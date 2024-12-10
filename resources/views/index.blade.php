@@ -1,482 +1,433 @@
 <!DOCTYPE html>
-	<html>
-	<head>
-		<!--  *****   Link To Custom CSS Style Sheet   *****  -->
-        @vite('resources/css/app.css')
+<html lang="en">
 
-		<!--  *****   Link To Font Awsome Icons   *****  -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link
+		href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
+		rel="stylesheet" />
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+	@vite('resources/css/app.css')
+	<title>Web Design Mastery | FitPhysique</title>
+</head>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-		<title>FitLife</title>
-	</head>
-	<body>
-	<!--   *** Website Wrapper Starts ***   -->
-	<div class="website-wrapper">
-		
-	<!--   *** Home Section Starts ***   -->
-	<section class="home" id="home">
-		
-		<div class="home-overlay"></div>
-		<!--   === Main Navbar Starts ===   -->
-		<nav class="main-navbar">
-			<div class="logo">
-				<img src="assets/images/home/logo.png">
+<body>
+	<nav>
+		<div class="nav__bar">
+			<div class="nav__header">
+				<div class="nav__logo">
+					<a href="#"><img src="assets/logo.png" alt="logo" /></a>
+				</div>
+				<div class="nav__menu__btn" id="menu-btn">
+					<i class="ri-menu-line"></i>
+				</div>
 			</div>
-			<ul class="nav-list">
-				<li><a href="#home">Home</a></li>
-				<li><a href="#about">About</a></li>
-				<li><a href="#services">Services</a></li>
-				<li><a href="#our_team">Trainers</a></li>
-				<li><a href="#pricing">Prices</a></li>
-				<li><a href="{{ route ('product') }}">Blog</a></li>
+			<ul class="nav__links" id="nav-links">
+				<li><a href="#home">HOME</a></li>
+				<li><a href="#about">ABOUT</a></li>
+				<li><a href="#trainer">TRAINER</a></li>
+				<li><a href="#client">CLIENT</a></li>
+				<li><a href="#blog">BLOG</a></li>
+				<li><a href="#contact">CONTACT US</a></li>
 			</ul>
-			<a href="#" class="join-us-btn-wrapper">
-				<button class="btn join-us-btn">Join Us</button>
-			</a>
-			<div class="hamburger-btn">
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-		</nav>
-		<!--   === Main Navbar Ends ===   -->
-		<!--   === Banner Starts ===   -->
-		<div class="banner">
-			<div class="banner-contents">
-				<h2>Start your training at FitLife</h2>
-				<h1>Fit body needs more training</h1>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
-				<button class="btn read-more-btn">Read More</button>
+		</div>
+	</nav>
+
+	<header class="header" id="header">
+		<div class="section__container header__container">
+			<div class="header__content">
+				<h1>HARD WORK</h1>
+				<h2>ISS FOR EVERY SUCCESS</h2>
+				<p>Start by taking inspirations, continue it to give inspirations</p>
+				<div class="header__btn">
+					<button class="btn btn__primary">GET STARTED</button>
+				</div>
 			</div>
 		</div>
-		<!--   === Banner Ends ===   -->
+	</header>
 
-	</section>
-	<!--   *** Home Section Ends ***   -->
-
-	<!--   *** Facilities Section Starts ***   -->
-	<section class="facilities">
-		<div class="facilities-contents">
-			
-			<div class="facility-item">
-				<div class="facility-icon">
-					<i class="fa-solid fa-dumbbell"></i>
-				</div>
-				<div class="facility-desc">
-					<h2>Quality Equipment</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-				</div>
+	<section class="section__container about__container" id="about">
+		<div class="about__header">
+			<h2 class="section__header">ABOUT US</h2>
+			<p class="section__description">
+				Our mission is to inspire and support individuals in achieving their
+				health and wellness goals, regardless of their fitness level or
+				background.
+			</p>
+		</div>
+		<div class="about__grid">
+			<div class="about__card">
+				<h4>WINNER COACHES</h4>
+				<p>
+					We pride ourselves on having a team of dedicated and experienced
+					coaches who are committed to helping you succeed.
+				</p>
 			</div>
-
-			<div class="facility-item">
-				<div class="facility-icon">
-					<i class="fa-solid fa-wifi"></i>
-				</div>
-				<div class="facility-desc">
-					<h2>Free Wifi</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-				</div>
+			<div class="about__card">
+				<h4>AFFORDABLE PRICE</h4>
+				<p>
+					We believe that everyone should have access to high-quality fitness
+					facilities without breaking the bank.
+				</p>
 			</div>
-
-			<div class="facility-item">
-				<div class="facility-icon">
-					<i class="fa-solid fa-person-swimming"></i>
-				</div>
-				<div class="facility-desc">
-					<h2>Swimming Pool</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-				</div>
+			<div class="about__card">
+				<h4>MODERN EQUIPMENTS</h4>
+				<p>
+					Stay ahead of the curve with our state-of-the-art equipment designed
+					to elevate your workout experience.
+				</p>
 			</div>
-
 		</div>
 	</section>
-	<!--   *** Facilities Section Ends ***   -->
 
-	<!--   *** About Section Starts ***   -->
-	<section class="about" id="about">
-		<div class="about-contents">
-			
-			<div class="about-left-col">
-				<img src="assets/images/about/about-img.jpg">
-			</div>
-
-			<div class="about-right-col">
-				<h4>About Us</h4>
-				<h1>Best Facilities and Experienced Trainers</h1>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-				<div class="about-states">
-					<div class="about-state about-state-1">
-						<i class="fa-solid fa-person"></i>
-						<h2>Best Trainers</h2>
-					</div>
-					<div class="about-state about-state-2">
-						<i class="fa-solid fa-medal"></i>
-						<h2>Award Winning</h2>
-					</div>
-				</div>
-			</div>
-
+	<section class="session">
+		<div class="session__card">
+			<h4>BODY BUILDING</h4>
+			<p>
+				Sculpt your physique and build muscle mass with our specialized
+				bodybuilding programs at FitPhysique.
+			</p>
+			<button class="btn btn__secondary">
+				READ MORE <i class="ri-arrow-right-line"></i>
+			</button>
+		</div>
+		<div class="session__card">
+			<h4>CARDIO</h4>
+			<p>
+				Elevate your heart rate and boost your endurance with our dynamic
+				cardio workouts at FitPhysique.
+			</p>
+			<button class="btn btn__secondary">
+				READ MORE <i class="ri-arrow-right-line"></i>
+			</button>
+		</div>
+		<div class="session__card">
+			<h4>FITNESS</h4>
+			<p>
+				Embrace a holistic approach to fitness with our comprehensive fitness
+				programs at FitPhysique.
+			</p>
+			<button class="btn btn__secondary">
+				READ MORE <i class="ri-arrow-right-line"></i>
+			</button>
+		</div>
+		<div class="session__card">
+			<h4>CROSSFIT</h4>
+			<p>
+				Experience the ultimate full-body workout with our intense CrossFit
+				classes at FitPhysique.
+			</p>
+			<button class="btn btn__secondary">
+				READ MORE <i class="ri-arrow-right-line"></i>
+			</button>
 		</div>
 	</section>
-	<!--   *** About Section Ends ***   -->
 
-	<!--   *** Services Section Starts ***   -->
-	<section class="services" id="services">
-		
-		<!--   === Services Header Starts ===   -->
-		<header class="section-header">
-			<h3>Services</h3>
-			<h1>Services Which We Offer</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-		</header>
-		<!--   === Services Header Ends ===   -->
-
-		<!--   === Services Contents Starts ===   -->
-		<div class="services-contents">
-			
-			<div class="service-box">
-				<div class="service-icon-box">
-					<i class="fa-solid fa-dumbbell"></i>
-				</div>
-				<div class="service-desc">
-					<h2>Body Building</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+	<section class="section__container trainer__container" id="trainer">
+		<h2 class="section__header">MEET OUR TRAINERS</h2>
+		<div class="trainer__grid">
+			<div class="trainer__card">
+				<img src="assets/trainer-1.jpg" alt="trainer" />
+				<h4>DAVID WILLIAMS</h4>
+				<p>Body Builder Coach</p>
+				<div class="trainer__socials">
+					<a href="#"><i class="ri-facebook-fill"></i></a>
+					<a href="#"><i class="ri-twitter-fill"></i></a>
+					<a href="#"><i class="ri-youtube-fill"></i></a>
 				</div>
 			</div>
-
-			<div class="service-box">
-				<div class="service-icon-box">
-					<i class="fa-solid fa-person-walking"></i>
-				</div>
-				<div class="service-desc">
-					<h2>Fitness</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-				</div>
-			</div>
-
-			<div class="service-box">
-				<div class="service-icon-box">
-					<i class="fa-solid fa-weight-hanging"></i>
-				</div>
-				<div class="service-desc">
-					<h2>Boxing</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+			<div class="trainer__card">
+				<img src="assets/trainer-2.jpg" alt="trainer" />
+				<h4>ROSY RIVERA</h4>
+				<p>Cardio Coach</p>
+				<div class="trainer__socials">
+					<a href="#"><i class="ri-facebook-fill"></i></a>
+					<a href="#"><i class="ri-twitter-fill"></i></a>
+					<a href="#"><i class="ri-youtube-fill"></i></a>
 				</div>
 			</div>
-
-			<div class="service-box">
-				<div class="service-icon-box">
-					<i class="fa-solid fa-dumbbell"></i>
-				</div>
-				<div class="service-desc">
-					<h2>Crossfit</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+			<div class="trainer__card">
+				<img src="assets/trainer-3.jpg" alt="trainer" />
+				<h4>MATT STONIE</h4>
+				<p>Fitness Coach</p>
+				<div class="trainer__socials">
+					<a href="#"><i class="ri-facebook-fill"></i></a>
+					<a href="#"><i class="ri-twitter-fill"></i></a>
+					<a href="#"><i class="ri-youtube-fill"></i></a>
 				</div>
 			</div>
-
-		</div>
-		<!--   === Services Contents Ends ===   -->
-
-	</section>
-	<!--   *** Services Section Ends ***   -->
-
-	<!--   *** Offer Section Starts ***   -->
-	<section class="offer">
-		<div class="offer-overlay"></div>
-		<div class="offer-contents">
-			<h1>Start Your Training Today</h1>
-			<span>&</span>
-			<h3>Get 30% Discount</h3>
-			<button class="btn start-training-btn">Join Now</button>
+			<div class="trainer__card">
+				<img src="assets/trainer-4.jpg" alt="trainer" />
+				<h4>SOFIA LAUREN</h4>
+				<p>Crossfit Coach</p>
+				<div class="trainer__socials">
+					<a href="#"><i class="ri-facebook-fill"></i></a>
+					<a href="#"><i class="ri-twitter-fill"></i></a>
+					<a href="#"><i class="ri-youtube-fill"></i></a>
+				</div>
+			</div>
 		</div>
 	</section>
-	<!--   *** Offer Section Ends ***   -->
 
-	<!--   *** Team Section Starts ***   -->
-	<section class="our-team" id="our_team">
-		<!--   === Team Header Starts ===   -->
-		<header class="section-header">
-			<h3>Our Trainers</h3>
-			<h1>Meet Our Experienced Trainers</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-		</header>
-		<!--   === Team Header Ends ===   -->
-		<!--   === Team Contents Starts ===   -->
-		<div class="team-contents">
-			
-			<div class="trainer-card">
-				<div class="trainer-image">
-					<img src="assets/images/trainers/trainer-1.jpg">
-				</div>
-				<div class="trainer-desc">
-					<h2>John Doe</h2>
-					<p>Muscles Trainer</p>
-				</div>
-				<div class="trainer-contact">
-					<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-					<a href="#"><i class="fa-brands fa-twitter"></i></a>
-					<a href="#"><i class="fa-brands fa-instagram"></i></a>
-				</div>
-			</div>
-
-			<div class="trainer-card">
-				<div class="trainer-image">
-					<img src="assets/images/trainers/trainer-2.jpg">
-				</div>
-				<div class="trainer-desc">
-					<h2>Jane Doe</h2>
-					<p>Boxing Trainer</p>
-				</div>
-				<div class="trainer-contact">
-					<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-					<a href="#"><i class="fa-brands fa-twitter"></i></a>
-					<a href="#"><i class="fa-brands fa-instagram"></i></a>
-				</div>
-			</div>
-
-			<div class="trainer-card">
-				<div class="trainer-image">
-					<img src="assets/images/trainers/trainer-3.jpg">
-				</div>
-				<div class="trainer-desc">
-					<h2>Tom Anderson</h2>
-					<p>Fitness Trainer</p>
-				</div>
-				<div class="trainer-contact">
-					<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-					<a href="#"><i class="fa-brands fa-twitter"></i></a>
-					<a href="#"><i class="fa-brands fa-instagram"></i></a>
-				</div>
-			</div>
-
-		</div>
-		<!--   === Team Contents Ends ===   -->
-	</section>
-	<!--   *** Team Section Ends ***   -->
-
-	<!--   *** Pricing Section Starts ***   -->
-	<section class="pricing" id="pricing">
-
-		<!--   === Pricing Header Starts ===   -->
-		<header class="section-header">
-			<h3>Pricing</h3>
-			<h1>Join Suitable Plan</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-		</header>
-		<!--   === Pricing Header Ends ===   -->
-		<!--   === Pricing Contents Starts ===   -->
-		<div class="pricing-contents">
-			
-			<!--   === Pricing Card 1 Starts ===   -->
-			<div class="pricing-card">
-				<div class="pricing-card-header">
-					<span class="pricing-card-title">Silver</span>
-					<div class="price-circle">
-						<span class="price"><i>$</i>12.99</span>
-						<span class="desc">/ Month</span>
-					</div>
-				</div>
-
-				<div class="pricing-card-body">
+	<section class="membership">
+		<div class="section__container membership__container">
+			<h2 class="section__header">MEMBERSHIP</h2>
+			<div class="membership__grid">
+				<div class="membership__card">
+					<h4>STANDARD</h4>
 					<ul>
-						<li><i class="fa-solid fa-check"></i>15 body Building</li>
-						<li><i class="fa-solid fa-check"></i>10 Boxing Classes</li>
-						<li><i class="fa-solid fa-check"></i>5 Massage</li>
-						<li><i class="fa-solid fa-check"></i>12 Swimming Sessions</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Gym floor access and standard equipment.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Group fitness classes: yoga, Zumba, Pilates.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Complimentary fitness consultations.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Locker room and showers.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Nutritional guidance and snacks.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Member discounts on merchandise.
+						</li>
 					</ul>
-					<button class="btn price-plan-btn">Select Plan</button>
+					<h3><sup>$</sup>30<span>/month</span></h3>
+					<button class="btn btn__primary">BUY NOW</button>
 				</div>
-			</div>
-			<!--   === Pricing Card 1 Ends ===   -->
-
-			<!--   === Pricing Card 2 Starts ===   -->
-			<div class="pricing-card">
-				<div class="pricing-card-header">
-					<div class="tag-box">
-						<span class="tag">Recommend</span>
-					</div>
-					<span class="pricing-card-title">Gold</span>
-					<div class="price-circle">
-						<span class="price"><i>$</i>36.99</span>
-						<span class="desc">/ Month</span>
-					</div>
-				</div>
-
-				<div class="pricing-card-body">
+				<div class="membership__card">
+					<h4>PROFESSIONAL</h4>
 					<ul>
-						<li><i class="fa-solid fa-check"></i>15 body Building</li>
-						<li><i class="fa-solid fa-check"></i>10 Boxing Classes</li>
-						<li><i class="fa-solid fa-check"></i>5 Massage</li>
-						<li><i class="fa-solid fa-check"></i>12 Swimming Sessions</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Standard Membership facilities included.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Priority booking for personal training.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Access to advanced equipment.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Complimentary fitness consultations.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Exclusive member events and workshops.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Discounts on additional services.
+						</li>
 					</ul>
-					<button class="btn price-plan-btn">Select Plan</button>
+					<h3><sup>$</sup>45<span>/month</span></h3>
+					<button class="btn btn__primary">BUY NOW</button>
 				</div>
-			</div>
-			<!--   === Pricing Card 2 Ends ===   -->
-
-			<!--   === Pricing Card 3 Starts ===   -->
-			<div class="pricing-card">
-				<div class="pricing-card-header">
-					<span class="pricing-card-title">Platinum</span>
-					<div class="price-circle">
-						<span class="price"><i>$</i>74.99</span>
-						<span class="desc">/ Month</span>
-					</div>
-				</div>
-
-				<div class="pricing-card-body">
+				<div class="membership__card">
+					<h4>ULTIMATE</h4>
 					<ul>
-						<li><i class="fa-solid fa-check"></i>15 body Building</li>
-						<li><i class="fa-solid fa-check"></i>10 Boxing Classes</li>
-						<li><i class="fa-solid fa-check"></i>5 Massage</li>
-						<li><i class="fa-solid fa-check"></i>12 Swimming Sessions</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Standard and Professional facilities included.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Unlimited access to premium amenities.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Reserved parking or valet service.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Complimentary premium fitness classes.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Customized workout plans.
+						</li>
+						<li>
+							<span><i class="ri-check-line"></i></span>
+							Priority access to guest passes and events.
+						</li>
 					</ul>
-					<button class="btn price-plan-btn">Select Plan</button>
+					<h3><sup>$</sup>60<span>/month</span></h3>
+					<button class="btn btn__primary">BUY NOW</button>
 				</div>
 			</div>
-			<!--   === Pricing Card 3 Ends ===   -->
-
 		</div>
-		<!--   === Pricing Contents Ends ===   -->
 	</section>
-	<!--   *** Pricing Section Ends ***   -->
+	<section class="section__container client__container" id="client">
+		<h2 class="section__header">OUR TESTIMONIALS</h2>
+		<!-- Slider main container -->
+		<div class="swiper">
+			<!-- Additional required wrapper -->
+			<div class="swiper-wrapper">
+				<!-- Slides -->
+				<div class="swiper-slide">
+					<div class="client__card">
+						<img src="assets/client-1.jpg" alt="client" />
+						<div><i class="ri-double-quotes-r"></i></div>
+						<p>
+							I've been a member at FitPhysique for over a year now, and I
+							couldn't be happier with my experience. The range of classes
+							offered here is impressive - from high-energy cardio sessions to
+							relaxing yoga classes, there's something for everyone.
+						</p>
+						<h4>Sarah Johnson</h4>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="client__card">
+						<img src="assets/client-2.jpg" alt="client" />
+						<div><i class="ri-double-quotes-r"></i></div>
+						<p>
+							The classes are always well-planned and engaging, and the
+							instructors do an excellent job of keeping us motivated
+							throughout. I'm so grateful to have found such a supportive and
+							inclusive gym.
+						</p>
+						<h4>Michael Wong</h4>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="client__card">
+						<img src="assets/client-3.jpg" alt="client" />
+						<div><i class="ri-double-quotes-r"></i></div>
+						<p>
+							I've tried many gyms in the past, but none of them compare to
+							FitPhysique. From the moment I walked through the doors, I felt
+							welcomed and supported by the staff and fellow members alike.
+						</p>
+						<h4>Emily Davis</h4>
+					</div>
+				</div>
+			</div>
+			<!-- If we need pagination -->
+			<div class="swiper-pagination"></div>
+		</div>
+	</section>
 
-	<!--   *** Blog Section Starts ***   -->
 	<section class="blog" id="blog">
-		<!--   === Blog Header Starts ===   -->
-		<header class="section-header">
-			<h3>Our Blog</h3>
-			<h1>Latest From Our Blog</h1>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-		</header>
-		<!--   === Blog Header Ends ===   -->
-
-		<!--   === Blog Contents Starts ===   -->
-		<div class="blog-contents">
-			
-			<div class="article-card">
-				<img src="assets/images/posts/post-1.jpg">
-				<div class="category">
-					<div class="subject"><h3>muscles</h3></div>
-					<span>21/06/2023</span>
+		<div class="section__container blog__container">
+			<h2 class="section__header">BLOGS</h2>
+			<div class="blog__grid">
+				<div class="blog__card">
+					<img src="assets/blog-1.jpg" alt="blog" />
+					<h4>Fueling Your Body for Optimal Performance</h4>
 				</div>
-				<h2 class="article-title">Strong Muscle: Lorem ipsum dolor sit amet, consectetur.</h2>
-				<p class="article-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-				<div class="article-views">
-					<span>2.5k <i class="fa-solid fa-eye"></i></span>
-					<span>352 <i class="fa-solid fa-comment"></i></span>
+				<div class="blog__card">
+					<img src="assets/blog-2.jpg" alt="blog" />
+					<h4>A Guide to Setting and Achieving Fitness Goals</h4>
+				</div>
+				<div class="blog__card">
+					<img src="assets/blog-3.jpg" alt="blog" />
+					<h4>Tips and Techniques for Efficient Exercise</h4>
+				</div>
+				<div class="blog__card">
+					<img src="assets/blog-4.jpg" alt="blog" />
+					<h4>A Beginner's Guide to Starting Your Running Journey</h4>
 				</div>
 			</div>
-
-			<div class="article-card">
-				<img src="assets/images/posts/post-2.jpg">
-				<div class="category">
-					<div class="subject"><h3>muscles</h3></div>
-					<span>21/06/2023</span>
-				</div>
-				<h2 class="article-title">Strong Muscle: Lorem ipsum dolor sit amet, consectetur.</h2>
-				<p class="article-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-				<div class="article-views">
-					<span>2.5k <i class="fa-solid fa-eye"></i></span>
-					<span>352 <i class="fa-solid fa-comment"></i></span>
-				</div>
+			<div class="blog__btn">
+				<button class="btn btn__primary">VIEW ALL</button>
 			</div>
-
-			<div class="article-card">
-				<img src="assets/images/posts/post-3.jpg">
-				<div class="category">
-					<div class="subject"><h3>muscles</h3></div>
-					<span>21/06/2023</span>
-				</div>
-				<h2 class="article-title">Strong Muscle: Lorem ipsum dolor sit amet, consectetur.</h2>
-				<p class="article-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-				<div class="article-views">
-					<span>2.5k <i class="fa-solid fa-eye"></i></span>
-					<span>352 <i class="fa-solid fa-comment"></i></span>
-				</div>
-			</div>
-
-		</div>
-		<!--   === Blog Contents Ends ===   -->
-		<div class="view-more-btn-container">
-			<button class="btn articles-view-btn">View More</button>
 		</div>
 	</section>
-	<!--   *** Blog Section Ends ***   -->
 
-	<!--   *** Footer Section Starts ***   -->
-	<section class="page-footer">
-		
-		<!--   === Footer Contents Starts ===   -->
-		<div class="footer-contents">
-			
-			<div class="footer-col footer-col-1">
-				<div class="footer-col-title">
-					<h3>About</h3>
-				</div>
-				<div class="footer-col-desc">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-					<span>321 Street, California, USA</span>
-					<span>+012 123 45678</span>
-					<span>info@sample.com</span>
-					<div class="footer-social-media">
-						<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-						<a href="#"><i class="fa-brands fa-twitter"></i></a>
-						<a href="#"><i class="fa-brands fa-instagram"></i></a>
-						<a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-					</div>
-				</div>
-			</div>
-
-			<div class="footer-col footer-col-2">
-				<div class="footer-col-title">
-					<h3>Quick Links</h3>
-				</div>
-				<div class="footer-col-desc">
-					<a href="#">Home</a>
-					<a href="#">About</a>
-					<a href="#">Services</a>
-					<a href="#">Trainers</a>
-					<a href="#">Pricing</a>
-					<a href="#">Blog</a>
-				</div>
-			</div>
-
-			<div class="footer-col footer-col-3">
-				<div class="footer-col-title">
-					<h3>Newsletter</h3>
-				</div>
-				<div class="footer-col-desc">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-					<form class="newsletter">
-						<input type="email" placeholder="Your Email">
-						<button class="btn newsletter-btn" type="submit">Subscribe</button>
-					</form>
-				</div>
-			</div>
-
-		</div>
-		<!--   === Footer Contents Ends ===   -->
-
+	<section class="section__container logo__banner">
+		<img src="assets/banner-1.png" alt="banner" />
+		<img src="assets/banner-2.png" alt="banner" />
+		<img src="assets/banner-3.png" alt="banner" />
+		<img src="assets/banner-4.png" alt="banner" />
 	</section>
-	<!--   *** Footer Section Ends ***   -->
 
-	<!--   *** Copy Rights Starts ***   -->
-	<div class="copy-rights">
-		<p>Created By <b>Five Star Tutorials</b> All Rights Reserved</p>
-	</div>
-	<!--   *** Copy Rights Ends ***   -->
+	<footer class="footer" id="contact">
+		<div class="section__container footer__container">
+			<div class="footer__col">
+				<div class="footer__logo">
+					<a href="#"><img src="assets/logo.png" alt="logo" /></a>
+				</div>
+				<p>
+					Welcome to FitPhysique, where we believe that every journey to
+					fitness is unique and empowering.
+				</p>
+				<ul class="footer__links">
+					<li>
+						<a href="#">
+							<span><i class="ri-map-pin-2-fill"></i></span>
+							123 Main Street<br />Sunrise Valley, Evergreen Heights
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<span><i class="ri-phone-fill"></i></span>
+							+91 9876543210
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<span><i class="ri-mail-fill"></i></span>
+							info@fitphysique.com
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="footer__col">
+				<h4>GALLERY</h4>
+				<div class="gallery__grid">
+					<img src="assets/gallery-1.jpg" alt="gallery" />
+					<img src="assets/gallery-2.jpg" alt="gallery" />
+					<img src="assets/gallery-3.jpg" alt="gallery" />
+					<img src="assets/gallery-4.jpg" alt="gallery" />
+					<img src="assets/gallery-5.jpg" alt="gallery" />
+					<img src="assets/gallery-6.jpg" alt="gallery" />
+					<img src="assets/gallery-7.jpg" alt="gallery" />
+					<img src="assets/gallery-8.jpg" alt="gallery" />
+					<img src="assets/gallery-9.jpg" alt="gallery" />
+				</div>
+			</div>
+			<div class="footer__col">
+				<h4>NEWSLETTER</h4>
+				<p>
+					Don't miss out on the latest news and offers - sign up today and
+					join our thriving fitness community!
+				</p>
+				<form action="/">
+					<input type="text" placeholder="Enter Email" />
+					<button class="btn btn__primary">SEND</button>
+				</form>
+				<div class="footer__socials">
+					<a href="#"><i class="ri-facebook-fill"></i></a>
+					<a href="#"><i class="ri-twitter-fill"></i></a>
+					<a href="#"><i class="ri-youtube-fill"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="footer__bar">
+			Copyright © 2024 Web Design Mastery. All rights reserved.
+		</div>
+	</footer>
 
-	</div>
-	<!--   *** Website Wrapper Ends ***   -->
+	<script src="https://unpkg.com/scrollreveal"></script>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<script src="assets/js/script.js"></script>
+</body>
 
-
-
-
-	<!--   *** Link To Custom Script File ***   -->
-	<script type="text/javascript" src="assets/js/script.js"></script>
-	</body>
-	</html>
+</html>

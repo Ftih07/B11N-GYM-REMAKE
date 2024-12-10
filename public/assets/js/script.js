@@ -1,38 +1,60 @@
-// Script File
+const menuBtn = document.getElementById("menu-btn");
+const navLinks = document.getElementById("nav-links");
+const menuBtnIcon = menuBtn.querySelector("i");
 
-// Home Section Starts
-var hamburgerBtn = document.querySelector('.main-navbar .hamburger-btn');
-var navList = document.querySelector('.main-navbar .nav-list');
-var navListItems = document.querySelectorAll('.nav-list li a');
+menuBtn.addEventListener("click", (e) => {
+  navLinks.classList.toggle("open");
 
-hamburgerBtn.addEventListener('click', activeClass);
+  const isOpen = navLinks.classList.contains("open");
+  menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
+});
 
-function activeClass(){
-	hamburgerBtn.classList.toggle('active');
-	navList.classList.toggle('active');
-}
+navLinks.addEventListener("click", (e) => {
+  navLinks.classList.remove("open");
+  menuBtnIcon.setAttribute("class", "ri-menu-line");
+});
 
-for(var i = 0; i < navListItems.length; i++){
-	navListItems[i].addEventListener('click', listItemClicked);
-}
+const scrollRevealOption = {
+  distance: "50px",
+  origin: "bottom",
+  duration: 1000,
+};
 
-function listItemClicked(){
-	hamburgerBtn.classList.remove('active');
-	navList.classList.remove('active');
-}
+ScrollReveal().reveal(".header__content h1", {
+  ...scrollRevealOption,
+});
+ScrollReveal().reveal(".header__content h2", {
+  ...scrollRevealOption,
+  delay: 500,
+});
+ScrollReveal().reveal(".header__content p", {
+  ...scrollRevealOption,
+  delay: 1000,
+});
+ScrollReveal().reveal(".header__content .header__btn", {
+  ...scrollRevealOption,
+  delay: 1500,
+});
 
-// Code For Navbar
-var homeSection = document.querySelector('#home');
-window.addEventListener('scroll', pageScrollFunction);
-window.addEventListener('load', pageScrollFunction);
+ScrollReveal().reveal(".about__card", {
+  duration: 1000,
+  interval: 500,
+});
 
-function pageScrollFunction(){
-	if(window.scrollY > 150){
-		homeSection.classList.add('active');
-	}
-	else{
-		homeSection.classList.remove('active');
-	}
-}
+ScrollReveal().reveal(".trainer__card", {
+  ...scrollRevealOption,
+  interval: 500,
+});
 
-// Home Section Ends
+ScrollReveal().reveal(".blog__card", {
+  ...scrollRevealOption,
+  interval: 500,
+});
+
+const swiper = new Swiper(".swiper", {
+  loop: true,
+
+  pagination: {
+    el: ".swiper-pagination",
+  },
+});
