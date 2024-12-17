@@ -11,7 +11,7 @@
 		rel="stylesheet"
 		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-	@vite('resources/css/app.css')
+	@vite('resources/css/index.css')
 	<title>Web Design Mastery | FitPhysique</title>
 </head>
 
@@ -38,7 +38,7 @@
 	</nav>
 
 	<header class="header" id="header">
-		<div class="section__container header__container">
+		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="header__content">
 				<h1>HARD WORK</h1>
 				<h2>ISS FOR EVERY SUCCESS</h2>
@@ -50,10 +50,10 @@
 		</div>
 	</header>
 
-	<section class="section__container about__container" id="about">
-		<div class="about__header">
-			<h2 class="section__header">ABOUT US</h2>
-			<p class="section__description">
+	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
+		<div class="about__header text-center grid gap-4">
+			<h2 class="section__header text-5xl font-semibold font-header text-text-dark text-center">ABOUT US</h2>
+			<p class="section__description max-w-[350px] mx-auto">
 				Our mission is to inspire and support individuals in achieving their
 				health and wellness goals, regardless of their fitness level or
 				background.
@@ -83,6 +83,33 @@
 			</div>
 		</div>
 	</section>
+
+	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
+		<div class="about__header text-center grid gap-4">
+			<h2 class="section__header text-5xl font-semibold font-header text-text-dark text-center">
+				Fasilitas Kami
+			</h2>
+			<p class="section__description max-w-[350px] mx-auto">
+				B11N Gym menawarkan fasilitas lengkap dan modern untuk memenuhi kebutuhan fitnessmu.
+				Mulai dari area kardio, angkat beban, hingga berbagai kelas fitness yang menarik, semuanya tersedia.
+			</p>
+		</div>
+		<div class="about__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+			@foreach ($facilities as $facility)
+			<div class="about__card border border-gray-200 rounded-lg p-6 shadow-md">
+				<img
+					src="{{ asset('storage/' . $facility->image) }}"
+					alt="{{ $facility->title }}"
+					class="w-40 h-10 object-cover mb-4 rounded" />
+				<h4 class="text-xl font-semibold mb-2">{{ $facility->title }}</h4>
+				<p class="text-gray-600">
+					{{ $facility->description }}
+				</p>
+			</div>
+			@endforeach
+		</div>
+	</section>
+
 
 	<section class="session">
 		<div class="session__card">
@@ -127,55 +154,28 @@
 		</div>
 	</section>
 
-	<section class="section__container trainer__container" id="trainer">
-		<h2 class="section__header">MEET OUR TRAINERS</h2>
+	<section class="trainer__container max-w-[1200px] mx-auto px-4 py-20" id="trainer">
+		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>
 		<div class="trainer__grid">
+			@foreach ($trainer as $trainer)
 			<div class="trainer__card">
-				<img src="assets/trainer-1.jpg" alt="trainer" />
-				<h4>DAVID WILLIAMS</h4>
-				<p>Body Builder Coach</p>
+				<img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" />
+				<h4>{{ $trainer->name }}</h4>
+				<p>{{ $trainer->description }}</p>
 				<div class="trainer__socials">
-					<a href="#"><i class="ri-facebook-fill"></i></a>
-					<a href="#"><i class="ri-twitter-fill"></i></a>
-					<a href="#"><i class="ri-youtube-fill"></i></a>
+					<a href="{{ $trainer->urls['facebook'] ?? '#' }}"><i class="ri-facebook-fill"></i></a>
+					<a href="{{ $trainer->urls['whatsapp'] ?? '#' }}"><i class="ri-whatsapp-fill"></i></a>
+					<a href="{{ $trainer->urls['instagram'] ?? '#' }}"><i class="ri-instagram-fill"></i></a>
 				</div>
 			</div>
-			<div class="trainer__card">
-				<img src="assets/trainer-2.jpg" alt="trainer" />
-				<h4>ROSY RIVERA</h4>
-				<p>Cardio Coach</p>
-				<div class="trainer__socials">
-					<a href="#"><i class="ri-facebook-fill"></i></a>
-					<a href="#"><i class="ri-twitter-fill"></i></a>
-					<a href="#"><i class="ri-youtube-fill"></i></a>
-				</div>
-			</div>
-			<div class="trainer__card">
-				<img src="assets/trainer-3.jpg" alt="trainer" />
-				<h4>MATT STONIE</h4>
-				<p>Fitness Coach</p>
-				<div class="trainer__socials">
-					<a href="#"><i class="ri-facebook-fill"></i></a>
-					<a href="#"><i class="ri-twitter-fill"></i></a>
-					<a href="#"><i class="ri-youtube-fill"></i></a>
-				</div>
-			</div>
-			<div class="trainer__card">
-				<img src="assets/trainer-4.jpg" alt="trainer" />
-				<h4>SOFIA LAUREN</h4>
-				<p>Crossfit Coach</p>
-				<div class="trainer__socials">
-					<a href="#"><i class="ri-facebook-fill"></i></a>
-					<a href="#"><i class="ri-twitter-fill"></i></a>
-					<a href="#"><i class="ri-youtube-fill"></i></a>
-				</div>
-			</div>
+			@endforeach
 		</div>
 	</section>
 
+
 	<section class="membership">
-		<div class="section__container membership__container">
-			<h2 class="section__header">MEMBERSHIP</h2>
+		<div class="membership__container max-w-[1200px] mx-auto px-4 py-20">
+			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEMBERSHIP</h2>
 			<div class="membership__grid">
 				<div class="membership__card">
 					<h4>STANDARD</h4>
@@ -273,8 +273,8 @@
 			</div>
 		</div>
 	</section>
-	<section class="section__container client__container" id="client">
-		<h2 class="section__header">OUR TESTIMONIALS</h2>
+	<section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="client">
+		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
 		<!-- Slider main container -->
 		<div class="swiper">
 			<!-- Additional required wrapper -->
@@ -325,8 +325,8 @@
 	</section>
 
 	<section class="blog" id="blog">
-		<div class="section__container blog__container">
-			<h2 class="section__header">BLOGS</h2>
+		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
+			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>
 			<div class="blog__grid">
 				<div class="blog__card">
 					<img src="assets/blog-1.jpg" alt="blog" />
@@ -351,7 +351,7 @@
 		</div>
 	</section>
 
-	<section class="section__container logo__banner">
+	<section class="logo__banner max-w-[1200px] mx-auto px-4 py-20">
 		<img src="assets/banner-1.png" alt="banner" />
 		<img src="assets/banner-2.png" alt="banner" />
 		<img src="assets/banner-3.png" alt="banner" />
@@ -359,7 +359,7 @@
 	</section>
 
 	<footer class="footer" id="contact">
-		<div class="section__container footer__container">
+		<div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="footer__col">
 				<div class="footer__logo">
 					<a href="#"><img src="assets/logo.png" alt="logo" /></a>
