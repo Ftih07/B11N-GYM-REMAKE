@@ -327,29 +327,22 @@
 	<section class="blog" id="blog">
 		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
 			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>
-			<div class="blog__grid">
+			<div class="blog__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				@foreach ($blog as $blog)
 				<div class="blog__card">
-					<img src="assets/blog-1.jpg" alt="blog" />
-					<h4>Fueling Your Body for Optimal Performance</h4>
+					<img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" />
+					<h4 class="text-lg font-medium mt-4">{{ $blog->title }}</h4>
 				</div>
-				<div class="blog__card">
-					<img src="assets/blog-2.jpg" alt="blog" />
-					<h4>A Guide to Setting and Achieving Fitness Goals</h4>
-				</div>
-				<div class="blog__card">
-					<img src="assets/blog-3.jpg" alt="blog" />
-					<h4>Tips and Techniques for Efficient Exercise</h4>
-				</div>
-				<div class="blog__card">
-					<img src="assets/blog-4.jpg" alt="blog" />
-					<h4>A Beginner's Guide to Starting Your Running Journey</h4>
-				</div>
+				@endforeach
 			</div>
-			<div class="blog__btn">
-				<button class="btn btn__primary">VIEW ALL</button>
+			@if($blog->count() > 3)
+			<div class="blog__btn mt-8 text-center">
+				<a href="/blogs" class="btn btn__primary">VIEW ALL</a>
 			</div>
+			@endif
 		</div>
 	</section>
+
 
 	<section class="logo__banner max-w-[1200px] mx-auto px-4 py-20">
 		<img src="assets/banner-1.png" alt="banner" />

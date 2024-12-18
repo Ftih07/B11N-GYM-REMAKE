@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FacilitiesResource extends Resource
 {
+    protected static ?string $navigationGroup = 'Menengah';
+    protected static ?int $navigationSort = 2;
     protected static ?string $model = Facilities::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';

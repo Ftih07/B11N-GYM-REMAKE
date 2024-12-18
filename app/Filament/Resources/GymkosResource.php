@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class GymkosResource extends Resource
 {
+    protected static ?string $navigationGroup = 'Penting';
+    protected static ?int $navigationSort = 1; // Atur sebagai menu utama
     protected static ?string $model = Gymkos::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -35,6 +37,7 @@ class GymkosResource extends Resource
         return $table
             ->columns([
                 //
+                Tables\Columns\TextColumn::make('id')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')

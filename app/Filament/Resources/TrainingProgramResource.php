@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AboutResource\Pages;
-use App\Filament\Resources\AboutResource\RelationManagers;
-use App\Models\About;
+use App\Filament\Resources\TrainingProgramResource\Pages;
+use App\Filament\Resources\TrainingProgramResource\RelationManagers;
+use App\Models\TrainingProgram;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,11 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AboutResource extends Resource
+class TrainingProgramResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Menengah';
-    protected static ?int $navigationSort = 2;
-    protected static ?string $model = About::class;
+    protected static ?string $model = TrainingProgram::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,21 +25,24 @@ class AboutResource extends Resource
             ->schema([
                 //
                 Forms\Components\TextInput::make('title')
-                    ->label('About Title')
+                    ->label('Title Category Training')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('description')
+                    ->label('Description Category Training')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
-                    ->label('About Image')
-                    ->directory('about')
-                    ->image()
-                    ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->nullable()
-                    ->maxLength(1000),
+                    ->label('Image Category Training')
+                    ->required()
+                    ->directory('training_program'),
                 Forms\Components\Select::make('gymkos_id')
                     ->label('Gymkos')
                     ->relationship('gymkos', 'name')
+                    ->required(),
+                Forms\Components\Select::make('category_trainings_id')
+                    ->label('Category Training')
+                    ->relationship('categorytraining', 'title')
                     ->required(),
             ]);
     }
@@ -52,14 +53,20 @@ class AboutResource extends Resource
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('title')
-                    ->label('About Title')
+                    ->label('Title Category Training')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('About Image'),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label('Title Category Training')
+                    ->sortable()
+                    ->searchable()
                     ->limit(50),
+                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\TextColumn::make('categorytraining.title')
+                    ->limit(50)
+                    ->label('Nama Category Training')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('gymkos.name')
                     ->label('Nama Gym/Kos')
                     ->sortable()
@@ -91,9 +98,9 @@ class AboutResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAbouts::route('/'),
-            'create' => Pages\CreateAbout::route('/create'),
-            'edit' => Pages\EditAbout::route('/{record}/edit'),
+            'index' => Pages\ListTrainingPrograms::route('/'),
+            'create' => Pages\CreateTrainingProgram::route('/create'),
+            'edit' => Pages\EditTrainingProgram::route('/{record}/edit'),
         ];
     }
 }

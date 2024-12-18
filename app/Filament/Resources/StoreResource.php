@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AboutResource\Pages;
-use App\Filament\Resources\AboutResource\RelationManagers;
-use App\Models\About;
+use App\Filament\Resources\StoreResource\Pages;
+use App\Filament\Resources\StoreResource\RelationManagers;
+use App\Models\Store;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,11 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AboutResource extends Resource
+class StoreResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Menengah';
-    protected static ?int $navigationSort = 2;
-    protected static ?string $model = About::class;
+    protected static ?string $model = Store::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,12 +25,12 @@ class AboutResource extends Resource
             ->schema([
                 //
                 Forms\Components\TextInput::make('title')
-                    ->label('About Title')
+                    ->label('Store Title')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
-                    ->label('About Image')
-                    ->directory('about')
+                    ->label('Store Image')
+                    ->directory('facilities')
                     ->image()
                     ->required(),
                 Forms\Components\Textarea::make('description')
@@ -52,13 +50,13 @@ class AboutResource extends Resource
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('title')
-                    ->label('About Title')
+                    ->label('Store Title')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('About Image'),
+                    ->label('Store Image'),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label('Store Description')
                     ->limit(50),
                 Tables\Columns\TextColumn::make('gymkos.name')
                     ->label('Nama Gym/Kos')
@@ -91,9 +89,9 @@ class AboutResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAbouts::route('/'),
-            'create' => Pages\CreateAbout::route('/create'),
-            'edit' => Pages\EditAbout::route('/{record}/edit'),
+            'index' => Pages\ListStores::route('/'),
+            'create' => Pages\CreateStore::route('/create'),
+            'edit' => Pages\EditStore::route('/{record}/edit'),
         ];
     }
 }
