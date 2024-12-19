@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TrainerResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Menengah';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Training';
+    protected static ?int $navigationSort = 3;
     protected static ?string $model = Trainer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
