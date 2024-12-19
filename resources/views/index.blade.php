@@ -17,6 +17,12 @@
 
 <body>
 	<nav>
+		@if (session('success'))
+		<div class="bg-green-500 text-white text-center py-2">
+			{{ session('success') }}
+		</div>
+		@endif
+
 		<div class="nav__bar">
 			<div class="nav__header">
 				<div class="nav__logo">

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Facilities;
 use App\Models\Trainer;
 use App\Models\Blog;
+use App\Models\Product;
+use App\Models\Store;
 
 use Illuminate\Http\Request;
 
@@ -20,8 +22,18 @@ class HomeController extends Controller
 
         return view('index', compact('facilities', 'trainer', 'blog'));
     }
+
     public function product()
     {
-        return view('product');
+        $stores = Store::withCount('products')->get();
+        // Mendapatkan produk dengan status 'ready' yang terhubung dengan gym 'B11N Gym'
+        $products = Product::where('status', 'ready')
+        ->whereHas('gymkos', function ($query) {
+            $query->whereNotNull('name')  // Pastikan 'name' tidak null
+                  ->where('name', 'B11N Gym');
+            })
+            ->get();
+
+        return view('product', compact('products'));
     }
 }

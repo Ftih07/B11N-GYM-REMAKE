@@ -1,66 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Cars</title>
     @vite('resources/css/app.css')
 </head>
+
 <body class="m-0 p-0 bg-black text-white font-poppins">
 
     <!-- Header Section -->
     <header class="relative w-full bg-no-repeat" style="background-image: url('assets/img/background/bg-car.png');">
-    <nav class="flex justify-between items-center mx-[10%] p-[45px_50px] border-b-4 border-[#5C5857] pb-[5px] bg-transparent">
-        <div class="flex w-[25px] h-[25px]">
-            <img src="assets/img/logo/Group 72.png" alt="Naltlan Dealer Logo">
-        </div>
-        <ul class="flex gap-5">
-    <li class="inline-block mr-2 relative">
-        <a href="#" class="relative group">
-            Home
-            <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-        </a>
-    </li>
-    <li class="inline-block mr-2 relative">
-        <a href="#" class="relative group">
-            About us
-            <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-        </a>
-    </li>
-    <li class="inline-block mr-2 relative">
-        <a href="#" class="relative group">
-            Supercar
-            <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-        </a>
-    </li>
-    <li class="inline-block mr-2 relative">
-        <a href="#" class="relative group">
-            Engine
-            <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-        </a>
-    </li>
-    <li class="inline-block mr-2 relative">
-        <a href="#" class="relative group">
-            Contact
-            <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-        </a>
-    </li>
-</ul>
+        <nav class="flex justify-between items-center mx-[10%] p-[45px_50px] border-b-4 border-[#5C5857] pb-[5px] bg-transparent">
+            <div class="flex w-[25px] h-[25px]">
+                <img src="assets/img/logo/Group 72.png" alt="Naltlan Dealer Logo">
+            </div>
+            <ul class="flex gap-5">
+                <li class="inline-block mr-2 relative">
+                    <a href="#" class="relative group">
+                        Home
+                        <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </a>
+                </li>
+                <li class="inline-block mr-2 relative">
+                    <a href="#" class="relative group">
+                        About us
+                        <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </a>
+                </li>
+                <li class="inline-block mr-2 relative">
+                    <a href="#" class="relative group">
+                        Supercar
+                        <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </a>
+                </li>
+                <li class="inline-block mr-2 relative">
+                    <a href="#" class="relative group">
+                        Engine
+                        <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </a>
+                </li>
+                <li class="inline-block mr-2 relative">
+                    <a href="#" class="relative group">
+                        Contact
+                        <span class="absolute left-0 right-0 bottom-0 top-9 h-1 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    </a>
+                </li>
+            </ul>
 
-        <div class="text-[24px] text-[#747474]">
-        <a href="/" class="relative group">
-            <i class="fas fa-user-circle"></i>
-        </a>
+            <div class="text-[24px] text-[#747474]">
+                <a href="/" class="relative group">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </div>
+        </nav>
+        <div class="flex flex-auto">
+            <div class="text-left py-[15%] bg-cover bg-center ml-[13%]">
+                <h1 class="text-[4.5em] m-0 font-bold">NALTLAN DEALER</h1>
+                <p class="text-[2.9em] mt-[-5%] font-medium">Supercars & Engines</p>
+            </div>
+            <div class="horizontal-line"></div>
         </div>
-    </nav>
-    <div class="flex flex-auto">
-        <div class="text-left py-[15%] bg-cover bg-center ml-[13%]">
-            <h1 class="text-[4.5em] m-0 font-bold">NALTLAN DEALER</h1>
-            <p class="text-[2.9em] mt-[-5%] font-medium">Supercars & Engines</p>
-        </div>
-        <div class="horizontal-line"></div>
-    </div>
-</header>
+    </header>
 
 
     <div class="absolute top-[62%] right-0 transform -translate-y-1/2 flex items-center z-100">
@@ -93,213 +95,60 @@
             <p class="text-[11px]">The exquisite craftsmanship of the Utopia serves a precise purpose: to express the uniqueness of each owner through a car tailored to the smallest detail.</p>
         </div>
     </div>
-    
+
     <div class="mx-[14%] my-[5%] border-b border-white"></div>
 
 
+    @if (session('success'))
+    <div class="bg-green-500 text-white text-center py-2">
+        {{ session('success') }}
+    </div>
+    @endif
 
     <div class="text-center py-8">
-        <h1 class="text-4xl font-bold">OUR CARS</h1>
+        <h1 class="text-4xl font-bold">B11N & K1NG Gym Store</h1>
         <p class="text-gray-500 mt-2">Available 70 Cars</p>
     </div>
 
     <!-- Filter Buttons -->
     <div class="flex justify-center gap-4 mb-8">
-        <button class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded">New</button>
-        <button class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded">Pre Order</button>
-        <button class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded">All</button>
+        <a href="{{ route('product.index', ['category' => null]) }}">
+            <button class="px-4 py-2 {{ is_null(request('category')) ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">All</button>
+        </a>
+        <a href="{{ route('product.index', ['category' => 1]) }}">
+            <button class="px-4 py-2 {{ request('category') == 1 ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">Makanan</button>
+        </a>
+        <a href="{{ route('product.index', ['category' => 2]) }}">
+            <button class="px-4 py-2 {{ request('category') == 2 ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">Minuman</button>
+        </a>
     </div>
 
-    <!-- Cars Grid -->
+
     <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-
-        <!-- Car Item -->
+        @foreach ($products as $product)
         <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
+            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-48 object-cover rounded-md">
             <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
+                <h2 class="text-lg font-semibold">{{ $product->name }}</h2>
+                <p class="text-red-600 font-bold text-xl mt-2">${{ number_format($product->price, 2) }}</p>
                 <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
+                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>{{ $product->flavour }}</span>
                     <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
+                    <span class="flex items-center"><i class="fas fa-box-open mr-1"></i>{{ $product->serving_option }}</span>
                 </div>
                 <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
+                    <form action="{{ route('cart.add', $product->id) }}" method="post">
+                        @csrf
+                        <button type="submit" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">Add to Cart</button>
+                    </form>
+                    <button class="bg-gray-300 text-black px-3 py-1 rounded">
+                        <a href="{{ route('product.show', $product->id) }}">View Details</a>
+                    </button>
                 </div>
             </div>
         </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Car Item -->
-        <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
-            <img src="https://hips.hearstapps.com/hmg-prod/images/2025-audi-rs6-avant-gt-motion-103-65bbc522aae10.jpg?crop=0.540xw:0.457xh;0.135xw,0.356xh&resize=1200:*" alt="Audi RS6 Avant" class="w-full h-48 object-cover rounded-md">
-            <div class="mt-4">
-                <h2 class="text-lg font-semibold">Audi RS6 Avant</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">$271,378.98</p>
-                <div class="flex items-center mt-4 text-gray-500 text-sm">
-                    <span class="flex items-center"><i class="fas fa-user mr-1"></i>4</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-cogs mr-1"></i>V8</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-road mr-1"></i>621 ft</span>
-                    <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-tachometer-alt mr-1"></i>8 Speed</span>
-                </div>
-                <div class="flex mt-4 gap-2">
-                    <button class="bg-red-600 text-white px-3 py-1 rounded">Buy</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Audi</button>
-                    <button class="bg-gray-300 text-black px-3 py-1 rounded">Type : RS6</button>
-                </div>
-            </div>
-        </div>
-        
+        @endforeach
     </div>
-
-    
-
 </body>
+
 </html>

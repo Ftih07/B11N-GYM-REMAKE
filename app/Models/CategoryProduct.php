@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Store extends Model
+class CategoryProduct extends Model
 {
     //
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
-        'image',
-        'gymkos_id'
+        'name',
+        'gymkos_id',
+        'stores_id'
     ];
 
     public function gymkos()
@@ -22,9 +21,8 @@ class Store extends Model
         return $this->belongsTo(Gymkos::class);
     }
 
-    public function products()
+    public function store()
     {
-        return $this->hasMany(Product::class, 'stores_id');
+        return $this->belongsTo(Store::class, 'stores_id');
     }
-    
 }
