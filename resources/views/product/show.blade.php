@@ -6,9 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Cars</title>
     @vite('resources/css/app.css')
+    @vite('resources/css/index.css')
+
 </head>
 
 <body class="m-0 p-0 bg-black text-white font-poppins">
+    <nav>
+        @if (session('success'))
+        <div class="bg-green-500 text-white text-center py-2">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        <div class="nav__bar">
+            <div class="nav__header">
+                <div class="nav__logo">
+                    <a href="#"><img src="assets/logo.png" alt="logo" /></a>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+                <li><a href="{{ route('index') }}">HOME</a></li>
+                <li><a href="{{ route('product.index') }}">B11N & K1NG GYM STORE</a></li>
+                <li><a href="{{ route('product.index') }}">B11N GYM STORE</a></li>
+                <li><a href="{{ route('product.index') }}">K1NG GYM STORE</a></li>
+                <li><a href="{{ route('cart.view') }}">KERANJANG</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- Header Section -->
     @if (session('success'))
@@ -38,6 +65,13 @@
                         <!-- Nama dan Harga -->
                         <h1 class="text-3xl font-semibold text-gray-800">{{ $product->name }}</h1>
                         <p class="text-red-600 font-bold text-2xl mt-2">${{ number_format($product->price, 2) }}</p>
+                        <p class="text-sm text-gray-500 mt-1">
+                            @if ($product->stores_id == 1)
+                            Dari: B11N Gym Store
+                            @elseif ($product->stores_id == 2)
+                            Dari: K1NG Gym Store
+                            @endif
+                        </p>
 
                         <!-- Deskripsi -->
                         <div class="mt-4 text-gray-600 text-sm space-y-2">
@@ -57,7 +91,11 @@
                     <div class="mt-6 flex gap-4">
                         <form action="{{ route('cart.add', $product->id) }}" method="post">
                             @csrf
-                            <button type="submit" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">Add to Cart</button>
+                            <button
+                                type="submit"
+                                class="{{ $product->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} text-white px-6 py-3 rounded-lg transition">
+                                Add to Cart
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -69,12 +107,21 @@
         <h3 class="text-2xl font-bold mb-4">Produk Serupa</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach ($relatedProducts as $relatedProduct)
-            <div class="shadow rounded-lg p-4 border hover:border-red-600 transition">
+            <div
+                class="shadow rounded-lg p-4 border transition {{ $relatedProduct->stores_id == 1 ? 'hover:border-red-600' : 'hover:border-yellow-600' }}">
                 <img src="{{ asset('storage/' . $relatedProduct->image) }}" alt="{{ $relatedProduct->name }}" class="w-full h-48 object-cover rounded-md">
                 <div class="mt-4">
                     <h4 class="text-lg font-semibold">{{ $relatedProduct->name }}</h4>
                     <p class="text-red-600 font-bold text-xl mt-2">${{ number_format($relatedProduct->price, 2) }}</p>
-                    <a href="{{ route('product.show', $relatedProduct->id) }}" class="block bg-gray-800 text-white text-center py-2 rounded mt-4 hover:bg-gray-700">
+                    <p class="text-sm text-gray-500">
+                        @if ($relatedProduct->stores_id == 1)
+                        Dari: B11N Gym Store
+                        @elseif ($relatedProduct->stores_id == 2)
+                        Dari: K1NG Gym Store
+                        @endif
+                    </p>
+                    <a href="{{ route('product.show', $relatedProduct->id) }}"
+                        class="{{ $relatedProduct->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} block text-white text-center py-2 rounded mt-4 transition">
                         View Details
                     </a>
                 </div>
@@ -82,6 +129,7 @@
             @endforeach
         </div>
     </div>
+
 
 </body>
 

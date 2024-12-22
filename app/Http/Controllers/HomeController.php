@@ -7,6 +7,7 @@ use App\Models\Trainer;
 use App\Models\Blog;
 use App\Models\Product;
 use App\Models\Store;
+use App\Models\Banner;
 
 use Illuminate\Http\Request;
 
@@ -19,8 +20,9 @@ class HomeController extends Controller
 
         $facilities = Facilities::where('gymkos_id', 1)->get();
         $trainer = Trainer::where('gymkos_id', 1)->get();
+        $banner = Banner::where('stores_id', 3)->get();
 
-        return view('index', compact('facilities', 'trainer', 'blog'));
+        return view('index', compact('facilities', 'trainer', 'blog', 'banner'));
     }
 
     public function product()

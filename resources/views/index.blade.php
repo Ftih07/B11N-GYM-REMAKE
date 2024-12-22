@@ -330,6 +330,25 @@
 		</div>
 	</section>
 
+	@foreach ($banner as $banner)
+	<section
+		style="background-image: url('{{ asset('storage/' . $banner->image) }}'); background-size: cover; background-position: center;"
+		class="header mx-auto px-4 py-15"
+		id="store">
+		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
+			<div class="header__content">
+				<h1>{{ $banner->title }}</h1>
+				<h2>{{ $banner->subheading }}</h2>
+				<p>{{ $banner->description }}</p>
+				<div class="header__btn">
+					<a href="{{ route('product.index') }}" class="btn btn__primary">VISIT STORE</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	@endforeach
+
+
 	<section class="blog" id="blog">
 		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
 			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>

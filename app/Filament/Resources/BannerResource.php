@@ -61,8 +61,10 @@ class BannerResource extends Resource
         return $table
             ->columns([
                 //
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Title Category Training')
+                    ->label('Banner Title')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('subheading')

@@ -31,5 +31,8 @@ Route::post('/cart/update/{id}', [ProductController::class, 'updateCart'])->name
 Route::delete('/cart/remove/{id}', [ProductController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/update/{id}', [ProductController::class, 'updateQuantity'])->name('cart.update');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+
+Route::get('/b11n-gym-store', [ProductController::class, 'showB11NStore'])->name('b11n.store');
+Route::get('/k1ng-gym-store', [ProductController::class, 'showKingStore'])->name('king.store');
