@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-    --primary-color: #dc030a;
-    --primary-color-dark: rgb(135, 6, 12);
+    --primary-color: #f0761f;
+    --primary-color-dark: #f0761f;
     --text-dark: #0a0a0a;
     --text-light: #737373;
     --extra-light: #e5e5e5;
     --white: #ffffff;
     --max-width: 1200px;
     --header-font: "Oswald", sans-serif;
-
+    
     --color: #9176ff;
     --dark-color: #2b2b2b;
     --dark-icon-color: #fff;
@@ -220,7 +220,7 @@ nav {
 }
 
 .nav__links a.active {
-    color: red;
+    color: #f0761f;
 }
 
 .nav__links a:hover {

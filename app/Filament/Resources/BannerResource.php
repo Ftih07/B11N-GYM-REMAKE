@@ -42,9 +42,9 @@ class BannerResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
-                    ->label('Image Category Training')
+                    ->label('Image Banner')
                     ->required()
-                    ->directory('training_program'),
+                    ->directory('banner'),
                 Forms\Components\Select::make('gymkos_id')
                     ->label('Gymkos')
                     ->relationship('gymkos', 'name')

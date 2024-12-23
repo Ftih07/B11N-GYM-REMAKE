@@ -5,20 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DCodeMania Shopping Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
-    @vite('resources/css/index.css')
     @vite('resources/css/index.css')
 
 </head>
 
-<body class="bg-gray-100">
-    <nav>
-        @if (session('success'))
-        <div class="bg-green-500 text-white text-center py-2">
-            {{ session('success') }}
-        </div>
-        @endif
-
+<body class="bg-gray-100 dark:bg-black transition-colors duration-300">
+    <nav class="bg-white dark:bg-black">
         <div class="nav__bar">
             <div class="nav__header">
                 <div class="nav__logo">
@@ -28,12 +22,34 @@
                     <i class="ri-menu-line"></i>
                 </div>
             </div>
-            <ul class="nav__links" id="nav-links">
-                <li><a href="{{ route('index') }}">HOME</a></li>
-                <li><a href="{{ route('product.index') }}">B11N & K1NG GYM STORE</a></li>
-                <li><a href="{{ route('product.index') }}">B11N GYM STORE</a></li>
-                <li><a href="{{ route('product.index') }}">K1NG GYM STORE</a></li>
-                <li><a href="{{ route('cart.view') }}">KERANJANG</a></li>
+            <ul class="nav__links dark:text-white text-black" id="nav-links">
+                <li>
+                    <a href="{{ route('index') }}"
+                        class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">HOME</a>
+                </li>
+                <li>
+                    <a href="{{ route('product.index') }}"
+                        class="{{ Route::currentRouteName() === 'product.index' ? 'active' : '' }}">B11N & K1NG GYM STORE</a>
+                </li>
+                <li>
+                    <a href="{{ route('b11n.store') }}"
+                        class="{{ Route::currentRouteName() === 'b11n.store' ? 'active' : '' }}">B11N GYM STORE</a>
+                </li>
+                <li>
+                    <a href="{{ route('king.store') }}"
+                        class="{{ Route::currentRouteName() === 'king.store' ? 'active' : '' }}">K1NG GYM STORE</a>
+                </li>
+                <li>
+                    <a href="{{ route('cart.view') }}"
+                        class="{{ Route::currentRouteName() === 'cart.view' ? 'active' : '' }}">KERANJANG</a>
+                </li>
+                <div class="mode rounded-full" id="switch-mode">
+                    <div class="btn__indicator">
+                        <div class="btn__icon-container">
+                            <i class="btn__icon fa-solid"></i>
+                        </div>
+                    </div>
+                </div>
             </ul>
         </div>
     </nav>
@@ -45,18 +61,18 @@
     <main class="container mx-auto mt-10 px-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
 
-            <div class="col-span-2 bg-white p-6 rounded-lg shadow-md">
-                <h1 class="text-2xl font-bold mb-6">Opsi Pembayaran</h1>
+            <div class="col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h1 class="text-2xl font-bold mb-6 dark:text-white text-black">Opsi Pembayaran</h1>
 
                 <div class="flex justify-between mb-6">
                     <button
-                        class="flex-1 py-2 px-4 border border-gray-300 bg-blue-100 text-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-5 place-items-center"
+                        class="flex-1 py-2 px-4 border border-gray-300 dark:bg-gray-700 bg-blue-100 text-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-5 place-items-center"
                         id="qris-button">
                         <img src="https://home.oxygen.id/assets/images/info-pembayaran/qris-logo.png" class="h-10 w-auto">
                     </button>
 
                     <button
-                        class="flex-1 py-2 px-4 border border-gray-300 bg-blue-100 text-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 place-items-center"
+                        class="flex-1 py-2 px-4 border border-gray-300 bg-blue-100 dark:bg-gray-700 text-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 place-items-center"
                         id="bca-button">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-10 w-auto">
                     </button>
@@ -65,13 +81,13 @@
                 <form>
                     <div class="place-items-center mb-5" id="payment-form">
                         <!-- Default Content -->
-                        <p class="text-gray-600">Silahkan pilih opsi pembayaran anda.</p>
+                        <p class="text-gray-600 dark:text-gray-400">Silahkan pilih opsi pembayaran anda.</p>
                     </div>
                 </form>
             </div>
 
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h1 class="text-2xl font-bold mb-6 flex justify-between items-center">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h1 class="text-2xl font-bold mb-6 flex justify-between items-center dark:text-white text-black">
                     Order Details
                     <button id="toggleDetails" class="text-blue-500 text-base">
                         Details <span class="arrow">▲</span>
@@ -79,16 +95,16 @@
                 </h1>
                 <div class="space-y-4">
 
-                    <table id="orderDetails" class="min-w-full rounded-lg shadow bg-white text-black">
+                    <table id="orderDetails" class="min-w-full rounded-lg shadow bg-white dark:bg-gray-800 text-black">
                         @if (empty($cart))
-                        <p class="text-gray-400">Your cart is empty.</p>
+                        <p class="text-gray-400 dark:text-white">Your cart is empty.</p>
                         @else
                         <thead>
-                            <tr class="text-left border-b bg-gray-200">
-                                <th class="py-3 px-4">Product</th>
-                                <th class="py-3 px-4">Quantity</th>
-                                <th class="py-3 px-4">Total</th>
-                                <th class="py-3 px-4">Gym</th> <!-- Kolom untuk gym -->
+                            <tr class="text-left border-b bg-gray-200 dark:bg-gray-700">
+                                <th class="py-3 px-4 dark:text-white text-black">Product</th>
+                                <th class="py-3 px-4 dark:text-white text-black">Quantity</th>
+                                <th class="py-3 px-4 dark:text-white text-black">Total</th>
+                                <th class="py-3 px-4 dark:text-white text-black">Gym</th> <!-- Kolom untuk gym -->
                             </tr>
                         </thead>
                         <tbody>
@@ -98,59 +114,57 @@
 
                                 <!-- NAME & IMAGE PRODUCT -->
                                 <td class="py-4 px-0 flex items-center">
-                                    <p class="ml-4 ">{{ $item['name'] }}</p>
+                                    <p class="ml-4 dark:text-white text-black">{{ $item['name'] }}</p>
                                 </td>
 
                                 <!-- QUANTITY -->
-                                <td class="px-10">{{ $item['quantity'] }}</td>
+                                <td class="px-10 dark:text-white text-black">{{ $item['quantity'] }}</td>
 
                                 <!-- TOTAL PRICE -->
-                                <td class="py-4 px-4">${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                                <td class="py-4 px-4 dark:text-white text-black">${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
 
                                 <!-- STORE NAME -->
                                 <td class="py-4 px-4">
                                     @if (isset($item['store_id']))
                                     @if ($item['store_id'] == 1)
-                                    B11N Gym Store
+                                    <span class="dark:text-white text-black">B11N Gym Store</span>
                                     @elseif ($item['store_id'] == 2)
-                                    K1NG Gym Store
+                                    <span class="dark:text-white text-black">K1NG Gym Store</span>
                                     @else
-                                    Unknown Store
+                                    <span class="dark:text-white text-black">Unknown Store</span>
                                     @endif
                                     @else
-                                    Unknown Store
+                                    <span class="dark:text-white text-black">Unknown Store</span>
                                     @endif
                                 </td>
                                 @endforeach
                         </tbody>
                     </table>
-                    <hr class="border-t border-black mt-5">
+                    <hr class="border-t border-black mt-5 dark:border-white">
 
-                    <h2 class="text-2xl font-bold mb-4 mt-5">Summary</h2>
+                    <h2 class="text-2xl font-bold mb-4 mt-5 dark:text-white text-black">Summary</h2>
                     <div class="space-y-3 mb-3">
                         <div class="flex justify-between">
-                            <span>Subtotal</span>
-                            <span> Total: ${{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }} </span>
+                            <span class="dark:text-white text-black">Subtotal</span>
+                            <span class="dark:text-white text-black">Total: ${{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }} </span>
                         </div>
                         <div class="flex justify-between">
-                            <span>Taxes</span>
-                            <span>$1.99</span>
+                            <span class="dark:text-white text-black">Taxes</span>
+                            <span class="dark:text-white text-black">$1.99</span>
                         </div>
                         <div class="flex justify-between">
-                            <span>Shipping</span>
-                            <span>$0.00</span>
+                            <span class="dark:text-white text-black">Shipping</span>
+                            <span class="dark:text-white text-black">$0.00</span>
                         </div>
                         <div class="flex justify-between font-bold text-xl">
-                            <span>Total</span>
-                            <span> Total: ${{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }} </span>
+                            <span class="dark:text-white text-black">Total</span>
+                            <span class="dark:text-white text-black">Total: ${{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }} </span>
                         </div>
                     </div>
                 </div>
                 @endif
             </div>
-
         </div>
-
     </main>
 
 
@@ -174,8 +188,8 @@
 
         // QRIS Content
         const qrisContent = `
-            <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm place-items-center">
-                <h1 class="font-bold text-xl mb-5">Pembayaran via Qris</h1>
+            <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm place-items-center dark:bg-gray-700">
+                <h1 class="font-bold text-xl mb-5 dark:text-white text-black">Pembayaran via Qris</h1>
                 <div class="flex flex-col items-center mb-4">
                 <img src="assets/Pembayaran/qris-barcode.png" alt="QR Code" class="w-48 h-48">
                 </div>
@@ -184,7 +198,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
                 </svg>
-                <span class="font-medium">Cara membayar</span>
+                <span class="font-medium dark:text-white text-black">Cara membayar</span>
                 </div>
 
                 <div class="bg-blue-50 p-4 rounded-md text-gray-700 text-sm">
@@ -209,7 +223,7 @@
             </div>
 
             <div class="place-items-center mt-5">
-                <h1 class="font-semibold text-xl mb-5">Pilih Opsi Konfirmasi Pembayaran</h1>
+                <h1 class="font-semibold text-xl mb-5 dark:text-white text-black">Pilih Opsi Konfirmasi Pembayaran</h1>
             </div>
 
             <div class="flex justify-between mb-6 items-center w-full">
@@ -226,20 +240,20 @@
 
         // BCA Content
         const bcaContent = `
-            <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm place-items-center">
-                <h1 class="font-bold text-xl mb-5">Pembayaran via BCA</h1>
+            <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md w-full max-w-sm place-items-center">
+                <h1 class="font-bold text-xl mb-5 dark:text-white text-black">Pembayaran via BCA</h1>
                 
                 <div class="flex flex-col items-center mb-14 mt-10">
-                    <p class="font-semibold">Bank: BCA</p>
-                    <p>No. Rekening: 0461701506</p>
-                    <p>Atas Nama: Sobiin</p>      
+                    <p class="font-semibold dark:text-white text-black">Bank: BCA</p>
+                    <p class="dark:text-white text-black">No. Rekening: 0461701506</p>
+                    <p class="dark:text-white text-black">Atas Nama: Sobiin</p>      
                 </div>
 
                 <div class="text-gray-800 text-sm mb-2 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
                 </svg>
-                <span class="font-medium">Cara membayar</span>
+                <span class="font-medium dark:text-white text-black">Cara membayar</span>
                 </div>
 
                 <div class="bg-blue-50 p-4 rounded-md text-gray-700 text-sm">
@@ -267,7 +281,7 @@
             </div>
 
             <div class="place-items-center mt-5">
-                <h1 class="font-semibold text-xl mb-5">Pilih Opsi Konfirmasi Pembayaran</h1>
+                <h1 class="font-semibold text-xl mb-5 dark:text-white text-black">Pilih Opsi Konfirmasi Pembayaran</h1>
             </div>
 
             <div class="flex justify-between mb-6 items-center w-full">
@@ -290,6 +304,81 @@
         bcaButton.addEventListener('click', () => {
             paymentForm.innerHTML = bcaContent;
         });
+
+        // resources/js/darkMode.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleDarkMode = document.getElementById('switch-mode');
+            const htmlElement = document.documentElement;
+
+            // Cek mode dari LocalStorage
+            if (localStorage.theme === 'dark') {
+                htmlElement.classList.add('dark');
+            } else if (localStorage.theme === 'light') {
+                htmlElement.classList.remove('dark');
+            }
+
+            // Event toggle
+            toggleDarkMode.addEventListener('click', function() {
+                if (htmlElement.classList.contains('dark')) {
+                    htmlElement.classList.remove('dark');
+                    localStorage.theme = 'light'; // Simpan ke LocalStorage
+                } else {
+                    htmlElement.classList.add('dark');
+                    localStorage.theme = 'dark'; // Simpan ke LocalStorage
+                }
+            });
+        });
+
+        const body = document.querySelector('body');
+        const btn = document.querySelector('.mode');
+        const icon = document.querySelector('.btn__icon');
+
+        //to save the dark mode use the object "local storage".
+
+        //function that stores the value true if the dark mode is activated or false if it's not.
+        function store(value) {
+            localStorage.setItem('darkmode', value);
+        }
+
+        //function that indicates if the "darkmode" property exists. It loads the page as we had left it.
+        function load() {
+            const darkmode = localStorage.getItem('darkmode');
+
+            //if the dark mode was never activated
+            if (!darkmode) {
+                store(false);
+                icon.classList.add('fa-sun');
+            } else if (darkmode == 'true') { //if the dark mode is activated
+                body.classList.add('darkmode');
+                icon.classList.add('fa-moon');
+            } else if (darkmode == 'false') { //if the dark mode exists but is disabled
+                icon.classList.add('fa-sun');
+            }
+        }
+
+
+        load();
+
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('darkmode');
+            icon.classList.add('animated');
+
+            //save true or false
+            store(body.classList.contains('darkmode'));
+
+            if (body.classList.contains('darkmode')) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            setTimeout(() => {
+                icon.classList.remove('animated');
+            }, 500)
+        })
     </script>
 </body>
 

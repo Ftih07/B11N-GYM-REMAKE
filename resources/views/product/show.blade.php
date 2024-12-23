@@ -4,20 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Cars</title>
+    <title>Product Details</title>
     @vite('resources/css/app.css')
     @vite('resources/css/index.css')
 
 </head>
 
 <body class="m-0 p-0 bg-black text-white font-poppins">
-    <nav>
-        @if (session('success'))
-        <div class="bg-green-500 text-white text-center py-2">
-            {{ session('success') }}
-        </div>
-        @endif
 
+    @if (session('success'))
+    <div
+        id="notification"
+        class="flex items-center bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-lg fixed top-4 right-4 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{{ session('success') }}</span>
+    </div>
+    @endif
+
+    <nav class="fixed">
         <div class="nav__bar">
             <div class="nav__header">
                 <div class="nav__logo">
@@ -28,83 +34,74 @@
                 </div>
             </div>
             <ul class="nav__links" id="nav-links">
-                <li><a href="{{ route('index') }}">HOME</a></li>
-                <li><a href="{{ route('product.index') }}">B11N & K1NG GYM STORE</a></li>
-                <li><a href="{{ route('product.index') }}">B11N GYM STORE</a></li>
-                <li><a href="{{ route('product.index') }}">K1NG GYM STORE</a></li>
-                <li><a href="{{ route('cart.view') }}">KERANJANG</a></li>
+                <li>
+                    <a href="{{ route('index') }}"
+                        class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">HOME</a>
+                </li>
+                <li>
+                    <a href="{{ route('product.index') }}"
+                        class="{{ Route::currentRouteName() === 'product.index' ? 'active' : '' }}">B11N & K1NG GYM STORE</a>
+                </li>
+                <li>
+                    <a href="{{ route('b11n.store') }}"
+                        class="{{ Route::currentRouteName() === 'b11n.store' ? 'active' : '' }}">B11N GYM STORE</a>
+                </li>
+                <li>
+                    <a href="{{ route('king.store') }}"
+                        class="{{ Route::currentRouteName() === 'king.store' ? 'active' : '' }}">K1NG GYM STORE</a>
+                </li>
+                <li>
+                    <a href="{{ route('cart.view') }}"
+                        class="{{ Route::currentRouteName() === 'cart.view' ? 'active' : '' }}">KERANJANG</a>
+                </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Header Section -->
-    @if (session('success'))
-    <div class="bg-green-500 text-white text-center py-2">
-        {{ session('success') }}
-    </div>
-    @endif
-
-    <div class="flex justify-end mb-4">
-        <a href="{{ route('cart.view') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-            View Cart
-        </a>
-    </div>
-    <!-- Cars Grid -->
     {{-- resources/views/product/show.blade.php --}}
-    <div class="container mx-auto px-4 py-8">
-        <div class="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="flex flex-col lg:flex-row">
-                <!-- Gambar Produk -->
-                <div class="lg:w-1/4">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-100 h-96 object-cover rounded-t-lg lg:rounded-l-lg">
+    <div class="max-w-[1300px] mx-auto p-4">
+
+        <!-- Product Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-28">
+            <!-- Image Section -->
+            <div>
+                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-100 h-[33em] object-cover rounded-lg lg:rounded-lg object-top">
+            </div>
+
+            <!-- Details Section -->
+            <div>
+                <h1 class="text-6xl font-bold text-white mb-2">{{ $product->name }}</h1>
+                <p class="text-3xl font-semibold text-red-600 mb-5">Rp{{ number_format($product->price, 2) }}</p>
+                <hr class="mb-5">
+                <div class="text-gray-300 text-sm space-y-0.5">
+                    <h1 class="text-xl font-semibold text-white mb-2">Product Details</h1>
+                    <p> @if ($product->stores_id == 1)
+                        From: B11N Gym Store
+                        @elseif ($product->stores_id == 2)
+                        From: K1NG Gym Store
+                        @endif
+                    </p>
+                    <p>Flavour: {{ $product->flavour }}</p>
+                    <p>Serving Option: {{ $product->serving_option }}</p>
+                    <p>Category: {{ $product->categoryproduct->name ?? 'No Category' }}</p>
+                </div>
+                <div class="mt-6">
+                    <h2 class="text-lg font-semibold text-white mb-2">Deskripsi Produk</h2>
+                    <p class="text-sm text-white">{{ $product->description ?? 'No description available' }}</p>
                 </div>
 
-                <!-- Detail Produk -->
-                <div class="lg:w-1/2 p-6 flex flex-col justify-between">
-                    <div>
-                        <!-- Nama dan Harga -->
-                        <h1 class="text-3xl font-semibold text-gray-800">{{ $product->name }}</h1>
-                        <p class="text-red-600 font-bold text-2xl mt-2">${{ number_format($product->price, 2) }}</p>
-                        <p class="text-sm text-gray-500 mt-1">
-                            @if ($product->stores_id == 1)
-                            Dari: B11N Gym Store
-                            @elseif ($product->stores_id == 2)
-                            Dari: K1NG Gym Store
-                            @endif
-                        </p>
+                <form action="{{ route('cart.add', $product->id) }}" method="post">
+                    @csrf
+                    <button type="submit" class="{{ $product->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} w-1/4 bg-red-600 text-white font-medium py-2 rounded-md hover:bg-red-700 transition mt-6">Add To Cart</button>
+                </form>
 
-                        <!-- Deskripsi -->
-                        <div class="mt-4 text-gray-600 text-sm space-y-2">
-                            <p><strong>Flavour:</strong> {{ $product->flavour }}</p>
-                            <p><strong>Serving Option:</strong> {{ $product->serving_option }}</p>
-                            <p><strong>Category:</strong> {{ $product->categoryproduct->name ?? 'No Category' }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <!-- Deskripsi Produk -->
-                        <p class="font-semibold text-lg text-gray-800">Description:</p>
-                        <p class="text-gray-600">{{ $product->description ?? 'No description available' }}</p>
-                    </div>
-
-                    <!-- Tombol Action -->
-                    <div class="mt-6 flex gap-4">
-                        <form action="{{ route('cart.add', $product->id) }}" method="post">
-                            @csrf
-                            <button
-                                type="submit"
-                                class="{{ $product->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} text-white px-6 py-3 rounded-lg transition">
-                                Add to Cart
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <div class="mt-8">
-        <h3 class="text-2xl font-bold mb-4">Produk Serupa</h3>
+    <div class="mt-8 max-w-[1300px] mx-auto p-4">
+        <hr class="mb-10">
+        <h3 class="text-2xl font-bold mb-5">Produk Serupa</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach ($relatedProducts as $relatedProduct)
             <div
@@ -113,13 +110,18 @@
                 <div class="mt-4">
                     <h4 class="text-lg font-semibold">{{ $relatedProduct->name }}</h4>
                     <p class="text-red-600 font-bold text-xl mt-2">${{ number_format($relatedProduct->price, 2) }}</p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-xs text-gray-500 mt-2">
                         @if ($relatedProduct->stores_id == 1)
                         Dari: B11N Gym Store
                         @elseif ($relatedProduct->stores_id == 2)
                         Dari: K1NG Gym Store
                         @endif
                     </p>
+                    <div class="flex mt-1 text-gray-500 text-xs">
+                        <p class="flex items-center"><i class="fas fa-cogs"></i>{{ $product->flavour }}</p>
+                        <p class="mx-2">|</p>
+                        <p class="flex items-center"><i class="fas fa-box-open"></i>{{ $product->serving_option }}</p>
+                    </div>
                     <a href="{{ route('product.show', $relatedProduct->id) }}"
                         class="{{ $relatedProduct->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} block text-white text-center py-2 rounded mt-4 transition">
                         View Details
@@ -130,7 +132,23 @@
         </div>
     </div>
 
+    <footer class="footer mt-10" id="contact">
+        <div class="footer__bar">
+            Copyright © 2024 Multicore. All rights reserved.
+        </div>
+    </footer>
 
+    <script>
+        // Automatically remove notification after 3 seconds
+        setTimeout(() => {
+            const notification = document.getElementById('notification');
+            if (notification) {
+                notification.style.transition = 'opacity 0.5s';
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 500); // Remove after transition
+            }
+        }, 3000);
+    </script>
 </body>
 
 </html>

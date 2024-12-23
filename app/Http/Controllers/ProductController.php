@@ -9,32 +9,48 @@ use App\Models\Banner;
 class ProductController extends Controller
 {
 
-    public function showB11NStore()
+    public function showB11NStore(Request $request)
     {
-        // Ambil produk dengan stores_id 1 dan status ready
-        $products = Product::where('stores_id', 1)
+        $storeId = 1; // ID untuk B11N Store
+        $categoryId = $request->input('category'); // Ambil ID kategori dari query string
+    
+        // Ambil produk dengan stores_id 1, status ready, dan filter kategori jika diperlukan
+        $products = Product::where('stores_id', $storeId)
             ->where('status', 'ready')
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->where('category_products_id', $categoryId);
+            })
             ->get();
-
-        $banner = Banner::where('stores_id', 3)->get();
-
+    
+        $banner = Banner::where('stores_id', 1)->get();
+    
         // Hitung jumlah produk
         $totalProducts = $products->count();
-
-        // Kirim data produk dan jumlah produk ke view
-        return view('biinstore', compact('products', 'totalProducts', 'banner'));
+    
+        // Kirim data ke view
+        return view('biinstore', compact('products', 'totalProducts', 'banner', 'categoryId'));
     }
-
-
-    public function showKingStore()
+    
+    public function showKingStore(Request $request)
     {
-        $products = Product::where('stores_id', 2) // Ganti 2 dengan ID dari King Gym Store
+        $storeId = 2; // ID untuk King Gym Store
+        $categoryId = $request->input('category'); // Ambil ID kategori dari query string
+    
+        // Ambil produk dengan stores_id 2, status ready, dan filter kategori jika diperlukan
+        $products = Product::where('stores_id', $storeId)
             ->where('status', 'ready')
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->where('category_products_id', $categoryId);
+            })
             ->get();
-
+    
+        $banner = Banner::where('stores_id', 2)->get();
+    
+        // Hitung jumlah produk
         $totalProducts = $products->count();
-
-        return view('kingstore', compact('products', 'totalProducts'));
+    
+        // Kirim data ke view
+        return view('kingstore', compact('products', 'totalProducts', 'banner', 'categoryId'));
     }
 
     public function product(Request $request)
@@ -50,9 +66,14 @@ class ProductController extends Controller
             })
             ->get();
 
-        return view('product', compact('products', 'categoryId', 'totalProducts'));
+        $banner = Banner::where('stores_id', 3)->get();
+
+
+        return view('product', compact('products', 'categoryId', 'totalProducts', 'banner'));
     }
 
+
+    // Product Details Controller
     public function show($id)
     {
         $product = Product::findOrFail($id); // Produk utama
@@ -68,6 +89,8 @@ class ProductController extends Controller
     }
 
 
+
+    // Cart Controller
     public function addToCart(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -95,8 +118,6 @@ class ProductController extends Controller
             return redirect()->back()->with('success', 'Product added to cart!');
         }
     }
-
-
 
     public function viewCart()
     {

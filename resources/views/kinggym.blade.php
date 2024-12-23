@@ -1,270 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="flex justify-end mb-4">
+        <a href="{{ route('cart.view') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+            View Cart
+        </a>
+    </div>
+    <!-- Cars Grid -->
+    {{-- resources/views/product/show.blade.php --}}
+    <div class="container mx-auto px-4 py-8">
+        <div class="mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="flex flex-col lg:flex-row">
+                <!-- Gambar Produk -->
+                <div class="lg:w-1/4">
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-100 h-96 object-cover rounded-t-lg lg:rounded-l-lg">
+                </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <style>
-        .container {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-        }
-
-        .cart-details,
-        .payment-methods {
-            width: 48%;
-        }
-
-        .cart-details table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .cart-details th,
-        .cart-details td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .total {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .payment-methods a {
-            display: block;
-            text-align: center;
-            margin: 10px;
-            padding: 15px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .payment-methods .qris {
-            background-color: #4CAF50;
-        }
-
-        .payment-methods .transfer {
-            background-color: #2196F3;
-        }
-
-        .payment-methods a:hover {
-            opacity: 0.8;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            /* Hide modal by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-        }
-
-        .modal-header {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .close-modal {
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-
-        .payment-btn {
-            display: inline-block;
-            margin: 10px 20px;
-            padding: 10px 20px;
-            background-color: #1d4ed8;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .payment-btn:hover {
-            background-color: #2563eb;
-        }
-    </style>
-</head>
-
-<body>
-    <h1 class="text-2xl font-bold mb-4 text-center">Payment Options</h1>
-
-    <div class="container">
-        <!-- Cart Details -->
-        <div class="cart-details">
-            <h2 class="text-xl font-bold">Order Details</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Gym</th> 
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cart as $id => $item)
-                    <tr>
-                        <td>{{ $item['name'] }}</td>
-                        <td>{{ $item['quantity'] }}</td>
-                        <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
-                        <td>
-                            @if (isset($item['store_id']))
-                            @if ($item['store_id'] == 1)
-                            B11N Gym Store
-                            @elseif ($item['store_id'] == 2)
-                            K1NG Gym Store
-                            @else
-                            Unknown Gym
+                <!-- Detail Produk -->
+                <div class="lg:w-1/2 p-6 flex flex-col justify-between">
+                    <div>
+                        <!-- Nama dan Harga -->
+                        <h1 class="text-3xl font-semibold text-gray-800">{{ $product->name }}</h1>
+                        <p class="text-red-600 font-bold text-2xl mt-2">${{ number_format($product->price, 2) }}</p>
+                        <p class="text-sm text-gray-500 mt-1">
+                            @if ($product->stores_id == 1)
+                            Dari: B11N Gym Store
+                            @elseif ($product->stores_id == 2)
+                            Dari: K1NG Gym Store
                             @endif
-                            @else
-                            Unknown Gym
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                        </p>
 
-            <div class="total">
-                Total: ${{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }}
+                        <!-- Deskripsi -->
+                        <div class="mt-4 text-gray-600 text-sm space-y-2">
+                            <p><strong>Flavour:</strong> {{ $product->flavour }}</p>
+                            <p><strong>Serving Option:</strong> {{ $product->serving_option }}</p>
+                            <p><strong>Category:</strong> {{ $product->categoryproduct->name ?? 'No Category' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <!-- Deskripsi Produk -->
+                        <p class="font-semibold text-lg text-gray-800">Description:</p>
+                        <p class="text-gray-600">{{ $product->description ?? 'No description available' }}</p>
+                    </div>
+
+                    <!-- Tombol Action -->
+                    <div class="mt-6 flex gap-4">
+                        <form action="{{ route('cart.add', $product->id) }}" method="post">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="{{ $product->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} text-white px-6 py-3 rounded-lg transition">
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
 
-
-            <div class="payment-confirmation mt-10 p-6 bg-white shadow-lg rounded-lg mb-[100px]">
-                <h3 class="text-2xl font-bold text-gray-800 mb-4">Confirm Your Payment</h3>
-                <p class="text-gray-600 mb-6">
-                    Please confirm your payment via WhatsApp or email using the options below. Make sure to include your <span class="font-medium text-gray-800">Order ID</span> for quick verification.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <!-- WhatsApp Button -->
-                    <a href="https://wa.me/+6281226110988?text=I%20would%20like%20to%20confirm%20my%20payment%20for%20order%20ID%20"
-                        class="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-green-500 text-white font-medium rounded-lg shadow-md hover:bg-green-600 transition">
-                        Confirm via WhatsApp
-                    </a>
-
-                    <!-- Email Button -->
-                    <a href="mailto:payment@example.com?subject=Payment%20Confirmation%20for%20Order%20&body=Dear%20Team,%0A%0AI%20would%20like%20to%20confirm%20my%20payment%20for%20order%20ID%20.%0A%0ABest%20regards,"
-                        class="flex items-center justify-center w-full sm:w-auto px-6 py-3 bg-blue-500 text-white font-medium rounded-lg shadow-md hover:bg-blue-600 transition">
-                        Confirm via Email
+    <div class="mt-8">
+        <h3 class="text-2xl font-bold mb-4">Produk Serupa</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            @foreach ($relatedProducts as $relatedProduct)
+            <div
+                class="shadow rounded-lg p-4 border transition {{ $relatedProduct->stores_id == 1 ? 'hover:border-red-600' : 'hover:border-yellow-600' }}">
+                <img src="{{ asset('storage/' . $relatedProduct->image) }}" alt="{{ $relatedProduct->name }}" class="w-full h-48 object-cover rounded-md">
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold">{{ $relatedProduct->name }}</h4>
+                    <p class="text-red-600 font-bold text-xl mt-2">${{ number_format($relatedProduct->price, 2) }}</p>
+                    <p class="text-sm text-gray-500">
+                        @if ($relatedProduct->stores_id == 1)
+                        Dari: B11N Gym Store
+                        @elseif ($relatedProduct->stores_id == 2)
+                        Dari: K1NG Gym Store
+                        @endif
+                    </p>
+                    <a href="{{ route('product.show', $relatedProduct->id) }}"
+                        class="{{ $relatedProduct->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} block text-white text-center py-2 rounded mt-4 transition">
+                        View Details
                     </a>
                 </div>
             </div>
-
-        </div>
-
-        <!-- Payment Methods -->
-        <div class="payment-methods">
-            <h2 class="text-xl font-bold text-center">Choose Payment Method</h2>
-            <a href="#" class="payment-btn" id="qris-btn">Pay with QRIS</a>
-            <a href="#" class="payment-btn" id="transfer-btn">Pay with Transfer</a>
+            @endforeach
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal" id="qris-modal">
-        <div class="modal-content">
-            <div class="modal-header">QRIS Payment</div>
-            <div class="modal-body">
-                <img src="path-to-your-qris-image.png" alt="QRIS Code" style="max-width: 100%; border-radius: 10px;">
-                <p>Please scan the QR code to complete your payment.</p>
-            </div>
-            <button class="close-modal" id="close-qris">Close</button>
-        </div>
-    </div>
-
-    <div class="modal" id="transfer-modal">
-        <div class="modal-content">
-            <div class="modal-header">Transfer Payment</div>
-            <div class="modal-body">
-                <img src="path-to-your-qris-image.png" alt="QRIS Code" style="max-width: 100%; border-radius: 10px;">
-                <p>Please scan the QR code to complete your payment.</p>
-            </div>
-            <button class="close-modal" id="close-transfer">Close</button>
-        </div>
-    </div>
-
-    <script>
-        // Get elements
-        const qrisBtn = document.getElementById('qris-btn');
-        const qrisModal = document.getElementById('qris-modal');
-        const closeQrisBtn = document.getElementById('close-qris');
-
-        // Open modal when QRIS button is clicked
-        qrisBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            qrisModal.style.display = 'flex';
-        });
-
-        // Close modal when close button is clicked
-        closeQrisBtn.addEventListener('click', () => {
-            qrisModal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside the content
-        window.addEventListener('click', (e) => {
-            if (e.target === qrisModal) {
-                qrisModal.style.display = 'none';
-            }
-        });
-
-        // Get elements
-        const tranferBtn = document.getElementById('transfer-btn');
-        const transferModal = document.getElementById('transfer-modal');
-        const closeTransferBtn = document.getElementById('close-transfer');
-
-        // Open modal when QRIS button is clicked
-        tranferBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            transferModal.style.display = 'flex';
-        });
-
-        // Close modal when close button is clicked
-        closeTransferBtn.addEventListener('click', () => {
-            transferModal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside the content
-        window.addEventListener('click', (e) => {
-            if (e.target === transferModal) {
-                transferModal.style.display = 'none';
-            }
-        });
-    </script>
-</body>
-
-</html>
