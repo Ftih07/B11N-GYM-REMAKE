@@ -11,38 +11,58 @@
 		rel="stylesheet"
 		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 	@vite('resources/css/index.css')
 	<title>Web Design Mastery | FitPhysique</title>
 </head>
 
 <body>
+	<!--Navigasi-->
 	<nav class="fixed text-white">
 		<div class="nav__bar">
 			<div class="nav__header">
-				<div class="nav__logo">
-					<a href="#"><img src="assets/logo.png" alt="logo" /></a>
+				@foreach ($logo as $logo)
+				<div class="w-12 h-12 object-cover object-center">
+					<a href="#"><img src="{{ asset('storage/' . $logo->image) }}" alt="logo" /></a>
 				</div>
+				@endforeach
 				<div class="nav__menu__btn" id="menu-btn">
 					<i class="ri-menu-line"></i>
 				</div>
 			</div>
 			<ul class="nav__links" id="nav-links">
-				<li><a href="#home">HOME</a></li>
-				<li><a href="#about">ABOUT</a></li>
-				<li><a href="#trainer">TRAINER</a></li>
-				<li><a href="#client">CLIENT</a></li>
-				<li><a href="#blog">BLOG</a></li>
-				<li><a href="#contact">CONTACT US</a></li>
+				<li class="nav-item"><a href="#header" class="nav-link">HOME</a></li>
+				<li class="nav-item"><a href="#about" class="nav-link">ABOUT</a></li>
+				<li class="nav-item"><a href="#trainer" class="nav-link">TRAINER</a></li>
+				<li class="nav-item"><a href="#client" class="nav-link">CLIENT</a></li>
+				<li class="nav-item"><a href="#blog" class="nav-link">BLOG</a></li>
+				<li class="nav-item"><a href="#contact" class="nav-link">CONTACT US</a></li>
 			</ul>
 		</div>
 	</nav>
 
+	<!--Hero-->
 	<header class="header" id="header">
-		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
-			<div class="header__content">
-				<h1>HARD WORK</h1>
-				<h2>ISS FOR EVERY SUCCESS</h2>
-				<p>Start by taking inspirations, continue it to give inspirations</p>
+		<div class="relative flex items-center justify-center h-screen bg-black text-white"
+			style="
+         background-image: linear-gradient(
+             to right,
+             rgba(0, 0, 0, 0.2),
+             rgba(0, 0, 0, 0.9)
+         ),
+         url('assets/Hero/b11ngym.jpg');
+         background-size: cover;
+		background-position: center center;
+         background-repeat: no-repeat;
+     ">
+			<div class="header__content relative text-center">
+				<h1 class="text-4xl md:text-6xl font-extrabold">
+					<span class="text-red-600">B11N GYM</span><br>
+					PURWOKERTO
+				</h1>
+				<p class="mt-2 text-lg md:text-xl font-base">Premium Fitness Studio | GIVE UP OR GET UP</p>
 				<div class="header__btn">
 					<button class="btn btn__primary">GET STARTED</button>
 				</div>
@@ -50,116 +70,109 @@
 		</div>
 	</header>
 
+	<!--Tentang Kami-->
 	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
-		<div class="about__header text-center grid gap-4">
-			<h2 class="section__header text-5xl font-semibold font-header text-text-dark text-center">ABOUT US</h2>
-			<p class="section__description max-w-[350px] mx-auto">
-				Our mission is to inspire and support individuals in achieving their
-				health and wellness goals, regardless of their fitness level or
-				background.
+		<div class="about__header text-center">
+			<h2 class="section__header text-2xl font-header text-text-dark font-semibold mb-8">Tentang Kami</h2>
+			<p class="section__description mx-auto text-center text-base">
+				Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur. Kami menawarkan keanggotaan harian, mingguan, dan bulanan dengan harga terjangkau. Fasilitas kami meliputi peralatan gym lengkap, ruang istirahat ber-AC, ruang karaoke, dan loker yang aman. B11N Gym bukan hanya tempat berolahraga, tapi juga ruang untuk membangun komunitas hidup sehat yang menyenangkan.
 			</p>
 		</div>
 		<div class="about__grid">
+			@foreach ($about as $about)
 			<div class="about__card">
-				<h4>WINNER COACHES</h4>
+				<h4 class="uppercase">{{ $about->title }}</h4>
 				<p>
-					We pride ourselves on having a team of dedicated and experienced
-					coaches who are committed to helping you succeed.
-				</p>
-			</div>
-			<div class="about__card">
-				<h4>AFFORDABLE PRICE</h4>
-				<p>
-					We believe that everyone should have access to high-quality fitness
-					facilities without breaking the bank.
-				</p>
-			</div>
-			<div class="about__card">
-				<h4>MODERN EQUIPMENTS</h4>
-				<p>
-					Stay ahead of the curve with our state-of-the-art equipment designed
-					to elevate your workout experience.
-				</p>
-			</div>
-		</div>
-	</section>
-
-	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
-		<div class="about__header text-center grid gap-4">
-			<h2 class="section__header text-5xl font-semibold font-header text-text-dark text-center">
-				Fasilitas Kami
-			</h2>
-			<p class="section__description max-w-[350px] mx-auto">
-				B11N Gym menawarkan fasilitas lengkap dan modern untuk memenuhi kebutuhan fitnessmu.
-				Mulai dari area kardio, angkat beban, hingga berbagai kelas fitness yang menarik, semuanya tersedia.
-			</p>
-		</div>
-		<div class="about__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-			@foreach ($facilities as $facility)
-			<div class="about__card border border-gray-200 rounded-lg p-6 shadow-md">
-				<img
-					src="{{ asset('storage/' . $facility->image) }}"
-					alt="{{ $facility->title }}"
-					class="w-40 h-10 object-cover mb-4 rounded" />
-				<h4 class="text-xl font-semibold mb-2">{{ $facility->title }}</h4>
-				<p class="text-gray-600">
-					{{ $facility->description }}
+					{{ $about->description }}
 				</p>
 			</div>
 			@endforeach
 		</div>
 	</section>
 
-
-	<section class="session">
-		<div class="session__card">
-			<h4>BODY BUILDING</h4>
-			<p>
-				Sculpt your physique and build muscle mass with our specialized
-				bodybuilding programs at FitPhysique.
-			</p>
-			<button class="btn btn__secondary">
-				READ MORE <i class="ri-arrow-right-line"></i>
-			</button>
+	<!--Fasilitas-->
+	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
+		<div class="about__header text-center">
+			<h2 class="section__header text-2xl font-header text-text-dark font-semibold mb-8">
+				Fasilitas Kami
+			</h2>
 		</div>
-		<div class="session__card">
-			<h4>CARDIO</h4>
-			<p>
-				Elevate your heart rate and boost your endurance with our dynamic
-				cardio workouts at FitPhysique.
-			</p>
-			<button class="btn btn__secondary">
-				READ MORE <i class="ri-arrow-right-line"></i>
-			</button>
-		</div>
-		<div class="session__card">
-			<h4>FITNESS</h4>
-			<p>
-				Embrace a holistic approach to fitness with our comprehensive fitness
-				programs at FitPhysique.
-			</p>
-			<button class="btn btn__secondary">
-				READ MORE <i class="ri-arrow-right-line"></i>
-			</button>
-		</div>
-		<div class="session__card">
-			<h4>CROSSFIT</h4>
-			<p>
-				Experience the ultimate full-body workout with our intense CrossFit
-				classes at FitPhysique.
-			</p>
-			<button class="btn btn__secondary">
-				READ MORE <i class="ri-arrow-right-line"></i>
-			</button>
+		<div class="container mx-auto px-4 py-12">
+			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+				@foreach ($facilities as $facility)
+				<div class="about__card bg-white border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+					<div class="flex items-center justify-center text-white rounded-full mx-auto -mb-16">
+						<!-- Replace this icon with the appropriate one for each facility -->
+						<img
+							src="{{ asset('storage/' . $facility->image) }}"
+							alt="{{ $facility->title }}"
+							class="object-cover w-28 h-28" />
+					</div>
+					<h4 class="text-center text-red-600 mb-2 uppercase">{{ $facility->title }}</h4>
+					<p class="text-gray-600 text-sm text-center">
+						{{ $facility->description }}
+					</p>
+				</div>
+				@endforeach
+			</div>
 		</div>
 	</section>
 
+	<!--Training Program-->
+	<section class="py-8">
+		@foreach ($groupedTrainingPrograms as $categoryId => $trainingPrograms)
+		@php
+		$categoryTitle = $categories[$categoryId]->title ?? 'Unknown Category'; // Judul kategori
+		@endphp
+		<div class="category-group">
+			<div class="text-center">
+				<h3 class="text-2xl font-semibold text-white bg-black pt-8 pb-8">{{ $categoryTitle }}</h3>
+			</div>
+			<div class="grid grid-cols-2 gap-0">
+				@foreach ($trainingPrograms as $trainingprogram)
+				<div class="session__card bg-cover bg-center p-6 relative h-[30rem]"
+					style="background-image:  linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),url('{{ asset('storage/' . $trainingprogram->image) }}');">
+					<h4 class="text-xl font-bold text-white uppercase">{{ $trainingprogram->title }}</h4>
+					<p class="text-white mt-4">
+						{{ \Illuminate\Support\Str::words(strip_tags($trainingprogram->description), 15, '...') }}
+					</p>
+					<button class="btn btn__secondary" data-bs-toggle="modal" data-bs-target="#modal-{{ $trainingprogram->id }}">
+						READ MORE <i class="ri-arrow-right-line"></i>
+					</button>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="modal-{{ $trainingprogram->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $trainingprogram->id }}" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content rounded-lg shadow-lg">
+							<div class="modal-header bg-gray-100 p-4 rounded-t-lg">
+								<h5 class="modal-title text-xl font-semibold" id="modalLabel-{{ $trainingprogram->id }}">{{ $trainingprogram->title }}</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body p-6">
+								{!! $trainingprogram->description !!}
+							</div>
+						</div>
+					</div>
+				</div>
+				@endforeach
+			</div>
+		</div>
+		@endforeach
+	</section>
+
+
+
+
+
+
+	<!--Trainer-->
 	<section class="trainer__container max-w-[1200px] mx-auto px-4 py-20" id="trainer">
 		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>
 		<div class="trainer__grid">
 			@foreach ($trainer as $trainer)
 			<div class="trainer__card">
-				<img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" />
+				<img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" class="h-64 w-auto" />
 				<h4>{{ $trainer->name }}</h4>
 				<p>{{ $trainer->description }}</p>
 				<div class="trainer__socials">
@@ -172,7 +185,7 @@
 		</div>
 	</section>
 
-
+	<!--Membership-->
 	<section class="membership">
 		<div class="membership__container max-w-[1200px] mx-auto px-4 py-20">
 			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEMBERSHIP</h2>
@@ -273,6 +286,8 @@
 			</div>
 		</div>
 	</section>
+
+	<!--Testimoni-->
 	<section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="client">
 		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
 		<!-- Slider main container -->
@@ -324,16 +339,17 @@
 		</div>
 	</section>
 
+	<!--Store-->
 	@foreach ($banner as $banner)
 	<section
 		style="background-image: url('{{ asset('storage/' . $banner->image) }}'); background-size: cover; background-position: center;"
-		class="header mx-auto px-4 py-15"
+		class="header mx-auto px-4 py-15 bg-black"
 		id="store">
 		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="header__content">
-				<h1>{{ $banner->title }}</h1>
-				<h2>{{ $banner->subheading }}</h2>
-				<p>{{ $banner->description }}</p>
+				<h1 class="text-[#dc030a]">{{ $banner->title }}</h1>
+				<h2 class="text-white">{{ $banner->subheading }}</h2>
+				<p class="text-white">{{ $banner->description }}</p>
 				<div class="header__btn">
 					<a href="{{ route('product.index') }}" class="btn btn__primary">VISIT STORE</a>
 				</div>
@@ -342,7 +358,7 @@
 	</section>
 	@endforeach
 
-
+	<!--Blog-->
 	<section class="blog" id="blog">
 		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
 			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>
@@ -362,7 +378,7 @@
 		</div>
 	</section>
 
-
+	<!--Gallery and contact us embed link maps-->
 	<section class="logo__banner max-w-[1200px] mx-auto px-4 py-20">
 		<img src="assets/banner-1.png" alt="banner" />
 		<img src="assets/banner-2.png" alt="banner" />
@@ -370,6 +386,7 @@
 		<img src="assets/banner-4.png" alt="banner" />
 	</section>
 
+	<!--Footer-->
 	<footer class="footer" id="contact">
 		<div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="footer__col">
@@ -440,6 +457,55 @@
 	<script src="https://unpkg.com/scrollreveal"></script>
 	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 	<script src="assets/js/script.js"></script>
+	<script>
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function(e) {
+				e.preventDefault();
+				const targetId = this.getAttribute('href');
+				const targetElement = document.querySelector(targetId);
+
+				if (targetElement) {
+					window.scrollTo({
+						top: targetElement.offsetTop - 90, // Ganti 100 dengan jarak yang diinginkan
+						behavior: 'smooth',
+					});
+				}
+			});
+		});
+
+		const navItems = document.querySelectorAll('.nav-item');
+
+		function handleScroll() {
+			const scrollPosition = window.scrollY;
+
+			// Define section heights (replace with actual section heights)
+			const sectionHeights = {
+				header: 0,
+				about: 500,
+				trainer: 1000,
+				client: 1500,
+				blog: 2000,
+				contact: 2500,
+			};
+
+			navItems.forEach(item => {
+				const sectionId = item.querySelector('a').getAttribute('href').substring(1);
+				const sectionHeight = sectionHeights[sectionId];
+				const nextSectionId = Object.keys(sectionHeights)[Object.keys(sectionHeights).indexOf(sectionId) + 1];
+				const nextSectionHeight = sectionHeights[nextSectionId];
+
+				if (scrollPosition >= sectionHeight && (nextSectionHeight === undefined || scrollPosition < nextSectionHeight)) {
+					item.classList.add('active');
+				} else {
+					item.classList.remove('active');
+				}
+			});
+		}
+
+		window.addEventListener('scroll', handleScroll);
+		handleScroll();
+	</script>
+
 </body>
 
 </html>

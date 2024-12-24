@@ -31,7 +31,7 @@ class TrainerResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required(),
 
-                        Forms\Components\TextInput::make('description')
+                        Forms\Components\Textarea::make('description')
                             ->required()
                             ->maxLength(65535),
 

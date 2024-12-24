@@ -7,10 +7,11 @@
     <title>Product Details</title>
     @vite('resources/css/app.css')
     @vite('resources/css/index.css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
-<body class="m-0 p-0 bg-black text-white font-poppins">
+<body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
 
     @if (session('success'))
     <div
@@ -23,7 +24,7 @@
     </div>
     @endif
 
-    <nav class="fixed">
+    <nav class="fixed bg-white dark:bg-black">
         <div class="nav__bar">
             <div class="nav__header">
                 <div class="nav__logo">
@@ -33,7 +34,7 @@
                     <i class="ri-menu-line"></i>
                 </div>
             </div>
-            <ul class="nav__links" id="nav-links">
+            <ul class="nav__links dark:text-white text-black" id="nav-links">
                 <li>
                     <a href="{{ route('index') }}"
                         class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">HOME</a>
@@ -54,6 +55,13 @@
                     <a href="{{ route('cart.view') }}"
                         class="{{ Route::currentRouteName() === 'cart.view' ? 'active' : '' }}">KERANJANG</a>
                 </li>
+                <div class="mode rounded-full" id="switch-mode">
+                    <div class="btn__indicator">
+                        <div class="btn__icon-container">
+                            <i class="btn__icon fa-solid"></i>
+                        </div>
+                    </div>
+                </div>
             </ul>
         </div>
     </nav>
@@ -70,24 +78,24 @@
 
             <!-- Details Section -->
             <div>
-                <h1 class="text-6xl font-bold text-white mb-2">{{ $product->name }}</h1>
+                <h1 class="text-6xl font-bold text-black dark:text-white mb-2">{{ $product->name }}</h1>
                 <p class="text-3xl font-semibold text-red-600 mb-5">Rp{{ number_format($product->price, 2) }}</p>
-                <hr class="mb-5">
+                <hr class="mb-5 bg-black dark:bg-white">
                 <div class="text-gray-300 text-sm space-y-0.5">
-                    <h1 class="text-xl font-semibold text-white mb-2">Product Details</h1>
-                    <p> @if ($product->stores_id == 1)
+                    <h1 class="text-xl font-semibold text-black dark:text-white mb-2">Product Details</h1>
+                    <p class="text-black dark:text-white"> @if ($product->stores_id == 1)
                         From: B11N Gym Store
                         @elseif ($product->stores_id == 2)
                         From: K1NG Gym Store
                         @endif
                     </p>
-                    <p>Flavour: {{ $product->flavour }}</p>
-                    <p>Serving Option: {{ $product->serving_option }}</p>
-                    <p>Category: {{ $product->categoryproduct->name ?? 'No Category' }}</p>
+                    <p class="text-black dark:text-white">Flavour: {{ $product->flavour }}</p>
+                    <p class="text-black dark:text-white">Serving Option: {{ $product->serving_option }}</p>
+                    <p class="text-black dark:text-white">Category: {{ $product->categoryproduct->name ?? 'No Category' }}</p>
                 </div>
                 <div class="mt-6">
-                    <h2 class="text-lg font-semibold text-white mb-2">Deskripsi Produk</h2>
-                    <p class="text-sm text-white">{{ $product->description ?? 'No description available' }}</p>
+                    <h2 class="text-lg font-semibold text-black dark:text-white mb-2">Deskripsi Produk</h2>
+                    <p class="text-sm text-black dark:text-white">{{ $product->description ?? 'No description available' }}</p>
                 </div>
 
                 <form action="{{ route('cart.add', $product->id) }}" method="post">
@@ -118,9 +126,9 @@
                         @endif
                     </p>
                     <div class="flex mt-1 text-gray-500 text-xs">
-                        <p class="flex items-center"><i class="fas fa-cogs"></i>{{ $product->flavour }}</p>
-                        <p class="mx-2">|</p>
-                        <p class="flex items-center"><i class="fas fa-box-open"></i>{{ $product->serving_option }}</p>
+                        <span class="flex items-center"><i class="fas fa-utensils mr-1"></i>{{ $product->flavour }}</span>
+                        <span class="mx-2">|</span>
+                        <span class="flex items-center"><i class="fas fa-box-open mr-1"></i>{{ $product->serving_option }}</span>
                     </div>
                     <a href="{{ route('product.show', $relatedProduct->id) }}"
                         class="{{ $relatedProduct->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} block text-white text-center py-2 rounded mt-4 transition">
@@ -148,6 +156,80 @@
                 setTimeout(() => notification.remove(), 500); // Remove after transition
             }
         }, 3000);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleDarkMode = document.getElementById('switch-mode');
+            const htmlElement = document.documentElement;
+
+            // Cek mode dari LocalStorage
+            if (localStorage.theme === 'dark') {
+                htmlElement.classList.add('dark');
+            } else if (localStorage.theme === 'light') {
+                htmlElement.classList.remove('dark');
+            }
+
+            // Event toggle
+            toggleDarkMode.addEventListener('click', function() {
+                if (htmlElement.classList.contains('dark')) {
+                    htmlElement.classList.remove('dark');
+                    localStorage.theme = 'light'; // Simpan ke LocalStorage
+                } else {
+                    htmlElement.classList.add('dark');
+                    localStorage.theme = 'dark'; // Simpan ke LocalStorage
+                }
+            });
+        });
+
+        const body = document.querySelector('body');
+        const btn = document.querySelector('.mode');
+        const icon = document.querySelector('.btn__icon');
+
+        //to save the dark mode use the object "local storage".
+
+        //function that stores the value true if the dark mode is activated or false if it's not.
+        function store(value) {
+            localStorage.setItem('darkmode', value);
+        }
+
+        //function that indicates if the "darkmode" property exists. It loads the page as we had left it.
+        function load() {
+            const darkmode = localStorage.getItem('darkmode');
+
+            //if the dark mode was never activated
+            if (!darkmode) {
+                store(false);
+                icon.classList.add('fa-sun');
+            } else if (darkmode == 'true') { //if the dark mode is activated
+                body.classList.add('darkmode');
+                icon.classList.add('fa-moon');
+            } else if (darkmode == 'false') { //if the dark mode exists but is disabled
+                icon.classList.add('fa-sun');
+            }
+        }
+
+
+        load();
+
+        btn.addEventListener('click', () => {
+
+            body.classList.toggle('darkmode');
+            icon.classList.add('animated');
+
+            //save true or false
+            store(body.classList.contains('darkmode'));
+
+            if (body.classList.contains('darkmode')) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            setTimeout(() => {
+                icon.classList.remove('animated');
+            }, 500)
+        })
     </script>
 </body>
 

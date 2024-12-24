@@ -121,9 +121,9 @@
                     @endif
                 </p>
                 <div class="flex items-center mt-1 text-gray-500 text-xs">
-                    <span class="flex items-center"><i class="fas fa-cogs"></i>{{ $product->flavour }}</span>
+                    <span class="flex items-center"><i class="fas fa-utensils mr-1"></i>{{ $product->flavour }}</span>
                     <span class="mx-2">|</span>
-                    <span class="flex items-center"><i class="fas fa-box-open"></i>{{ $product->serving_option }}</span>
+                    <span class="flex items-center"><i class="fas fa-box-open mr-1"></i>{{ $product->serving_option }}</span>
                 </div>
                 <div class="flex mt-4 gap-2">
                     <form action="{{ route('cart.add', $product->id) }}" method="post">

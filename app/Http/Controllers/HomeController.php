@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\Facilities;
 use App\Models\Trainer;
 use App\Models\Blog;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Banner;
-
+use App\Models\CategoryTraining;
+use App\Models\Logo;
+use App\Models\TrainingProgram;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -16,14 +19,23 @@ class HomeController extends Controller
     //
     public function index()
     {
-        $blog = Blog::published()->where('gymkos_id', 1)->get(); // Pastikan hanya blog yang 'publish'
-
+        $blog = Blog::published()->where('gymkos_id', 1)->get();
         $facilities = Facilities::where('gymkos_id', 1)->get();
         $trainer = Trainer::where('gymkos_id', 1)->get();
         $banner = Banner::where('stores_id', 3)->get();
-
-        return view('index', compact('facilities', 'trainer', 'blog', 'banner'));
+        $logo = Logo::where('gymkos_id', 1)->get();
+        $about = About::where('gymkos_id', 1)->get();
+        $trainingprograms = TrainingProgram::where('gymkos_id', 1)->get();
+    
+        // Mengelompokkan berdasarkan category_trainings_id
+        $groupedTrainingPrograms = $trainingprograms->groupBy('category_trainings_id');
+    
+        // Mengambil data kategori
+        $categories = CategoryTraining::whereIn('id', $groupedTrainingPrograms->keys())->get()->keyBy('id');
+    
+        return view('index', compact('facilities', 'trainer', 'blog', 'banner', 'logo', 'about', 'groupedTrainingPrograms', 'categories'));
     }
+    
 
     public function product()
     {
@@ -37,5 +49,11 @@ class HomeController extends Controller
             ->get();
 
         return view('product', compact('products'));
+    }
+
+    public function kinggym()
+    {
+
+        return view('kinggym', compact('facilities', 'trainer', 'blog', 'banner', 'logo'));
     }
 }

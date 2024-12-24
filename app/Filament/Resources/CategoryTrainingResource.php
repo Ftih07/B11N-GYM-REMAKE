@@ -43,6 +43,7 @@ class CategoryTrainingResource extends Resource
         return $table
             ->columns([
                 //
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title Category Training')
                     ->sortable()
