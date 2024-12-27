@@ -4,11 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
+
     <title>Keranjang</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     @vite('resources/css/index.css')
-
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
+        rel="stylesheet" />
 </head>
 
 <body class="bg-gray-100 dark:bg-black transition-colors duration-300">
@@ -27,7 +31,7 @@
         <div class="nav__bar">
             <div class="nav__header">
                 <div class="nav__logo">
-                    <a href="#"><img src="assets/logo.png" alt="logo" /></a>
+                    <a href="#"><img src="assets/Logo/colab.png" alt="logo" /></a>
                 </div>
                 <div class="nav__menu__btn" id="menu-btn">
                     <i class="ri-menu-line"></i>
@@ -35,8 +39,8 @@
             </div>
             <ul class="nav__links dark:text-white text-black" id="nav-links">
                 <li>
-                    <a href="{{ route('index') }}"
-                        class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">HOME</a>
+                    <a href="{{ route('home') }}"
+                        class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
                 </li>
                 <li>
                     <a href="{{ route('product.index') }}"
@@ -65,54 +69,55 @@
         </div>
     </nav>
 
+    <menu class="z-50">
+        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
+        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
+    </menu>
+
     @extends('layouts.main')
 
     @section('title', 'Your Cart')
 
     @section('content')
-    <main class="container mx-auto mt-28 px-6">
-        <h1 class="text-3xl font-bold mb-6 text-black dark:text-white">Shopping Cart</h1>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <main class="container mx-auto mt-28 px-4 lg:px-6">
+        <h1 class="text-2xl md:text-3xl font-bold mb-6 text-black dark:text-white text-center md:text-left">Shopping Cart</h1>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <div class="col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md overflow-x-auto">
 
                 <table class="min-w-full rounded-lg shadow bg-white dark:bg-gray-800 text-black dark:text-white">
                     @if (empty($cart))
-                    <p class="text-gray-400 dark:text-gray-500">Your cart is empty.</p>
+                    <p class="text-gray-400 dark:text-gray-500 text-center">Your cart is empty.</p>
                     @else
                     <thead>
                         <tr class="text-left border-b bg-gray-200 dark:bg-gray-700">
-                            <th class="py-3 px-4">Product</th>
-                            <th class="py-3 px-4">Price</th>
-                            <th class="py-3 px-4">Quantity</th>
-                            <th class="py-3 px-4">Total</th>
-                            <th class="py-3 px-4">Gym</th> <!-- Kolom untuk gym -->
-                            <th class="py-3 px-4">Remove</th>
+                            <th class="py-2 px-3">Product</th>
+                            <th class="py-2 px-3">Price</th>
+                            <th class="py-2 px-3">Quantity</th>
+                            <th class="py-2 px-3">Total</th>
+                            <th class="py-2 px-3">Gym</th>
+                            <th class="py-2 px-3">Remove</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach ($cart as $id => $item)
                         <tr class="border-b dark:border-gray-700">
-
-                            <!-- NAME & IMAGE PRODUCT -->
-                            <td class="py-4 px-4 flex items-center">
-                                <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}" class="w-16 h-16 object-cover rounded">
-                                <p class="ml-4">{{ $item['name'] }}</p>
+                            <td class="py-3 px-3 flex items-center">
+                                <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}" class="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded">
+                                <p class="ml-3 sm:ml-4">{{ $item['name'] }}</p>
                             </td>
-
-                            <!-- PRICE -->
-                            <td class="py-4 px-4">${{ number_format($item['price']) }}</td>
-
-                            <!-- QUANTITY -->
-                            <td class="py-4 px-4">
+                            <td class="py-3 px-3">${{ number_format($item['price']) }}</td>
+                            <td class="py-3 px-3">
                                 <div class="flex items-center">
                                     <form action="{{ route('cart.update', $id) }}" method="post" class="inline">
                                         @csrf
                                         <input type="hidden" name="quantity" value="{{ $item['quantity'] - 1 }}">
                                         <button type="submit" class="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500">-</button>
                                     </form>
-                                    <span class="mx-4">{{ $item['quantity'] }}</span>
+                                    <span class="mx-3 sm:mx-4">{{ $item['quantity'] }}</span>
                                     <form action="{{ route('cart.update', $id) }}" method="post" class="inline">
                                         @csrf
                                         <input type="hidden" name="quantity" value="{{ $item['quantity'] + 1 }}">
@@ -120,12 +125,8 @@
                                     </form>
                                 </div>
                             </td>
-
-                            <!-- TOTAL PRICE -->
-                            <td class="py-4 px-4">${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
-
-                            <!-- STORE NAME -->
-                            <td class="py-4 px-4">
+                            <td class="py-3 px-3">${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                            <td class="py-3 px-3">
                                 @if (isset($item['store_id']))
                                 @if ($item['store_id'] == 1)
                                 B11N Gym Store
@@ -138,13 +139,11 @@
                                 Unknown Store
                                 @endif
                             </td>
-
-                            <!-- DELETE -->
-                            <td class="py-4 px-4">
+                            <td class="py-3 px-3">
                                 <form action="{{ route('cart.remove', $id) }}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                                    <button type="submit" class="bg-red-500 text-white px-3 sm:px-4 py-1 sm:py-2 rounded hover:bg-red-600 transition">
                                         Remove
                                     </button>
                                 </form>
@@ -155,12 +154,12 @@
                 </table>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-black dark:text-white" style="max-height: 300px;">
-                <h2 class="text-2xl font-bold mb-4">Summary</h2>
+            <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md text-black dark:text-white" style="max-height: 300px;">
+                <h2 class="text-xl sm:text-2xl font-bold mb-4 text-center lg:text-left">Summary</h2>
                 <div class="space-y-3">
                     <div class="flex justify-between">
                         <span>Subtotal</span>
-                        <span>Total: Rp{{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }} </span>
+                        <span>Rp{{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span>Pajak</span>
@@ -170,13 +169,13 @@
                         <span>Ongkir</span>
                         <span>Rp0.00</span>
                     </div>
-                    <div class="flex justify-between font-bold text-xl">
+                    <div class="flex justify-between font-bold text-lg sm:text-xl">
                         <span>Total</span>
-                        <span> Total: Rp{{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }} </span>
+                        <span>Rp{{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart)), 2) }}</span>
                     </div>
                 </div>
                 <a href="{{ route('checkout') }}">
-                    <button class="w-full mt-6 bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-md">
+                    <button class="w-full mt-4 bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                         Checkout
                     </button>
                 </a>
@@ -184,11 +183,13 @@
             @endif
         </div>
 
+
     </main>
 
     @endsection
 
-    
+
+    <script src="assets/js/script.js"></script>
 
 
     <!-- JS -->
@@ -277,6 +278,12 @@
                 icon.classList.remove('animated');
             }, 500)
         })
+
+        // Nav Utama
+        const trigger = document.querySelector("menu > .trigger");
+        trigger.addEventListener('click', (e) => {
+            e.currentTarget.parentElement.classList.toggle("open");
+        });
     </script>
 </body>
 

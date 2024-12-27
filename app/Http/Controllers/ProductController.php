@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use App\Models\Logo;
 
 class ProductController extends Controller
 {
 
     public function showB11NStore(Request $request)
     {
+        $logo = Logo::where('gymkos_id', 1)->get();
         $storeId = 1; // ID untuk B11N Store
         $categoryId = $request->input('category'); // Ambil ID kategori dari query string
     
@@ -28,7 +30,7 @@ class ProductController extends Controller
         $totalProducts = $products->count();
     
         // Kirim data ke view
-        return view('biinstore', compact('products', 'totalProducts', 'banner', 'categoryId'));
+        return view('biinstore', compact('products', 'totalProducts', 'banner', 'categoryId', 'logo'));
     }
     
     public function showKingStore(Request $request)

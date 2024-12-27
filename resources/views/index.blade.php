@@ -4,6 +4,8 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
+
 	<link
 		href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
 		rel="stylesheet" />
@@ -12,41 +14,59 @@
 		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
 	@vite('resources/css/index.css')
-	<title>Web Design Mastery | FitPhysique</title>
+	<title>B11N Gym Purwokerto</title>
 </head>
+
+@foreach ($logo as $logo)
 
 <body>
 	<!--Navigasi-->
 	<nav class="fixed text-white">
 		<div class="nav__bar">
 			<div class="nav__header">
-				@foreach ($logo as $logo)
 				<div class="w-12 h-12 object-cover object-center">
 					<a href="#"><img src="{{ asset('storage/' . $logo->image) }}" alt="logo" /></a>
 				</div>
-				@endforeach
 				<div class="nav__menu__btn" id="menu-btn">
 					<i class="ri-menu-line"></i>
 				</div>
 			</div>
 			<ul class="nav__links" id="nav-links">
 				<li class="nav-item"><a href="#header" class="nav-link">HOME</a></li>
-				<li class="nav-item"><a href="#about" class="nav-link">ABOUT</a></li>
+				<li class="nav-item"><a href="#about" class="nav-link">TENTANG KAMI</a></li>
+				<li class="nav-item"><a href="#fasilitas" class="nav-link">FASILITAS</a></li>
+				<li class="nav-item"><a href="#training" class="nav-link">TRAINING PROGRAM</a></li>
 				<li class="nav-item"><a href="#trainer" class="nav-link">TRAINER</a></li>
-				<li class="nav-item"><a href="#client" class="nav-link">CLIENT</a></li>
+				<li class="nav-item"><a href="#membership" class="nav-link">MEMBERSHIP</a></li>
+				<li class="nav-item"><a href="#store" class="nav-link">STORE</a></li>
+				<li class="nav-item"><a href="#client" class="nav-link">TESTIMONIAL</a></li>
 				<li class="nav-item"><a href="#blog" class="nav-link">BLOG</a></li>
 				<li class="nav-item"><a href="#contact" class="nav-link">CONTACT US</a></li>
 			</ul>
 		</div>
 	</nav>
 
+    <menu class="z-50">
+        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
+        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
+    </menu>
+
 	<!--Hero-->
-	<header class="header" id="header">
-		<div class="relative flex items-center justify-center h-screen bg-black text-white"
-			style="
+	<section id="header">
+		<header class="header">
+			<div class="relative flex items-center justify-center h-screen bg-black text-white"
+				style="
          background-image: linear-gradient(
              to right,
              rgba(0, 0, 0, 0.2),
@@ -57,24 +77,27 @@
 		background-position: center center;
          background-repeat: no-repeat;
      ">
-			<div class="header__content relative text-center">
-				<h1 class="text-4xl md:text-6xl font-extrabold">
-					<span class="text-red-600">B11N GYM</span><br>
-					PURWOKERTO
-				</h1>
-				<p class="mt-2 text-lg md:text-xl font-base">Premium Fitness Studio | GIVE UP OR GET UP</p>
-				<div class="header__btn">
-					<button class="btn btn__primary">GET STARTED</button>
+				<div class="header__content_hero relative text-center px-4 sm:px-8 md:px-12 lg:px-16">
+					<h1 class="text-4xl sm:text-6xl md:text-6xl lg:text-7xl font-extrabold">
+						<span class="text-red-600">B11N GYM</span><br>
+						PURWOKERTO
+					</h1>
+					<p class="mt-2 text-lg md:text-xl font-base">Premium Fitness Studio | GIVE UP OR GET UP</p>
+					<div class="header__btn">
+						<a href="#membership">
+							<button class="btn btn__primary mt-3">GET STARTED</button>
+						</a>
+					</div>
 				</div>
 			</div>
-		</div>
-	</header>
+		</header>
+	</section>
 
 	<!--Tentang Kami-->
-	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
+	<section class="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="about">
 		<div class="about__header text-center">
-			<h2 class="section__header text-2xl font-header text-text-dark font-semibold mb-8">Tentang Kami</h2>
-			<p class="section__description mx-auto text-center text-base">
+			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">Tentang Kami</h2>
+			<p class="section__description mx-auto text-center text-base sm:text-base md:text-base">
 				Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur. Kami menawarkan keanggotaan harian, mingguan, dan bulanan dengan harga terjangkau. Fasilitas kami meliputi peralatan gym lengkap, ruang istirahat ber-AC, ruang karaoke, dan loker yang aman. B11N Gym bukan hanya tempat berolahraga, tapi juga ruang untuk membangun komunitas hidup sehat yang menyenangkan.
 			</p>
 		</div>
@@ -91,13 +114,13 @@
 	</section>
 
 	<!--Fasilitas-->
-	<section class="max-w-[1200px] mx-auto px-4 py-20" id="about">
+	<section class="max-w-[1200px] mx-auto px-4 py-20" id="fasilitas">
 		<div class="about__header text-center">
-			<h2 class="section__header text-2xl font-header text-text-dark font-semibold mb-8">
+			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">
 				Fasilitas Kami
 			</h2>
 		</div>
-		<div class="container mx-auto px-4 py-12">
+		<div class="container mx-auto px-0 md:px-4 py-12">
 			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 				@foreach ($facilities as $facility)
 				<div class="about__card bg-white border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -119,7 +142,7 @@
 	</section>
 
 	<!--Training Program-->
-	<section class="py-8">
+	<section class="py-8" id="training">
 		@foreach ($groupedTrainingPrograms as $categoryId => $trainingPrograms)
 		@php
 		$categoryTitle = $categories[$categoryId]->title ?? 'Unknown Category'; // Judul kategori
@@ -128,7 +151,7 @@
 			<div class="text-center">
 				<h3 class="text-2xl font-semibold text-white bg-black pt-8 pb-8">{{ $categoryTitle }}</h3>
 			</div>
-			<div class="grid grid-cols-2 gap-0">
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-0">
 				@foreach ($trainingPrograms as $trainingprogram)
 				<div class="session__card bg-cover bg-center p-6 relative h-[30rem]"
 					style="background-image:  linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),url('{{ asset('storage/' . $trainingprogram->image) }}');">
@@ -161,21 +184,16 @@
 		@endforeach
 	</section>
 
-
-
-
-
-
 	<!--Trainer-->
-	<section class="trainer__container max-w-[1200px] mx-auto px-4 py-20" id="trainer">
-		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>
-		<div class="trainer__grid">
+	<section class="trainer__container max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="trainer">
+		<h2 class="section__header text-2xl sm:text-3xl md:text-3xl lg:text-3xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>
+		<div class="trainer__grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
 			@foreach ($trainer as $trainer)
-			<div class="trainer__card">
-				<img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" class="h-64 w-auto" />
-				<h4>{{ $trainer->name }}</h4>
-				<p>{{ $trainer->description }}</p>
-				<div class="trainer__socials">
+			<div class="trainer__card text-center border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
+				<img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" class="h-50 w-full object-cover mb-4 rounded-md" />
+				<h4 class="text-lg sm:text-xl md:text-2xl font-semibold">{{ $trainer->name }}</h4>
+				<p class="text-sm sm:text-base md:text-lg text-gray-600">{{ $trainer->description }}</p>
+				<div class="trainer__socials flex justify-center mt-4 gap-4">
 					<a href="{{ $trainer->urls['facebook'] ?? '#' }}"><i class="ri-facebook-fill"></i></a>
 					<a href="{{ $trainer->urls['whatsapp'] ?? '#' }}"><i class="ri-whatsapp-fill"></i></a>
 					<a href="{{ $trainer->urls['instagram'] ?? '#' }}"><i class="ri-instagram-fill"></i></a>
@@ -186,156 +204,271 @@
 	</section>
 
 	<!--Membership-->
-	<section class="membership">
+	<section class="membership"
+		style="
+         background-image: linear-gradient(
+             to top,
+             rgba(0, 0, 0, 0.2),
+             rgba(0, 0, 0, 0.9)
+         ),
+         url('assets/Hero/b11ngym.jpg');
+         background-size: cover;
+		background-position: center center;
+         background-repeat: no-repeat;
+     " id="membership">
 		<div class="membership__container max-w-[1200px] mx-auto px-4 py-20">
 			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEMBERSHIP</h2>
-			<div class="membership__grid">
+			<div class="membership__grid grid grid-cols-1 md:grid-cols-3 gap-6">
 				<div class="membership__card">
-					<h4>STANDARD</h4>
+					<h4>Harian</h4>
 					<ul>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Gym floor access and standard equipment.
+							Satu hari akses penuh di B11N & K1NG Gym Purwokerto
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Group fitness classes: yoga, Zumba, Pilates.
+							Akses bebas untuk semua peralatan gym.
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Complimentary fitness consultations.
+							Free personal trainer.
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Locker room and showers.
+							Akses bebas untuk semua peralatan
 						</li>
 						<li>
-							<span><i class="ri-check-line"></i></span>
-							Nutritional guidance and snacks.
+							<span><i class="ri-close-line"></i></span>
+							Free biaya pendaftaran
 						</li>
 						<li>
-							<span><i class="ri-check-line"></i></span>
-							Member discounts on merchandise.
+							<span><i class="ri-close-line"></i></span>
+							Masuk sebagai member dari B11N & K1NG Gym
 						</li>
 					</ul>
-					<h3><sup>$</sup>30<span>/month</span></h3>
-					<button class="btn btn__primary">BUY NOW</button>
+					<h3><sup>Rp</sup>10.000<span>/hari</span></h3>
+					<button class="btn btn__primary" class="btn btn__primary" onclick="openPaymentModal('Harian')">
+						Beli Sekarang</button>
 				</div>
 				<div class="membership__card">
-					<h4>PROFESSIONAL</h4>
+					<h4>Mingguan</h4>
 					<ul>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Standard Membership facilities included.
+							Satu hari akses penuh di B11N & K1NG Gym Purwokerto
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Priority booking for personal training.
+							Akses bebas untuk semua peralatan gym.
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Access to advanced equipment.
+							Free personal trainer.
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Complimentary fitness consultations.
+							Akses bebas untuk semua peralatan
 						</li>
 						<li>
-							<span><i class="ri-check-line"></i></span>
-							Exclusive member events and workshops.
+							<span><i class="ri-close-line"></i></span>
+							Free biaya pendaftaran
 						</li>
 						<li>
-							<span><i class="ri-check-line"></i></span>
-							Discounts on additional services.
+							<span><i class="ri-close-line"></i></span>
+							Masuk sebagai member dari B11N & K1NG Gym
 						</li>
 					</ul>
-					<h3><sup>$</sup>45<span>/month</span></h3>
-					<button class="btn btn__primary">BUY NOW</button>
+					<h3><sup>Rp</sup>30.000<span>/minggu</span></h3>
+					<button class="btn btn__primary" class="btn btn__primary" onclick="openPaymentModal('Mingguan')">
+						Beli Sekarang</button>
 				</div>
 				<div class="membership__card">
-					<h4>ULTIMATE</h4>
+					<h4>Bulanan</h4>
 					<ul>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Standard and Professional facilities included.
+							Satu hari akses penuh di B11N & K1NG Gym Purwokerto
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Unlimited access to premium amenities.
+							Akses bebas untuk semua peralatan gym.
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Reserved parking or valet service.
+							Free personal trainer.
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Complimentary premium fitness classes.
+							Akses bebas untuk semua peralatan
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Customized workout plans.
+							Free biaya pendaftaran
 						</li>
 						<li>
 							<span><i class="ri-check-line"></i></span>
-							Priority access to guest passes and events.
+							Masuk sebagai member dari B11N & K1NG Gym
 						</li>
 					</ul>
-					<h3><sup>$</sup>60<span>/month</span></h3>
-					<button class="btn btn__primary">BUY NOW</button>
+					<h3><sup>Rp</sup>80.000<span>/Bulan</span></h3>
+					<button
+						class="btn btn__primary" onclick="openPaymentModal('Bulanan')">
+						Beli Sekarang
+					</button>
 				</div>
-			</div>
-		</div>
-	</section>
 
-	<!--Testimoni-->
-	<section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="client">
-		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
-		<!-- Slider main container -->
-		<div class="swiper">
-			<!-- Additional required wrapper -->
-			<div class="swiper-wrapper">
-				<!-- Slides -->
-				<div class="swiper-slide">
-					<div class="client__card">
-						<img src="assets/client-1.jpg" alt="client" />
-						<div><i class="ri-double-quotes-r"></i></div>
-						<p>
-							I've been a member at FitPhysique for over a year now, and I
-							couldn't be happier with my experience. The range of classes
-							offered here is impressive - from high-energy cardio sessions to
-							relaxing yoga classes, there's something for everyone.
-						</p>
-						<h4>Sarah Johnson</h4>
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="client__card">
-						<img src="assets/client-2.jpg" alt="client" />
-						<div><i class="ri-double-quotes-r"></i></div>
-						<p>
-							The classes are always well-planned and engaging, and the
-							instructors do an excellent job of keeping us motivated
-							throughout. I'm so grateful to have found such a supportive and
-							inclusive gym.
-						</p>
-						<h4>Michael Wong</h4>
-					</div>
-				</div>
-				<div class="swiper-slide">
-					<div class="client__card">
-						<img src="assets/client-3.jpg" alt="client" />
-						<div><i class="ri-double-quotes-r"></i></div>
-						<p>
-							I've tried many gyms in the past, but none of them compare to
-							FitPhysique. From the moment I walked through the doors, I felt
-							welcomed and supported by the staff and fellow members alike.
-						</p>
-						<h4>Emily Davis</h4>
+				<!-- Modal -->
+				<div
+					class="modal fade"
+					id="paymentModal"
+					tabindex="-1"
+					aria-labelledby="paymentModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="paymentModalLabel">
+									Pilih Metode Pembayaran untuk Member <span class="text-danger" id="membershipTitle"></span>
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div id="paymentOptions">
+									<!-- Pilihan Metode Pembayaran -->
+									<div class="row">
+										<div class="col-md-6 text-center">
+											<img
+												src="/assets/img/pembayaran/qris.png"
+												alt="QRIS"
+												class="img-fluid mb-3"
+												style="max-height: 200px;" />
+											<button
+												class="btn btn-primary w-100"
+												onclick="selectPaymentMethod('qris')">
+												Bayar via QRIS
+											</button>
+										</div>
+										<div class="col-md-6 text-center">
+											<img
+												src="/assets/img/pembayaran/bca.png"
+												alt="Transfer Bank"
+												class="img-fluid mb-3"
+												style="max-height: 200px;" />
+											<button
+												class="btn btn-primary w-100"
+												onclick="selectPaymentMethod('transfer')">
+												Bayar via Transfer
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<!-- Pembayaran QRIS -->
+								<div id="qrisPayment" class="d-none">
+									<h5 class="text-center mt-4">
+										Pembayaran via QRIS untuk Member <span class="text-danger" id="qrisMembershipTitle"></span>
+									</h5>
+									<div class="text-center my-3">
+										<div class="place-items-center">
+											<img
+												src="/assets/img/pembayaran/qris-barcode.png"
+												alt="QRIS Barcode"
+												class="img-fluid w-full md:w-1/2" />
+										</div>
+									</div>
+									<p class="text-center">
+										Scan kode QR di atas untuk melakukan pembayaran.
+									</p>
+									<div class="flex flex-col sm:flex-row gap-4 justify-center">
+										<!-- Kirim Via WhatsApp -->
+										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('whatsapp')">
+											Kirim Bukti Pembayaran Via WhatsApp
+										</button>
+										<!-- Kirim Via Email -->
+										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('email')">
+											Kirim Bukti Pembayaran Via Email
+										</button>
+									</div>
+									<p class="text-danger text-center">
+										Catatan Penting: Setelah pembayaran, wajib kirim bukti pembayaran
+										dengan klik tombol di atas.
+									</p>
+									<p class="text-gray-800 text-center rounded-md bg-gray-200 text-sm border-t-[15px] border-b-[15px] mb-3 mt-2">
+										Jangan lupa absen saat berkunjung ke B11N Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
+									</p>
+									<div class="d-flex justify-content-between">
+										<button
+											class="btn btn-secondary"
+											onclick="goBackToOptions()">
+											Kembali
+										</button>
+										<button
+											class="btn btn-secondary"
+											data-bs-dismiss="modal">
+											Tutup
+										</button>
+									</div>
+								</div>
+
+								<!-- Pembayaran Transfer -->
+								<div id="transferPayment" class="d-none">
+									<h5 class="text-center mt-4">
+										Pembayaran via Transfer untuk Member <span class="text-danger" id="transferMembershipTitle"></span>
+									</h5>
+									<div class="text-center my-3">
+										<p class="text-center">Nomor Rekening: <strong>0461701506</strong></p>
+										<p class="text-center">An: <strong>Sobiin</strong></p>
+										<div class="place-items-center">
+											<img
+												src="/assets/img/pembayaran/bca.png"
+												alt="Bank BCA"
+												class="img-fluid w-1/2" />
+										</div>
+									</div>
+									<p class="text-center">
+										Lakukan transfer ke nomor rekening di atas.
+									</p>
+									<div class="flex flex-col sm:flex-row gap-4 justify-center">
+										<!-- Kirim Via WhatsApp -->
+										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('whatsapp')">
+											Kirim Bukti Pembayaran Via WhatsApp
+										</button>
+										<!-- Kirim Via Email -->
+										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('email')">
+											Kirim Bukti Pembayaran Via Email
+										</button>
+									</div>
+
+									<p class="text-danger text-center">
+										Catatan Penting: Setelah pembayaran, wajib kirim bukti pembayaran
+										dengan klik tombol di atas.
+									</p>
+									<p class="text-gray-800 text-center rounded-md bg-gray-200 text-sm border-t-[15px] border-b-[15px] mb-3 mt-2">
+										Jangan lupa absen saat berkunjung ke B11N Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
+									</p>
+									<div class="d-flex justify-content-between">
+										<button
+											class="btn btn-secondary"
+											onclick="goBackToOptions()">
+											Kembali
+										</button>
+										<button
+											class="btn btn-secondary"
+											data-bs-dismiss="modal">
+											Tutup
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-			<!-- If we need pagination -->
-			<div class="swiper-pagination"></div>
 		</div>
 	</section>
 
@@ -343,7 +476,7 @@
 	@foreach ($banner as $banner)
 	<section
 		style="background-image: url('{{ asset('storage/' . $banner->image) }}'); background-size: cover; background-position: center;"
-		class="header mx-auto px-4 py-15 bg-black"
+		class="header mx-auto px-4 py-15 bg-black "
 		id="store">
 		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="header__content">
@@ -358,99 +491,194 @@
 	</section>
 	@endforeach
 
+	<!--Testimoni-->
+	<section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="client">
+		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
+		<!-- Slider main container -->
+		<div class="swiper">
+			<!-- Additional required wrapper -->
+			<div class="swiper-wrapper">
+				@foreach ($testimonis as $testimoni)
+				<div class="swiper-slide">
+					<div class="client__card">
+						<img src="{{ asset('storage/' . $testimoni->image) }}" alt="{{ $testimoni->name }}" />
+						<div><i class="ri-double-quotes-r"></i></div>
+						<p>{{ $testimoni->description }}</p>
+						<h4>{{ $testimoni->name }}</h4>
+						<div class="rating">
+							@php
+							$rating = $testimoni->rating ?? 1; // Default minimal 1
+							@endphp
+							@for ($i = 1; $i <= 5; $i++)
+								<i class="{{ $i <= $rating ? 'fas' : 'far' }} fa-star text-yellow-500 text-base"></i>
+								@endfor
+						</div>
+					</div>
+				</div>
+				@endforeach
+			</div>
+			<!-- If we need pagination -->
+			<div class="swiper-pagination"></div>
+		</div>
+	</section>
+
 	<!--Blog-->
+	@section('content')
 	<section class="blog" id="blog">
 		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
 			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>
 			<div class="blog__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 				@foreach ($blog as $blog)
-				<div class="blog__card">
-					<img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" />
-					<h4 class="text-lg font-medium mt-4">{{ $blog->title }}</h4>
+				<div class="blog__card mt-4 md:mt-0">
+					<a href="{{ route('blog.show', $blog->id) }}">
+						<img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-[300px] object-cover" />
+						<p class="uppercase text-[10px] tracking-[3px] mb-1 text-white mt-3">{{ $blog->created_at->format('F d, Y') }}</p>
+						<h5 class="text-lg font-medium uppercase">{{ $blog->title }}</h5>
+					</a>
 				</div>
 				@endforeach
 			</div>
+
 			@if($blog->count() > 3)
 			<div class="blog__btn mt-8 text-center">
-				<a href="/blogs" class="btn btn__primary">VIEW ALL</a>
+				<a href="{{ route('blogs.index') }}" class="btn btn__primary">VIEW ALL</a>
 			</div>
 			@endif
 		</div>
 	</section>
 
-	<!--Gallery and contact us embed link maps-->
-	<section class="logo__banner max-w-[1200px] mx-auto px-4 py-20">
-		<img src="assets/banner-1.png" alt="banner" />
-		<img src="assets/banner-2.png" alt="banner" />
-		<img src="assets/banner-3.png" alt="banner" />
-		<img src="assets/banner-4.png" alt="banner" />
+	<!--Maps-->
+	<section class="w-full mx-auto" id="contact">
+		<div class="flex-dir-row" style="width: 100%; height: 300px;">
+			<div class="" style="width: 100%; height: 100%;">
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.4855691732196!2d109.25932187454826!3d-7.411386672987716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0039f00903%3A0xf9273b4e5db80ee9!2sB11N%20GYM!5e0!3m2!1sid!2sid!4v1735117847259!5m2!1sid!2sid" style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+			</div>
+		</div>
 	</section>
 
 	<!--Footer-->
-	<footer class="footer" id="contact">
+	<footer class="footer">
 		<div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="footer__col">
 				<div class="footer__logo">
-					<a href="#"><img src="assets/logo.png" alt="logo" /></a>
+					<a href="#"><img src="{{ asset('storage/' . $logo->image) }}" alt="logo" /></a>
 				</div>
 				<p>
-					Welcome to FitPhysique, where we believe that every journey to
-					fitness is unique and empowering.
+					Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur.
 				</p>
 				<ul class="footer__links">
 					<li>
-						<a href="#">
+						<a href="https://maps.app.goo.gl/CEQqy1nCNUYKasrU9" target="_blank">
 							<span><i class="ri-map-pin-2-fill"></i></span>
-							123 Main Street<br />Sunrise Valley, Evergreen Heights
-						</a>
+							Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas </a>
 					</li>
 					<li>
-						<a href="#">
+						<a href="https://wa.me/6281226110988" target="_blank">
 							<span><i class="ri-phone-fill"></i></span>
-							+91 9876543210
+							+62 812 2611 0988
 						</a>
 					</li>
 					<li>
-						<a href="#">
+						<a href="mailto:sobiin77@gmail.com" target="_blank">
 							<span><i class="ri-mail-fill"></i></span>
-							info@fitphysique.com
+							sobiin77@gmail.com
 						</a>
 					</li>
 				</ul>
 			</div>
+
+			<!---Gallery Footer-->
 			<div class="footer__col">
-				<h4>GALLERY</h4>
-				<div class="gallery__grid">
-					<img src="assets/gallery-1.jpg" alt="gallery" />
-					<img src="assets/gallery-2.jpg" alt="gallery" />
-					<img src="assets/gallery-3.jpg" alt="gallery" />
-					<img src="assets/gallery-4.jpg" alt="gallery" />
-					<img src="assets/gallery-5.jpg" alt="gallery" />
-					<img src="assets/gallery-6.jpg" alt="gallery" />
-					<img src="assets/gallery-7.jpg" alt="gallery" />
-					<img src="assets/gallery-8.jpg" alt="gallery" />
-					<img src="assets/gallery-9.jpg" alt="gallery" />
+				<h4 class="">GALLERY</h4>
+				<div class="gallery__grid mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+					@foreach ($gallery as $item)
+					<img
+						src="{{ asset('storage/' . $item->image) }}"
+						alt="{{ $item->title }}"
+						class="gallery-thumbnail"
+						data-bs-toggle="modal"
+						data-bs-target="#galleryModal"
+						data-title="{{ $item->title }}"
+						data-src="{{ asset('storage/' . $item->image) }}" />
+					@endforeach
 				</div>
 			</div>
-			<div class="footer__col">
-				<h4>NEWSLETTER</h4>
-				<p>
-					Don't miss out on the latest news and offers - sign up today and
-					join our thriving fitness community!
-				</p>
-				<form action="/">
-					<input type="text" placeholder="Enter Email" />
-					<button class="btn btn__primary">SEND</button>
-				</form>
-				<div class="footer__socials">
-					<a href="#"><i class="ri-facebook-fill"></i></a>
-					<a href="#"><i class="ri-twitter-fill"></i></a>
-					<a href="#"><i class="ri-youtube-fill"></i></a>
+
+			<!-- Modal -->
+			<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<span class="text-danger">B11N GYM </span>GALLERY
+							</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body text-center">
+							<img id="modalImage" src="" alt="" class="img-fluid mb-3" />
+							<h5 id="modalTitle" class="text-center font-bold text-lg"></h5>
+						</div>
+						<div class="modal-footer justify-content-between">
+							<button type="button" class="btn btn-secondary prev-image">Previous</button>
+							<button type="button" class="btn btn-secondary next-image">Next</button>
+						</div>
+					</div>
 				</div>
 			</div>
+
+			<div class="footer_contact text-white">
+				<h4 class="text-red-600 text-lg font-bold mb-4">HUBUNGI KAMI</h4>
+
+				<!-- Threads -->
+				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+					<a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<!-- Threads Icon -->
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-threads group-hover:text-red-600" viewBox="0 0 16 16">
+							<path d="M6.321 6.016c-.27-.18-1.166-.802-1.166-.802.756-1.081 1.753-1.502 3.132-1.502.975 0 1.803.327 2.394.948s.928 1.509 1.005 2.644q.492.207.905.484c1.109.745 1.719 1.86 1.719 3.137 0 2.716-2.226 5.075-6.256 5.075C4.594 16 1 13.987 1 7.994 1 2.034 4.482 0 8.044 0 9.69 0 13.55.243 15 5.036l-1.36.353C12.516 1.974 10.163 1.43 8.006 1.43c-3.565 0-5.582 2.171-5.582 6.79 0 4.143 2.254 6.343 5.63 6.343 2.777 0 4.847-1.443 4.847-3.556 0-1.438-1.208-2.127-1.27-2.127-.236 1.234-.868 3.31-3.644 3.31-1.618 0-3.013-1.118-3.013-2.582 0-2.09 1.984-2.847 3.55-2.847.586 0 1.294.04 1.663.114 0-.637-.54-1.728-1.9-1.728-1.25 0-1.566.405-1.967.868ZM8.716 8.19c-2.04 0-2.304.87-2.304 1.416 0 .878 1.043 1.168 1.6 1.168 1.02 0 2.067-.282 2.232-2.423a6.2 6.2 0 0 0-1.528-.161" />
+						</svg>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Threads</h5>
+					</a>
+					<p class="text-gray-400 text-sm tracking-wide uppercase mt-2">B11N_GYM</p>
+				</div>
+
+				<!-- Instagram -->
+				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+					<a href="https://www.instagram.com/biin_gym/" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<i class="fab fa-instagram text-xl group-hover:text-red-600"></i>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Instagram</h5>
+					</a>
+					<p class="text-gray-400 text-sm tracking-wide uppercase mt-2">BIIN_GYM</p>
+				</div>
+
+				<!-- WhatsApp -->
+				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+					<a href="https://wa.me/6281226110988" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<i class="fab fa-whatsapp text-xl group-hover:text-red-600"></i>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Whatsapp</h5>
+					</a>
+					<p class="text-gray-400 text-sm tracking-wide mt-2">0896-5384-7651</p>
+				</div>
+
+				<!-- Email -->
+				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+					<a href="mailto:sobiin77@gmail.com" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<i class="fas fa-envelope text-xl group-hover:text-red-600"></i>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Email</h5>
+					</a>
+					<p class="text-gray-400 text-sm tracking-wide mt-2">SOBIIN77@GMAIL.COM</p>
+				</div>
+			</div>
+
+
 		</div>
+		<hr class="border-t border-white">
+
 		<div class="footer__bar">
-			Copyright © 2024 Web Design Mastery. All rights reserved.
+			Copyright © 2024 Mullticore. All rights reserved.
 		</div>
 	</footer>
 
@@ -466,46 +694,166 @@
 
 				if (targetElement) {
 					window.scrollTo({
-						top: targetElement.offsetTop - 90, // Ganti 100 dengan jarak yang diinginkan
+						top: targetElement.offsetTop - 70, // Offset untuk menghindari overlap dengan header
 						behavior: 'smooth',
 					});
 				}
 			});
 		});
 
+		const sections = document.querySelectorAll('section'); // Pastikan setiap bagian diberi tag <section>
 		const navItems = document.querySelectorAll('.nav-item');
 
 		function handleScroll() {
-			const scrollPosition = window.scrollY;
-
-			// Define section heights (replace with actual section heights)
-			const sectionHeights = {
-				header: 0,
-				about: 500,
-				trainer: 1000,
-				client: 1500,
-				blog: 2000,
-				contact: 2500,
-			};
-
-			navItems.forEach(item => {
-				const sectionId = item.querySelector('a').getAttribute('href').substring(1);
-				const sectionHeight = sectionHeights[sectionId];
-				const nextSectionId = Object.keys(sectionHeights)[Object.keys(sectionHeights).indexOf(sectionId) + 1];
-				const nextSectionHeight = sectionHeights[nextSectionId];
-
-				if (scrollPosition >= sectionHeight && (nextSectionHeight === undefined || scrollPosition < nextSectionHeight)) {
-					item.classList.add('active');
-				} else {
-					item.classList.remove('active');
+			let activeFound = false;
+			sections.forEach(section => {
+				const rect = section.getBoundingClientRect();
+				if (rect.top <= 100 && rect.bottom >= 100 && !activeFound) {
+					activeFound = true;
+					const id = section.getAttribute('id');
+					navItems.forEach(item => {
+						item.classList.toggle(
+							'active',
+							item.querySelector('a').getAttribute('href') === `#${id}`
+						);
+					});
 				}
 			});
+
+			if (!activeFound) {
+				navItems.forEach(item => item.classList.remove('active'));
+			}
 		}
 
 		window.addEventListener('scroll', handleScroll);
-		handleScroll();
+		handleScroll(); // Jalankan sekali untuk memastikan efek langsung terjadi
+
+		let selectedMembershipTitle = "";
+		let selectedPaymentMethod = ""; // Tambahkan variabel ini untuk menyimpan metode pembayaran
+
+		function openPaymentModal(title) {
+			selectedMembershipTitle = title;
+			document.getElementById("membershipTitle").textContent = title;
+			document.getElementById("paymentOptions").classList.remove("d-none");
+			document.getElementById("qrisPayment").classList.add("d-none");
+			document.getElementById("transferPayment").classList.add("d-none");
+			new bootstrap.Modal(document.getElementById("paymentModal")).show();
+		}
+
+		function selectPaymentMethod(method) {
+			selectedPaymentMethod = method; // Simpan metode pembayaran yang dipilih
+			document.getElementById("paymentOptions").classList.add("d-none");
+			if (method === "qris") {
+				document.getElementById("qrisPayment").classList.remove("d-none");
+				document.getElementById("qrisMembershipTitle").textContent = selectedMembershipTitle;
+			} else if (method === "transfer") {
+				document.getElementById("transferPayment").classList.remove("d-none");
+				document.getElementById("transferMembershipTitle").textContent = selectedMembershipTitle;
+			}
+		}
+
+		function sendPaymentConfirmation(method) {
+			const email = "naufalfathi37@gmail.com"; // Ganti dengan email Anda
+			const whatsappNumber = "6281226110988"; // Ganti dengan nomor WhatsApp Anda
+
+			const messageBase = `Halo, saya ingin mengonfirmasi pembayaran untuk membership ${selectedMembershipTitle} via (${selectedPaymentMethod.toUpperCase()}).\n`;
+			const messageFooter = `Tolong lampirkan bukti pembayaran Anda disini. \n\nTerima kasih.`;
+
+			if (method === "email") {
+				const subject = `Konfirmasi Pembayaran via ${selectedPaymentMethod.toUpperCase()} untuk member ${selectedMembershipTitle}`;
+				const body = `${messageBase}${messageFooter}`;
+				window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+			} else if (method === "whatsapp") {
+				const message = `${messageBase}${messageFooter}`;
+				window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+			}
+		}
+
+
+		function goBackToOptions() {
+			document.getElementById("paymentOptions").classList.remove("d-none");
+			document.getElementById("qrisPayment").classList.add("d-none");
+			document.getElementById("transferPayment").classList.add("d-none");
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			new Swiper('.swiper', {
+				loop: true,
+				pagination: {
+					el: '.swiper-pagination',
+					clickable: true,
+				},
+			});
+		});
+
+		document.addEventListener('DOMContentLoaded', function() {
+			const swiper = new Swiper('.swiper', {
+				// Enable loop mode
+				loop: true,
+				// Enable autoplay
+				autoplay: {
+					delay: 3000, // 5000ms = 5 seconds
+					disableOnInteraction: false, // Continue autoplay after user interaction
+				},
+				// Add pagination
+				pagination: {
+					el: '.swiper-pagination',
+					clickable: true,
+				},
+			});
+		});
+
+		document.addEventListener('DOMContentLoaded', function() {
+			const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+			const modalImage = document.getElementById('modalImage');
+			const modalTitle = document.getElementById('modalTitle');
+			let currentIndex = 0;
+
+			// Array untuk menyimpan data gambar
+			const galleryData = Array.from(thumbnails).map((thumbnail, index) => ({
+				src: thumbnail.getAttribute('data-src'),
+				title: thumbnail.getAttribute('data-title'),
+				index: index,
+			}));
+
+			// Klik pada gambar untuk membuka modal
+			thumbnails.forEach((thumbnail, index) => {
+				thumbnail.addEventListener('click', () => {
+					currentIndex = index;
+					updateModal();
+				});
+			});
+
+			// Fungsi untuk memperbarui modal
+			function updateModal() {
+				const {
+					src,
+					title
+				} = galleryData[currentIndex];
+				modalImage.src = src;
+				modalTitle.textContent = title;
+			}
+
+			// Navigasi gambar
+			document.querySelector('.prev-image').addEventListener('click', () => {
+				currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+				updateModal();
+			});
+
+			document.querySelector('.next-image').addEventListener('click', () => {
+				currentIndex = (currentIndex + 1) % galleryData.length;
+				updateModal();
+			});
+		});
+
+		const trigger = document.querySelector("menu > .trigger");
+		trigger.addEventListener('click', (e) => {
+			e.currentTarget.parentElement.classList.toggle("open");
+		});
 	</script>
 
 </body>
+@endforeach
+
 
 </html>

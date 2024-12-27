@@ -4,11 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Cars</title>
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/last.png'))">
+
+    <title>K1NG Gym Store</title>
     @vite('resources/css/app.css')
     @vite('resources/css/kinggym.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
+        rel="stylesheet" />
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -28,7 +32,7 @@
         <div class="nav__bar">
             <div class="nav__header">
                 <div class="nav__logo">
-                    <a href="#"><img src="assets/logo.png" alt="logo" /></a>
+                    <a href="#"><img src="assets/Logo/last.png" alt="logo" /></a>
                 </div>
                 <div class="nav__menu__btn" id="menu-btn">
                     <i class="ri-menu-line"></i>
@@ -36,8 +40,8 @@
             </div>
             <ul class="nav__links dark:text-white text-black" id="nav-links">
                 <li>
-                    <a href="{{ route('index') }}"
-                        class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">HOME</a>
+                    <a href="{{ route('home') }}"
+                        class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
                 </li>
                 <li>
                     <a href="{{ route('product.index') }}"
@@ -65,6 +69,15 @@
             </ul>
         </div>
     </nav>
+
+    <menu class="z-50">
+        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
+        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
+    </menu>
+
     @foreach ($banner as $banner)
     <section
         style="background-image: url('{{ asset('storage/' . $banner->image) }}'); background-size: cover; background-position: center;"
@@ -84,7 +97,7 @@
     @endforeach
 
     <div class="text-center py-8">
-        <h1 class="text-4xl font-bold text-black dark:text-white">K1NG Gym Store</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-black dark:text-white">K1NG Gym Store</h1>
         <p class="text-gray-500 mt-2">Available {{ $totalProducts }} Products</p>
     </div>
 
@@ -145,6 +158,7 @@
             Copyright © 2024 Multicore. All rights reserved.
         </div>
     </footer>
+    <script src="assets/js/script.js"></script>
 
     <script>
         // Automatically remove notification after 3 seconds
@@ -230,6 +244,12 @@
                 icon.classList.remove('animated');
             }, 500)
         })
+
+        // Nav Utama
+        const trigger = document.querySelector("menu > .trigger");
+        trigger.addEventListener('click', (e) => {
+            e.currentTarget.parentElement.classList.toggle("open");
+        });
     </script>
 </body>
 

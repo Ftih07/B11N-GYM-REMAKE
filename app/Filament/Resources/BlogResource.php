@@ -28,7 +28,7 @@ class BlogResource extends Resource
             ->schema([
                 //
                 Forms\Components\TextInput::make('title')->required()->maxLength(255),
-                Forms\Components\Textarea::make('content')->required(),
+                Forms\Components\RichEditor::make('content')->required(),
                 Forms\Components\FileUpload::make('image')->required()->directory('blog'),
                 Forms\Components\Select::make('status')
                     ->options([
