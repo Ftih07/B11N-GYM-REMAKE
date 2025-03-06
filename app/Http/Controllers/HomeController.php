@@ -15,6 +15,9 @@ use App\Models\Logo;
 use App\Models\TrainingProgram;
 use Illuminate\Http\Request;
 use App\Models\Testimoni;
+use Illuminate\Support\Facades\DB;
+use App\Mail\BookingConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -102,6 +105,78 @@ class HomeController extends Controller
 
     public function kost()
     {
-        return view('kost');
+        $bookedDates = DB::table('bookings')
+            ->where('status', 'paid')
+            ->pluck('date') // Ambil hanya kolom tanggal
+            ->toArray(); // Ubah jadi array
+
+        $gallery = Gallery::where('gymkos_id', 2)->get();
+        $blog = Blog::published()->take(3)->get();
+
+        $testimonis = \App\Models\Testimoni::where('gymkos_id', 3)
+            ->get()
+            ->map(function ($testimoni) {
+                $testimoni->rating = max(1, $testimoni->rating); // Set minimal rating ke 1
+                return $testimoni;
+            });
+
+        return view('kost', compact('blog', 'testimonis', 'gallery', 'bookedDates'));
+    }
+
+    public function bookKost(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'phone' => 'required|string',
+                'date' => 'required|date',
+                'room_type' => 'required|string',
+                'paymentMethod' => 'required|string',
+                'paymentProof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:8192',
+            ]);
+
+            // Cek apakah kamar sudah dipesan dengan status "paid"
+            $existingBooking = DB::table('bookings')
+                ->where('date', $request->date)
+                ->where('room_type', $request->room_type)
+                ->where('status', 'paid')
+                ->exists();
+
+            if ($existingBooking) {
+                return back()->with('error', 'Maaf, kamar pada tanggal tersebut sudah dipesan.');
+            }
+
+            // Simpan bukti pembayaran
+            if ($request->hasFile('paymentProof')) {
+                $filePath = $request->file('paymentProof')->store('bukti_pembayaran', 'public');
+            } else {
+                return back()->with('error', 'File pembayaran tidak terdeteksi!');
+            }
+
+            // Simpan ke database
+            $bookingId = DB::table('bookings')->insertGetId([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'date' => $request->date,
+                'room_type' => $request->room_type,
+                'payment' => $request->paymentMethod,
+                'payment_proof' => $filePath,
+                'status' => 'paid',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Ambil data booking yang baru saja disimpan
+            $bookingData = DB::table('bookings')->where('id', $bookingId)->first();
+
+            // Kirim email konfirmasi
+            Mail::to($request->email)->send(new BookingConfirmationMail($bookingData));
+
+            return back()->with('success', 'Booking berhasil dikirim!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan! ' . $e->getMessage());
+        }
     }
 }

@@ -110,7 +110,10 @@
                     <div>
                         <h4>B11N Gym Purwokerto</h4>
                         <p>Tempat gym yang saat ini menyandang status sebagai tempat gym termurah di Purwokerto</p>
-                        <button class="px-4 py-2 mt-3 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded-md cursor-pointer outline-none border-none">Kunjungi Website</button>
+
+                        <a href="{{ route('index') }}" target="_blank">
+                            <button class="px-4 py-2 mt-3 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded-md cursor-pointer outline-none border-none">Kunjungi Website</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -120,7 +123,9 @@
                     <div>
                         <h4>K1NG Gym Purwokerto</h4>
                         <p>Cabang dari B11N Gym yang baru buka beberapa bulan yang juga menyandang status sebagai tempat gym termurah di Purwokerto</p>
-                        <button class="px-4 py-2 mt-3 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded-md cursor-pointer outline-none border-none">Kunjungi Website</button>
+                        <a href="{{ route('kinggym') }}" target="_blank">
+                            <button class="px-4 py-2 mt-3 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded-md cursor-pointer outline-none border-none">Kunjungi Website</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -130,7 +135,9 @@
                     <div>
                         <h4>Kost Istana Merdeka 3</h4>
                         <p>Kost khusus putra yang letaknya berada di lantai 2 B11N Gym Purwokerto </p>
-                        <button class="px-4 py-2 mt-3 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded-md cursor-pointer outline-none border-none">Kunjungi Website</button>
+                        <a href="{{ route('kost') }}" target="_blank">
+                            <button class="px-4 py-2 mt-3 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded-md cursor-pointer outline-none border-none">Kunjungi Website</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -145,7 +152,9 @@
                 <p class="section__description">
                     B11N & K1NG Gym Store adalah toko yang menjual berbagai minuman protein yang dijual di B11N Gym & K1NG Gym Purwokerto, disini ada banyak jenis minuman baik itu susu protein, air mineral, suplement untuk gym, dan lainnya
                 </p>
-                <button class="btn">Kunjungi Website</button>
+                <a href="{{ route('product.index') }}" target="_blank">
+                    <button class="btn">Kunjungi Website</button>
+                </a>
             </div>
             <div class="intro__video">
                 <img src="assets/home/store.png"></img>
@@ -166,7 +175,7 @@
         <div class="news__grid">
             @foreach ($blog as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blog.show', $blog->id) }}">
+                <a href="{{ route('blog.show', $blog->id) }}" target="_blank">
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[200px] object-cover" />
                     <div class="news__card__title">
                         <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</p>
@@ -179,7 +188,7 @@
         </div>
         @if($blog->count() > 3)
         <div class=" mt-8 text-center">
-            <a href="{{ route('blogs.index') }}">
+            <a href="{{ route('blogs.index') }}" target="_blank">
                 <button class="btn">
                     View All
                 </button>
@@ -219,21 +228,21 @@
                 <h4>Quick Link</h4>
                 <div class="footer__links">
                     <li><a href="#">Multicore Website</a></li>
-                    <li><a href="{{ route('index') }}">B11N Gym Website</a></li>
-                    <li><a href="{{ route('kinggym') }}">K1NG Gym Website</a></li>
-                    <li><a href="{{ route('kost') }}">Kost Istana Merdeka 3 Website</a></li>
-                    <li><a href="{{ route('product.index') }}">B11N & K1NG Gym Store</a></li>
-                    <li><a href="{{ route('blogs.index') }}">Multicore Blog</a></li>
+                    <li><a href="{{ route('index') }}" target="_blank">B11N Gym Website</a></li>
+                    <li><a href="{{ route('kinggym') }}" target="_blank">K1NG Gym Website</a></li>
+                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 3 Website</a></li>
+                    <li><a href="{{ route('product.index') }}" target="_blank">B11N & K1NG Gym Store</a></li>
+                    <li><a href="{{ route('blogs.index') }}" target="_blank">Multicore Blog</a></li>
                 </div>
             </div>
             <div class="footer__col">
-                <h4>Contact Us</h4>
+                <h4>Hubungi Kami</h4>
                 <div class="footer__links">
                     <li>
                         <span><i class="ri-phone-fill"></i></span>
                         <div>
-                            <h5>Phone Number</h5>
-                            <p>+62 812 2611 0988</p>
+                            <h5>No. Telephone</h5>
+                            <p>+62 896 5384 7651</p>
                         </div>
                     </li>
                     <li>
@@ -260,7 +269,7 @@
 
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="assets/js/home.js"></script>
-    
+
 </body>
 
 </html>

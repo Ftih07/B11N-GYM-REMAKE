@@ -1,8 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=GFS+Didot&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=GFS+Didot&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
 
 :root {
     --primary-color: #0f1a2c;
@@ -157,7 +157,7 @@ menu.open > .trigger > i {
 }
 
 .btn__indicator {
-    background-color: #fff;
+    background-color: #000;
     width: 2em;
     height: 2em;
     border-radius: 50%;
@@ -180,7 +180,7 @@ menu.open > .trigger > i {
 }
 
 .btn__icon {
-    color: var(--light-icon-color);
+    color: var(--dark-icon-color);
     font-size: 1rem;
 }
 
@@ -204,12 +204,12 @@ menu.open > .trigger > i {
 
 .darkmode .btn__indicator {
     transform: translateX(2em);
-    background-color: var(--dark-color);
+    background-color: var(--white);
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
 }
 
 .darkmode .btn__icon {
-    color: var(--dark-icon-color);
+    color: var(--light-icon-color);
 }
 .blog {
     font-family: var(--header-font-news);
@@ -729,7 +729,14 @@ nav {
     display: grid;
     gap: 2rem 1rem;
 }
+.news__grid > * { /* Mengatur setiap item di dalam grid */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.news__grid > *:hover {
+    transform: translateY(-15px); /* Naik sedikit saat dihover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
+}
 .news__card img {
     margin-bottom: 2rem;
     border-radius: 5px;

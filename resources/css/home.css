@@ -1,8 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
 
 :root {
     --primary-color: #0f1a2c;
@@ -638,6 +639,15 @@ nav {
     margin-top: 4rem;
     display: grid;
     gap: 2rem 1rem;
+}
+
+.news__grid > * { /* Mengatur setiap item di dalam grid */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.news__grid > *:hover {
+    transform: translateY(-15px); /* Naik sedikit saat dihover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
 }
 
 .news__card img {

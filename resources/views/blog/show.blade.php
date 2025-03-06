@@ -94,21 +94,29 @@
             </div>
         </article>
 
-        {{-- Artikel Lainnya --}}
         <section class="related-articles mt-12">
             <h2 class="text-2xl font-semibold mb-6 text-black dark:text-white">Artikel Lainnya</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($relatedBlogs as $relatedBlog)
-                <div class="blog__card">
-                    <a href="{{ route('blog.show', $relatedBlog->id) }}">
-                        <img src="{{ asset('storage/' . $relatedBlog->image) }}" alt="{{ $relatedBlog->title }}" class="w-full h-48 object-cover rounded-lg mb-4">
-                        <h4 class="text-lg font-medium text-gray-900 dark:text-white">{{ $relatedBlog->title }}</h4>
-                        <p class="text-sm text-gray-500">{{ $relatedBlog->created_at->format('F d, Y') }}</p>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
+                    <a href="{{ route('blog.show', $relatedBlog->id) }}" class="block">
+                        <img src="{{ asset('storage/' . $relatedBlog->image) }}"
+                            alt="{{ $relatedBlog->title }}"
+                            class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
+                        <div class="p-4">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 hover:text-red-500">
+                                {{ $relatedBlog->title }}
+                            </h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ $relatedBlog->created_at->format('F d, Y') }}
+                            </p>
+                        </div>
                     </a>
                 </div>
                 @endforeach
             </div>
         </section>
+
     </section>
 
     <script src="{{ asset('assets/js/script.js') }}"></script>
@@ -135,22 +143,36 @@
         document.addEventListener('DOMContentLoaded', function() {
             const toggleDarkMode = document.getElementById('switch-mode');
             const htmlElement = document.documentElement;
+            const icon = document.querySelector('.btn__icon');
 
-            // Cek mode dari LocalStorage
-            if (localStorage.theme === 'dark') {
-                htmlElement.classList.add('dark');
-            } else if (localStorage.theme === 'light') {
-                htmlElement.classList.remove('dark');
+            // Jika localStorage belum ada, set default ke light mode
+            if (!localStorage.theme) {
+                localStorage.theme = 'light';
             }
 
-            // Event toggle
+            // Terapkan mode yang tersimpan di localStorage
+            if (localStorage.theme === 'dark') {
+                htmlElement.classList.add('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                htmlElement.classList.remove('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            // Event toggle dark mode
             toggleDarkMode.addEventListener('click', function() {
                 if (htmlElement.classList.contains('dark')) {
                     htmlElement.classList.remove('dark');
-                    localStorage.theme = 'light'; // Simpan ke LocalStorage
+                    localStorage.theme = 'light';
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
                 } else {
                     htmlElement.classList.add('dark');
-                    localStorage.theme = 'dark'; // Simpan ke LocalStorage
+                    localStorage.theme = 'dark';
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
                 }
             });
         });

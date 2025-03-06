@@ -9,7 +9,7 @@ menuBtn.addEventListener("click", (e) => {
     menuBtnIcon.setAttribute(
         "class",
         isOpen ? "ri-close-line" : "ri-menu-line"
-    );
+    ); 
 });
 
 navLinks.addEventListener("click", (e) => {

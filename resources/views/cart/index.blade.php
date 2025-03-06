@@ -208,22 +208,36 @@
         document.addEventListener('DOMContentLoaded', function() {
             const toggleDarkMode = document.getElementById('switch-mode');
             const htmlElement = document.documentElement;
+            const icon = document.querySelector('.btn__icon');
 
-            // Cek mode dari LocalStorage
-            if (localStorage.theme === 'dark') {
-                htmlElement.classList.add('dark');
-            } else if (localStorage.theme === 'light') {
-                htmlElement.classList.remove('dark');
+            // Jika localStorage belum ada, set default ke light mode
+            if (!localStorage.theme) {
+                localStorage.theme = 'light';
             }
 
-            // Event toggle
+            // Terapkan mode yang tersimpan di localStorage
+            if (localStorage.theme === 'dark') {
+                htmlElement.classList.add('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                htmlElement.classList.remove('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            // Event toggle dark mode
             toggleDarkMode.addEventListener('click', function() {
                 if (htmlElement.classList.contains('dark')) {
                     htmlElement.classList.remove('dark');
-                    localStorage.theme = 'light'; // Simpan ke LocalStorage
+                    localStorage.theme = 'light';
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
                 } else {
                     htmlElement.classList.add('dark');
-                    localStorage.theme = 'dark'; // Simpan ke LocalStorage
+                    localStorage.theme = 'dark';
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
                 }
             });
         });

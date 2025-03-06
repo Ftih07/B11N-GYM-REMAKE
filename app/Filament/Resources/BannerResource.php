@@ -100,7 +100,9 @@ class BannerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(), // Adds view action
+                Tables\Actions\DeleteAction::make(), // Adds delete action
+                Tables\Actions\EditAction::make(), // Adds edit action
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
