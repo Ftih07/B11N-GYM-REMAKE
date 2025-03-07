@@ -561,7 +561,8 @@
 				@foreach ($testimonis as $testimoni)
 				<div class="swiper-slide">
 					<div class="client__card">
-						<img src="{{ asset('storage/' . $testimoni->image) }}" alt="{{ $testimoni->name }}" />
+						<img src="{{ filter_var($testimoni->image, FILTER_VALIDATE_URL) ? $testimoni->image : asset('storage/' . $testimoni->image) }}"
+							alt="{{ $testimoni->name }}" />
 						<div><i class="ri-double-quotes-r"></i></div>
 						<p>{{ $testimoni->description }}</p>
 						<h4>{{ $testimoni->name }}</h4>
@@ -836,32 +837,22 @@
 			document.getElementById("transferPayment").classList.add("d-none");
 		}
 
-		document.addEventListener('DOMContentLoaded', () => {
-			new Swiper('.swiper', {
+		document.addEventListener('DOMContentLoaded', function() {
+			const swiper = new Swiper('.swiper', {
 				loop: true,
+				autoplay: {
+					delay: 3000,
+					disableOnInteraction: false,
+				},
 				pagination: {
 					el: '.swiper-pagination',
 					clickable: true,
+					dynamicBullets: true, // Pagination berubah saat swipe
+					dynamicMainBullets: 5, // Hanya tampilkan 5 bullet, sisanya bisa digeser
 				},
 			});
 		});
 
-		document.addEventListener('DOMContentLoaded', function() {
-			const swiper = new Swiper('.swiper', {
-				// Enable loop mode
-				loop: true,
-				// Enable autoplay
-				autoplay: {
-					delay: 3000, // 5000ms = 5 seconds
-					disableOnInteraction: false, // Continue autoplay after user interaction
-				},
-				// Add pagination
-				pagination: {
-					el: '.swiper-pagination',
-					clickable: true,
-				},
-			});
-		});
 
 		document.addEventListener('DOMContentLoaded', function() {
 			const thumbnails = document.querySelectorAll('.gallery-thumbnail');
