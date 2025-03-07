@@ -105,9 +105,9 @@ class HomeController extends Controller
 
     public function kost()
     {
-        $bookedDates = DB::table('bookings')
+        $bookedRooms  = DB::table('bookings')
             ->where('status', 'paid')
-            ->pluck('date') // Ambil hanya kolom tanggal
+            ->pluck('room_number') // Ambil hanya kolom tanggal
             ->toArray(); // Ubah jadi array
 
         $gallery = Gallery::where('gymkos_id', 2)->get();
@@ -120,7 +120,7 @@ class HomeController extends Controller
                 return $testimoni;
             });
 
-        return view('kost', compact('blog', 'testimonis', 'gallery', 'bookedDates'));
+        return view('kost', compact('blog', 'testimonis', 'gallery', 'bookedRooms'));
     }
 
     public function bookKost(Request $request)
@@ -132,6 +132,7 @@ class HomeController extends Controller
                 'phone' => 'required|string',
                 'date' => 'required|date',
                 'room_type' => 'required|string',
+                'room_number' => 'required|integer',
                 'paymentMethod' => 'required|string',
                 'paymentProof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:8192',
             ]);
@@ -139,12 +140,12 @@ class HomeController extends Controller
             // Cek apakah kamar sudah dipesan dengan status "paid"
             $existingBooking = DB::table('bookings')
                 ->where('date', $request->date)
-                ->where('room_type', $request->room_type)
+                ->where('room_number', $request->room_number)
                 ->where('status', 'paid')
                 ->exists();
 
             if ($existingBooking) {
-                return back()->with('error', 'Maaf, kamar pada tanggal tersebut sudah dipesan.');
+                return back()->with('error', 'Maaf, kamar ini sudah dipesan.');
             }
 
             // Simpan bukti pembayaran
@@ -161,6 +162,7 @@ class HomeController extends Controller
                 'phone' => $request->phone,
                 'date' => $request->date,
                 'room_type' => $request->room_type,
+                'room_number' => $request->room_number,
                 'payment' => $request->paymentMethod,
                 'payment_proof' => $filePath,
                 'status' => 'paid',

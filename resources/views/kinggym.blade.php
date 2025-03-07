@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/last.png'))">
@@ -54,13 +56,13 @@
 		</div>
 	</nav>
 
-    <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
-        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
-    </menu>
+	<menu class="z-50">
+		<a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
+		<a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+		<a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+		<a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+		<a href="#" class="trigger"><i class="fas fa-plus"></i></a>
+	</menu>
 
 	<!--Hero-->
 	<section id="header">
@@ -385,13 +387,8 @@
 										Scan kode QR di atas untuk melakukan pembayaran.
 									</p>
 									<div class="flex flex-col sm:flex-row gap-4 justify-center">
-										<!-- Kirim Via WhatsApp -->
-										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('whatsapp')">
-											Kirim Bukti Pembayaran Via WhatsApp
-										</button>
-										<!-- Kirim Via Email -->
-										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('email')">
-											Kirim Bukti Pembayaran Via Email
+										<button class="btn btn-primary" onclick="showPaymentConfirmationModal()">
+											Upload Payment Confirmation
 										</button>
 									</div>
 									<p class="text-danger text-center">
@@ -434,13 +431,8 @@
 										Lakukan transfer ke nomor rekening di atas.
 									</p>
 									<div class="flex flex-col sm:flex-row gap-4 justify-center">
-										<!-- Kirim Via WhatsApp -->
-										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('whatsapp')">
-											Kirim Bukti Pembayaran Via WhatsApp
-										</button>
-										<!-- Kirim Via Email -->
-										<button class="btn btn-dark w-45 sm:w-45 my-3" onclick="sendPaymentConfirmation('email')">
-											Kirim Bukti Pembayaran Via Email
+										<button class="btn btn-primary" onclick="showPaymentConfirmationModal()">
+											Upload Payment Confirmation
 										</button>
 									</div>
 
@@ -468,6 +460,73 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Modal Payment Confirmation -->
+				<div class="modal fade" id="paymentConfirmationModal" tabindex="-1" aria-labelledby="paymentConfirmationModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h2 class="modal-title" id="paymentConfirmationModalLabel">Upload Payment Confirmation</h2>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<!-- Form -->
+								<form id="paymentForm" enctype="multipart/form-data">
+									<!-- Nama -->
+									<div class="mb-3">
+										<label class="block font-medium">Nama:</label>
+										<input type="text" name="name" class="w-full border p-2 rounded" required>
+									</div>
+
+									<!-- Email -->
+									<div class="mb-3">
+										<label class="block font-medium">Email:</label>
+										<input type="email" name="email" class="w-full border p-2 rounded" required>
+									</div>
+
+									<!-- No. Telp -->
+									<div class="mb-3">
+										<label class="block font-medium">No. Telp:</label>
+										<input type="tel" name="phone" class="w-full border p-2 rounded" required>
+									</div>
+
+									<!-- Upload Bukti Pembayaran -->
+									<div class="mb-3">
+										<label class="block font-medium">Upload Bukti Pembayaran:</label>
+										<input type="file" name="image" accept="image/*" class="w-full border p-2 rounded" required>
+									</div>
+
+									<!-- Pilihan Membership -->
+									<div class="mb-3">
+										<label class="block font-medium">Pilih Membership:</label>
+										<select name="membership_type" class="w-full border p-2 rounded" required>
+											<option value="Member Harian">Member Harian</option>
+											<option value="Member Mingguan">Member Mingguan</option>
+											<option value="Member Bulanan">Member Bulanan</option>
+										</select>
+									</div>
+
+									<!-- Metode Pembayaran -->
+									<div class="mb-3">
+										<label class="block font-medium">Metode Pembayaran:</label>
+										<select name="payment" class="w-full border p-2 rounded" required>
+											<option value="qris">QRIS</option>
+											<option value="transfer">Transfer Bank</option>
+										</select>
+									</div>
+
+									<!-- Submit Button -->
+									<div class="flex justify-end">
+										<button type="button" class="btn btn-danger me-2" data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-success">Upload</button>
+									</div>
+								</form>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</section>
@@ -551,7 +610,7 @@
 	<section class="w-full mx-auto" id="contact">
 		<div class="flex-dir-row" style="width: 100%; height: 300px;">
 			<div class="" style="width: 100%; height: 100%;">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3990886005636!2d109.2682165745483!3d-7.421008173094577!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0048b6a975%3A0x8d16ddcbd80dad18!2sK1NG%20GYM!5e0!3m2!1sid!2sid!4v1735265555471!5m2!1sid!2sid"style="border:0; width: 100%; height: 100%" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3990886005636!2d109.2682165745483!3d-7.421008173094577!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0048b6a975%3A0x8d16ddcbd80dad18!2sK1NG%20GYM!5e0!3m2!1sid!2sid!4v1735265555471!5m2!1sid!2sid" style="border:0; width: 100%; height: 100%" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 			</div>
 		</div>
 	</section>
@@ -852,6 +911,44 @@
 		trigger.addEventListener('click', (e) => {
 			e.currentTarget.parentElement.classList.toggle("open");
 		});
+	</script>
+
+	<script>
+		document.getElementById('paymentForm').addEventListener('submit', function(event) {
+			event.preventDefault();
+
+			let formData = new FormData(this);
+
+			fetch('/payment/upload', {
+					method: 'POST',
+					body: formData,
+					headers: {
+						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+					}
+				})
+				.then(response => response.text()) // Ubah dari `.json()` ke `.text()`
+				.then(data => {
+					console.log('Response:', data); // Cek di console log
+					try {
+						let jsonData = JSON.parse(data); // Coba parse ke JSON
+						alert(jsonData.message);
+					} catch (e) {
+						console.error('Invalid JSON response:', data);
+					}
+				})
+				.catch(error => console.error('Error:', error));
+
+		});
+
+		function showPaymentConfirmationModal() {
+			var paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+			var paymentConfirmationModal = new bootstrap.Modal(document.getElementById('paymentConfirmationModal'));
+
+			paymentModal.hide(); // Tutup modal pertama
+			setTimeout(() => {
+				paymentConfirmationModal.show(); // Buka modal kedua setelah yang pertama tertutup
+			}, 500); // Delay sedikit biar animasi smooth
+		}
 	</script>
 
 </body>

@@ -1136,3 +1136,37 @@ nav {
     float: right;
     font-size: 20px;
 }
+
+.container-room {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.room-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.room {
+    width: 60px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1E3A8A;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1E3A8A;
+    cursor: pointer;
+}
+.room.booked {
+    background-color: #FF4B4B;
+    color: white;
+    cursor: not-allowed;
+}
+.room.selected {
+    background-color: #4CAF50;
+    color: white;
+}

@@ -41,7 +41,7 @@ class BookingController extends Controller
         return response()->json([
             'message' => 'Bukti pembayaran berhasil diunggah!',
             'status' => 'paid'
-        ]);
+        ]); 
     }
     
 }

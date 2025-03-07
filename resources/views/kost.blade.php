@@ -321,7 +321,24 @@
             <input type="date" id="date" name="date" required>
             <span id="tooltip" class="hidden absolute bg-red-500 text-white text-xs rounded p-1"></span>
 
-            <label for="room_type">Pilih Kamar</label>
+            <label for="room_number">Pilih Nomor Kamar</label>
+            <div class="container-room">
+                @foreach(array_chunk(range(1, 10), 2) as $row)
+                <div class="room-row">
+                    @foreach($row as $room)
+                    @php
+                    $isBooked = in_array($room, $bookedRooms ?? []);
+                    @endphp
+                    <div class="room {{ $isBooked ? 'booked' : '' }}" data-room="{{ $room }}">
+                        {{ str_pad($room, 2, '0', STR_PAD_LEFT) }}
+                    </div>
+                    @endforeach
+                </div>
+                @endforeach
+            </div>
+            <input type="hidden" id="room_number" name="room_number" required>
+
+            <label for="room_type">Pilih Jenis Kamar</label>
             <select id="room_type" name="room_type">
                 <option value="750rb - AC">750rb - AC</option>
                 <option value="350rb - Non AC">350rb - Non AC</option>
@@ -473,26 +490,16 @@
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Ambil tanggal yang sudah dibooking dari backend
-            let bookedDates = @json($bookedDates); // Data dari controller
-
             flatpickr("#date", {
                 dateFormat: "Y-m-d", // Format tanggal (YYYY-MM-DD)
-                disable: bookedDates, // Nonaktifkan tanggal yang sudah dibooking
-                locale: {
-                    firstDayOfWeek: 1 // Mulai dari Senin
-                },
-                onDayCreate: function(dObj, dStr, fp, dayElem) {
-                    let dateStr = dayElem.dateObj.toISOString().split('T')[0]; // Format YYYY-MM-DD
+            });
+        });
 
-                    if (bookedDates.includes(dateStr)) {
-                        dayElem.style.backgroundColor = "#ffcccc"; // Warna merah untuk tanggal booked
-                        dayElem.style.color = "white";
-                        dayElem.style.borderRadius = "50%"; // Biar lebih mencolok
-                        dayElem.style.cursor = "not-allowed";
-                        dayElem.setAttribute("title", "Tanggal sudah dibooking!");
-                    }
-                }
+        document.querySelectorAll('.room:not(.booked)').forEach(room => {
+            room.addEventListener('click', function() {
+                document.querySelectorAll('.room').forEach(r => r.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('room_number').value = this.dataset.room;
             });
         });
     </script>

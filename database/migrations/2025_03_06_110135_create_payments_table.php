@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->string('order_id')->unique();
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->date('date');
-            $table->enum('room_type', ['750rb - AC', '350rb - Non AC']);
-            $table->integer('room_number'); // Menambah kolom nomor kamar
+            $table->string('image');
             $table->string('payment');
-            $table->string('payment_proof')->nullable();
-            $table->enum('status', ['pending', 'paid'])->default('pending');
+            $table->string('membership_type');
+            $table->string('status')->default('pending'); // pending, confirmed, rejected
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('payments');
     }
 };

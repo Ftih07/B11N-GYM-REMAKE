@@ -6,7 +6,8 @@ use App\Http\Controllers\FacilitiesController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
-
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentStoreController;
 
 Route::get('/', function () {
     return view('index');
@@ -53,3 +54,7 @@ Route::get('/blogs/k1ng-gym', [BlogController::class, 'k1ngGymBlogs'])->name('bl
 
 
 Route::post('/kost-istana-merdeka-3/book', [HomeController::class, 'bookKost'])->name('kost.book');
+
+Route::post('/payment/upload', [PaymentController::class, 'uploadPayment']);
+
+Route::post('/send-order-confirmation', [PaymentStoreController::class, 'sendOrderConfirmation'])->name('sendOrderConfirmation');
