@@ -125,7 +125,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2024 Multicore. All rights reserved.
+            Copyright © 2024 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 

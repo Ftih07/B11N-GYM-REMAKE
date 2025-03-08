@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-    <title>Multicore Blog</title>
+    <title>B1NG EMPIRE Blog</title>
     @vite('resources/css/blog.css')
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
@@ -29,7 +29,7 @@
                     <div class="w-14 h-14 sm:w-16 mt-4 sm:h-16">
                         <a href="#"><img src="assets/Logo/mc.png" alt="logo" /></a>
                     </div>
-                    <span>MULTICORE<br />BLOG</span>
+                    <span>B1NG EMPIRE<br />BLOG</span>
                 </div>
                 <div class="nav__menu__btn" id="menu-btn">
                     <i class="ri-menu-line"></i>
@@ -88,7 +88,7 @@
          background-repeat: no-repeat;
      ">
         <div class="section__container header__container">
-            <p class="section__subheader sm:mt-28">MULTICORE BLOG</p>
+            <p class="section__subheader sm:mt-28">B1NG EMPIRE BLOG</p>
             <h1>Blog<br />Seputar</h1>
             <div class="mt-6">
                 <a
@@ -166,7 +166,7 @@
 
     <footer class="footer mt-10">
         <div class="footer__bar">
-            Copyright © 2024 Multicore. All rights reserved.
+            Copyright © 2024 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 

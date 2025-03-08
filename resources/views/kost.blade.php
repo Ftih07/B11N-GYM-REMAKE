@@ -21,7 +21,7 @@
 
 
     @vite('resources/css/kost.css')
-    <title>Multicore Website</title>
+    <title>Kost Istana Merdeka 03</title>
 </head>
 
 <body>
@@ -375,9 +375,9 @@
         <div class="news__header">
             <div>
                 <p class="section__subheader">BLOG</p>
-                <h2 class="section__header">Multicore Blog</h2>
+                <h2 class="section__header">B1NG EMPIRE Blog</h2>
                 <p class="section__description">
-                    Multicore Blog adalah Website Blog pribadi kami yang didalamnya berisi informasi, tips & trick, dan berita - berita terbaru yang berkaitan dengan B11N Gym, K1NG Gym, dan Kost Istana Merdeka 3.
+                    B1NG EMPIRE Blog adalah Website Blog pribadi kami yang didalamnya berisi informasi, tips & trick, dan berita - berita terbaru yang berkaitan dengan B11N Gym, K1NG Gym, dan Kost Istana Merdeka 3.
                 </p>
             </div>
         </div>

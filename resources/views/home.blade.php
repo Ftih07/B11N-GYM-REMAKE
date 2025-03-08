@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
     @vite('resources/css/home.css')
-    <title>Multicore Website</title>
+    <title>B1NG EMPIRE</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
                     <div class="w-14 h-14 sm:w-16 mt-4 sm:h-16">
                         <a href="#"><img src="assets/Logo/mc.png" alt="logo" /></a>
                     </div>
-                    <span>MULTICORE<br />WEBSITE</span>
+                    <span>B1NG<br />EMPIRE</span>
                 </div>
                 <div class="nav__menu__btn" id="menu-btn">
                     <i class="ri-menu-line"></i>
@@ -63,7 +63,7 @@
      ">
         <div class="section__container header__container">
             <p class="section__subheader">WELCOME TO</p>
-            <h1>Multicore<br />Website</h1>
+            <h1>B1NG<br />EMPIRE</h1>
             <button class="btn">Halo, senang melihat anda 👋🏻</button>
         </div>
     </header>
@@ -92,9 +92,9 @@
             </div>
             <div class="about__content">
                 <p class="section__subheader">TENTANG KAMI</p>
-                <h2 class="section__header">Apa itu Multicore Website?</h2>
+                <h2 class="section__header">Apa itu B1NG EMPIRE?</h2>
                 <p class="section__description">
-                    Multicore website adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding. </p>
+                    B1NG EMPIRE adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding. </p>
                 <button class="btn"><a href="#website">Get Started</a></button>
             </div>
         </div>
@@ -166,9 +166,9 @@
         <div class="news__header">
             <div>
                 <p class="section__subheader">BLOG</p>
-                <h2 class="section__header">Multicore Blog</h2>
+                <h2 class="section__header">B1NG EMPIRE Blog</h2>
                 <p class="section__description">
-                    Multicore Blog adalah Website Blog pribadi kami yang didalamnya berisi informasi, tips & trick, dan berita - berita terbaru yang berkaitan dengan B11N Gym, K1NG Gym, dan Kost Istana Merdeka 3.
+                    B1NG EMPIRE Blog adalah Website Blog pribadi kami yang didalamnya berisi informasi, tips & trick, dan berita - berita terbaru yang berkaitan dengan B11N Gym, K1NG Gym, dan Kost Istana Merdeka 3.
                 </p>
             </div>
         </div>
@@ -204,10 +204,10 @@
                 <div class="logo footer__logo">
                     <div class="w-14 h-14 sm:w-16 mt-0 sm:h-16">
                         <a href="#"><img src="assets/Logo/mc.png" alt="logo" class="mt-3" /></a>
-                    </div> <span>MULTICORE<br />WEBSITE</span>
+                    </div> <span>B1NG<br />EMPIRE</span>
                 </div>
                 <p class="section__description">
-                    Multicore website adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding. </p>
+                    B1NG EMPIRE adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding. </p>
                 </p>
                 <ul class="footer__socials">
                     <li>
@@ -227,12 +227,12 @@
             <div class="footer__col">
                 <h4>Quick Link</h4>
                 <div class="footer__links">
-                    <li><a href="#">Multicore Website</a></li>
+                    <li><a href="#">B1NG EMPIRE</a></li>
                     <li><a href="{{ route('index') }}" target="_blank">B11N Gym Website</a></li>
                     <li><a href="{{ route('kinggym') }}" target="_blank">K1NG Gym Website</a></li>
                     <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 3 Website</a></li>
                     <li><a href="{{ route('product.index') }}" target="_blank">B11N & K1NG Gym Store</a></li>
-                    <li><a href="{{ route('blogs.index') }}" target="_blank">Multicore Blog</a></li>
+                    <li><a href="{{ route('blogs.index') }}" target="_blank">B1NG EMPIRE Blog</a></li>
                 </div>
             </div>
             <div class="footer__col">
