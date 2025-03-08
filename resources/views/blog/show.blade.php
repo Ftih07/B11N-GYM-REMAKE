@@ -44,7 +44,7 @@
                 </li>
                 <li>
                     <a href="{{ route('blogs.index') }}"
-                        class="{{ Route::currentRouteName() === 'blogs.index' ? 'active' : '' }}">BLOG</a>
+                        class="{{ Route::currentRouteName() === 'blogs.index' ? 'active' : '' }}">B1NG BLOG</a>
                 </li>
                 <li>
                     <a href="{{ route('index') }}"
@@ -56,7 +56,7 @@
                 </li>
                 <li>
                     <a href="{{ route('kost') }}"
-                        class="{{ Route::currentRouteName() === 'kost' ? 'active' : '' }}">KOST</a>
+                        class="{{ Route::currentRouteName() === 'kost' ? 'active' : '' }}">ISTANA MERDEKA 03</a>
                 </li>
                 <li>
                     <a href="{{ route('product.index') }}"
@@ -75,8 +75,8 @@
 
     @foreach ($logo as $logo)
     <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('home') }}" class="action"><img src="{{ asset('assets/Logo/empire.png') }}" alt="B1NG Empire" /></a>
+        <a href="{{ route('kost') }}" class="action"><img src="{{ asset('assets/Logo/kost.png') }}" alt="Istana Merdeka" /></a>
         <a href="{{ route('index') }}" class="action"><img src="{{ asset('assets/Logo/biin.png') }}" alt="B11N Gym" /></a>
         <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="{{ asset('assets/Logo/last.png') }}" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
@@ -125,7 +125,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2024 B1NG EMPIRE. All rights reserved.
+            Copyright © 2025 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 

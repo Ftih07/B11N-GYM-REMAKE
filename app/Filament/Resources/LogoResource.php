@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class LogoResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Penting (Jangan Dirubah)';
+    protected static ?string $navigationGroup = 'Logo & Category Business';
     protected static ?int $navigationSort = 1;
     protected static ?string $model = Logo::class;
 

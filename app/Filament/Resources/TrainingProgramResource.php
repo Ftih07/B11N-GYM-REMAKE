@@ -34,7 +34,7 @@ class TrainingProgramResource extends Resource
                 Forms\Components\RichEditor::make('description')
                     ->label('Description Category Training')
                     ->required()
-                    ->maxLength(1000),
+                    ->maxLength(2000),
                 Forms\Components\FileUpload::make('image')
                     ->label('Image Category Training')
                     ->required()

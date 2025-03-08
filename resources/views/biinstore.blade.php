@@ -73,8 +73,8 @@
     </nav>
 
     <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
         <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
         <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
@@ -124,7 +124,7 @@
             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-48 object-cover rounded-md">
             <div class="mt-4">
                 <h2 class="text-lg font-semibold">{{ $product->name }}</h2>
-                <p class="text-red-600 font-bold text-xl mt-2">${{ number_format($product->price, 2) }}</p>
+                <p class="text-red-600 font-bold text-xl mt-2">Rp{{ number_format($product->price, 2) }}</p>
                 <p class="text-gray-500 text-xs mt-2">
                     @if ($product->stores_id == 1)
                     Dari: B11N Gym Store
@@ -157,7 +157,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2024 B1NG EMPIRE. All rights reserved.
+            Copyright © 2025 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
     <script src="assets/js/script.js"></script>

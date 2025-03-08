@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/mc.png'))">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
 
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
@@ -23,7 +23,7 @@
             <div class="nav__header">
                 <div class="logo nav__logo">
                     <div class="w-14 h-14 sm:w-16 mt-4 sm:h-16">
-                        <a href="#"><img src="assets/Logo/mc.png" alt="logo" /></a>
+                        <a href="#"><img src="assets/Logo/empire.png" alt="logo" /></a>
                     </div>
                     <span>B1NG<br />EMPIRE</span>
                 </div>
@@ -37,14 +37,14 @@
                 <li class="nav-item"><a href="#website" class="nav-link">WEBSITE KAMI</a></li>
                 <li class="nav-item"><a href="#store" class="nav-link">STORE</a></li>
                 <li class="nav-item"><a href="#blog" class="nav-link">BLOG</a></li>
-                <li class="nav-item"><a href="#membership" class="nav-link">HUBUNGI KAMI</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">HUBUNGI KAMI</a></li>
             </ul>
         </div>
     </nav>
 
     <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
         <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
         <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
@@ -198,12 +198,12 @@
     </section>
 
 
-    <footer class="footer">
+    <footer class="footer" id="contact">
         <div class="section__container footer__container">
             <div class="footer__col">
                 <div class="logo footer__logo">
                     <div class="w-14 h-14 sm:w-16 mt-0 sm:h-16">
-                        <a href="#"><img src="assets/Logo/mc.png" alt="logo" class="mt-3" /></a>
+                        <a href="#"><img src="assets/Logo/empire.png" alt="logo" class="mt-3" /></a>
                     </div> <span>B1NG<br />EMPIRE</span>
                 </div>
                 <p class="section__description">
@@ -227,10 +227,10 @@
             <div class="footer__col">
                 <h4>Quick Link</h4>
                 <div class="footer__links">
-                    <li><a href="#">B1NG EMPIRE</a></li>
+                    <li><a href="{{ route('home') }}" target="_blank">B1NG EMPIRE</a></li>
                     <li><a href="{{ route('index') }}" target="_blank">B11N Gym Website</a></li>
                     <li><a href="{{ route('kinggym') }}" target="_blank">K1NG Gym Website</a></li>
-                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 3 Website</a></li>
+                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 03 Website</a></li>
                     <li><a href="{{ route('product.index') }}" target="_blank">B11N & K1NG Gym Store</a></li>
                     <li><a href="{{ route('blogs.index') }}" target="_blank">B1NG EMPIRE Blog</a></li>
                 </div>
@@ -238,29 +238,39 @@
             <div class="footer__col">
                 <h4>Hubungi Kami</h4>
                 <div class="footer__links">
-                    <li>
-                        <span><i class="ri-phone-fill"></i></span>
-                        <div>
-                            <h5>No. Telephone</h5>
-                            <p>+62 896 5384 7651</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span><i class="ri-record-mail-line"></i></span>
-                        <div>
-                            <h5>Email</h5>
-                            <p>sobiin77@gmail.com</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span><i class="ri-map-pin-2-fill"></i></span>
-                        <div>
-                            <h5>Alamat</h5>
-                            <p>Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas</p>
-                        </div>
-                    </li>
+                    <a href="tel:+6289653847651">
+
+                        <li>
+                            <span><i class="ri-phone-fill"></i></span>
+                            <div>
+                                <h5>No. Telephone</h5>
+                                <p>+62 896 5384 7651</p>
+                            </div>
+                        </li>
+                    </a>
+                    <a href="mailto:sobiin77@gmail.com">
+
+                        <li>
+                            <span><i class="ri-record-mail-line"></i></span>
+                            <div>
+                                <h5>Email</h5>
+                                <p>sobiin77@gmail.com</p>
+                            </div>
+                        </li>
+                    </a>
+                    <a href="https://www.google.com/maps?q=Jl.+Masjid+Baru,+Arcawinangun,Kec.+Purwokerto+Timur,+Kab.+Banyumas" target="_blank">
+
+                        <li>
+                            <span><i class="ri-map-pin-2-fill"></i></span>
+                            <div>
+                                <h5>Alamat</h5>
+                                <p>Jl. Masjid Baru, Arcawinangun, Kec. Purwokerto Timur, Kab. Banyumas</p>
+                            </div>
+                        </li>
+                    </a>
                 </div>
             </div>
+
         </div>
         <div class="footer__bar">
             Copyright © 2025 B1NG EMPIRE. All rights reserved.

@@ -53,20 +53,20 @@
                 </div>
             </div>
             <ul class="nav__links" id="nav-links">
-                <li class="nav-item"><a href="#header" class="nav-link">HOME</a></li>
+                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">HOME</a></li>
                 <li class="nav-item"><a href="#about" class="nav-link">TENTANG KAMI</a></li>
                 <li class="nav-item"><a href="#website" class="nav-link">FASILITAS</a></li>
                 <li class="nav-item"><a href="#room" class="nav-link">KAMAR</a></li>
                 <li class="nav-item"><a href="#feature" class="nav-link">FASILITAS</a></li>
                 <li class="nav-item"><a href="#booking" class="nav-link">PEMESANAN</a></li>
-                <li class="nav-item"><a href="#membership" class="nav-link">HUBUNGI KAMI</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">HUBUNGI KAMI</a></li>
             </ul>
         </div>
     </nav>
 
     <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
         <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
         <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
@@ -123,7 +123,7 @@
                     Selamat datang di Kost Istana Merdeka 3, pilihan terbaik bagi Anda yang mencari hunian premium dengan kenyamanan maksimal. Terletak strategis di atas B11N Gym Purwokerto, kost khusus putra ini menawarkan suasana eksklusif dan tenang, jauh dari kebisingan meskipun berada di area gym.
 
                     Nikmati fasilitas terbaik seperti AC di setiap kamar dan WiFi berkecepatan tinggi, memastikan Anda tetap nyaman saat beristirahat, belajar, atau bekerja. </p>
-                <button class="btn"><a href="#website">Pesan Sekarang</a></button>
+                <button class="btn"><a href="#booking">Pesan Sekarang</a></button>
             </div>
         </div>
     </section>
@@ -165,7 +165,7 @@
                 <p class="section__description">
                     Nikmati pengalaman tinggal di Kost Istana Merdeka 3 yang nyaman dan eksklusif. Dengan kamar ber-AC yang bersih dan tertata rapi, kami menghadirkan suasana yang tenang dan kondusif untuk beristirahat maupun beraktivitas. Saksikan video cinematic kami untuk melihat langsung fasilitas yang tersedia dan rasakan kenyamanan yang kami tawarkan.
                 </p>
-                <button class="btn">Pesan Sekarang</button>
+                <button class="btn"><a href="#booking">Pesan Sekarang</a></button>
             </div>
             <div class="intro__video">
                 <video src="assets/0305.mp4" autoplay muted loop></video>
@@ -438,17 +438,18 @@
         @endif
     </section>
 
-    <footer class="footer">
+    <footer class="footer" id="contact">
         <div class="section__container footer__container">
             <div class="footer__col">
                 <div class="logo footer__logo">
                     <div class="w-14 h-14 sm:w-16 mt-0 sm:h-16">
                         <a href="#"><img src="assets/Logo/mc.png" alt="logo" class="mt-3" /></a>
-                    </div> <span>B1NG<br />EMPIRE</span>
+                    </div> <span>KOST ISTANA<br />MERDEKA 03</span>
                 </div>
                 <p class="section__description">
-                    B1NG EMPIRE adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding. </p>
-                </p>
+                    Selamat datang di Kost Istana Merdeka 3, pilihan terbaik bagi Anda yang mencari hunian premium dengan kenyamanan maksimal. Terletak strategis di atas B11N Gym Purwokerto, kost khusus putra ini menawarkan suasana eksklusif dan tenang, jauh dari kebisingan meskipun berada di area gym.
+
+                    Nikmati fasilitas terbaik seperti AC di setiap kamar dan WiFi berkecepatan tinggi, memastikan Anda tetap nyaman saat beristirahat, belajar, atau bekerja. </p>
                 <ul class="footer__socials">
                     <li>
                         <a href="mailto:sobiin77@gmail.com"><i class="fas fa-envelope"></i></a>
@@ -467,10 +468,10 @@
             <div class="footer__col">
                 <h4>Quick Link</h4>
                 <div class="footer__links">
-                    <li><a href="#">B1NG EMPIRE</a></li>
+                    <li><a href="{{ route('home') }}" target="_blank">B1NG EMPIRE</a></li>
                     <li><a href="{{ route('index') }}" target="_blank">B11N Gym Website</a></li>
                     <li><a href="{{ route('kinggym') }}" target="_blank">K1NG Gym Website</a></li>
-                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 3 Website</a></li>
+                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 03 Website</a></li>
                     <li><a href="{{ route('product.index') }}" target="_blank">B11N & K1NG Gym Store</a></li>
                     <li><a href="{{ route('blogs.index') }}" target="_blank">B1NG EMPIRE Blog</a></li>
                 </div>
@@ -478,29 +479,39 @@
             <div class="footer__col">
                 <h4>Hubungi Kami</h4>
                 <div class="footer__links">
-                    <li>
-                        <span><i class="ri-phone-fill"></i></span>
-                        <div>
-                            <h5>No. Telephone</h5>
-                            <p>+62 896 5384 7651</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span><i class="ri-record-mail-line"></i></span>
-                        <div>
-                            <h5>Email</h5>
-                            <p>sobiin77@gmail.com</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span><i class="ri-map-pin-2-fill"></i></span>
-                        <div>
-                            <h5>Alamat</h5>
-                            <p>Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas</p>
-                        </div>
-                    </li>
+                    <a href="tel:+6289653847651">
+
+                        <li>
+                            <span><i class="ri-phone-fill"></i></span>
+                            <div>
+                                <h5>No. Telephone</h5>
+                                <p>+62 896 5384 7651</p>
+                            </div>
+                        </li>
+                    </a>
+                    <a href="mailto:sobiin77@gmail.com">
+
+                        <li>
+                            <span><i class="ri-record-mail-line"></i></span>
+                            <div>
+                                <h5>Email</h5>
+                                <p>sobiin77@gmail.com</p>
+                            </div>
+                        </li>
+                    </a>
+                    <a href="https://www.google.com/maps?q=Jl.+Masjid+Baru,+Arcawinangun,Kec.+Purwokerto+Timur,+Kab.+Banyumas" target="_blank">
+
+                        <li>
+                            <span><i class="ri-map-pin-2-fill"></i></span>
+                            <div>
+                                <h5>Alamat</h5>
+                                <p>Jl. Masjid Baru, Arcawinangun, Kec. Purwokerto Timur, Kab. Banyumas</p>
+                            </div>
+                        </li>
+                    </a>
                 </div>
             </div>
+
         </div>
         <div class="footer__bar">
             Copyright © 2025 B1NG EMPIRE. All rights reserved.

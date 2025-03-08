@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/mc.png'))">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
         rel="stylesheet" />
@@ -27,7 +27,7 @@
             <div class="nav__header">
                 <div class="logo nav__logo">
                     <div class="w-14 h-14 sm:w-16 mt-4 sm:h-16">
-                        <a href="#"><img src="assets/Logo/mc.png" alt="logo" /></a>
+                        <a href="#"><img src="assets/Logo/empire.png" alt="logo" /></a>
                     </div>
                     <span>B1NG EMPIRE<br />BLOG</span>
                 </div>
@@ -41,16 +41,16 @@
                         class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
                 </li>
                 <li>
-                    <a href="{{ route('blogs.index') }}"
-                        class="{{ Route::currentRouteName() === 'blogs.index' ? 'active' : '' }}">BLOG</a>
-                </li>
-                <li>
                     <a href="{{ route('index') }}"
                         class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">B11N GYM</a>
                 </li>
                 <li>
                     <a href="{{ route('kinggym') }}"
                         class="{{ Route::currentRouteName() === 'kinggym' ? 'active' : '' }}">K1NG GYM</a>
+                </li>
+                <li>
+                    <a href="{{ route('kost') }}"
+                        class="{{ Route::currentRouteName() === 'kinggym' ? 'active' : '' }}">ISTANA MERDEKA 03</a>
                 </li>
                 <li>
                     <a href="{{ route('product.index') }}"
@@ -68,8 +68,8 @@
     </nav>
     @foreach ($logo as $logo)
     <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
         <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
         <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>

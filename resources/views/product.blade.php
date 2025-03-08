@@ -73,8 +73,8 @@
     </nav>
 
     <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><i class="fas fa-home"></i></a>
-        <a href="{{ route('kost') }}" class="action"><i class="fas fa-bed"></i></a>
+        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
         <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
         <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
@@ -159,7 +159,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2024 B1NG EMPIRE. All rights reserved.
+            Copyright © 2025 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
     <script src="assets/js/script.js"></script>
