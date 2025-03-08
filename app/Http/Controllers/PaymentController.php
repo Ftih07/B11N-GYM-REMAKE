@@ -30,7 +30,7 @@ class PaymentController extends Controller
 
         // Simpan ke Database
         $payment = Payment::create([
-            'c' => $orderID,
+            'order_id' => $orderID,
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,

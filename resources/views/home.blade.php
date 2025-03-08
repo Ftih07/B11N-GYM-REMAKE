@@ -263,7 +263,7 @@
             </div>
         </div>
         <div class="footer__bar">
-            Copyright © 2024 Mullticore. All rights reserved.
+            Copyright © 2025 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 

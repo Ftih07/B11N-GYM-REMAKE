@@ -11,7 +11,7 @@ class TestimoniSeeder extends Seeder
     public function run(): void
     {
         // Ambil file JSON dari public
-        $jsonPath = public_path('testimoni_kinggym.json');
+        $jsonPath = public_path('reviewkost.json');
 
         if (!File::exists($jsonPath)) {
             dd("File JSON tidak ditemukan di: " . $jsonPath);
@@ -29,7 +29,7 @@ class TestimoniSeeder extends Seeder
                 'name' => $data['name'] ?? 'Anonim',
                 'description' => $data['text'] ?? 'Tidak ada deskripsi.',
                 'image' => $data['reviewerPhotoUrl'] ?? null, // Gunakan foto reviewer jika ada
-                'gymkos_id' => 2, // Default gymkos_id = 1
+                'gymkos_id' => 3, // Default gymkos_id = 1
                 'rating' => $data['stars'] ?? 0
             ]);
         }

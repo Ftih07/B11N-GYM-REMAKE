@@ -57,4 +57,3 @@ Route::post('/kost-istana-merdeka-3/book', [HomeController::class, 'bookKost'])-
 
 Route::post('/payment/upload', [PaymentController::class, 'uploadPayment']);
 
-Route::post('/send-order-confirmation', [PaymentStoreController::class, 'sendOrderConfirmation'])->name('sendOrderConfirmation');

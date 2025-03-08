@@ -69,7 +69,7 @@
                 <p><strong>Status Pembayaran:</strong> {{ ucfirst($booking->status) }}</p>
             </div>
 
-            <p>Mohon menunggu konfirmasi lebih lanjut dari tim kami. Jika Anda memiliki pertanyaan atau ingin mengubah reservasi, silakan hubungi kami.</p>
+            <p>Kami tunggu kedatangan anda di Kost Istana Merdeka 03. Jika Anda memiliki pertanyaan atau ingin mengubah reservasi, silakan hubungi kami.</p>
 
             <p>Salam hangat,</p>
             <p><strong>Kost Istana Merdeka 3</strong></p>

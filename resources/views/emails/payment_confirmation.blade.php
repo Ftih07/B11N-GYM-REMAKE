@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Konfirmasi Pembayaran</title>
+    <title>Konfirmasi Pembayaran Membership</title>
 </head>
 <body>
     <h2>Halo, {{ $payment->name }}</h2>
@@ -13,8 +13,8 @@
 
     <p><img src="{{ asset($membershipImage) }}" alt="Membership Image" width="200"></p>
 
-    <p>Kami akan segera mengonfirmasi pembayaran Anda. Jika ada pertanyaan, silakan hubungi kami.</p>
+    <p>Pembayaran anda telah kami konfirmasi. Jika ada pertanyaan, silakan hubungi kami.</p>
 
-    <p>Salam,<br>B11N Gym</p>
+    <p>Salam,<br>B11N & K1NG Gym</p>
 </body>
 </html>

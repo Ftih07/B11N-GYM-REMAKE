@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -318,7 +316,7 @@ nav {
     }
 }
 .booking {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
 }
 
 .booking__container form {
@@ -494,6 +492,28 @@ nav {
     position: relative;
     isolation: isolate;
     background-color: var(--primary-color);
+}
+
+.booking-section {
+    position: relative;
+    background-color: var(--primary-color);
+    padding: 5%;
+}
+
+.section__header-booking {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    font-family: var(--header-font);
+    color: var(--black);
+    margin-bottom: 5px;
+}
+
+.booking-subtext {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--black);
+    margin-bottom: 10%;
 }
 
 .intro::before {
@@ -1092,7 +1112,7 @@ nav {
 .booking-form input, .booking-form select {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
+    margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
@@ -1173,4 +1193,41 @@ nav {
 .room.selected {
     background-color: #4CAF50;
     color: white;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.stairs, .balcony {
+    padding: 10px 50px;
+    border: 2px solid black;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.bathrooms {
+    display: flex;
+    gap: 15px;
+}
+
+.bathroom {
+    padding: 8px 12px;
+    border: 2px solid black;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+button:disabled {
+    background-color: #ccc; /* Warna abu-abu */
+    color: #666; /* Warna teks lebih redup */
+    cursor: not-allowed; /* Ubah kursor menjadi tanda larangan */
+    opacity: 0.6; /* Bikin sedikit transparan */
 }

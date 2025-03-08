@@ -56,8 +56,9 @@
                 <li class="nav-item"><a href="#header" class="nav-link">HOME</a></li>
                 <li class="nav-item"><a href="#about" class="nav-link">TENTANG KAMI</a></li>
                 <li class="nav-item"><a href="#website" class="nav-link">FASILITAS</a></li>
-                <li class="nav-item"><a href="#store" class="nav-link">KAMAR</a></li>
-                <li class="nav-item"><a href="#blog" class="nav-link">BLOG</a></li>
+                <li class="nav-item"><a href="#room" class="nav-link">KAMAR</a></li>
+                <li class="nav-item"><a href="#feature" class="nav-link">FASILITAS</a></li>
+                <li class="nav-item"><a href="#booking" class="nav-link">PEMESANAN</a></li>
                 <li class="nav-item"><a href="#membership" class="nav-link">HUBUNGI KAMI</a></li>
             </ul>
         </div>
@@ -71,6 +72,7 @@
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
     </menu>
 
+    <!-- Header -->
     <header class="header" id="home" style="
          background-image: linear-gradient(
              to left,
@@ -88,6 +90,8 @@
             <button class="btn">Halo, senang melihat anda 👋🏻</button>
         </div>
     </header>
+
+    <!-- About -->
     <section class="about" id="about">
         <div class="section__container about__container">
             <div class="about__grid">
@@ -119,11 +123,12 @@
                     Selamat datang di Kost Istana Merdeka 3, pilihan terbaik bagi Anda yang mencari hunian premium dengan kenyamanan maksimal. Terletak strategis di atas B11N Gym Purwokerto, kost khusus putra ini menawarkan suasana eksklusif dan tenang, jauh dari kebisingan meskipun berada di area gym.
 
                     Nikmati fasilitas terbaik seperti AC di setiap kamar dan WiFi berkecepatan tinggi, memastikan Anda tetap nyaman saat beristirahat, belajar, atau bekerja. </p>
-                <button class="btn">Book Now</button>
+                <button class="btn"><a href="#website">Pesan Sekarang</a></button>
             </div>
         </div>
     </section>
 
+    <!-- Room -->
     <section class="room__container" id="room">
         <p class="section__subheader">Kamar</p>
         <h2 class="section__header">Tersedia 2 Jenis Kamar</h2>
@@ -151,6 +156,7 @@
         </div>
     </section>
 
+    <!-- Room Tour -->
     <section class="intro">
         <div class="section__container intro__container">
             <div class="intro__cotent">
@@ -159,7 +165,7 @@
                 <p class="section__description">
                     Nikmati pengalaman tinggal di Kost Istana Merdeka 3 yang nyaman dan eksklusif. Dengan kamar ber-AC yang bersih dan tertata rapi, kami menghadirkan suasana yang tenang dan kondusif untuk beristirahat maupun beraktivitas. Saksikan video cinematic kami untuk melihat langsung fasilitas yang tersedia dan rasakan kenyamanan yang kami tawarkan.
                 </p>
-                <button class="btn">Book Now</button>
+                <button class="btn">Pesan Sekarang</button>
             </div>
             <div class="intro__video">
                 <video src="assets/0305.mp4" autoplay muted loop></video>
@@ -167,6 +173,7 @@
         </div>
     </section>
 
+    <!-- Feature -->
     <section class="section__container feature__container" id="feature">
         <p class="section__subheader">FASILITAS</p>
         <h2 class="section__header">Fasilitas Kami</h2>
@@ -256,7 +263,8 @@
                 @foreach ($testimonis as $testimoni)
                 <div class="swiper-slide">
                     <div class="client__card">
-                        <img src="{{ asset('storage/' . $testimoni->image) }}" alt="{{ $testimoni->name }}" />
+                        <img src="{{ filter_var($testimoni->image, FILTER_VALIDATE_URL) ? $testimoni->image : asset('storage/' . $testimoni->image) }}"
+                            alt="{{ $testimoni->name }}" />
                         <div><i class="ri-double-quotes-r"></i></div>
                         <p>{{ $testimoni->description }}</p>
                         <h4>{{ $testimoni->name }}</h4>
@@ -277,6 +285,7 @@
         </div>
     </section>
 
+    <!-- Gallery -->
     <section class="gallery" id="gallery">
         <div class="section__container menu__container">
             <div class="menu__header">
@@ -301,76 +310,99 @@
         </div>
     </section>
 
+    <!-- Booking -->
+    <div class="booking-section" id="booking">
+        <section class="booking-container">
+            <form class="booking-form" action="{{ route('kost.book') }}" method="POST" enctype="multipart/form-data" id="bookingForm">
+                <h2 class="section__header-booking">Form Pemesanan Kamar</h2>
+                <p class="booking-subtext">Kost Istana Merdeka 03</p>
+                <hr>
+                @csrf
 
+                <label for="name">Nama Lengkap</label>
+                <input type="text" id="name" name="name" required>
 
-    <section class="booking-container">
-        <h2 class="booking-title">Booking Kamar Kost Istana Merdeka 3</h2>
-        <form class="booking-form" action="{{ route('kost.book') }}" method="POST" enctype="multipart/form-data" id="bookingForm">
-            @csrf
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
 
-            <label for="name">Nama Lengkap</label>
-            <input type="text" id="name" name="name" required>
+                <label for="phone">Nomor WhatsApp</label>
+                <input type="tel" id="phone" name="phone" required>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+                <label for="date">Pilih Tanggal</label>
+                <input type="date" id="date" name="date" required>
+                <span id="tooltip" class="hidden absolute bg-red-500 text-white text-xs rounded p-1"></span>
 
-            <label for="phone">Nomor WhatsApp</label>
-            <input type="tel" id="phone" name="phone" required>
-
-            <label for="date">Pilih Tanggal</label>
-            <input type="date" id="date" name="date" required>
-            <span id="tooltip" class="hidden absolute bg-red-500 text-white text-xs rounded p-1"></span>
-
-            <label for="room_number">Pilih Nomor Kamar</label>
-            <div class="container-room">
-                @foreach(array_chunk(range(1, 10), 2) as $row)
-                <div class="room-row">
-                    @foreach($row as $room)
-                    @php
-                    $isBooked = in_array($room, $bookedRooms ?? []);
-                    @endphp
-                    <div class="room {{ $isBooked ? 'booked' : '' }}" data-room="{{ $room }}">
-                        {{ str_pad($room, 2, '0', STR_PAD_LEFT) }}
+                <label for="room_number">Pilih Nomor Kamar</label>
+                <div class="layout">
+                    <div class="stairs">Tangga</div>
+                    <div class="bathrooms">
+                        <div class="bathroom">Kamar mandi 01</div>
+                        <div class="bathroom">Kamar mandi 02</div>
                     </div>
-                    @endforeach
+                    <div class="container-room">
+                        @foreach(array_chunk(range(1, 10), 2) as $row)
+                        <div class="room-row">
+                            @foreach($row as $room)
+                            @php
+                            $isBooked = in_array($room, $bookedRooms ?? []);
+                            @endphp
+                            <div class="room {{ $isBooked ? 'booked' : '' }}" data-room="{{ $room }}">
+                                {{ str_pad($room, 2, '0', STR_PAD_LEFT) }}
+                            </div>
+                            @endforeach
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="balcony">Balkon</div>
                 </div>
-                @endforeach
-            </div>
-            <input type="hidden" id="room_number" name="room_number" required>
 
-            <label for="room_type">Pilih Jenis Kamar</label>
-            <select id="room_type" name="room_type">
-                <option value="750rb - AC">750rb - AC</option>
-                <option value="350rb - Non AC">350rb - Non AC</option>
-            </select>
+                <input type="hidden" id="room_number" name="room_number" required>
 
-            <label for="paymentMethod">Metode Pembayaran</label>
-            <select id="paymentMethod" name="paymentMethod" required>
-                <option value="" selected disabled>Pilih Metode</option>
-                <option value="qris">QRIS</option>
-                <option value="transfer">Transfer Bank</option>
-            </select>
+                <label for="room_type">Pilih Jenis Kamar</label>
+                <select id="room_type" name="room_type">
+                    <option value="750rb - AC">750rb - AC</option>
+                    <option value="350rb - Non AC">350rb - Non AC</option>
+                </select>
 
-            <!-- Bagian QRIS -->
-            <div id="qrisSection" class="hidden">
-                <p>Silakan scan QRIS di bawah ini:</p>
-                <img src="{{ asset('images/qris.png') }}" alt="QRIS">
-            </div>
+                <label for="paymentMethod">Metode Pembayaran</label>
+                <select id="paymentMethod" name="paymentMethod" required>
+                    <option value="" selected disabled>Pilih Metode</option>
+                    <option value="qris">QRIS</option>
+                    <option value="transfer">Transfer Bank</option>
+                </select>
 
-            <!-- Bagian Transfer -->
-            <div id="transferSection" class="hidden">
-                <p>Nomor Rekening: <strong>123456789 (BCA)</strong></p>
-            </div>
+                <!-- Bagian QRIS -->
+                <div id="qrisSection" class="hidden">
+                    <p>Silakan scan QRIS di bawah ini:</p>
+                    <div class="place-items-center">
+                        <img
+                            src="/assets/img/pembayaran/qris-barcode.png"
+                            alt="QRIS Barcode"
+                            class="img-fluid w-full md:w-1/2" />
+                    </div>
+                </div>
 
-            <label for="paymentProof">Upload Bukti Pembayaran</label>
-            <input type="file" id="paymentProof" name="paymentProof" accept="image/*" required>
+                <!-- Bagian Transfer -->
+                <div id="transferSection" class="hidden">
+                    <p class="text-center">Nomor Rekening: <strong>0461701506</strong></p>
+                    <p class="text-center">An: <strong>Sobiin</strong></p>
+                    <div class="place-items-center">
+                        <img
+                            src="/assets/img/pembayaran/bca.png"
+                            alt="Bank BCA"
+                            class="img-fluid w-1/2" />
+                    </div>
+                </div>
 
-            <button type="submit" class="booking-btn" id="bookingNow" disabled>Booking Sekarang</button>
-        </form>
-    </section>
+                <label for="paymentProof">Upload Bukti Pembayaran</label>
+                <input type="file" id="paymentProof" name="paymentProof" accept="image/*" required>
 
+                <button type="submit" class="booking-btn" id="bookingNow" disabled>Booking Sekarang</button>
+            </form>
+        </section>
+    </div>
 
-
+    <!-- Booking -->
     <section class="section__container news__container" id="blog">
         <div class="news__header">
             <div>
@@ -407,8 +439,71 @@
     </section>
 
     <footer class="footer">
+        <div class="section__container footer__container">
+            <div class="footer__col">
+                <div class="logo footer__logo">
+                    <div class="w-14 h-14 sm:w-16 mt-0 sm:h-16">
+                        <a href="#"><img src="assets/Logo/mc.png" alt="logo" class="mt-3" /></a>
+                    </div> <span>B1NG<br />EMPIRE</span>
+                </div>
+                <p class="section__description">
+                    B1NG EMPIRE adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding. </p>
+                </p>
+                <ul class="footer__socials">
+                    <li>
+                        <a href="mailto:sobiin77@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://wa.me/6281226110988"><i class="ri-whatsapp-line"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/biin_gym/"><i class="ri-instagram-fill"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU"><i class="ri-threads-fill"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer__col">
+                <h4>Quick Link</h4>
+                <div class="footer__links">
+                    <li><a href="#">B1NG EMPIRE</a></li>
+                    <li><a href="{{ route('index') }}" target="_blank">B11N Gym Website</a></li>
+                    <li><a href="{{ route('kinggym') }}" target="_blank">K1NG Gym Website</a></li>
+                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 3 Website</a></li>
+                    <li><a href="{{ route('product.index') }}" target="_blank">B11N & K1NG Gym Store</a></li>
+                    <li><a href="{{ route('blogs.index') }}" target="_blank">B1NG EMPIRE Blog</a></li>
+                </div>
+            </div>
+            <div class="footer__col">
+                <h4>Hubungi Kami</h4>
+                <div class="footer__links">
+                    <li>
+                        <span><i class="ri-phone-fill"></i></span>
+                        <div>
+                            <h5>No. Telephone</h5>
+                            <p>+62 896 5384 7651</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span><i class="ri-record-mail-line"></i></span>
+                        <div>
+                            <h5>Email</h5>
+                            <p>sobiin77@gmail.com</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span><i class="ri-map-pin-2-fill"></i></span>
+                        <div>
+                            <h5>Alamat</h5>
+                            <p>Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas</p>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </div>
         <div class="footer__bar">
-            Copyright © 2024 Mullticore. All rights reserved.
+            Copyright © 2025 B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 

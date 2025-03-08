@@ -94,7 +94,7 @@
                 <a
                     href="#"
                     class="inline-block py-3 px-8 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-xl sm:rounded-full shadow-lg transition duration-300">
-                    B11N Gym || K1NG Gym || Kost Istana Merdeka 3
+                    B11N Gym | K1NG Gym | Kost Istana Merdeka 03
                 </a>
             </div>
         </div>
