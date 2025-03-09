@@ -15,9 +15,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BookingResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return Booking::count(); // Menampilkan jumlah total data booking
+    }
 
     protected static ?string $model = Booking::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -29,7 +33,7 @@ class BookingResource extends Resource
                 Forms\Components\Select::make('room_type')
                     ->options([
                         '750rb - AC' => '750rb - AC',
-                        '350rb - Non AC' => '350rb - Non AC'
+                        '500rb - Non AC' => '500rb - Non AC'
                     ])
                     ->required(),
                 Forms\Components\Select::make('room_number')
@@ -50,7 +54,7 @@ class BookingResource extends Resource
                 ])->default('pending')->required(),
             ]);
     }
-
+ 
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table->columns([

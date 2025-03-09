@@ -140,7 +140,7 @@
                         <h4>Kamar Non AC</h4>
                         <p>Nyaman, terjangkau, dan cocok untuk hunian yang hemat.</p>
                     </div>
-                    <h3>Rp350.000<span>/bulan</span></h3>
+                    <h3>Rp500.000<span>/bulan</span></h3>
                 </div>
             </div>
             <div class="room__card">
@@ -361,7 +361,7 @@
                 <label for="room_type">Pilih Jenis Kamar</label>
                 <select id="room_type" name="room_type">
                     <option value="750rb - AC">750rb - AC</option>
-                    <option value="350rb - Non AC">350rb - Non AC</option>
+                    <option value="500rb - Non AC">500rb - Non AC</option>
                 </select>
 
                 <label for="paymentMethod">Metode Pembayaran</label>

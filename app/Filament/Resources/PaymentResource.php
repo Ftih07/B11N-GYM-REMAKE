@@ -20,9 +20,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PaymentResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return Payment::count(); // Menampilkan jumlah total data booking
+    }
     protected static ?string $model = Payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     public static function form(Forms\Form $form): Forms\Form
     {

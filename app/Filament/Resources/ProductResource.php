@@ -15,11 +15,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return Product::count(); // Menampilkan jumlah total data booking
+    }
     protected static ?string $navigationGroup = 'Store';
-    protected static ?int $navigationSort = 4;
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
     public static function form(Form $form): Form
     {

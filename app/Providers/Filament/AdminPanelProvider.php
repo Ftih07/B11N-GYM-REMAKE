@@ -2,6 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\DashboardStats;
+use App\Filament\Widgets\MembershipChart;
+use App\Filament\Widgets\MembershipPaymentChart;
+use App\Filament\Widgets\MembershipRevenueChart;
+use App\Filament\Widgets\OrdersChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -37,6 +42,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                DashboardStats::class,
+                OrdersChart::class,
+                MembershipPaymentChart::class,
+                MembershipRevenueChart::class,
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])

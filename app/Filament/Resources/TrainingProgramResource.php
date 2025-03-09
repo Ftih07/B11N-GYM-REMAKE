@@ -17,10 +17,9 @@ use Filament\Tables\Columns\ImageColumn;
 class TrainingProgramResource extends Resource
 {
     protected static ?string $navigationGroup = 'Training Program';
-    protected static ?int $navigationSort = 3;
     protected static ?string $model = TrainingProgram::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-fire';
 
     public static function form(Form $form): Form
     {
