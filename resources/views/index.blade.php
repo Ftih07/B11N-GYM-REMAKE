@@ -56,29 +56,35 @@
 		</div>
 	</nav>
 
-    <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
-        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
-        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
-    </menu>
+	<menu class="z-50">
+		<a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+		<a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
+		<a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+		<a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+		<a href="#" class="trigger"><i class="fas fa-plus"></i></a>
+	</menu>
 
 	<!--Hero-->
 	<section id="header">
 		<header class="header">
 			<div class="relative flex items-center justify-center h-screen bg-black text-white"
 				style="
-         background-image: linear-gradient(
-             to right,
-             rgba(0, 0, 0, 0.2),
-             rgba(0, 0, 0, 0.9)
-         ),
-         url('assets/Hero/b11ngym.jpg');
-         background-size: cover;
-		background-position: center center;
-         background-repeat: no-repeat;
-     ">
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),  /* Lapisan gelap di atas */
+            rgba(0, 0, 0, 0.5)
+        ),
+        linear-gradient(
+            to left, 
+            rgba(0, 0, 0, 0.8), 
+            rgba(0, 0, 0, 0.2),
+            rgba(0, 0, 0, 0.8)
+        ),
+        url('assets/home/biin-gym.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    ">
+	
 				<div class="header__content_hero relative text-center px-4 sm:px-8 md:px-12 lg:px-16">
 					<h1 class="text-4xl sm:text-6xl md:text-6xl lg:text-7xl font-extrabold">
 						<span class="text-red-600">B11N GYM</span><br>
@@ -196,7 +202,7 @@
 				<h4 class="text-lg sm:text-xl md:text-2xl font-semibold">{{ $trainer->name }}</h4>
 				<p class="text-sm sm:text-base md:text-lg text-gray-600">{{ $trainer->description }}</p>
 				<div class="trainer__socials flex justify-center mt-4 gap-4">
-					<a href="{{ $trainer->urls['facebook'] ?? '#' }}"><i class="ri-facebook-fill"></i></a>
+					<a href="{{ $trainer->urls['facebook'] ?? '#' }}" target="_blank"><i class="ri-facebook-fill"></i></a>
 					<a href="{{ $trainer->urls['whatsapp'] ?? '#' }}"><i class="ri-whatsapp-fill"></i></a>
 					<a href="{{ $trainer->urls['instagram'] ?? '#' }}"><i class="ri-instagram-fill"></i></a>
 				</div>

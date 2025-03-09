@@ -433,7 +433,7 @@ nav {
     display: grid;
     gap: 0 1rem;
 }
-
+ 
 .room__card img {
     box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
 }

@@ -213,7 +213,7 @@
              rgba(0, 0, 0, 0.2),
              rgba(0, 0, 0, 0.9)
          ),
-         url('assets/Hero/king.jpg');
+         url('assets/home/king-gym.jpg');
          background-size: cover;
 		background-position: center center;
          background-repeat: no-repeat;

@@ -72,7 +72,7 @@
         <div class="section__container about__container">
             <div class="about__grid">
                 <div class="about__image">
-                    <img src="assets/Hero/b11ngym.jpg" alt="about" />
+                    <img src="assets/home/biin-gym.jpg" alt="about" />
                 </div>
                 <div class="about__card">
                     <span><i class="fas fa-dumbbell"></i></span>
@@ -82,7 +82,7 @@
                     </p>
                 </div>
                 <div class="about__image">
-                    <img src="assets/home/kost.png" alt="about" />
+                    <img src="assets/home/kost.jpg" alt="about" />
                 </div>
                 <div class="about__card">
                     <span><i class="fas fa-bed"></i></span>
@@ -105,7 +105,7 @@
         <h2 class="section__header">Website Kami</h2>
         <div class="room__grid">
             <div class="room__card">
-                <img src="assets/home/biin.png" alt="room" />
+                <img src="assets/home/biin-gym.jpg" alt="b11n gym" />
                 <div class="room__card__details">
                     <div>
                         <h4>B11N Gym Purwokerto</h4>
@@ -118,7 +118,7 @@
                 </div>
             </div>
             <div class="room__card">
-                <img src="assets/home/king.jpg" alt="room" />
+                <img src="assets/home/king-gym.jpg" alt="b1ng gym" />
                 <div class="room__card__details">
                     <div>
                         <h4>K1NG Gym Purwokerto</h4>
@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div class="room__card">
-                <img src="assets/home/kost.png" alt="room" />
+                <img src="assets/home/istana-merdeka.jpg" alt="istana merdeka 03" />
                 <div class="room__card__details">
                     <div>
                         <h4>Kost Istana Merdeka 3</h4>

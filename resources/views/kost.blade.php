@@ -79,7 +79,7 @@
              rgba(0, 0, 0, 0.2),
              rgba(0, 0, 0, 0.9)
          ),
-         url('assets/Home/kost.png');
+         url('assets/facilities/ber-ac.png');
          background-size: cover;
 		background-position: center center;
          background-repeat: no-repeat;
@@ -96,7 +96,7 @@
         <div class="section__container about__container">
             <div class="about__grid">
                 <div class="about__image">
-                    <img src="assets/about-1.jpg" alt="about" />
+                    <img src="assets/facilities/ac.png" alt="about" />
                 </div>
                 <div class="about__card">
                     <span><i class="ri-user-line"></i></span>
@@ -106,7 +106,7 @@
                     </p>
                 </div>
                 <div class="about__image">
-                    <img src="assets/about-2.jpg" alt="about" />
+                    <img src="assets/home/biin-gym.jpg" alt="about" />
                 </div>
                 <div class="about__card">
                     <span><i class="ri-calendar-check-line"></i></span>
@@ -134,7 +134,7 @@
         <h2 class="section__header">Tersedia 2 Jenis Kamar</h2>
         <div class="room__grid">
             <div class="room__card">
-                <img src="assets/room-1.jpg" alt="room" />
+                <img src="assets/home/istana-merdeka.jpg" alt="room"/>
                 <div class="room__card__details">
                     <div>
                         <h4>Kamar Non AC</h4>
@@ -144,7 +144,7 @@
                 </div>
             </div>
             <div class="room__card">
-                <img src="assets/room-2.jpg" alt="room" />
+                <img src="assets/facilities/ber-ac.png" alt="room" />
                 <div class="room__card__details">
                     <div>
                         <h4>Kamar Ber-AC</h4>
@@ -443,7 +443,7 @@
             <div class="footer__col">
                 <div class="logo footer__logo">
                     <div class="w-14 h-14 sm:w-16 mt-0 sm:h-16">
-                        <a href="#"><img src="assets/Logo/mc.png" alt="logo" class="mt-3" /></a>
+                        <a href="#"><img src="assets/Logo/kost.png" alt="logo" class="mt-3" /></a>
                     </div> <span>KOST ISTANA<br />MERDEKA 03</span>
                 </div>
                 <p class="section__description">

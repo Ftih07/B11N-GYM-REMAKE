@@ -110,7 +110,7 @@ class HomeController extends Controller
             ->pluck('room_number') // Ambil hanya kolom tanggal
             ->toArray(); // Ubah jadi array
 
-        $gallery = Gallery::where('gymkos_id', 2)->get();
+        $gallery = Gallery::where('gymkos_id', 3)->get();
         $blog = Blog::published()->take(3)->get();
 
         $testimonis = \App\Models\Testimoni::where('gymkos_id', 3)

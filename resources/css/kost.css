@@ -438,14 +438,10 @@ nav {
 }
 
 .room__grid {
-    align-items: center;
     max-width: 1500px;
     margin-inline: auto;
     margin-top: 4rem;
     display: grid;
-    justify-content: center; /* Posisikan ke tengah */
-    flex-wrap: wrap; /* Supaya responsif di layar kecil */
-    display: flex;
     gap: 0 1rem;
 }
 
