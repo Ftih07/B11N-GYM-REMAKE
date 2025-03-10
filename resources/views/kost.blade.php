@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
-    @vite('resources/css/kost.css')
+    <link rel="stylesheet" href="/assets/css/kost.css?v=1.1">
     <title>Kost Istana Merdeka 03</title>
 </head>
 
