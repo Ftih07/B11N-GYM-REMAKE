@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <title>B1NG EMPIRE Blog</title>
-    <link rel="stylesheet" href="/assets/css/blog.css?v=1.1">
+    @vite('resources/css/blog.css')
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
         rel="stylesheet" />

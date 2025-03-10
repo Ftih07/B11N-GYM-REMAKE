@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-    <link rel="stylesheet" href="/assets/css/home.css?v=1.1">
+    @vite('resources/css/home.css')
     <title>B1NG EMPIRE</title>
 </head>
     <nav>
