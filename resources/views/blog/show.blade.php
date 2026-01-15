@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/mc.png'))">
     <title>{{ $blog->title }}</title>
     @vite('resources/css/app.css')
-    @vite('resources/css/index.css')
+    @vite('resources/css/blog/show.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
@@ -47,11 +47,11 @@
                         class="{{ Route::currentRouteName() === 'blogs.index' ? 'active' : '' }}">B1NG BLOG</a>
                 </li>
                 <li>
-                    <a href="{{ route('index') }}"
+                    <a href="{{ route('gym.biin') }}"
                         class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">B11N GYM</a>
                 </li>
                 <li>
-                    <a href="{{ route('kinggym') }}"
+                    <a href="{{ route('gym.king') }}"
                         class="{{ Route::currentRouteName() === 'kinggym' ? 'active' : '' }}">K1NG GYM</a>
                 </li>
                 <li>
@@ -59,8 +59,8 @@
                         class="{{ Route::currentRouteName() === 'kost' ? 'active' : '' }}">ISTANA MERDEKA 03</a>
                 </li>
                 <li>
-                    <a href="{{ route('product.index') }}"
-                        class="{{ Route::currentRouteName() === 'product.index' ? 'active' : '' }}">STORE</a>
+                    <a href="{{ route('store.biin-king') }}"
+                        class="{{ Route::currentRouteName() === 'store.biin-king' ? 'active' : '' }}">STORE</a>
                 </li>
                 <div class="mode rounded-full" id="switch-mode">
                     <div class="btn__indicator">
@@ -77,8 +77,8 @@
     <menu class="z-50">
         <a href="{{ route('home') }}" class="action"><img src="{{ asset('assets/Logo/empire.png') }}" alt="B1NG Empire" /></a>
         <a href="{{ route('kost') }}" class="action"><img src="{{ asset('assets/Logo/kost.png') }}" alt="Istana Merdeka" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="{{ asset('assets/Logo/biin.png') }}" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="{{ asset('assets/Logo/last.png') }}" alt="K1NG Gym" /></a>
+        <a href="{{ route('gym.biin') }}" class="action"><img src="{{ asset('assets/Logo/biin.png') }}" alt="B11N Gym" /></a>
+        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="{{ asset('assets/Logo/last.png') }}" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
     </menu>
     @endforeach
@@ -99,7 +99,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($relatedBlogs as $relatedBlog)
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
-                    <a href="{{ route('blog.show', $relatedBlog->id) }}" class="block">
+                    <a href="{{ route('blogs.show', $relatedBlog->id) }}" class="block">
                         <img src="{{ asset('storage/' . $relatedBlog->image) }}"
                             alt="{{ $relatedBlog->title }}"
                             class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">

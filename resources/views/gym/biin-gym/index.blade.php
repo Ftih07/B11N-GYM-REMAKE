@@ -6,7 +6,7 @@
 
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/last.png'))">
+	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
 
 	<link
 		href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
@@ -23,8 +23,8 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
-    @vite('resources/css/kinggym.css')
-	<title>K1NG Gym Purwokerto</title>
+	@vite('resources/css/gym/biin-gym/index.css')
+	<title>B11N Gym Purwokerto</title>
 </head>
 
 @foreach ($logo as $logo)
@@ -56,35 +56,41 @@
 		</div>
 	</nav>
 
-    <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
-        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
-        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
-    </menu>
+	<menu class="z-50">
+		<a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
+		<a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
+		<a href="{{ route('gym.biin') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+		<a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+		<a href="#" class="trigger"><i class="fas fa-plus"></i></a>
+	</menu>
 
 	<!--Hero-->
 	<section id="header">
 		<header class="header">
 			<div class="relative flex items-center justify-center h-screen bg-black text-white"
 				style="
-         background-image: linear-gradient(
-             to right,
-             rgba(0, 0, 0, 0.2),
-             rgba(0, 0, 0, 0.9)
-         ),
-         url('assets/Hero/king.jpg');
-         background-size: cover;
-		background-position: center center;
-         background-repeat: no-repeat;
-     ">
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),  /* Lapisan gelap di atas */
+            rgba(0, 0, 0, 0.5)
+        ),
+        linear-gradient(
+            to left, 
+            rgba(0, 0, 0, 0.8), 
+            rgba(0, 0, 0, 0.2),
+            rgba(0, 0, 0, 0.8)
+        ),
+        url('assets/home/biin-gym.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    	">
+
 				<div class="header__content_hero relative text-center px-4 sm:px-8 md:px-12 lg:px-16">
 					<h1 class="text-4xl sm:text-6xl md:text-6xl lg:text-7xl font-extrabold">
-						<span class="text-yellow-600">K1NG GYM</span><br>
+						<span class="text-red-600">B11N GYM</span><br>
 						PURWOKERTO
 					</h1>
-					<p class="mt-2 text-lg md:text-xl font-base">Empower The King On You | GIVE UP OR GET UP</p>
+					<p class="mt-2 text-lg md:text-xl font-base">Premium Fitness Studio | GIVE UP OR GET UP</p>
 					<div class="header__btn">
 						<a href="#membership">
 							<button class="btn btn__primary mt-3">GET STARTED</button>
@@ -100,7 +106,7 @@
 		<div class="about__header text-center">
 			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">Tentang Kami</h2>
 			<p class="section__description mx-auto text-center text-base sm:text-base md:text-base">
-				Selamat datang di K1NG Gym Purwokerto, pusat kebugaran populer di Ledug, Kec. Kembaran. Kami menawarkan keanggotaan harian, mingguan, dan bulanan dengan harga terjangkau. Fasilitas kami meliputi peralatan gym lengkap, loker yang aman, free personal trainer, dan free parkir. K1NG Gym bukan hanya tempat berolahraga, tapi juga ruang untuk membangun komunitas hidup sehat yang menyenangkan.
+				Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur. Kami menawarkan keanggotaan harian, mingguan, dan bulanan dengan harga terjangkau. Fasilitas kami meliputi peralatan gym lengkap, ruang istirahat ber-AC, ruang karaoke, dan loker yang aman. B11N Gym bukan hanya tempat berolahraga, tapi juga ruang untuk membangun komunitas hidup sehat yang menyenangkan.
 			</p>
 		</div>
 		<div class="about__grid">
@@ -133,7 +139,7 @@
 							alt="{{ $facility->title }}"
 							class="object-cover w-28 h-28" />
 					</div>
-					<h4 class="text-center text-yellow-600 mb-2 uppercase">{{ $facility->title }}</h4>
+					<h4 class="text-center text-red-600 mb-2 uppercase">{{ $facility->title }}</h4>
 					<p class="text-gray-600 text-sm text-center">
 						{{ $facility->description }}
 					</p>
@@ -196,7 +202,7 @@
 				<h4 class="text-lg sm:text-xl md:text-2xl font-semibold">{{ $trainer->name }}</h4>
 				<p class="text-sm sm:text-base md:text-lg text-gray-600">{{ $trainer->description }}</p>
 				<div class="trainer__socials flex justify-center mt-4 gap-4">
-					<a href="{{ $trainer->urls['facebook'] ?? '#' }}"><i class="ri-facebook-fill"></i></a>
+					<a href="{{ $trainer->urls['facebook'] ?? '#' }}" target="_blank"><i class="ri-facebook-fill"></i></a>
 					<a href="{{ $trainer->urls['whatsapp'] ?? '#' }}"><i class="ri-whatsapp-fill"></i></a>
 					<a href="{{ $trainer->urls['instagram'] ?? '#' }}"><i class="ri-instagram-fill"></i></a>
 				</div>
@@ -213,7 +219,7 @@
              rgba(0, 0, 0, 0.2),
              rgba(0, 0, 0, 0.9)
          ),
-         url('assets/home/king-gym.jpg');
+         url('assets/Hero/b11ngym.jpg');
          background-size: cover;
 		background-position: center center;
          background-repeat: no-repeat;
@@ -396,7 +402,7 @@
 										dengan klik tombol di atas.
 									</p>
 									<p class="text-gray-800 text-center rounded-md bg-gray-200 text-sm border-t-[15px] border-b-[15px] mb-3 mt-2">
-										Jangan lupa absen saat berkunjung ke K1NG Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
+										Jangan lupa absen saat berkunjung ke B11N Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
 									</p>
 									<div class="d-flex justify-content-between">
 										<button
@@ -441,7 +447,7 @@
 										dengan klik tombol di atas.
 									</p>
 									<p class="text-gray-800 text-center rounded-md bg-gray-200 text-sm border-t-[15px] border-b-[15px] mb-3 mt-2">
-										Jangan lupa absen saat berkunjung ke K1NG Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
+										Jangan lupa absen saat berkunjung ke B11N Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
 									</p>
 									<div class="d-flex justify-content-between">
 										<button
@@ -527,6 +533,7 @@
 					</div>
 				</div>
 
+
 			</div>
 		</div>
 	</section>
@@ -539,11 +546,11 @@
 		id="store">
 		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="header__content">
-				<h1 class="text-[#f0761f]">{{ $banner->title }}</h1>
+				<h1 class="text-[#dc030a]">{{ $banner->title }}</h1>
 				<h2 class="text-white">{{ $banner->subheading }}</h2>
 				<p class="text-white">{{ $banner->description }}</p>
 				<div class="header__btn">
-					<a href="{{ route('product.index') }}" class="btn btn__primary">VISIT STORE</a>
+					<a href="{{ route('store.biin-king') }}" class="btn btn__primary">VISIT STORE</a>
 				</div>
 			</div>
 		</div>
@@ -590,10 +597,10 @@
 			<div class="blog__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 				@foreach ($blog as $blog)
 				<div class="blog__card mt-4 md:mt-0">
-					<a href="{{ route('blog.show', $blog->id) }}">
+					<a href="{{ route('blogs.show', $blog->id) }}">
 						<img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-[300px] object-cover" />
 						<p class="uppercase text-[10px] tracking-[3px] mb-1 text-white mt-3">{{ $blog->created_at->format('F d, Y') }}</p>
-						<h4 class="text-lg font-medium uppercase">{{ $blog->title }}</h4>
+						<h5 class="text-lg font-medium uppercase">{{ $blog->title }}</h5>
 					</a>
 				</div>
 				@endforeach
@@ -611,7 +618,7 @@
 	<section class="w-full mx-auto" id="contact">
 		<div class="flex-dir-row" style="width: 100%; height: 300px;">
 			<div class="" style="width: 100%; height: 100%;">
-				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3990886005636!2d109.2682165745483!3d-7.421008173094577!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0048b6a975%3A0x8d16ddcbd80dad18!2sK1NG%20GYM!5e0!3m2!1sid!2sid!4v1735265555471!5m2!1sid!2sid" style="border:0; width: 100%; height: 100%" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.4855691732196!2d109.25932187454826!3d-7.411386672987716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0039f00903%3A0xf9273b4e5db80ee9!2sB11N%20GYM!5e0!3m2!1sid!2sid!4v1735117847259!5m2!1sid!2sid" style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 			</div>
 		</div>
 	</section>
@@ -624,11 +631,11 @@
 					<a href="#"><img src="{{ asset('storage/' . $logo->image) }}" alt="logo" /></a>
 				</div>
 				<p>
-					Selamat datang di K1NG Gym Purwokerto, pusat kebugaran populer di Ledug, Kec. Kembaran.
+					Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur.
 				</p>
 				<ul class="footer__links">
 					<li>
-						<a href="https://maps.app.goo.gl/a6hw3JmqBBEuBzt89" target="_blank">
+						<a href="https://maps.app.goo.gl/CEQqy1nCNUYKasrU9" target="_blank">
 							<span><i class="ri-map-pin-2-fill"></i></span>
 							Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas </a>
 					</li>
@@ -655,7 +662,7 @@
 					<img
 						src="{{ asset('storage/' . $item->image) }}"
 						alt="{{ $item->title }}"
-						class="gallery-thumbnail h-20 w-20 object-cover"
+						class="gallery-thumbnail"
 						data-bs-toggle="modal"
 						data-bs-target="#galleryModal"
 						data-title="{{ $item->title }}"
@@ -670,7 +677,7 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title">
-								<span class="text-danger">K1NG GYM </span>GALLERY
+								<span class="text-danger">B11N GYM </span>GALLERY
 							</h5>
 							<button
 								type="button"
@@ -691,43 +698,43 @@
 			</div>
 
 			<div class="footer_contact text-white">
-				<h4 class="text-yellow-600 text-lg font-bold mb-4">HUBUNGI KAMI</h4>
+				<h4 class="text-red-600 text-lg font-bold mb-4">HUBUNGI KAMI</h4>
 
 				<!-- Threads -->
 				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU" class="flex items-center gap-3 text-white group-hover:text-yellow-600 transition-all" target="_blank">
+					<a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
 						<!-- Threads Icon -->
-						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-threads group-hover:text-yellow-600" viewBox="0 0 16 16">
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-threads group-hover:text-red-600" viewBox="0 0 16 16">
 							<path d="M6.321 6.016c-.27-.18-1.166-.802-1.166-.802.756-1.081 1.753-1.502 3.132-1.502.975 0 1.803.327 2.394.948s.928 1.509 1.005 2.644q.492.207.905.484c1.109.745 1.719 1.86 1.719 3.137 0 2.716-2.226 5.075-6.256 5.075C4.594 16 1 13.987 1 7.994 1 2.034 4.482 0 8.044 0 9.69 0 13.55.243 15 5.036l-1.36.353C12.516 1.974 10.163 1.43 8.006 1.43c-3.565 0-5.582 2.171-5.582 6.79 0 4.143 2.254 6.343 5.63 6.343 2.777 0 4.847-1.443 4.847-3.556 0-1.438-1.208-2.127-1.27-2.127-.236 1.234-.868 3.31-3.644 3.31-1.618 0-3.013-1.118-3.013-2.582 0-2.09 1.984-2.847 3.55-2.847.586 0 1.294.04 1.663.114 0-.637-.54-1.728-1.9-1.728-1.25 0-1.566.405-1.967.868ZM8.716 8.19c-2.04 0-2.304.87-2.304 1.416 0 .878 1.043 1.168 1.6 1.168 1.02 0 2.067-.282 2.232-2.423a6.2 6.2 0 0 0-1.528-.161" />
 						</svg>
-						<h5 class="font-semibold text-xl group-hover:text-yellow-600 transition-all">Threads</h5>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Threads</h5>
 					</a>
 					<p class="text-gray-400 text-sm tracking-wide uppercase mt-2">B11N_GYM</p>
 				</div>
 
 				<!-- Instagram -->
 				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://www.instagram.com/biin_gym/" class="flex items-center gap-3 text-white group-hover:text-yellow-600 transition-all" target="_blank">
-						<i class="fab fa-instagram text-xl group-hover:text-yellow-600"></i>
-						<h5 class="font-semibold text-xl group-hover:text-yellow-600 transition-all">Instagram</h5>
+					<a href="https://www.instagram.com/biin_gym/" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<i class="fab fa-instagram text-xl group-hover:text-red-600"></i>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Instagram</h5>
 					</a>
 					<p class="text-gray-400 text-sm tracking-wide uppercase mt-2">BIIN_GYM</p>
 				</div>
 
 				<!-- WhatsApp -->
 				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://wa.me/6281226110988" class="flex items-center gap-3 text-white group-hover:text-yellow-600 transition-all" target="_blank">
-						<i class="fab fa-whatsapp text-xl group-hover:text-yellow-600"></i>
-						<h5 class="font-semibold text-xl group-hover:text-yellow-600 transition-all">Whatsapp</h5>
+					<a href="https://wa.me/6281226110988" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<i class="fab fa-whatsapp text-xl group-hover:text-red-600"></i>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Whatsapp</h5>
 					</a>
 					<p class="text-gray-400 text-sm tracking-wide mt-2">0896-5384-7651</p>
 				</div>
 
 				<!-- Email -->
 				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="mailto:sobiin77@gmail.com" class="flex items-center gap-3 text-white group-hover:text-yellow-600 transition-all" target="_blank">
-						<i class="fas fa-envelope text-xl group-hover:text-yellow-600"></i>
-						<h5 class="font-semibold text-xl group-hover:text-yellow-600 transition-all">Email</h5>
+					<a href="mailto:sobiin77@gmail.com" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+						<i class="fas fa-envelope text-xl group-hover:text-red-600"></i>
+						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Email</h5>
 					</a>
 					<p class="text-gray-400 text-sm tracking-wide mt-2">SOBIIN77@GMAIL.COM</p>
 				</div>
@@ -896,8 +903,6 @@
 			});
 		});
 
-
-		// Nav Utama
 		const trigger = document.querySelector("menu > .trigger");
 		trigger.addEventListener('click', (e) => {
 			e.currentTarget.parentElement.classList.toggle("open");
@@ -908,27 +913,80 @@
 		document.getElementById('paymentForm').addEventListener('submit', function(event) {
 			event.preventDefault();
 
+			// 1. Definisi Elemen
+			const form = this;
+			const submitBtn = form.querySelector('button[type="submit"]');
+			const originalBtnText = submitBtn.innerHTML; // Simpan teks asli tombol "Upload"
+			const modalElement = document.getElementById('paymentConfirmationModal');
+			const modalInstance = bootstrap.Modal.getInstance(modalElement);
+
+			// 2. Aktifkan Loading State
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
+
+			// 3. Siapkan Data
 			let formData = new FormData(this);
 
+			// 4. Kirim Request
 			fetch('/payment/upload', {
 					method: 'POST',
 					body: formData,
 					headers: {
-						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+						// Jangan set 'Content-Type' secara manual saat pakai FormData, 
+						// browser akan otomatis mengaturnya termasuk boundary-nya.
 					}
 				})
-				.then(response => response.text()) // Ubah dari `.json()` ke `.text()`
+				.then(response => {
+					// Cek jika response sukses (200 OK)
+					if (response.ok) {
+						return response.json();
+					}
+					// Jika error validasi (422) atau server error (500)
+					return response.json().then(err => {
+						throw err;
+					});
+				})
 				.then(data => {
-					console.log('Response:', data); // Cek di console log
-					try {
-						let jsonData = JSON.parse(data); // Coba parse ke JSON
-						alert(jsonData.message);
-					} catch (e) {
-						console.error('Invalid JSON response:', data);
+					// --- SUKSES ---
+					console.log('Success:', data);
+
+					// Tampilkan pesan sukses (Bisa ganti SweetAlert biar lebih cantik)
+					alert("Berhasil! " + data.message + "\nOrder ID: " + data.order_id);
+
+					// Reset form agar bersih jika mau upload lagi
+					form.reset();
+
+					// Tutup Modal
+					if (modalInstance) {
+						modalInstance.hide();
 					}
 				})
-				.catch(error => console.error('Error:', error));
+				.catch(error => {
+					// --- ERROR ---
+					console.error('Error:', error);
 
+					let errorMessage = "Terjadi kesalahan saat mengupload.";
+
+					// Cek apakah ini error validasi dari Laravel (Status 422)
+					if (error.errors) {
+						errorMessage = "Gagal Validasi:\n";
+						// Loop error message dari Laravel
+						for (const [key, messages] of Object.entries(error.errors)) {
+							errorMessage += `- ${messages[0]}\n`;
+						}
+					} else if (error.message) {
+						errorMessage = error.message;
+					}
+
+					alert(errorMessage);
+				})
+				.finally(() => {
+					// --- FINALLY (Selalu dijalankan) ---
+					// 5. Matikan Loading State (Kembalikan tombol seperti semula)
+					submitBtn.disabled = false;
+					submitBtn.innerHTML = originalBtnText;
+				});
 		});
 
 		function showPaymentConfirmationModal() {

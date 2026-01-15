@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gym;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentConfirmationMail;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Store;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class CheckoutController extends Controller
 {
@@ -18,6 +19,6 @@ class CheckoutController extends Controller
         $cart = session()->get('cart', []); // Ambil data atau array kosong jika belum ada
 
         // Kirimkan data ke view
-        return view('checkout', compact('cart'));
+        return view('store.checkout.index', compact('cart'));
     }
 }

@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <title>B1NG EMPIRE Blog</title>
-    @vite('resources/css/blog.css')
+    @vite('resources/css/blog/index.css')
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
         rel="stylesheet" />
@@ -41,11 +41,11 @@
                         class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
                 </li>
                 <li>
-                    <a href="{{ route('index') }}"
+                    <a href="{{ route('gym.biin') }}"
                         class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">B11N GYM</a>
                 </li>
                 <li>
-                    <a href="{{ route('kinggym') }}"
+                    <a href="{{ route('gym.king') }}"
                         class="{{ Route::currentRouteName() === 'kinggym' ? 'active' : '' }}">K1NG GYM</a>
                 </li>
                 <li>
@@ -53,8 +53,8 @@
                         class="{{ Route::currentRouteName() === 'kinggym' ? 'active' : '' }}">ISTANA MERDEKA 03</a>
                 </li>
                 <li>
-                    <a href="{{ route('product.index') }}"
-                        class="{{ Route::currentRouteName() === 'product.index' ? 'active' : '' }}">STORE</a>
+                    <a href="{{ route('store.biin-king') }}"
+                        class="{{ Route::currentRouteName() === 'store.biin-king' ? 'active' : '' }}">STORE</a>
                 </li>
                 <div class="mode rounded-full" id="switch-mode">
                     <div class="btn__indicator">
@@ -70,8 +70,8 @@
     <menu class="z-50">
         <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
         <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="{{ route('gym.biin') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
     </menu>
     @endforeach
@@ -121,7 +121,7 @@
 
             @foreach ($b11nBlogs as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blog.show', $blog->id) }}">
+                <a href="{{ route('blogs.show', $blog->id) }}">
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[300px] object-cover" />
                     <div class="news__card__title">
                         <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</p>
@@ -146,7 +146,7 @@
 
             @foreach ($k1ngBlogs as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blog.show', $blog->id) }}">
+                <a href="{{ route('blogs.show', $blog->id) }}">
 
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[300px] object-cover" />
                     <div class="news__card__title">

@@ -19,26 +19,13 @@
     <!-- Tambahkan JS Flatpickr -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-
-    @vite('resources/css/kost.css')
+    @vite('resources/css/kost/index.css')
     <title>Kost Istana Merdeka 03</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-    @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Sukses!</strong> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
-
-    @if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Error!</strong> {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
-
     <nav>
         <div class="nav__bar">
             <div class="nav__header">
@@ -67,8 +54,8 @@
     <menu class="z-50">
         <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
         <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="{{ route('gym.biin') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
     </menu>
 
@@ -134,7 +121,7 @@
         <h2 class="section__header">Tersedia 2 Jenis Kamar</h2>
         <div class="room__grid">
             <div class="room__card">
-                <img src="assets/home/istana-merdeka.jpg" alt="room"/>
+                <img src="assets/home/istana-merdeka.jpg" alt="room" />
                 <div class="room__card__details">
                     <div>
                         <h4>Kamar Non AC</h4>
@@ -397,12 +384,22 @@
                 <label for="paymentProof">Upload Bukti Pembayaran</label>
                 <input type="file" id="paymentProof" name="paymentProof" accept="image/*" required>
 
-                <button type="submit" class="booking-btn" id="bookingNow" disabled>Booking Sekarang</button>
+                <button type="submit" class="booking-btn flex justify-center items-center gap-2 w-full" id="bookingNow" disabled>
+                    <span id="btnText">Booking Sekarang</span>
+
+                    <span id="btnLoading" class="hidden">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Memproses...
+                    </span>
+                </button>
             </form>
         </section>
     </div>
 
-    <!-- Booking -->
+    <!-- Blog -->
     <section class="section__container news__container" id="blog">
         <div class="news__header">
             <div>
@@ -416,7 +413,7 @@
         <div class="news__grid">
             @foreach ($blog as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blog.show', $blog->id) }}" target="_blank">
+                <a href="{{ route('blogs.show', $blog->id) }}" target="_blank">
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[200px] object-cover" />
                     <div class="news__card__title">
                         <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</p>
@@ -469,10 +466,10 @@
                 <h4>Quick Link</h4>
                 <div class="footer__links">
                     <li><a href="{{ route('home') }}" target="_blank">B1NG EMPIRE</a></li>
-                    <li><a href="{{ route('index') }}" target="_blank">B11N Gym Website</a></li>
-                    <li><a href="{{ route('kinggym') }}" target="_blank">K1NG Gym Website</a></li>
+                    <li><a href="{{ route('gym.biin') }}" target="_blank">B11N Gym Website</a></li>
+                    <li><a href="{{ route('gym.king') }}" target="_blank">K1NG Gym Website</a></li>
                     <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 03 Website</a></li>
-                    <li><a href="{{ route('product.index') }}" target="_blank">B11N & K1NG Gym Store</a></li>
+                    <li><a href="{{ route('store.biin-king') }}" target="_blank">B11N & K1NG Gym Store</a></li>
                     <li><a href="{{ route('blogs.index') }}" target="_blank">B1NG EMPIRE Blog</a></li>
                 </div>
             </div>
@@ -520,6 +517,28 @@
 
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="assets/js/home.js"></script>
+
+    <script>
+    // Cek Session Success
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#3085d6',
+        });
+    @endif
+
+    // Cek Session Error
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: "{{ session('error') }}",
+            confirmButtonColor: '#d33',
+        });
+    @endif
+</script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -584,16 +603,34 @@
         });
 
         document.getElementById("bookingForm").addEventListener("submit", function(event) {
+            const btn = document.getElementById("bookingNow");
+            const btnText = document.getElementById("btnText");
+            const btnLoading = document.getElementById("btnLoading");
+
+            // 1. Disable tombol agar tidak diklik 2x
+            btn.setAttribute("disabled", "true");
+            btn.classList.add("opacity-75", "cursor-not-allowed"); // styling tambahan (opsional)
+
+            // 2. Sembunyikan teks "Booking Sekarang"
+            btnText.classList.add("hidden");
+
+            // 3. Munculkan loading spinner
+            btnLoading.classList.remove("hidden");
+            btnLoading.classList.add("flex", "items-center", "gap-2"); // pastikan flex aktif
+
             console.log("Form sedang dikirim...");
+
+            // Form akan lanjut submit secara normal ke server
         });
 
+        // Script untuk menghilangkan Alert otomatis setelah 5 detik
         setTimeout(function() {
-            document.querySelectorAll('.alert').forEach(alert => {
-                alert.style.display = 'none';
+            document.querySelectorAll('.alert-box').forEach(alert => {
+                alert.style.transition = "opacity 0.5s ease";
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500); // Hapus elemen setelah animasi selesai
             });
-        }, 5000); // 5 detik
-
-
+        }, 5000);
 
         document.addEventListener("DOMContentLoaded", function() {
             flatpickr("#date", {

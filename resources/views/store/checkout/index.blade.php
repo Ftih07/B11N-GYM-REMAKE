@@ -9,7 +9,7 @@
     <title>Checkout Product</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
-    @vite('resources/css/index.css')
+    @vite('resources/css/store/checkout/index.css')
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
         rel="stylesheet" />
@@ -34,16 +34,16 @@
                         class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
                 </li>
                 <li>
-                    <a href="{{ route('product.index') }}"
-                        class="{{ Route::currentRouteName() === 'product.index' ? 'active' : '' }}">B11N & K1NG GYM STORE</a>
+                    <a href="{{ route('store.biin-king') }}"
+                        class="{{ Route::currentRouteName() === 'store.biin-king' ? 'active' : '' }}">B11N & K1NG GYM STORE</a>
                 </li>
                 <li>
-                    <a href="{{ route('b11n.store') }}"
-                        class="{{ Route::currentRouteName() === 'b11n.store' ? 'active' : '' }}">B11N GYM STORE</a>
+                    <a href="{{ route('store.biin') }}"
+                        class="{{ Route::currentRouteName() === 'store.biin' ? 'active' : '' }}">B11N GYM STORE</a>
                 </li>
                 <li>
-                    <a href="{{ route('king.store') }}"
-                        class="{{ Route::currentRouteName() === 'king.store' ? 'active' : '' }}">K1NG GYM STORE</a>
+                    <a href="{{ route('store.king') }}"
+                        class="{{ Route::currentRouteName() === 'store.king' ? 'active' : '' }}">K1NG GYM STORE</a>
                 </li>
                 <li>
                     <a href="{{ route('cart.view') }}"
@@ -63,8 +63,8 @@
     <menu class="z-50">
         <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
         <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="{{ route('gym.biin') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
     </menu>
 

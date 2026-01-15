@@ -3,18 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B11N & K1NG Gym Store</title>
-    @vite('resources/css/index.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
 
+    <title>B11N Gym Store</title>
+    @vite('resources/css/app.css')
+    @vite('resources/css/store/biin-gym-store/index.css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link
         href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
         rel="stylesheet" />
-
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -29,13 +27,15 @@
     </div>
     @endif
 
-    <!-- Navigation Section -->
     <nav class="fixed bg-white dark:bg-black">
         <div class="nav__bar">
             <div class="nav__header">
-                <div class="nav__logo">
-                    <a href="#"><img src="assets/Logo/colab.png" alt="logo" /></a>
+                @foreach ($logo as $logo)
+                <div class="w-12 h-12 object-cover object-center">
+                    <a href="#"><img src="{{ asset('storage/' . $logo->image) }}" alt="logo" /></a>
                 </div>
+                @endforeach
+
                 <div class="nav__menu__btn" id="menu-btn">
                     <i class="ri-menu-line"></i>
                 </div>
@@ -46,20 +46,16 @@
                         class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
                 </li>
                 <li>
-                    <a href="{{ route('product.index') }}"
-                        class="{{ Route::currentRouteName() === 'product.index' ? 'active' : '' }}">B11N & K1NG GYM STORE</a>
+                    <a href="{{ route('store.biin-king') }}"
+                        class="{{ Route::currentRouteName() === 'store.biin-king' ? 'active' : '' }}">B11N & K1NG GYM STORE</a>
                 </li>
                 <li>
-                    <a href="{{ route('b11n.store') }}"
-                        class="{{ Route::currentRouteName() === 'b11n.store' ? 'active' : '' }}">B11N GYM STORE</a>
+                    <a href="{{ route('store.biin') }}"
+                        class="{{ Route::currentRouteName() === 'store.biin' ? 'active' : '' }}">B11N GYM STORE</a>
                 </li>
                 <li>
-                    <a href="{{ route('king.store') }}"
-                        class="{{ Route::currentRouteName() === 'king.store' ? 'active' : '' }}">K1NG GYM STORE</a>
-                </li>
-                <li>
-                    <a href="{{ route('cart.view') }}"
-                        class="{{ Route::currentRouteName() === 'cart.view' ? 'active' : '' }}">KERANJANG</a>
+                    <a href="{{ route('store.king') }}"
+                        class="{{ Route::currentRouteName() === 'store.king' ? 'active' : '' }}">K1NG GYM STORE</a>
                 </li>
                 <div class="mode rounded-full" id="switch-mode">
                     <div class="btn__indicator">
@@ -75,12 +71,10 @@
     <menu class="z-50">
         <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
         <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('index') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('kinggym') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
+        <a href="{{ route('gym.biin') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
+        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
         <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
     </menu>
-
-    <!-- Header Section -->
 
     @foreach ($banner as $banner)
     <section
@@ -101,25 +95,25 @@
     @endforeach
 
     <div class="text-center py-8">
-        <h1 class="text-3xl sm:text-4xl font-bold text-black dark:text-white">B11N & K1NG Gym Store</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-black dark:text-white">B11N Gym Store</h1>
         <p class="text-gray-500 mt-2">Available {{ $totalProducts }} Products</p>
     </div>
 
     <!-- Filter Buttons -->
-    <div class="flex flex-wrap justify-center gap-4 mb-8">
-        <a href="{{ route('product.index', ['category' => null]) }}">
-            <button class="px-3 py-2 sm:px-4 sm:py-2 {{ is_null(request('category')) ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">All</button>
+    <div class="flex justify-center gap-4 mb-8">
+        <a href="{{ route('store.biin', ['category' => null]) }}">
+            <button class="px-4 py-2 {{ is_null(request('category')) ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">All</button>
         </a>
-        <a href="{{ route('product.index', ['category' => 1]) }}">
-            <button class="px-3 py-2 sm:px-4 sm:py-2 {{ request('category') == 1 ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">Makanan</button>
+        <a href="{{ route('store.biin', ['category' => 1]) }}">
+            <button class="px-4 py-2 {{ request('category') == 1 ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">Makanan</button>
         </a>
-        <a href="{{ route('product.index', ['category' => 2]) }}">
-            <button class="px-3 py-2 sm:px-4 sm:py-2 {{ request('category') == 2 ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">Minuman</button>
+        <a href="{{ route('store.biin', ['category' => 2]) }}">
+            <button class="px-4 py-2 {{ request('category') == 2 ? 'bg-gray-700 text-white' : 'bg-gray-800 hover:bg-gray-700' }} rounded">Minuman</button>
         </a>
     </div>
 
 
-    <div class="container max-w-[1400px] mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <div class="container max-w-[1400px]  mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         @foreach ($products as $product)
         <div
             class="shadow rounded-lg p-4 border transition {{ $product->stores_id == 1 ? 'hover:border-red-600' : 'hover:border-yellow-600' }}">
@@ -139,19 +133,10 @@
                     <span class="mx-2">|</span>
                     <span class="flex items-center"><i class="fas fa-box-open mr-1"></i>{{ $product->serving_option }}</span>
                 </div>
-                <div class="flex mt-4 gap-2">
-                    <form action="{{ route('cart.add', $product->id) }}" method="post">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="{{ $product->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-600 hover:bg-yellow-700' }} text-white px-4 py-3 rounded-lg transition text-sm">
-                            Add to Cart
-                        </button>
-                    </form>
-                    <button class="bg-gray-300 text-black px-4 py-1 rounded text-sm">
-                        <a href="{{ route('product.show', $product->id) }}">View Details</a>
-                    </button>
-                </div>
+                <a href="{{ route('store.product.show', $product->id) }}"
+                    class="{{ $product->stores_id == 1 ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-500 hover:bg-yellow-600' }} block text-white text-center py-2 rounded mt-4 transition">
+                    View Details
+                </a>
             </div>
         </div>
         @endforeach
@@ -212,7 +197,6 @@
             });
         });
 
-
         const body = document.querySelector('body');
         const btn = document.querySelector('.mode');
         const icon = document.querySelector('.btn__icon');
@@ -270,7 +254,6 @@
             e.currentTarget.parentElement.classList.toggle("open");
         });
     </script>
-
 </body>
 
 </html>
