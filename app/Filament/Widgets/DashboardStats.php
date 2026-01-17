@@ -15,7 +15,7 @@ class DashboardStats extends BaseWidget
         $lastMonth = Carbon::now()->subMonth()->month;
 
         // Hitung pendapatan bulan ini
-        $currentRevenue = DB::table('bookings')
+        $currentRevenue = DB::table('booking_kost')
             ->whereMonth('date', $currentMonth)
             ->where('status', 'paid')
             ->sum(DB::raw("CASE 
@@ -24,7 +24,7 @@ class DashboardStats extends BaseWidget
                 ELSE 0 END"));
 
         // Hitung pendapatan bulan lalu
-        $lastMonthRevenue = DB::table('bookings')
+        $lastMonthRevenue = DB::table('booking_kost')
             ->whereMonth('date', $lastMonth)
             ->where('status', 'paid')
             ->sum(DB::raw("CASE 
@@ -58,7 +58,7 @@ class DashboardStats extends BaseWidget
         }
 
         // === DATA PEMBAYARAN MEMBERSHIP ===
-        $paymentData = DB::table('payments')
+        $paymentData = DB::table('payment_membership')
             ->where('status', 'confirmed')
             ->selectRaw('payment, COUNT(*) as total')
             ->groupBy('payment')
@@ -71,7 +71,7 @@ class DashboardStats extends BaseWidget
         $paymentChartData = [$qrisCount, $transferCount];
 
         // === TOTAL UANG MASUK DARI MEMBERSHIP ===
-        $totalMembershipRevenue = DB::table('payments')
+        $totalMembershipRevenue = DB::table('payment_membership')
             ->where('status', 'confirmed')
             ->sum(DB::raw("CASE 
                     WHEN membership_type = 'Member Bulanan' THEN 80000
@@ -80,7 +80,7 @@ class DashboardStats extends BaseWidget
                     ELSE 0 END"));
 
         // === DATA PENDAPATAN MEMBERSHIP PER BULAN ===
-        $membershipRevenuePerMonth = DB::table('payments')
+        $membershipRevenuePerMonth = DB::table('payment_membership')
             ->selectRaw('MONTH(created_at) as month, SUM(CASE 
                 WHEN membership_type = "Member Bulanan" THEN 80000
                 WHEN membership_type = "Member Mingguan" THEN 30000

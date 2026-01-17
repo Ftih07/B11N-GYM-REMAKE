@@ -26,7 +26,7 @@ class MembershipRevenueChart extends ChartWidget
         $selectedYear = $this->year ?? date('Y');
 
         // Ambil total pendapatan dari membership per bulan
-        $revenueData = DB::table('payments')
+        $revenueData = DB::table('payment_membership')
             ->selectRaw('MONTH(created_at) as month, 
                         SUM(CASE 
                             WHEN membership_type = "Member Bulanan" THEN 80000
@@ -77,7 +77,7 @@ class MembershipRevenueChart extends ChartWidget
 
     private function getYearsOptions(): array
     {
-        $years = DB::table('payments')
+        $years = DB::table('payment_membership')
             ->selectRaw('YEAR(created_at) as year')
             ->distinct()
             ->orderBy('year', 'desc')

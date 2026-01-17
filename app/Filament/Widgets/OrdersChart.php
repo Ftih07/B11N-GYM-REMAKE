@@ -26,7 +26,7 @@ class OrdersChart extends ChartWidget
         $selectedYear = $this->year ?? date('Y');
 
         // Ambil jumlah booking per bulan berdasarkan tahun yang dipilih
-        $ordersPerMonth = DB::table('bookings')
+        $ordersPerMonth = DB::table('booking_kost')
             ->selectRaw('MONTH(date) as month, COUNT(*) as total')
             ->whereYear('date', $selectedYear)
             ->where('status', 'paid')
@@ -72,7 +72,7 @@ class OrdersChart extends ChartWidget
 
     private function getYearsOptions(): array
     {
-        $years = DB::table('bookings')
+        $years = DB::table('booking_kost')
             ->selectRaw('YEAR(date) as year')
             ->distinct()
             ->orderBy('year', 'desc')

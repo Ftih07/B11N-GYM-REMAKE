@@ -26,7 +26,7 @@ class MembershipPaymentChart extends ChartWidget
         $selectedYear = $this->year ?? date('Y');
 
         // Ambil jumlah pembayaran berdasarkan metode (QRIS & Transfer)
-        $paymentData = DB::table('payments')
+        $paymentData = DB::table('payment_membership')
             ->selectRaw('MONTH(created_at) as month, 
                         SUM(CASE WHEN payment = "qris" THEN 1 ELSE 0 END) as qris_count,
                         SUM(CASE WHEN payment = "transfer" THEN 1 ELSE 0 END) as transfer_count')
@@ -81,7 +81,7 @@ class MembershipPaymentChart extends ChartWidget
 
     private function getYearsOptions(): array
     {
-        $years = DB::table('payments')
+        $years = DB::table('payment_membership')
             ->selectRaw('YEAR(created_at) as year')
             ->distinct()
             ->orderBy('year', 'desc')
