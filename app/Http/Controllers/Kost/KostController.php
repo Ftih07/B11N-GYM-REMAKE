@@ -13,7 +13,7 @@ class KostController extends Controller
 {
     public function index()
     {
-        $bookedRooms = DB::table('bookings')
+        $bookedRooms = DB::table('booking_kost')
             ->where('status', 'paid')
             ->pluck('room_number')
             ->toArray();
@@ -49,7 +49,7 @@ class KostController extends Controller
             ]);
 
             // Cek apakah kamar sudah dipesan dengan status "paid"
-            $existingBooking = DB::table('bookings')
+            $existingBooking = DB::table('booking_kost')
                 ->where('date', $request->date)
                 ->where('room_number', $request->room_number)
                 ->where('status', 'paid')
@@ -67,7 +67,7 @@ class KostController extends Controller
             }
 
             // Simpan ke database
-            $bookingId = DB::table('bookings')->insertGetId([
+            $bookingId = DB::table('booking_kost')->insertGetId([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
@@ -82,7 +82,7 @@ class KostController extends Controller
             ]);
 
             // Ambil data booking yang baru saja disimpan
-            $bookingData = DB::table('bookings')->where('id', $bookingId)->first();
+            $bookingData = DB::table('booking_kost')->where('id', $bookingId)->first();
 
             // Kirim email konfirmasi
             Mail::to($request->email)->send(new BookingConfirmationMail($bookingData));
