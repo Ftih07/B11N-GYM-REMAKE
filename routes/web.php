@@ -13,6 +13,7 @@ use App\Http\Controllers\Kost\KostController;
 use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\StoreController;
 use App\Http\Controllers\Store\CheckoutController;
+use App\Http\Controllers\Store\PrintController;
 use App\Http\Controllers\Store\ProductController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home'); //Home - Landing Page
@@ -48,3 +49,5 @@ Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])->na
 
 //Membership Payment Route
 Route::post('/payment/upload', [PaymentController::class, 'uploadPayment']);
+
+Route::get('/print/transaction/{id}', [PrintController::class, 'printStruk'])->name('print.struk');
