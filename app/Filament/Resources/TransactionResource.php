@@ -80,7 +80,6 @@ class TransactionResource extends Resource
                                         if ($product) {
                                             $set('price', $product->price);
                                             $set('product_name', $product->name);
-                                            $set('quantity', 1); // Tetap disarankan 1 saat pilih produk, tapi default awal bisa 0
                                         }
                                     }),
 
@@ -88,14 +87,20 @@ class TransactionResource extends Resource
 
                                 TextInput::make('quantity')
                                     ->numeric()
-                                    ->default(0) // FIX: Request default 0
-                                    ->minValue(1)
+                                    ->default(0)
+                                    ->minValue(0)
                                     ->required()
-                                    ->reactive()
-                                    ->afterStateUpdated(
-                                        fn($state, Set $set, Get $get) =>
-                                        $set('subtotal', $state * $get('price'))
-                                    ),
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                                        $price = $get('price') ?? 0;
+                                        $subtotal = $state * $price;
+                                        $set('subtotal', $subtotal);
+
+                                        // HITUNG TOTAL LANGSUNG
+                                        $items = $get('../../items');
+                                        $total = collect($items)->sum(fn($item) => $item['subtotal'] ?? 0);
+                                        $set('../../total_amount', $total);
+                                    }),
 
                                 TextInput::make('price')
                                     ->numeric()
