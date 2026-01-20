@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Gym;
 
 use App\Http\Controllers\Controller;
-use App\Models\{About, Facilities, Trainer, Blog, Banner, CategoryTraining, Gallery, Logo, TrainingProgram, Testimoni};
+use App\Models\{About, Facilities, Trainer, Blog, Banner, CategoryTraining, Equipment, Gallery, Logo, TrainingProgram, Testimoni};
 
 class BiinGymController extends Controller
 {
@@ -18,6 +18,13 @@ class BiinGymController extends Controller
         $trainingprograms = TrainingProgram::where('gymkos_id', 1)->get();
         $gallery = Gallery::where('gymkos_id', 1)->get();
 
+        $featuredEquipments = Equipment::where('gymkos_id', 1)
+            ->with(['gallery']) // Eager load gallery buat ambil foto thumbnail
+            ->where('status', 'active')
+            ->latest()
+            ->take(3)
+            ->get();
+
         $groupedTrainingPrograms = $trainingprograms->groupBy('category_trainings_id');
         $categories = CategoryTraining::whereIn('id', $groupedTrainingPrograms->keys())->get()->keyBy('id');
 
@@ -27,8 +34,17 @@ class BiinGymController extends Controller
         });
 
         return view('gym.biin-gym.index', compact(
-            'facilities','trainer','blog','banner','logo','about',
-            'groupedTrainingPrograms','categories','testimonis','gallery'
+            'facilities',
+            'trainer',
+            'blog',
+            'banner',
+            'logo',
+            'about',
+            'groupedTrainingPrograms',
+            'categories',
+            'testimonis',
+            'gallery',
+            'featuredEquipments'
         ));
     }
 }

@@ -51,3 +51,16 @@ Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])->na
 Route::post('/payment/upload', [PaymentController::class, 'uploadPayment']);
 
 Route::get('/print/transaction/{id}', [PrintController::class, 'printStruk'])->name('print.struk');
+
+// Route Halaman Report Form
+Route::get('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'create'])->name('maintenance.create');
+Route::post('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'store'])->name('maintenance.store');
+
+// Route API Dropdown (PENTING)
+Route::get('/api/equipments/{gymId}', [App\Http\Controllers\MaintenanceReportController::class, 'getEquipments']);
+
+// Route untuk melihat semua list alat (View All)
+Route::get('/gym/equipments', [App\Http\Controllers\Gym\EquipmentPageController::class, 'index'])->name('gym.equipments.index');
+
+// Route untuk melihat detail & video tutorial
+Route::get('/gym/equipments/{id}', [App\Http\Controllers\Gym\EquipmentPageController::class, 'show'])->name('gym.equipments.show');

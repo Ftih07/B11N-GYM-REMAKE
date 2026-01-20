@@ -186,6 +186,56 @@
 		@endforeach
 	</section>
 
+	<!--Equipment Gym-->
+	<section class="py-16 bg-white" id="equipments">
+		<div class="container mx-auto px-4">
+
+			<div class="text-center mb-12">
+				<h2 class="text-3xl md:text-4xl font-bold text-gray-900 uppercase tracking-wide">Gym Equipments & Tutorials</h2>
+				<div class="w-20 h-1 bg-red-600 mx-auto mt-4"></div>
+				<p class="text-gray-500 mt-4 max-w-2xl mx-auto">
+					Kenali alat-alat kami dan pelajari cara penggunaannya yang benar melalui video tutorial eksklusif.
+				</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+				@foreach($featuredEquipments as $item)
+				@php
+				// Ambil foto pertama sebagai thumbnail, atau placeholder
+				$thumbnail = $item->gallery->first()
+				? asset('storage/' . $item->gallery->first()->file_path)
+				: 'https://placehold.co/600x400?text=No+Image';
+				@endphp
+				<div class="group bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
+					<div class="relative h-64 overflow-hidden">
+						<img src="{{ $thumbnail }}" alt="{{ $item->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+						<div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+							<a href="{{ route('gym.equipments.show', $item->id) }}" class="bg-red-600 text-white px-6 py-2 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition duration-300">
+								<i class="ri-play-circle-line mr-1"></i> Watch Tutorial
+							</a>
+						</div>
+					</div>
+
+					<div class="p-6">
+						<div class="text-xs font-bold text-red-600 uppercase tracking-wider mb-2">{{ $item->category }}</div>
+						<h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-600 transition">{{ $item->name }}</h3>
+						<p class="text-gray-500 text-sm line-clamp-2">
+							{{ $item->description }}
+						</p>
+					</div>
+				</div>
+				@endforeach
+			</div>
+
+			<div class="text-center">
+				<a href="{{ route('gym.equipments.index') }}" class="inline-block border-2 border-black text-black px-8 py-3 font-bold rounded hover:bg-black hover:text-white transition duration-300 uppercase tracking-widest">
+					View All Equipments
+				</a>
+			</div>
+
+		</div>
+	</section>
+
 	<!--Trainer-->
 	<section class="trainer__container max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="trainer">
 		<h2 class="section__header text-2xl sm:text-3xl md:text-3xl lg:text-3xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>

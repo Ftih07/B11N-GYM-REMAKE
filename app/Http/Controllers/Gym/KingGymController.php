@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Gym;
 
 use App\Http\Controllers\Controller;
-use App\Models\{About, Facilities, Trainer, Blog, Banner, CategoryTraining, Gallery, Logo, TrainingProgram, Testimoni};
+use App\Models\{About, Facilities, Trainer, Blog, Banner, CategoryTraining, Equipment, Gallery, Logo, TrainingProgram, Testimoni};
 
 class KingGymController extends Controller
 {
@@ -18,6 +18,13 @@ class KingGymController extends Controller
         $trainingprograms = TrainingProgram::where('gymkos_id', 1)->get();
         $gallery = Gallery::where('gymkos_id', 2)->get();
 
+        $featuredEquipments = Equipment::where('gymkos_id', 2)
+            ->with(['gallery']) // Eager load gallery buat ambil foto thumbnail
+            ->where('status', 'active')
+            ->latest()
+            ->take(3)
+            ->get();
+
         $groupedTrainingPrograms = $trainingprograms->groupBy('category_trainings_id');
 
         // Mengambil data kategori
@@ -30,6 +37,6 @@ class KingGymController extends Controller
                 return $testimoni;
             });
 
-        return view('gym.king-gym.index', compact('facilities', 'trainer', 'blog', 'banner', 'logo', 'about', 'groupedTrainingPrograms', 'categories', 'testimonis', 'gallery'));
+        return view('gym.king-gym.index', compact('facilities', 'trainer', 'blog', 'banner', 'logo', 'about', 'groupedTrainingPrograms', 'categories', 'testimonis', 'gallery', 'featuredEquipments'));
     }
 }
