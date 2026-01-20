@@ -4,30 +4,42 @@ namespace App\Http\Controllers\Gym;
 
 use App\Http\Controllers\Controller;
 use App\Models\Equipment;
+use Illuminate\Http\Request; 
 
 class EquipmentPageController extends Controller
 {
     // Halaman List Semua Alat (Global)
-    public function index()
+    public function index(Request $request)
     {
-        $equipments = Equipment::where('status', 'active') // Hapus where gymkos_id
-            ->with(['gallery', 'gymkos']) // Load relasi gymkos supaya bisa nampilin nama lokasinya di card
-            ->latest() // Urutkan dari yang terbaru
-            ->paginate(9);
+        // 1. Mulai Query dasar
+        $query = Equipment::where('status', 'active')
+            ->with(['gallery', 'gymkos']);
+
+        // 2. Cek apakah ada filter category di URL?
+        if ($request->has('category') && $request->category != null) {
+            $query->where('category', $request->category);
+        }
+
+        // 3. Eksekusi query dengan pagination
+        // withQueryString() penting biar pas pindah halaman (page 2), filternya ga ilang
+        $equipments = $query->latest()->paginate(9)->withQueryString();
 
         return view('gym.equipments.index', compact('equipments'));
     }
 
     // Halaman Detail
-    public function show($id)
+    public function show($slug) // <--- Parameter terima $slug (bukan $id lagi)
     {
-        // Ambil data alat
-        $equipment = Equipment::with(['gallery', 'gymkos'])->findOrFail($id);
+        // 1. Cari alat berdasarkan slug
+        $equipment = Equipment::with(['gallery', 'gymkos'])
+            ->where('slug', $slug)
+            ->firstOrFail(); // Kalau slug salah -> 404
 
-        // Logic Related: Ambil alat lain TAPI yang satu lokasi (Gym ID-nya sama dengan alat ini)
+        // 2. Logic Related (Tetap pakai ID buat exclude, ini lebih aman & cepat)
         $relatedEquipments = Equipment::where('status', 'active')
-            ->where('id', '!=', $id) // Jangan tampilkan alat yang sedang dibuka
-            ->inRandomOrder() // Acak biar ga itu-itu aja yang muncul
+            ->where('id', '!=', $equipment->id) // Exclude ID alat yang sedang dibuka
+            // ->where('gymkos_id', $equipment->gymkos_id) // Opsional: kalau mau related by lokasi yg sama
+            ->inRandomOrder()
             ->take(3)
             ->get();
 

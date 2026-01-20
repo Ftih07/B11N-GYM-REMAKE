@@ -216,7 +216,7 @@
 					<div class="relative h-64 overflow-hidden">
 						<img src="{{ $thumbnail }}" alt="{{ $item->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
 						<div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-							<a href="{{ route('gym.equipments.show', $item->id) }}" class="bg-red-600 text-white px-6 py-2 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition duration-300">
+							<a href="{{ route('gym.equipments.show', $item->slug) }}" class="bg-red-600 text-white px-6 py-2 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition duration-300">
 								<i class="ri-play-circle-line mr-1"></i> Watch Tutorial
 							</a>
 						</div>
@@ -647,7 +647,7 @@
 			<div class="blog__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 				@foreach ($blog as $blog)
 				<div class="blog__card mt-4 md:mt-0">
-					<a href="{{ route('blogs.show', $blog->id) }}">
+					<a href="{{ route('blogs.show', $blog->slug) }}">
 						<img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-[300px] object-cover" />
 						<p class="uppercase text-[10px] tracking-[3px] mb-1 text-white mt-3">{{ $blog->created_at->format('F d, Y') }}</p>
 						<h5 class="text-lg font-medium uppercase">{{ $blog->title }}</h5>

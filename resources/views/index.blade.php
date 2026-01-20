@@ -173,7 +173,7 @@
         <div class="news__grid">
             @foreach ($blog as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blogs.show', $blog->id) }}" target="_blank">
+                <a href="{{ route('blogs.show', $blog->slug) }}" target="_blank">
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[200px] object-cover" />
                     <div class="news__card__title">
                         <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</p>

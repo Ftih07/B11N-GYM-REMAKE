@@ -70,7 +70,7 @@
                 <h3 class="text-lg font-bold mb-4 text-gray-800">Alat Lainnya</h3>
                 <div class="space-y-4">
                     @foreach($relatedEquipments as $related)
-                    <a href="{{ route('gym.equipments.show', $related->id) }}" class="flex items-center gap-3 group">
+                    <a href="{{ route('gym.equipments.show', $related->slug) }}" class="flex items-center gap-3 group">
                         <div class="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
                             @php $img = $related->gallery->first() ? asset('storage/'.$related->gallery->first()->file_path) : 'https://placehold.co/100'; @endphp
                             <img src="{{ $img }}" class="w-full h-full object-cover group-hover:scale-110 transition">

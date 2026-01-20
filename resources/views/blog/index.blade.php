@@ -121,7 +121,7 @@
 
             @foreach ($b11nBlogs as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blogs.show', $blog->id) }}">
+                <a href="{{ route('blogs.show', $blog->slug) }}">
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[300px] object-cover" />
                     <div class="news__card__title">
                         <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</p>
@@ -146,7 +146,7 @@
 
             @foreach ($k1ngBlogs as $blog)
             <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blogs.show', $blog->id) }}">
+                <a href="{{ route('blogs.show', $blog->slug) }}">
 
                     <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[300px] object-cover" />
                     <div class="news__card__title">

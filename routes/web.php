@@ -24,7 +24,7 @@ Route::get('/kost-istana-merdeka-3', [KostController::class, 'index'])->name('ko
 // Blog Route
 Route::prefix('blogs')->group(function () {
     Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
-    Route::get('/{id}', [BlogController::class, 'show'])->name('blogs.show');
+    Route::get('/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 });
 
 //Store Route
@@ -50,7 +50,15 @@ Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])->na
 //Membership Payment Route
 Route::post('/payment/upload', [PaymentController::class, 'uploadPayment']);
 
-Route::get('/print/transaction/{id}', [PrintController::class, 'printStruk'])->name('print.struk');
+Route::get('/login', function () {
+    return redirect()->route('filament.admin.auth.login');
+})->name('login');
+
+// Route Print Struk Customer
+Route::middleware(['auth', 'admin'])->group(function () { 
+    Route::get('/print/transaction/{code}', [PrintController::class, 'printStruk'])
+        ->name('print.struk');
+});
 
 // Route Halaman Report Form
 Route::get('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'create'])->name('maintenance.create');
@@ -63,4 +71,5 @@ Route::get('/api/equipments/{gymId}', [App\Http\Controllers\MaintenanceReportCon
 Route::get('/gym/equipments', [App\Http\Controllers\Gym\EquipmentPageController::class, 'index'])->name('gym.equipments.index');
 
 // Route untuk melihat detail & video tutorial
-Route::get('/gym/equipments/{id}', [App\Http\Controllers\Gym\EquipmentPageController::class, 'show'])->name('gym.equipments.show');
+Route::get('/gym/equipments/{slug}', [App\Http\Controllers\Gym\EquipmentPageController::class, 'show'])
+    ->name('gym.equipments.show');

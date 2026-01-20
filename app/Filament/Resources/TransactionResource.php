@@ -285,7 +285,7 @@ class TransactionResource extends Resource
                     ->label('Cetak')
                     ->icon('heroicon-o-printer')
                     ->color('info') // Warna biru
-                    ->url(fn(Transaction $record) => route('print.struk', $record->id))
+                    ->url(fn(Transaction $record) => route('print.struk', $record->code))
                     ->openUrlInNewTab(), // Buka tab baru biar admin panel gak ketutup               
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

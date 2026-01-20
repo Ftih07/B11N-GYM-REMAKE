@@ -17,7 +17,7 @@ class BlogResource extends Resource
 {
     protected static ?string $navigationGroup = 'Management General';
     protected static ?int $navigationSort = 2;
-    
+
     protected static ?string $model = Blog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -28,6 +28,10 @@ class BlogResource extends Resource
             ->schema([
                 //
                 Forms\Components\TextInput::make('title')->required()->maxLength(255),
+                Forms\Components\TextInput::make('slug')
+                    ->unique(ignoreRecord: true) // Biar validasi unique jalan bener pas edit
+                    ->disabled() // Opsional: disable kalau gamau admin ngedit slug manual
+                    ->dehydrated(), // Wajib ada kalau didisable, biar tetep masuk database
                 Forms\Components\RichEditor::make('content')->required(),
                 Forms\Components\FileUpload::make('image')->required()->directory('blog'),
                 Forms\Components\Select::make('status')

@@ -19,11 +19,22 @@ class BlogController extends Controller
         return view('blog.index', compact('b11nBlogs', 'k1ngBlogs', 'logo'));
     }
 
-    public function show($id)
+    public function show($slug) // <--- Parameter terima string $slug
     {
         $logo = Logo::where('gymkos_id', 1)->get();
-        $blog = Blog::published()->findOrFail($id);
-        $relatedBlogs = Blog::published()->where('id', '!=', $id)->latest()->take(3)->get();
+
+        // Cari blog yang slug-nya sesuai parameter & status publish
+        $blog = Blog::published()
+            ->where('slug', $slug)
+            ->firstOrFail(); // Kalau slug ngawur, auto 404
+
+        // Cari related blogs (kecuali blog yang sedang dibuka)
+        // Kita tetap exclude pakai ID ($blog->id) karena ID lebih cepat buat query exclude
+        $relatedBlogs = Blog::published()
+            ->where('id', '!=', $blog->id)
+            ->latest()
+            ->take(3)
+            ->get();
 
         return view('blog.show', compact('blog', 'relatedBlogs', 'logo'));
     }

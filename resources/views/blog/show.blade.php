@@ -99,7 +99,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($relatedBlogs as $relatedBlog)
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
-                    <a href="{{ route('blogs.show', $relatedBlog->id) }}" class="block">
+                    <a href="{{ route('blogs.show', $relatedBlog->slug) }}" class="block">
                         <img src="{{ asset('storage/' . $relatedBlog->image) }}"
                             alt="{{ $relatedBlog->title }}"
                             class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
