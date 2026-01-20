@@ -61,8 +61,8 @@
 <body onload="window.print()">
     <div class="header">
         <div class="bold">{{ strtoupper($transaction->gymkos->name ?? 'B11N GYM') }}</div>
-        <div>Jl. Merdeka No. 3, Purwokerto</div>
-        <div>Telp: 0812-3456-7890</div>
+        <div>{{ strtoupper($transaction->gymkos->address ?? 'Jl. Masjid Baru, Arcawinangun') }}</div>
+        <div>Telp: 0896-5384-7651</div>
     </div>
 
     <div class="line"></div>

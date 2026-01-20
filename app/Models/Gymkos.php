@@ -12,6 +12,7 @@ class Gymkos extends Model
 
     protected $fillable = [
         'name',
+        'address',
         'created_at',
     ];
 

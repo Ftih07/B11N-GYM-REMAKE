@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class GymkosResource extends Resource
 {
     protected static ?string $navigationGroup = 'Logo & Category Business';
-    protected static ?int $navigationSort = 1; 
+    protected static ?int $navigationSort = 1;
     protected static ?string $model = Gymkos::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
@@ -29,6 +29,12 @@ class GymkosResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+
+                Forms\Components\Textarea::make('address')
+                    ->label('Address')
+                    ->rows(3)
+                    ->maxLength(500)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -39,9 +45,16 @@ class GymkosResource extends Resource
                 //
                 Tables\Columns\TextColumn::make('id')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
+
+                Tables\Columns\TextColumn::make('address')
+                    ->label('Address')
+                    ->limit(40)
+                    ->wrap()
+                    ->searchable(),
+                    
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
-                    ->date('F d, Y') 
+                    ->date('F d, Y')
                     ->sortable()
                     ->searchable(),
             ])
