@@ -15,6 +15,7 @@ use App\Http\Controllers\Store\StoreController;
 use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Controllers\Store\PrintController;
 use App\Http\Controllers\Store\ProductController;
+use App\Http\Controllers\SurveyController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home'); //Home - Landing Page
 Route::get('/biin-gym', [BiinGymController::class, 'index'])->name('gym.biin'); //B11N Gym
@@ -55,7 +56,7 @@ Route::get('/login', function () {
 })->name('login');
 
 // Route Print Struk Customer
-Route::middleware(['auth', 'admin'])->group(function () { 
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/print/transaction/{code}', [PrintController::class, 'printStruk'])
         ->name('print.struk');
 });
@@ -73,3 +74,9 @@ Route::get('/gym/equipments', [App\Http\Controllers\Gym\EquipmentPageController:
 // Route untuk melihat detail & video tutorial
 Route::get('/gym/equipments/{slug}', [App\Http\Controllers\Gym\EquipmentPageController::class, 'show'])
     ->name('gym.equipments.show');
+
+// Route untuk menampilkan halaman form
+Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
+
+// Route untuk memproses data yang dikirim (POST)
+Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
