@@ -87,6 +87,12 @@ Pelajari cara menggunakan {{ $equipment->name }}. {{ \Illuminate\Support\Str::li
                             {{ ucfirst($equipment->status) }}
                         </span>
                     </div>
+                    <div class="bg-gray-100 px-4 py-2 rounded-lg">
+                        <span class="block text-xs text-gray-500 uppercase">Tersedia di</span>
+                        <span class="font-bold {{ $equipment->status == 'active' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $equipment->gymkos->name ?? 'Unknown' }}
+                        </span>
+                    </div>
                 </div>
             </div>
 

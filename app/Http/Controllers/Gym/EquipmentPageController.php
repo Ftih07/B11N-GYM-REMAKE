@@ -4,27 +4,30 @@ namespace App\Http\Controllers\Gym;
 
 use App\Http\Controllers\Controller;
 use App\Models\Equipment;
-use Illuminate\Http\Request; 
+use App\Models\Gymkos;
+use Illuminate\Http\Request;
 
 class EquipmentPageController extends Controller
 {
     // Halaman List Semua Alat (Global)
     public function index(Request $request)
     {
-        // 1. Mulai Query dasar
+        $gyms = Gymkos::all();
+
         $query = Equipment::where('status', 'active')
             ->with(['gallery', 'gymkos']);
 
-        // 2. Cek apakah ada filter category di URL?
         if ($request->has('category') && $request->category != null) {
             $query->where('category', $request->category);
         }
 
-        // 3. Eksekusi query dengan pagination
-        // withQueryString() penting biar pas pindah halaman (page 2), filternya ga ilang
+        if ($request->filled('gym')) {
+            $query->where('gymkos_id', $request->gym);
+        }
+
         $equipments = $query->latest()->paginate(9)->withQueryString();
 
-        return view('gym.equipments.index', compact('equipments'));
+        return view('gym.equipments.index', compact('equipments', 'gyms'));
     }
 
     // Halaman Detail
