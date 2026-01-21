@@ -4,15 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- 1. TITLE DINAMIS: Menyesuaikan Kategori Produk --}}
+    @php
+    $storeTitle = match(request('category')) {
+    '1' => 'Jual Makanan Diet Sehat (Ledug)',
+    '2' => 'Minuman Protein & Suplemen Murah',
+    default => 'K1NG Gym Store - Pusat Suplemen & Makanan Sehat'
+    };
+    @endphp
+    <title>{{ $storeTitle }} - Kembaran, Purwokerto</title>
+
+    {{-- 2. META DESCRIPTION: Highlight Lokasi & Produk --}}
+    <meta name="description" content="K1NG Gym Store menyediakan makanan sehat (diet food), minuman protein, dan perlengkapan gym di area Ledug & Kembaran. Harga terjangkau untuk mahasiswa & umum.">
+
+    {{-- 3. KEYWORDS: Target Lokal Area --}}
+    <meta name="keywords" content="toko suplemen ledug, jual whey protein kembaran, makanan diet purwokerto, catering sehat ump, k1ng gym store, perlengkapan fitness murah">
+
+    <meta name="author" content="K1NG Gym Store">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. OPEN GRAPH (Product Store) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="K1NG Gym Store - Nutrition & Gears">
+    <meta property="og:description" content="Belanja kebutuhan gym dan makanan sehat di K1NG Gym Store. Lokasi strategis di Ledug, Purwokerto.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    {{-- Gunakan gambar produk pertama atau logo sebagai preview --}}
+    <meta property="og:image" content="{{ isset($products[0]) ? asset('storage/' . $products[0]->image) : asset('assets/Logo/last.png') }}">
+    <meta property="og:site_name" content="K1NG Gym Store">
+
+    {{-- 5. GEO TAGS (Lokasi K1NG Gym di Ledug) --}}
+    <meta name="geo.region" content="ID-JT" />
+    <meta name="geo.placename" content="Purwokerto" />
+    <meta name="geo.position" content="-7.4360;109.2650" />
+    <meta name="ICBM" content="-7.4360, 109.2650" />
+
+    {{-- 6. SCHEMA MARKUP (Store) --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Store",
+            "name": "K1NG Gym Store",
+            "image": "{{ asset('assets/Logo/last.png') }}",
+            "telephone": "+6281226110988",
+            "url": "{{ url()->current() }}",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Ledug, Kec. Kembaran",
+                "addressLocality": "Purwokerto",
+                "addressRegion": "Jawa Tengah",
+                "postalCode": "53182",
+                "addressCountry": "ID"
+            },
+            "priceRange": "Rp 5.000 - Rp 500.000",
+            "openingHoursSpecification": [{
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "07:00",
+                "closes": "21:00"
+            }]
+        }
+    </script>
+
+    {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/last.png'))">
 
-    <title>K1NG Gym Store</title>
-    @vite('resources/css/app.css')
-    @vite('resources/css/store/king-gym-store/index.css')
+    {{-- Stylesheets --}}
+    @vite(['resources/css/app.css', 'resources/css/store/king-gym-store/index.css'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -142,7 +204,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2025 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
     <script src="assets/js/script.js"></script>

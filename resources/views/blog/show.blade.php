@@ -1,17 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- 1. TITLE DINAMIS + BRANDING --}}
+    <title>{{ $blog->title }} - B1NG EMPIRE Blog</title>
+
+    {{-- 2. META DESCRIPTION OTOMATIS --}}
+    {{-- Mengambil 150 karakter pertama dari konten, membuang tag HTML biar bersih --}}
+    <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
+
+    {{-- 3. KEYWORDS (Bisa dinamis kalau ada kolom tags di DB, kalau tidak pakai default ini) --}}
+    <meta name="keywords" content="{{ $blog->category ?? 'gym, fitness, kost' }}, tips kesehatan, B11N Gym, K1NG Gym, artikel fitness indonesia">
+
+    <meta name="author" content="B1NG EMPIRE">
+    <meta name="robots" content="index, follow">
+
+    {{-- Canonical URL (Mencegah duplikat konten) --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. OPEN GRAPH (Wajib supaya keren saat di-share di WA/IG) --}}
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ $blog->title }}">
+    <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="B1NG EMPIRE Blog">
+    <meta property="og:image" content="{{ asset('storage/' . $blog->image) }}">
+    <meta property="og:image:alt" content="{{ $blog->title }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $blog->title }}">
+    <meta name="twitter:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
+    <meta name="twitter:image" content="{{ asset('storage/' . $blog->image) }}">
+
+    {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/mc.png'))">
-    <title>{{ $blog->title }}</title>
-    @vite('resources/css/app.css')
-    @vite('resources/css/blog/show.css')
+
+    {{-- Assets --}}
+    @vite(['resources/css/app.css', 'resources/css/blog/show.css'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+
+    {{-- 5. SCHEMA MARKUP: Article / BlogPosting --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "{{ url()->current() }}"
+            },
+            "headline": "{{ $blog->title }}",
+            "image": [
+                "{{ asset('storage/' . $blog->image) }}"
+            ],
+            "datePublished": "{{ $blog->created_at->toIso8601String() }}",
+            "dateModified": "{{ $blog->updated_at->toIso8601String() }}",
+            "author": {
+                "@type": "Organization",
+                "name": "B1NG EMPIRE"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "B1NG EMPIRE",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "{{ asset('assets/Logo/colab.png') }}"
+                }
+            },
+            "description": "{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}"
+        }
+    </script>
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -83,7 +146,6 @@
     </menu>
     @endforeach
 
-
     <section class="blog-detail max-w-[800px] mx-auto px-4 py-24">
         <article class="blog__content">
             <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="w-full rounded-lg mb-6">
@@ -121,11 +183,9 @@
 
     <script src="{{ asset('assets/js/script.js') }}"></script>
 
-
-
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2025 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 

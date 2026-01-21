@@ -1,5 +1,47 @@
 @extends('layouts.main') @section('content')
 
+@section('title')
+Tutorial {{ $equipment->name }} - Cara Pakai & Fungsi | B1NG Empire
+@endsection
+
+@section('meta_description')
+Pelajari cara menggunakan {{ $equipment->name }}. {{ \Illuminate\Support\Str::limit($equipment->description, 120) }}. Tonton video tutorialnya di sini.
+@endsection
+
+@section('og_image', $equipment->gallery->first() ? asset('storage/' . $equipment->gallery->first()->file_path) : asset('assets/Logo/biin.png'))
+
+{{-- Schema Markup: VideoObject (Sangat bagus untuk SEO Video di Google) --}}
+@push('json-ld')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": ["Product", "VideoObject"],
+        "name": "{{ $equipment->name }}",
+        "description": "{{ $equipment->description }}",
+        "thumbnailUrl": [
+            "{{ $equipment->gallery->first() ? asset('storage/' . $equipment->gallery->first()->file_path) : asset('assets/Logo/biin.png') }}"
+        ],
+        "uploadDate": "{{ $equipment->created_at->toIso8601String() }}",
+        "contentUrl": "{{ $equipment->video_url ?? url()->current() }}",
+        "embedUrl": "{{ $equipment->video_url }}",
+        "brand": {
+            "@type": "Brand",
+            "name": "B1NG Empire Equipment"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "IDR",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+                "@type": "GymOrFitnessCenter",
+                "name": "B1NG Empire Purwokerto"
+            }
+        }
+    }
+</script>
+@endpush
+
 <div class="bg-gray-900 py-12 text-white">
     <div class="container mx-auto px-4 text-center">
         <h1 class="text-4xl font-bold uppercase">{{ $equipment->name }}</h1>
@@ -9,22 +51,22 @@
 
 <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
+
         <div class="lg:col-span-2 space-y-8">
-            
+
             <div class="bg-black rounded-xl overflow-hidden shadow-2xl aspect-video relative">
                 @if($equipment->video_url)
-                    <iframe class="w-full h-full" 
-                        src="{{ $equipment->video_url }}" 
-                        title="Tutorial Video" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
+                <iframe class="w-full h-full"
+                    src="{{ $equipment->video_url }}"
+                    title="Tutorial Video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
                 @else
-                    <div class="flex items-center justify-center h-full text-gray-500">
-                        <p>Video tutorial belum tersedia.</p>
-                    </div>
+                <div class="flex items-center justify-center h-full text-gray-500">
+                    <p>Video tutorial belum tersedia.</p>
+                </div>
                 @endif
             </div>
 
@@ -33,7 +75,7 @@
                 <p class="text-gray-600 leading-relaxed">
                     {{ $equipment->description }}
                 </p>
-                
+
                 <div class="mt-6 pt-6 border-t flex gap-4">
                     <div class="bg-gray-100 px-4 py-2 rounded-lg">
                         <span class="block text-xs text-gray-500 uppercase">Category</span>
@@ -51,7 +93,7 @@
         </div>
 
         <div class="space-y-8">
-            
+
             <div class="bg-white p-6 rounded-xl shadow-sm border">
                 <h3 class="text-xl font-bold mb-4 text-gray-800">Gallery</h3>
                 <div class="grid grid-cols-2 gap-2">
@@ -62,7 +104,7 @@
                     @endforeach
                 </div>
                 @if($equipment->gallery->isEmpty())
-                    <p class="text-sm text-gray-400 italic">Tidak ada foto tambahan.</p>
+                <p class="text-sm text-gray-400 italic">Tidak ada foto tambahan.</p>
                 @endif
             </div>
 

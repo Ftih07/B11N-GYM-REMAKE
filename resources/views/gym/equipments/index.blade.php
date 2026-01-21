@@ -1,5 +1,28 @@
 @extends('layouts.main')
 
+@section('title')
+{{ request('category') ? 'Alat Gym Kategori ' . request('category') : 'Daftar Peralatan Gym Lengkap' }} - B1NG Empire
+@endsection
+
+@section('meta_description')
+Lihat koleksi lengkap peralatan fitness standar internasional di B1NG Empire. Tersedia alat Cardio, Strength, dan Machine modern untuk menunjang latihanmu.
+@endsection
+
+@section('meta_keywords', 'alat gym purwokerto, treadmill purwokerto, alat fitness lengkap, smith machine, lat pulldown, B1NG Empire equipment')
+
+{{-- Schema Markup untuk Halaman Koleksi --}}
+@push('json-ld')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Koleksi Peralatan B1NG Empire",
+        "description": "Daftar peralatan gym lengkap mulai dari Cardio, Strength, hingga Machine.",
+        "url": "{{ url()->current() }}"
+    }
+</script>
+@endpush
+
 @section('content')
 <div class="relative bg-black py-20">
     <div class="absolute inset-0 overflow-hidden">

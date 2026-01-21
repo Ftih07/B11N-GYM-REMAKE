@@ -105,11 +105,15 @@ $descriptorPath = implode('.', $pathParts);
 
         <div x-show="!image">
             <div x-show="cameraActive" class="relative">
-                <video x-ref="video" autoplay playsinline class="w-full rounded-lg border border-gray-300"></video>
+                <video x-ref="video" autoplay playsinline class="w-full rounded-lg border border-black"></video>
 
-                <button type="button" @click="snap()" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-2 rounded-full shadow-lg hover:bg-red-700 flex items-center gap-2">
+                <button
+                    type="button"
+                    @click="snap()"
+                    class="absolute bottom-4 right-4 bg-red-600 text-white px-6 py-2 rounded-full shadow-lg hover:bg-red-700 flex items-center gap-2">
                     <span>📸</span> Jepret & Scan AI
                 </button>
+
             </div>
 
             <div x-show="!cameraActive" class="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">

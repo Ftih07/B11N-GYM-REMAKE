@@ -4,15 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- 1. TITLE: Nama Produk + Varian + Harga (Menarik Klik) --}}
+    <title>{{ $product->name }} ({{ $product->flavour }}) - Harga Rp{{ number_format($product->price, 0, ',', '.') }}</title>
+
+    {{-- 2. META DESCRIPTION: Deskripsi singkat produk --}}
+    <meta name="description" content="Jual {{ $product->name }} rasa {{ $product->flavour }}. {{ \Illuminate\Support\Str::limit($product->description, 100) }}. Tersedia di {{ $product->stores_id == 1 ? 'B11N Gym' : 'K1NG Gym' }} Purwokerto.">
+
+    {{-- 3. KEYWORDS: Spesifik Produk --}}
+    <meta name="keywords" content="jual {{ strtolower($product->name) }}, harga {{ strtolower($product->name) }}, suplemen gym purwokerto, makanan diet {{ $product->flavour }}, toko gym b1ng empire">
+
+    <meta name="author" content="B1NG EMPIRE Store">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. OPEN GRAPH (Product Card Style) --}}
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="{{ $product->name }} - {{ $product->flavour }}">
+    <meta property="og:description" content="Hanya Rp{{ number_format($product->price, 0, ',', '.') }}. {{ \Illuminate\Support\Str::limit($product->description, 80) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('storage/' . $product->image) }}">
+    <meta property="og:site_name" content="B1NG EMPIRE Store">
+
+    {{-- Open Graph Product Specifics --}}
+    <meta property="product:price:amount" content="{{ $product->price }}">
+    <meta property="product:price:currency" content="IDR">
+
+    {{-- 5. SCHEMA MARKUP (Product Rich Snippet) --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": "{{ $product->name }}",
+            "image": [
+                "{{ asset('storage/' . $product->image) }}"
+            ],
+            "description": "{{ $product->description }}",
+            "sku": "{{ $product->id }}",
+            "brand": {
+                "@type": "Brand",
+                "name": "{{ $product->stores_id == 1 ? 'B11N Gym' : 'K1NG Gym' }}"
+            },
+            "offers": {
+                "@type": "Offer",
+                "url": "{{ url()->current() }}",
+                "priceCurrency": "IDR",
+                "price": "{{ $product->price }}",
+                "availability": "https://schema.org/InStock",
+                "itemCondition": "https://schema.org/NewCondition"
+            }
+        }
+    </script>
+
+    {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
 
-    <title>{{ $product->name }}</title>
-    @vite('resources/css/app.css')
-    @vite('resources/css/store/product/show.css')
+    {{-- Stylesheets --}}
+    @vite(['resources/css/app.css', 'resources/css/store/product/show.css'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -145,7 +196,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2025 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
     <script src="{{ asset('assets/js/script.js') }}"></script>

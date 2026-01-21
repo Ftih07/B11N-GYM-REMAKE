@@ -4,8 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lapor Kerusakan Alat - B11N</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- CSRF Token (Wajib untuk form Laravel yang menggunakan AJAX/Post) --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    {{-- 1. TITLE: Jelas & To-The-Point --}}
+    <title>Lapor Kerusakan & Maintenance - B11N Gym % K1NG Gym</title>
+
+    {{-- 2. META DESCRIPTION: Instruksi singkat --}}
+    <meta name="description" content="Formulir resmi pelaporan kerusakan alat Gym dan fasilitas Kost (Istana Merdeka 03). Bantu kami menjaga kenyamanan dengan melaporkan kendala di sini.">
+
+    {{-- 3. KEYWORDS: Fokus ke member internal --}}
+    <meta name="keywords" content="lapor kerusakan gym purwokerto, maintenance b11n, komplain fasilitas kost, service alat gym purwokerto, form maintenance b1ng empire">
+
+    <meta name="author" content="B1NG EMPIRE IT Support">
+
+    {{-- Robots: Index biar member bisa cari di Google, tapi prioritas rendah --}}
+    <meta name="robots" content="index, follow">
+
+    {{-- 4. OPEN GRAPH (Penting untuk Share di Grup WhatsApp Member) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🛠 Lapor Kerusakan Alat - B1NG EMPIRE">
+    <meta property="og:description" content="Temukan alat rusak atau fasilitas bermasalah? Laporkan segera di sini agar tim maintenance kami bisa memperbaikinya.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    {{-- Gunakan Logo B11N atau icon maintenance sebagai thumbnail --}}
+    <meta property="og:image" content="{{ asset('assets/Logo/biin.png') }}">
+    <meta property="og:site_name" content="Maintenance System">
+
+    {{-- 5. THEME COLOR (Merah sesuai branding halaman ini) --}}
+    <meta name="theme-color" content="#dc2626">
+
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo/biin.png') }}">
+
+    {{-- Scripts & Styles --}}
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* Efek saat kartu dipilih */
         .equipment-card.selected {
@@ -13,7 +49,14 @@
             /* Merah */
             background-color: #fef2f2;
             /* Merah muda pudar */
-            ring: 2px solid #dc2626;
+            box-shadow: 0 0 0 2px #dc2626;
+            /* Ring effect pengganti ring tailwind yg kadang conflict */
+        }
+
+        /* Smooth scroll & font */
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>

@@ -3,18 +3,78 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B11N & K1NG Gym Store</title>
-    @vite('resources/css/store/biin-king-gym-store/index.css')
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- 1. TITLE DINAMIS: Menyesuaikan Kategori Produk --}}
+    @php
+    $pageTitle = match(request('category')) {
+    '1' => 'Menu Makanan Sehat & Diet',
+    '2' => 'Minuman Protein & Suplemen',
+    default => 'Katalog Lengkap B11N & K1NG Gym Store'
+    };
+    @endphp
+    <title>{{ $pageTitle }} - Pusat Nutrisi Fitness Purwokerto</title>
+
+    {{-- 2. META DESCRIPTION: Mencakup dua brand sekaligus --}}
+    <meta name="description" content="Belanja kebutuhan fitness dari B11N Gym dan K1NG Gym dalam satu tempat. Jual makanan diet, whey protein, pre-workout, dan merchandise gym official di Purwokerto.">
+
+    {{-- 3. KEYWORDS: Gabungan keyword kedua lokasi --}}
+    <meta name="keywords" content="toko gym purwokerto, suplemen fitness ledug, makanan diet arcawinangun, b11n store, k1ng gym store, jual whey purwokerto, catering sehat banyumas">
+
+    <meta name="author" content="B1NG EMPIRE">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. OPEN GRAPH (E-Commerce Catalog) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="B11N & K1NG Gym Store - Official Merchandise & Nutrition">
+    <meta property="og:description" content="Satu destinasi untuk semua kebutuhan nutrisimu. Cek katalog produk terbaru kami sekarang!">
+    <meta property="og:url" content="{{ url()->current() }}">
+    {{-- Gunakan logo Colab (gabungan) jika ada, atau fallback ke salah satu --}}
+    <meta property="og:image" content="{{ asset('assets/Logo/colab.png') }}">
+    <meta property="og:site_name" content="B1NG EMPIRE Store">
+
+    {{-- 5. GEO TAGS (Menggunakan Pusat Kota Purwokerto agar netral) --}}
+    <meta name="geo.region" content="ID-JT" />
+    <meta name="geo.placename" content="Purwokerto" />
+    <meta name="geo.position" content="-7.4243;109.2391" />
+    <meta name="ICBM" content="-7.4243, 109.2391" />
+
+    {{-- 6. SCHEMA MARKUP (CollectionPage) --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Katalog B11N & K1NG Gym Store",
+            "description": "Daftar lengkap produk makanan, minuman, dan perlengkapan dari B11N dan K1NG Gym.",
+            "url": "{{ url()->current() }}",
+            "mainEntity": {
+                "@type": "ItemList",
+                "itemListElement": [{
+                        "@type": "ListItem",
+                        "position": 1,
+                        "url": "{{ route('store.biin-king', ['category' => 1]) }}",
+                        "name": "Makanan Sehat"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "url": "{{ route('store.biin-king', ['category' => 2]) }}",
+                        "name": "Minuman & Suplemen"
+                    }
+                ]
+            }
+        }
+    </script>
+
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
+
+    {{-- Stylesheets --}}
+    @vite(['resources/css/app.css', 'resources/css/store/biin-king-gym-store/index.css'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-        rel="stylesheet" />
-
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -146,7 +206,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2025 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
     <script src="assets/js/script.js"></script>

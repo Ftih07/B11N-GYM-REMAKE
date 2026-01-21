@@ -1,30 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{-- 1. TITLE: Nama Brand + Keyword Utama + Lokasi --}}
+	<title>B11N Gym Purwokerto - Pusat Fitness & Gym Terlengkap & Murah</title>
+
+	{{-- 2. META DESCRIPTION: Call to Action + Lokasi + Harga --}}
+	<meta name="description" content="Cari gym di Purwokerto? B11N Gym Arcawinangun menawarkan alat fitness lengkap, AC, Karaoke, dan Free Personal Trainer. Harian mulai Rp 10rb! Gabung sekarang.">
+
+	{{-- 3. KEYWORDS: Variasi kata kunci pencarian lokal --}}
+	<meta name="keywords" content="gym purwokerto, fitness center purwokerto, tempat gym murah purwokerto, gym arcawinangun, fitness muslimah purwokerto, member gym harian, B11N Gym">
+
+	<meta name="author" content="B11N Gym Management">
+	<meta name="robots" content="index, follow">
+	<link rel="canonical" href="{{ url()->current() }}">
+
+	{{-- 4. GEO TAGS (PENTING UNTUK LOCAL SEO) --}}
+	<meta name="geo.region" content="ID-JT" /> {{-- Jawa Tengah --}}
+	<meta name="geo.placename" content="Purwokerto" />
+	<meta name="geo.position" content="-7.4243;109.2391" /> {{-- Ganti dengan Koordinat Asli B11N --}}
+	<meta name="ICBM" content="-7.4243, 109.2391" />
+
+	{{-- 5. OPEN GRAPH (Tampilan saat share Link) --}}
+	<meta property="og:type" content="business.business">
+	<meta property="og:title" content="B11N Gym Purwokerto - Give Up or Get Up">
+	<meta property="og:description" content="Gym premium harga rakyat. Fasilitas lengkap, nyaman, dan strategis di Arcawinangun.">
+	<meta property="og:url" content="{{ url()->current() }}">
+	<meta property="og:image" content="{{ asset('assets/home/biin-gym.jpg') }}">
+	<meta property="og:site_name" content="B11N Gym">
+
+	{{-- 6. SCHEMA MARKUP LOCAL BUSINESS --}}
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "ExerciseGym",
+			"name": "B11N Gym Purwokerto",
+			"image": "{{ asset('assets/home/biin-gym.jpg') }}",
+			"telephone": "+6281226110988",
+			"url": "{{ url('/') }}",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Jl. Masjid Baru, Arcawinangun",
+				"addressLocality": "Purwokerto Timur",
+				"addressRegion": "Jawa Tengah",
+				"postalCode": "53113",
+				"addressCountry": "ID"
+			},
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": -7.4243,
+				"longitude": 109.2391
+			},
+			"openingHoursSpecification": [{
+				"@type": "OpeningHoursSpecification",
+				"dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+				"opens": "07:00",
+				"closes": "21:00"
+			}],
+			"priceRange": "Rp 10.000 - Rp 80.000"
+		}
+	</script>
+
+	{{-- Favicon --}}
 	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
 
-	<link
-		href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-		rel="stylesheet" />
-	<link
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	{{-- CSS Libraries --}}
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
+	{{-- JS Libraries --}}
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 	@vite('resources/css/gym/biin-gym/index.css')
-	<title>B11N Gym Purwokerto</title>
 </head>
 
 @foreach ($logo as $logo)
@@ -795,7 +851,7 @@
 		<hr class="border-t border-white">
 
 		<div class="footer__bar">
-			Copyright © 2024 Mullticore. All rights reserved.
+			Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
 		</div>
 	</footer>
 

@@ -1,24 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- 1. TITLE: Masukkan keyword utama (Gym & Kost) --}}
+    <title>Blog B1NG EMPIRE - Tips Fitness, Gym & Info Kost Eksklusif</title>
+
+    {{-- 2. META DESCRIPTION: Rangkuman isi blog untuk muncul di Google --}}
+    <meta name="description" content="Temukan artikel terbaru seputar tips latihan fitness di B11N & K1NG Gym, panduan hidup sehat, serta info kost eksklusif Istana Merdeka 03.">
+
+    {{-- 3. KEYWORDS: Fokus niche --}}
+    <meta name="keywords" content="blog fitness indonesia, tips gym pemula, kost fasilitas gym, B11N Gym, K1NG Gym, Istana Merdeka 03, gaya hidup sehat">
+
+    <meta name="author" content="B1NG EMPIRE">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. OPEN GRAPH (Untuk Tampilan Share WA/IG/FB) --}}
+    <meta property="og:type" content="blog">
+    <meta property="og:site_name" content="B1NG EMPIRE Blog">
+    <meta property="og:title" content="Blog B1NG EMPIRE - Solusi Sehat & Hunian Nyaman">
+    <meta property="og:description" content="Baca tips fitness, jadwal kelas gym, dan info hunian kost terbaru di sini.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('assets/Hero/b11ngym.jpg') }}"> {{-- Gambar default saat share link --}}
+
+    {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+
+    {{-- CSS & Fonts --}}
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" /> {{-- Pastikan path ini benar atau pakai asset() --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-    <title>B1NG EMPIRE Blog</title>
+
     @vite('resources/css/blog/index.css')
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-        rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    {{-- 5. SCHEMA MARKUP (JSON-LD) --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "{{ url()->current() }}"
+            },
+            "headline": "B1NG EMPIRE Blog - Tips Gym & Info Kost",
+            "description": "Kumpulan artikel seputar kesehatan, fitness, dan info hunian kost.",
+            "image": "{{ asset('assets/Hero/b11ngym.jpg') }}",
+            "author": {
+                "@type": "Organization",
+                "name": "B1NG EMPIRE"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "B1NG EMPIRE",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "{{ asset('assets/Logo/empire.png') }}"
+                }
+            }
+        }
+    </script>
 </head>
 
 <body class="bg-white dark:bg-black transition-colors duration-300">
@@ -105,10 +154,6 @@
         </div>
     </section>
 
-
-
-    <!-- Sesuaikan dengan layout Anda -->
-
     @section('content')
     <section class="section__container news__container" id="b11n-news">
         <div class="news__header">
@@ -161,16 +206,11 @@
         </div>
     </section>
 
-
-
-
     <footer class="footer mt-10">
         <div class="footer__bar">
-            Copyright © 2024 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
-
-
 
     <script src="https://unpkg.com/scrollreveal"></script>
     <script>

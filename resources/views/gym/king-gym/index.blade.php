@@ -6,25 +6,83 @@
 
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{-- 1. TITLE: Fokus ke Wilayah Spesifik (Ledug) agar tidak bentrok dengan B11N --}}
+	<title>K1NG Gym Purwokerto - Fitness Center Terbaik di Ledug & Kembaran</title>
+
+	{{-- 2. META DESCRIPTION: Highlight USP (Free Parkir & PT) + Lokasi --}}
+	<meta name="description" content="K1NG Gym Purwokerto berlokasi di Ledug, Kembaran. Gym luas dengan fasilitas lengkap, free personal trainer, parkir gratis, dan harga mahasiswa mulai Rp 10rb.">
+
+	{{-- 3. KEYWORDS: Target audiens sekitar UMP / Ledug --}}
+	<meta name="keywords" content="k1ng gym, gym ledug, fitness center kembaran, gym dekat ump, gym purwokerto, fitness murah purwokerto, member gym harian">
+
+	<meta name="author" content="K1NG Gym Management">
+	<meta name="robots" content="index, follow">
+	<link rel="canonical" href="{{ url()->current() }}">
+
+	{{-- 4. GEO TAGS (Penting untuk membedakan lokasi dengan cabang lain) --}}
+	<meta name="geo.region" content="ID-JT" />
+	<meta name="geo.placename" content="Purwokerto" />
+	{{-- Koordinat disesuaikan ke area Ledug/Kembaran --}}
+	<meta name="geo.position" content="-7.4360;109.2650" />
+	<meta name="ICBM" content="-7.4360, 109.2650" />
+
+	{{-- 5. OPEN GRAPH --}}
+	<meta property="og:type" content="business.business">
+	<meta property="og:title" content="K1NG Gym Purwokerto - Empower The King On You">
+	<meta property="og:description" content="Pusat kebugaran di Ledug dengan alat lengkap, suasana nyaman, dan harga terjangkau. Gabung sekarang!">
+	<meta property="og:url" content="{{ url()->current() }}">
+	<meta property="og:image" content="{{ asset('assets/Hero/king.jpg') }}">
+	<meta property="og:site_name" content="K1NG Gym">
+
+	{{-- 6. SCHEMA MARKUP (LocalBusiness: Gym) --}}
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "ExerciseGym",
+			"name": "K1NG Gym Purwokerto",
+			"image": "{{ asset('assets/Hero/king.jpg') }}",
+			"telephone": "+6281226110988",
+			"url": "{{ url('/') }}",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Ledug, Kec. Kembaran",
+				"addressLocality": "Purwokerto",
+				"addressRegion": "Jawa Tengah",
+				"postalCode": "53182",
+				"addressCountry": "ID"
+			},
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": -7.4360,
+				"longitude": 109.2650
+			},
+			"openingHoursSpecification": [{
+				"@type": "OpeningHoursSpecification",
+				"dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+				"opens": "07:00",
+				"closes": "21:00"
+			}],
+			"priceRange": "Rp 10.000 - Rp 80.000"
+		}
+	</script>
+
+	{{-- Favicon --}}
 	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/last.png'))">
 
-	<link
-		href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-		rel="stylesheet" />
-	<link
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	{{-- CSS Libraries --}}
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
+	{{-- Scripts --}}
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 	@vite('resources/css/gym/king-gym/index.css')
-	<title>K1NG Gym Purwokerto</title>
 </head>
 
 @foreach ($logo as $logo)
@@ -783,12 +841,11 @@
 				</div>
 			</div>
 
-
 		</div>
 		<hr class="border-t border-white">
 
 		<div class="footer__bar">
-			Copyright © 2024 Mullticore. All rights reserved.
+			Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
 		</div>
 	</footer>
 
@@ -1047,6 +1104,5 @@
 
 </body>
 @endforeach
-
 
 </html>

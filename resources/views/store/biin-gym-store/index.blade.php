@@ -4,15 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    {{-- 1. TITLE DINAMIS: Menyesuaikan Filter Kategori --}}
+    @php
+    $catTitle = match(request('category')) {
+    '1' => 'Jual Makanan Sehat & Diet',
+    '2' => 'Jual Minuman Protein & Suplemen',
+    default => 'Pusat Nutrisi & Perlengkapan Gym'
+    };
+    @endphp
+    <title>{{ $catTitle }} - B11N Gym Store Purwokerto</title>
+
+    {{-- 2. META DESCRIPTION: Fokus pada Penjualan & Produk --}}
+    <meta name="description" content="Belanja kebutuhan fitness di B11N Gym Store. Tersedia makanan diet, minuman whey protein, dan suplemen gym berkualitas dengan harga terjangkau di Purwokerto.">
+
+    {{-- 3. KEYWORDS: Kata kunci belanja --}}
+    <meta name="keywords" content="toko suplemen purwokerto, jual makanan diet, minuman protein gym, b11n store, harga member gym, susu whey purwokerto, catering sehat b11n">
+
+    <meta name="author" content="B11N Gym Store">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. OPEN GRAPH (Product Catalog Style) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="B11N Gym Store - Fuel Your Gains">
+    <meta property="og:description" content="Temukan nutrisi terbaik untuk latihanmu. Makanan sehat dan suplemen original tersedia di sini.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    {{-- Ambil gambar produk pertama sebagai preview jika ada, atau logo default --}}
+    <meta property="og:image" content="{{ isset($products[0]) ? asset('storage/' . $products[0]->image) : asset('assets/Logo/biin.png') }}">
+    <meta property="og:site_name" content="B11N Gym Store">
+
+    {{-- 5. GEO TAGS (Lokasi Toko Fisik) --}}
+    <meta name="geo.region" content="ID-JT" />
+    <meta name="geo.placename" content="Purwokerto" />
+    <meta name="geo.position" content="-7.4243;109.2391" />
+    <meta name="ICBM" content="-7.4243, 109.2391" />
+
+    {{-- 6. SCHEMA MARKUP (Store) --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Store",
+            "name": "B11N Gym Store",
+            "image": "{{ asset('assets/Logo/biin.png') }}",
+            "telephone": "+6281226110988",
+            "url": "{{ url()->current() }}",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Jl. Masjid Baru, Arcawinangun",
+                "addressLocality": "Purwokerto Timur",
+                "addressRegion": "Jawa Tengah",
+                "postalCode": "53113",
+                "addressCountry": "ID"
+            },
+            "priceRange": "Rp 5.000 - Rp 500.000",
+            "openingHoursSpecification": [{
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "07:00",
+                "closes": "21:00"
+            }]
+        }
+    </script>
+
+    {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
 
-    <title>B11N Gym Store</title>
-    @vite('resources/css/app.css')
-    @vite('resources/css/store/biin-gym-store/index.css')
+    {{-- Stylesheets --}}
+    @vite(['resources/css/app.css', 'resources/css/store/biin-gym-store/index.css'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
-        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 
 <body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
@@ -144,7 +206,7 @@
 
     <footer class="footer mt-10" id="contact">
         <div class="footer__bar">
-            Copyright © 2025 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
     <script src="assets/js/script.js"></script>

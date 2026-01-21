@@ -4,25 +4,93 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    {{-- 1. TITLE: Brand + Jenis Kost + Target Lokasi (Kampus) --}}
+    <title>Kost Putra Istana Merdeka 03 - Kost Nyaman Dekat UNSOED & UMP Purwokerto</title>
+
+    {{-- 2. META DESCRIPTION: Harga + Fasilitas Utama + Lokasi --}}
+    <meta name="description" content="Terima kost putra di Purwokerto mulai Rp 500rb. Fasilitas lengkap: AC/Non-AC, WiFi kencang, kasur empuk, aman & nyaman. Lokasi strategis di Arcawinangun dekat UNSOED & UMP.">
+
+    {{-- 3. KEYWORDS: Kata kunci pencarian anak kost --}}
+    <meta name="keywords" content="kost putra purwokerto, kost dekat unsoed, kost dekat ump, kost arcawinangun, kost murah purwokerto, kost ac purwokerto, kost istana merdeka 03, kost harian purwokerto">
+
+    <meta name="author" content="Kost Istana Merdeka 03">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- 4. GEO TAGS (Lokasi sama dengan B11N Gym karena satu gedung) --}}
+    <meta name="geo.region" content="ID-JT" />
+    <meta name="geo.placename" content="Purwokerto" />
+    <meta name="geo.position" content="-7.4243;109.2391" />
+    <meta name="ICBM" content="-7.4243, 109.2391" />
+
+    {{-- 5. OPEN GRAPH (Tampilan Share WA/IG) --}}
+    <meta property="og:type" content="business.business">
+    <meta property="og:title" content="Kost Putra Istana Merdeka 03 - Mulai Rp 500rb/Bulan">
+    <meta property="og:description" content="Hunian kost eksklusif di atas B11N Gym. Fasilitas lengkap, lokasi strategis, lingkungan kondusif. Pesan kamar sekarang!">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('assets/home/istana-merdeka.jpg') }}">
+    <meta property="og:site_name" content="Kost Istana Merdeka 03">
+
+    {{-- 6. SCHEMA MARKUP (LodgingBusiness / Hostel) --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "LodgingBusiness",
+            "name": "Kost Putra Istana Merdeka 03",
+            "image": "{{ asset('assets/home/istana-merdeka.jpg') }}",
+            "telephone": "+6289653847651",
+            "url": "{{ url('/') }}",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Jl. Masjid Baru, Arcawinangun (Lantai 2 B11N Gym)",
+                "addressLocality": "Purwokerto Timur",
+                "addressRegion": "Jawa Tengah",
+                "postalCode": "53113",
+                "addressCountry": "ID"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": -7.4243,
+                "longitude": 109.2391
+            },
+            "priceRange": "Rp 500.000 - Rp 750.000",
+            "amenityFeature": [{
+                    "@type": "LocationFeatureSpecification",
+                    "name": "AC",
+                    "value": "True"
+                },
+                {
+                    "@type": "LocationFeatureSpecification",
+                    "name": "WiFi High Speed",
+                    "value": "True"
+                },
+                {
+                    "@type": "LocationFeatureSpecification",
+                    "name": "Gym Access (B11N)",
+                    "value": "True"
+                }
+            ]
+        }
+    </script>
+
+    {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/kost.png'))">
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
-        rel="stylesheet" />
+    {{-- Stylesheets & Scripts --}}
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-    <!-- Tambahkan CSS Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-    <!-- Tambahkan JS Flatpickr -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @vite('resources/css/kost/index.css')
-    <title>Kost Istana Merdeka 03</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -511,7 +579,7 @@
 
         </div>
         <div class="footer__bar">
-            Copyright © 2025 B1NG EMPIRE. All rights reserved.
+            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
         </div>
     </footer>
 
@@ -519,26 +587,26 @@
     <script src="assets/js/home.js"></script>
 
     <script>
-    // Cek Session Success
-    @if(session('success'))
+        // Cek Session Success
+        @if(session('success'))
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
             text: "{{ session('success') }}",
             confirmButtonColor: '#3085d6',
         });
-    @endif
+        @endif
 
-    // Cek Session Error
-    @if(session('error'))
+        // Cek Session Error
+        @if(session('error'))
         Swal.fire({
             icon: 'error',
             title: 'Gagal!',
             text: "{{ session('error') }}",
             confirmButtonColor: '#d33',
         });
-    @endif
-</script>
+        @endif
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
