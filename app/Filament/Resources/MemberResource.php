@@ -13,9 +13,17 @@ use Filament\Forms\Components\ViewField;
 
 class MemberResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return Member::count();
+    }
+
     protected static ?string $model = Member::class;
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'Membership';
+    protected static ?string $navigationGroup = 'Membership & Absensi';
+    protected static ?string $navigationLabel = 'Manajemen Membership';
+    protected static ?string $pluralModelLabel = 'Data Membership';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -100,7 +108,7 @@ class MemberResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('picture')->circular(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
-                
+
                 // Tampilkan sisa hari membership
                 Tables\Columns\TextColumn::make('membership_end_date')
                     ->label('Masa Berlaku')

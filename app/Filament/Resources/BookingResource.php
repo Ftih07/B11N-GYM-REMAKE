@@ -22,6 +22,8 @@ class BookingResource extends Resource
 
     protected static ?string $model = Booking::class;
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $navigationLabel = 'Online Kost Booking';
+
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -54,7 +56,7 @@ class BookingResource extends Resource
                 ])->default('pending')->required(),
             ]);
     }
- 
+
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table->columns([

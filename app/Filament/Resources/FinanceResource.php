@@ -17,7 +17,11 @@ class FinanceResource extends Resource
 {
     protected static ?string $model = Finance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationLabel = 'Rekap Keuangan';
+    protected static ?string $pluralModelLabel = 'Laporan Keuangan';
+    protected static ?string $navigationGroup = 'Laporan';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

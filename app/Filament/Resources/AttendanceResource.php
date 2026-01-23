@@ -23,6 +23,7 @@ class AttendanceResource extends Resource
     protected static ?string $navigationLabel = 'Rekap Absensi';
     protected static ?string $pluralModelLabel = 'Data Absensi';
     protected static ?string $navigationGroup = 'Laporan';
+    protected static ?int $navigationSort = 1;
 
     // Kita matikan tombol "Create" karena absen inputnya dari Halaman AbsensiPage, bukan dari sini
     public static function canCreate(): bool

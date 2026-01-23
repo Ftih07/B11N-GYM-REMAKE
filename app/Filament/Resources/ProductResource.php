@@ -19,7 +19,9 @@ class ProductResource extends Resource
     {
         return Product::count(); // Menampilkan jumlah total data booking
     }
-    protected static ?string $navigationGroup = 'Store';
+    protected static ?string $navigationGroup = 'Store Management';
+    protected static ?int $navigationSort = 6;
+
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';

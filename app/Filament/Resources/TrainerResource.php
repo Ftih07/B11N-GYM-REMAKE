@@ -15,8 +15,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TrainerResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return Trainer::count();
+    }
+
     protected static ?string $navigationGroup = 'Employee Management';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
     protected static ?string $model = Trainer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';

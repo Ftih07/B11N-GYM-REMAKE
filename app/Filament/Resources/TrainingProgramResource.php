@@ -20,6 +20,7 @@ class TrainingProgramResource extends Resource
     protected static ?string $model = TrainingProgram::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-fire';
+    protected static ?int $navigationSort = 7;
 
     public static function form(Form $form): Form
     {

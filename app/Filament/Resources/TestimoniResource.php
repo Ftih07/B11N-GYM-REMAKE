@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestimoniResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Management General';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'General Management Website';
+    protected static ?int $navigationSort = 5;
     protected static ?string $model = Testimoni::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left';

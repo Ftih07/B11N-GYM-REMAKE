@@ -13,9 +13,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class SurveyResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return Survey::count();
+    }
+
     protected static ?string $model = Survey::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationLabel = 'Data Survey';
+    protected static ?string $navigationGroup = 'Gym Management';
+    protected static ?int $navigationSort = 3;
 
     // 1. Agar tombol "New Survey" hilang (karena data dari public form)
     public static function canCreate(): bool

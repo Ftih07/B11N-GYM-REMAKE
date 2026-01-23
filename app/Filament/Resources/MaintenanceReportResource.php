@@ -13,11 +13,15 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MaintenanceReportResource extends Resource
 {
+    public static function getNavigationBadge(): ?string
+    {
+        return MaintenanceReport::count();
+    }
     protected static ?string $model = MaintenanceReport::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationGroup = 'Gym Management';
     protected static ?string $navigationLabel = 'Laporan Kerusakan';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

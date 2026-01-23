@@ -30,9 +30,18 @@
 </style>
 
 <!-- Header Logo Section -->
-<div class="header-logo">
-    <a href="" class="decoration-none">
-        <img src="assets/Logo/empire.png" alt="Logo" class="logo-img">
+<div class="flex items-center gap-x-2">
+    {{-- LOGO GAMBAR --}}
+    {{-- Gunakan asset() biar muncul di semua halaman --}}
+    <img
+        src="{{ asset('assets/Logo/empire.png') }}"
+        alt="Logo"
+        class="h-10" />
+
+    {{-- TEKS --}}
+    {{-- text-gray-950 (hitam utk light mode) --}}
+    {{-- dark:text-white (putih utk dark mode) --}}
+    <div class="font-bold text-xl text-gray-950 dark:text-white">
         B1NG EMPIRE
-    </a>
+    </div>
 </div>

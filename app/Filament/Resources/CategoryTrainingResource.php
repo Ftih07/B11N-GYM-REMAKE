@@ -20,6 +20,7 @@ class CategoryTrainingResource extends Resource
     protected static ?string $model = CategoryTraining::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?int $navigationSort = 7;
 
     public static function form(Form $form): Form
     {

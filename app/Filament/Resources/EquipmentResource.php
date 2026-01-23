@@ -12,9 +12,14 @@ use Filament\Tables\Table;
 
 class EquipmentResource extends Resource
 {
+        public static function getNavigationBadge(): ?string
+    {
+        return Equipment::count(); 
+    }
     protected static ?string $model = Equipment::class;
     protected static ?string $navigationIcon = 'heroicon-o-wrench';
     protected static ?string $navigationGroup = 'Gym Management';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

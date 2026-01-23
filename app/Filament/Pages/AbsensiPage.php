@@ -21,6 +21,9 @@ class AbsensiPage extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-camera';
     protected static ?string $navigationLabel = 'Absensi Harian';
     protected static ?string $title = 'Absensi Member & Tamu';
+    protected static ?string $navigationGroup = 'Membership & Absensi';
+    protected static ?int $navigationSort = 2;
+
     protected static string $view = 'filament.pages.absensi-page';
 
     // Variabel penampung data form manual
