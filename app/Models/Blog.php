@@ -28,11 +28,6 @@ class Blog extends Model
         });
     }   
 
-    public function gymkos()
-    {
-        return $this->belongsTo(Gymkos::class);
-    }
-
     public function scopePublished($query)
     {
         return $query->where('status', 'publish');

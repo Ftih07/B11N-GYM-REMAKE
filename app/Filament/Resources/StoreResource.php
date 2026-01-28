@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\StoreResource\Pages;
-use App\Filament\Resources\StoreResource\RelationManagers;
 use App\Models\Store;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +10,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+// HAPUS baris SoftDeletingScope karena kamu tidak pakai soft delete
+// use Illuminate\Database\Eloquent\SoftDeletingScope; 
 
 class StoreResource extends Resource
 {
@@ -26,24 +26,35 @@ class StoreResource extends Resource
     {
         return $form
             ->schema([
-                //
                 Forms\Components\TextInput::make('title')
                     ->label('Store Title')
                     ->required()
                     ->maxLength(255),
+
+                // --- TAMBAHAN BARU: SUBHEADING ---
+                Forms\Components\TextInput::make('subheading')
+                    ->label('Subheading / Slogan')
+                    ->placeholder('Contoh: Pusat Gym Terlengkap')
+                    ->maxLength(255),
+
+                // --- PERUBAHAN: IMAGE JADI TIDAK WAJIB ---
+                // Hapus '->required()' karena di database sudah nullable
                 Forms\Components\FileUpload::make('image')
                     ->label('Store Image')
-                    ->directory('facilities')
-                    ->image()
-                    ->required(),
+                    ->directory('stores') // Saran: rapikan ke folder stores
+                    ->image(),
+
+                // --- TAMBAHAN BARU: LOCATION ---
+                Forms\Components\Textarea::make('location')
+                    ->label('Location / Alamat')
+                    ->rows(2)
+                    ->maxLength(500),
+
                 Forms\Components\Textarea::make('description')
                     ->label('Description')
                     ->nullable()
-                    ->maxLength(1000),
-                Forms\Components\Select::make('gymkos_id')
-                    ->label('Gymkos')
-                    ->relationship('gymkos', 'name')
-                    ->required(),
+                    ->maxLength(1000)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -51,29 +62,43 @@ class StoreResource extends Resource
     {
         return $table
             ->columns([
-                //
                 Tables\Columns\TextColumn::make('title')
                     ->label('Store Title')
                     ->sortable()
                     ->searchable(),
+
+                // --- TAMBAHAN BARU: SUBHEADING ---
+                Tables\Columns\TextColumn::make('subheading')
+                    ->label('Slogan')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true), // Sembunyikan biar tabel ga penuh
+
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Store Image'),
-                Tables\Columns\TextColumn::make('description')
-                    ->label('Store Description')
-                    ->limit(50),
-                Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
-                    ->sortable()
+
+                // --- TAMBAHAN BARU: LOCATION ---
+                Tables\Columns\TextColumn::make('location')
+                    ->label('Location')
+                    ->limit(30)
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Description')
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                // Tidak perlu filter Trash karena tidak ada soft delete
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(), // Delete biasa (langsung hilang)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

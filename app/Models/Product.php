@@ -18,17 +18,11 @@ class Product extends Model
         'price',
         'status',
         'image',
-        'gymkos_id',
         'stores_id',
         'category_products_id',
         'serving_option',
         'flavour'
     ];
-
-    public function gymkos()
-    {
-        return $this->belongsTo(Gymkos::class);
-    }
 
     public function store()
     {

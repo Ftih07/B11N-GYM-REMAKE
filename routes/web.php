@@ -30,8 +30,6 @@ Route::prefix('blogs')->group(function () {
 
 //Store Route
 Route::get('/biin-king-gym-store', [StoreController::class, 'showBiinKingGymStore'])->name('store.biin-king');
-Route::get('/biin-gym-store', [StoreController::class, 'showBiinStore'])->name('store.biin');
-Route::get('/king-gym-store', [StoreController::class, 'showKingStore'])->name('store.king');
 
 //Product Route
 Route::get('product/{id}', [ProductController::class, 'show'])->name('store.product.show');

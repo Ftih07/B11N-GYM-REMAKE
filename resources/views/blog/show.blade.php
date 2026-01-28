@@ -1,299 +1,229 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    {{-- 1. TITLE DINAMIS + BRANDING --}}
+    {{-- SEO Meta Tags --}}
     <title>{{ $blog->title }} - B1NG EMPIRE Blog</title>
-
-    {{-- 2. META DESCRIPTION OTOMATIS --}}
-    {{-- Mengambil 150 karakter pertama dari konten, membuang tag HTML biar bersih --}}
     <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
-
-    {{-- 3. KEYWORDS (Bisa dinamis kalau ada kolom tags di DB, kalau tidak pakai default ini) --}}
-    <meta name="keywords" content="{{ $blog->category ?? 'gym, fitness, kost' }}, tips kesehatan, B11N Gym, K1NG Gym, artikel fitness indonesia">
-
+    <meta name="keywords" content="gym, fitness, kost, purwokerto, b11n gym, k1ng gym, {{ Str::slug($blog->title, ', ') }}">
     <meta name="author" content="B1NG EMPIRE">
-    <meta name="robots" content="index, follow">
-
-    {{-- Canonical URL (Mencegah duplikat konten) --}}
     <link rel="canonical" href="{{ url()->current() }}">
 
-    {{-- 4. OPEN GRAPH (Wajib supaya keren saat di-share di WA/IG) --}}
+    {{-- Open Graph --}}
     <meta property="og:type" content="article">
     <meta property="og:title" content="{{ $blog->title }}">
     <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="B1NG EMPIRE Blog">
     <meta property="og:image" content="{{ asset('storage/' . $blog->image) }}">
-    <meta property="og:image:alt" content="{{ $blog->title }}">
-
-    {{-- Twitter Card --}}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $blog->title }}">
-    <meta name="twitter:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
-    <meta name="twitter:image" content="{{ asset('storage/' . $blog->image) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/mc.png'))">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
 
-    {{-- Assets --}}
-    @vite(['resources/css/app.css', 'resources/css/blog/show.css'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+    {{-- Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Poppins:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
 
-    {{-- 5. SCHEMA MARKUP: Article / BlogPosting --}}
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            "mainEntityOfPage": {
-                "@type": "WebPage",
-                "@id": "{{ url()->current() }}"
-            },
-            "headline": "{{ $blog->title }}",
-            "image": [
-                "{{ asset('storage/' . $blog->image) }}"
-            ],
-            "datePublished": "{{ $blog->created_at->toIso8601String() }}",
-            "dateModified": "{{ $blog->updated_at->toIso8601String() }}",
-            "author": {
-                "@type": "Organization",
-                "name": "B1NG EMPIRE"
-            },
-            "publisher": {
-                "@type": "Organization",
-                "name": "B1NG EMPIRE",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "{{ asset('assets/Logo/colab.png') }}"
+    {{-- Tailwind & Icons --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        heading: ['Oswald', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'], // Font khusus bacaan panjang
+                    },
+                    colors: {
+                        'brand-red': '#dc030a',
+                        'brand-orange': '#f97316',
+                        'brand-black': '#0a0a0a',
+                        'brand-gray': '#171717',
+                    }
                 }
-            },
-            "description": "{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}"
+            }
         }
     </script>
+
+    {{-- Custom Styles for Typography --}}
+    <style>
+        /* Styling untuk konten artikel dari Rich Text Editor */
+        .prose p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .prose h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: inherit;
+        }
+
+        .prose h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: inherit;
+        }
+
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prose ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prose blockquote {
+            border-left: 4px solid #dc030a;
+            padding-left: 1rem;
+            font-style: italic;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .prose img {
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .dark .prose blockquote {
+            color: #9ca3af;
+        }
+    </style>
 </head>
 
-<body class="m-0 p-0 bg-white text-white font-poppins dark:bg-black transition-colors duration-300">
+<body class="bg-white text-brand-black dark:bg-brand-black dark:text-gray-200 font-sans antialiased transition-colors duration-300 pt-20">
 
-    @if (session('success'))
-    <div
-        id="notification"
-        class="flex items-center bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-lg fixed top-4 right-4 z-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>{{ session('success') }}</span>
-    </div>
-    @endif
+    @include('components.navbar-cta')
 
-    <nav class="fixed bg-gray-100 dark:bg-black">
-        <div class="nav__bar">
-            <div class="nav__header">
-                <div class="nav__logo">
-                    <a href="#"><img src="{{ asset('assets/Logo/colab.png') }}" alt="logo" /></a>
+    <div class="relative w-full h-[60vh] md:h-[70vh] bg-gray-900 overflow-hidden">
+        <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="w-full h-full object-cover opacity-60">
+        <div class="absolute inset-0 bg-gradient-to-t from-white dark:from-brand-black via-transparent to-black/30"></div>
+
+        <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 max-w-4xl mx-auto">
+            <div class="mb-4 flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-brand-red text-white text-xs font-bold uppercase tracking-wider rounded">Article</span>
+                <span class="px-3 py-1 bg-white/20 backdrop-blur text-white text-xs font-bold uppercase tracking-wider rounded">{{ $blog->category ?? 'General' }}</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight mb-4 drop-shadow-lg">
+                {{ $blog->title }}
+            </h1>
+            <div class="flex items-center text-gray-500 text-sm font-medium gap-4">
+                <div class="flex items-center gap-2">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>{{ $blog->created_at->format('d M Y') }}</span>
                 </div>
-                <div class="nav__menu__btn" id="menu-btn">
-                    <i class="ri-menu-line"></i>
+                <div class="flex items-center gap-2">
+                    <i class="far fa-user"></i>
+                    <span>Admin B1NG</span>
                 </div>
             </div>
-            <ul class="nav__links dark:text-white text-black" id="nav-links">
-                <li>
-                    <a href="{{ route('home') }}"
-                        class="{{ Route::currentRouteName() === 'home' ? 'active' : '' }}">HOME</a>
-                </li>
-                <li>
-                    <a href="{{ route('blogs.index') }}"
-                        class="{{ Route::currentRouteName() === 'blogs.index' ? 'active' : '' }}">B1NG BLOG</a>
-                </li>
-                <li>
-                    <a href="{{ route('gym.biin') }}"
-                        class="{{ Route::currentRouteName() === 'index' ? 'active' : '' }}">B11N GYM</a>
-                </li>
-                <li>
-                    <a href="{{ route('gym.king') }}"
-                        class="{{ Route::currentRouteName() === 'kinggym' ? 'active' : '' }}">K1NG GYM</a>
-                </li>
-                <li>
-                    <a href="{{ route('kost') }}"
-                        class="{{ Route::currentRouteName() === 'kost' ? 'active' : '' }}">ISTANA MERDEKA 03</a>
-                </li>
-                <li>
-                    <a href="{{ route('store.biin-king') }}"
-                        class="{{ Route::currentRouteName() === 'store.biin-king' ? 'active' : '' }}">STORE</a>
-                </li>
-                <div class="mode rounded-full" id="switch-mode">
-                    <div class="btn__indicator">
-                        <div class="btn__icon-container">
-                            <i class="btn__icon fa-solid"></i>
-                        </div>
-                    </div>
-                </div>
-            </ul>
         </div>
-    </nav>
+    </div>
 
-    @foreach ($logo as $logo)
-    <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><img src="{{ asset('assets/Logo/empire.png') }}" alt="B1NG Empire" /></a>
-        <a href="{{ route('kost') }}" class="action"><img src="{{ asset('assets/Logo/kost.png') }}" alt="Istana Merdeka" /></a>
-        <a href="{{ route('gym.biin') }}" class="action"><img src="{{ asset('assets/Logo/biin.png') }}" alt="B11N Gym" /></a>
-        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="{{ asset('assets/Logo/last.png') }}" alt="K1NG Gym" /></a>
-        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
-    </menu>
-    @endforeach
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
 
-    <section class="blog-detail max-w-[800px] mx-auto px-4 py-24">
-        <article class="blog__content">
-            <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="w-full rounded-lg mb-6">
-            <p class="text-sm text-gray-500">{{ $blog->created_at->format('F d, Y') }}</p>
-            <h1 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white my-6">{{ $blog->title }}</h1>
-            <div class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                {!! $blog->content !!} <!-- Rich Editor content -->
-            </div>
+        <nav class="flex mb-8 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-4" aria-label="Breadcrumb">
+            <ol class="flex flex-wrap items-center gap-2">
+                <li class="inline-flex items-center">
+                    <a href="{{ route('blogs.index') }}" class="hover:text-brand-red transition">Blog</a>
+                </li>
+
+                <li class="inline-flex items-center text-xs">
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+
+                <li class="min-w-0">
+                    <span class="text-brand-black dark:text-white font-medium block break-words">
+                        {{ $blog->title }}
+                    </span>
+                </li>
+            </ol>
+        </nav>
+
+        <article class="prose prose-lg dark:prose-invert max-w-none font-serif
+                text-gray-800 dark:text-gray-300
+                break-words overflow-x-hidden
+                prose-a:break-all prose-li:break-words prose-p:break-words">
+            {!! $blog->content !!}
         </article>
 
-        <section class="related-articles mt-12">
-            <h2 class="text-2xl font-semibold mb-6 text-black dark:text-white">Artikel Lainnya</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ($relatedBlogs as $relatedBlog)
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
-                    <a href="{{ route('blogs.show', $relatedBlog->slug) }}" class="block">
-                        <img src="{{ asset('storage/' . $relatedBlog->image) }}"
-                            alt="{{ $relatedBlog->title }}"
-                            class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105">
-                        <div class="p-4">
-                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 hover:text-red-500">
-                                {{ $relatedBlog->title }}
-                            </h4>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
-                                {{ $relatedBlog->created_at->format('F d, Y') }}
-                            </p>
-                        </div>
+        <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm font-bold text-gray-500 uppercase tracking-widest">Share Article:</div>
+            <div class="flex gap-4">
+                {{-- Link Share WA (Dinamis) --}}
+                <a href="https://wa.me/?text={{ urlencode($blog->title . ' ' . url()->current()) }}" target="_blank" class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center hover:scale-110 transition shadow-lg">
+                    <i class="fab fa-whatsapp text-lg"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-110 transition shadow-lg">
+                    <i class="fab fa-facebook-f text-lg"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?text={{ urlencode($blog->title) }}&url={{ url()->current() }}"
+                    target="_blank"
+                    class="w-10 h-10 rounded-full bg-black dark:bg-gray-700 text-white flex items-center justify-center hover:scale-110 transition shadow-lg">
+                    <i class="fab fa-twitter text-lg"></i>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    @if($relatedBlogs->count() > 0)
+    <section class="bg-gray-50 dark:bg-brand-gray py-16 border-t border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-heading font-bold text-gray-900 dark:text-white mb-8 uppercase text-center">
+                Baca Juga <span class="text-brand-red">Artikel Lainnya</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @foreach ($relatedBlogs as $related)
+                <div class="group bg-white dark:bg-brand-black rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+                    <a href="{{ route('blogs.show', $related->slug) }}" class="relative h-48 overflow-hidden block">
+                        <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->title }}" class="w-full h-full object-cover transform transition duration-500 group-hover:scale-110">
                     </a>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-lg font-heading font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-brand-red transition">
+                            <a href="{{ route('blogs.show', $related->slug) }}">{{ $related->title }}</a>
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2 flex-grow">
+                            {{ Str::limit(strip_tags($related->content), 80) }}
+                        </p>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-auto">
+                            {{ $related->created_at->format('d M Y') }}
+                        </span>
+                    </div>
                 </div>
                 @endforeach
             </div>
-        </section>
-
+        </div>
     </section>
+    @endif
 
-    <script src="{{ asset('assets/js/script.js') }}"></script>
-
-    <footer class="footer mt-10" id="contact">
-        <div class="footer__bar">
-            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
+    <footer class="bg-brand-black text-white py-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">&copy; {{ date('Y') }} B1NG EMPIRE. All Rights Reserved.</p>
         </div>
     </footer>
-
-    <script>
-        // Automatically remove notification after 3 seconds
-        setTimeout(() => {
-            const notification = document.getElementById('notification');
-            if (notification) {
-                notification.style.transition = 'opacity 0.5s';
-                notification.style.opacity = '0';
-                setTimeout(() => notification.remove(), 500); // Remove after transition
-            }
-        }, 3000);
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleDarkMode = document.getElementById('switch-mode');
-            const htmlElement = document.documentElement;
-            const icon = document.querySelector('.btn__icon');
-
-            // Jika localStorage belum ada, set default ke light mode
-            if (!localStorage.theme) {
-                localStorage.theme = 'light';
-            }
-
-            // Terapkan mode yang tersimpan di localStorage
-            if (localStorage.theme === 'dark') {
-                htmlElement.classList.add('dark');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            } else {
-                htmlElement.classList.remove('dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-
-            // Event toggle dark mode
-            toggleDarkMode.addEventListener('click', function() {
-                if (htmlElement.classList.contains('dark')) {
-                    htmlElement.classList.remove('dark');
-                    localStorage.theme = 'light';
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                } else {
-                    htmlElement.classList.add('dark');
-                    localStorage.theme = 'dark';
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                }
-            });
-        });
-
-        const body = document.querySelector('body');
-        const btn = document.querySelector('.mode');
-        const icon = document.querySelector('.btn__icon');
-
-        //to save the dark mode use the object "local storage".
-
-        //function that stores the value true if the dark mode is activated or false if it's not.
-        function store(value) {
-            localStorage.setItem('darkmode', value);
-        }
-
-        //function that indicates if the "darkmode" property exists. It loads the page as we had left it.
-        function load() {
-            const darkmode = localStorage.getItem('darkmode');
-
-            //if the dark mode was never activated
-            if (!darkmode) {
-                store(false);
-                icon.classList.add('fa-sun');
-            } else if (darkmode == 'true') { //if the dark mode is activated
-                body.classList.add('darkmode');
-                icon.classList.add('fa-moon');
-            } else if (darkmode == 'false') { //if the dark mode exists but is disabled
-                icon.classList.add('fa-sun');
-            }
-        }
-
-
-        load();
-
-        btn.addEventListener('click', () => {
-
-            body.classList.toggle('darkmode');
-            icon.classList.add('animated');
-
-            //save true or false
-            store(body.classList.contains('darkmode'));
-
-            if (body.classList.contains('darkmode')) {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            } else {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-
-            setTimeout(() => {
-                icon.classList.remove('animated');
-            }, 500)
-        })
-
-        // Nav Utama
-        const trigger = document.querySelector("menu > .trigger");
-        trigger.addEventListener('click', (e) => {
-            e.currentTarget.parentElement.classList.toggle("open");
-        });
-    </script>
+    
 </body>
 
 </html>

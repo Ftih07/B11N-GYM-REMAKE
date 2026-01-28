@@ -32,7 +32,11 @@ class Transaction extends Model
         // Jika nama modelnya berbeda (misal Gym), sesuaikan class-nya.
         return $this->belongsTo(Gymkos::class);
     }
-    // ---------------------
+    
+    public function payable()
+    {
+        return $this->morphTo();
+    }
 
     // Relasi ke tabel Finance (One to One)
     public function finance()

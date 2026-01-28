@@ -45,9 +45,6 @@ class BlogResource extends Resource
                         'publish' => 'Publish',
                     ])
                     ->required(),
-                Forms\Components\Select::make('gymkos_id')
-                    ->relationship('gymkos', 'name') // Assuming Gymkos has a `name` column
-                    ->required(),
             ]);
     }
 
@@ -62,7 +59,6 @@ class BlogResource extends Resource
                     ->limit(50),
                 Tables\Columns\TextColumn::make('status')->sortable(),
                 Tables\Columns\ImageColumn::make('image'),
-                Tables\Columns\TextColumn::make('gymkos.name')->label('Gymkos'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime(),

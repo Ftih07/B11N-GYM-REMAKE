@@ -33,7 +33,7 @@ class ProductResource extends Resource
                 //
                 Forms\Components\TextInput::make('name')->required()->maxLength(255),
                 Forms\Components\Textarea::make('description')->required()->maxLength(255),
-                Forms\Components\FileUpload::make('image')->required()->directory('product'),
+                Forms\Components\FileUpload::make('image')->directory('product'),
                 Forms\Components\TextInput::make('price')
                     ->numeric()
                     ->required()
@@ -41,7 +41,6 @@ class ProductResource extends Resource
                     ->placeholder('e.g., 10000, 20000'),
                 Forms\Components\TextInput::make('serving_option')
                     ->label('Takaran Sajian Product')
-                    ->required()
                     ->placeholder('e.g., 1kg, 1 scoop, 1 sajian'),
                 Forms\Components\TextInput::make('flavour')
                     ->label('Flavour')
@@ -56,9 +55,6 @@ class ProductResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('category_products_id')
                     ->relationship('categoryproduct', 'name')
-                    ->required(),
-                Forms\Components\Select::make('gymkos_id')
-                    ->relationship('gymkos', 'name')
                     ->required(),
             ]);
     }
@@ -105,10 +101,6 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('store.title')
                     ->limit(50)
                     ->label('Store')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Gym/Kos Name')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

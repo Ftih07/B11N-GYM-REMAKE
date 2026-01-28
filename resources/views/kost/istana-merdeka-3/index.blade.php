@@ -110,7 +110,6 @@
             <ul class="nav__links" id="nav-links">
                 <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">HOME</a></li>
                 <li class="nav-item"><a href="#about" class="nav-link">TENTANG KAMI</a></li>
-                <li class="nav-item"><a href="#website" class="nav-link">FASILITAS</a></li>
                 <li class="nav-item"><a href="#room" class="nav-link">KAMAR</a></li>
                 <li class="nav-item"><a href="#feature" class="nav-link">FASILITAS</a></li>
                 <li class="nav-item"><a href="#booking" class="nav-link">PEMESANAN</a></li>
@@ -309,7 +308,7 @@
     </section>
 
     <!--Testimoni-->
-    <section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="client">
+    <section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="testimonials">
         <h2 class="section__header text-sm font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
         <!-- Slider main container -->
         <div class="swiper">

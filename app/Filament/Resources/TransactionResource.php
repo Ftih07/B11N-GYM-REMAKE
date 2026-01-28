@@ -198,6 +198,31 @@ class TransactionResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                // Badge Penanda Asal Transaksi (Online / Manual)
+                Tables\Columns\TextColumn::make('source_label')
+                    ->label('Asal')
+                    ->badge()
+                    ->getStateUsing(function ($record) {
+                        // Cek isi kolom payable_type
+                        if ($record->payable_type === 'App\Models\Booking') {
+                            return 'Booking Kost'; // Online Kost
+                        } elseif ($record->payable_type === 'App\Models\Payment') {
+                            return 'Member Online'; // Online Gym
+                        } else {
+                            return 'Kasir / POS'; // Transaksi Manual (payable null)
+                        }
+                    })
+                    ->colors([
+                        'info'    => 'Booking Kost',   // Biru
+                        'success' => 'Member Online',  // Hijau
+                        'gray'    => 'Kasir / POS',    // Abu-abu
+                    ])
+                    ->icon(fn($state) => match ($state) {
+                        'Booking Kost' => 'heroicon-m-home',
+                        'Member Online' => 'heroicon-m-identification',
+                        default => 'heroicon-m-computer-desktop',
+                    }),
+
                 // 2. Nama Kasir (Ambil dari relasi trainer)
                 Tables\Columns\TextColumn::make('trainer.name')
                     ->label('Kasir')
@@ -288,9 +313,13 @@ class TransactionResource extends Resource
                 Tables\Actions\Action::make('print')
                     ->label('Cetak')
                     ->icon('heroicon-o-printer')
-                    ->color('info') // Warna biru
+                    ->color('info')
+                    // --- TAMBAHANNYA DISINI ---
+                    // Tombol hanya akan muncul jika status === 'paid'
+                    ->visible(fn(Transaction $record) => $record->status === 'paid')
+                    // --------------------------
                     ->url(fn(Transaction $record) => route('print.struk', $record->code))
-                    ->openUrlInNewTab(), // Buka tab baru biar admin panel gak ketutup               
+                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

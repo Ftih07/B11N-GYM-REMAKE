@@ -7,24 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    //
     use HasFactory;
 
     protected $fillable = [
         'title',
+        'subheading', // TAMBAHAN BARU
+        'location',   // TAMBAHAN BARU
         'description',
         'image',
-        'gymkos_id'
     ];
-
-    public function gymkos()
-    {
-        return $this->belongsTo(Gymkos::class);
-    }
 
     public function products()
     {
         return $this->hasMany(Product::class, 'stores_id');
     }
-    
 }

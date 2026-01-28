@@ -31,14 +31,6 @@ class CategoryProductResource extends Resource
                     ->label('Name Category')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('gymkos_id')
-                    ->label('Gymkos Name')
-                    ->relationship('gymkos', 'name')
-                    ->required(),
-                Forms\Components\Select::make('stores_id')
-                    ->label('Store Name')
-                    ->relationship('store', 'title')
-                    ->required(),
             ]);
     }
 
@@ -49,15 +41,6 @@ class CategoryProductResource extends Resource
                 //
                 Tables\Columns\TextColumn::make('name')
                     ->label('Title Category Training')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('store.title')
-                    ->limit(50)
-                    ->label('Nama Store')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

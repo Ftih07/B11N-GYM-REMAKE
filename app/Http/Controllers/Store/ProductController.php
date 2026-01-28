@@ -12,7 +12,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $relatedProducts = Product::where('category_products_id', $product->category_products_id)
-            ->where('stores_id', $product->stores_id)
             ->where('id', '!=', $product->id)
             ->limit(4)
             ->get();

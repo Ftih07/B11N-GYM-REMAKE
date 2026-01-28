@@ -10,19 +10,15 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $logo = Logo::where('gymkos_id', 1)->get();
-        // Ambil blog berdasarkan foreign key
-        $b11nBlogs = Blog::published()->where('gymkos_id', 1)->get();
-        $k1ngBlogs = Blog::published()->where('gymkos_id', 2)->get();
+        // Ambil semua blog yang statusnya publish, urutkan dari yang terbaru
+        $blogs = Blog::published()->latest()->get();
 
-        // Tampilkan ke view
-        return view('blog.index', compact('b11nBlogs', 'k1ngBlogs', 'logo'));
+        // Tampilkan ke view dengan satu variabel saja
+        return view('blog.index', compact('blogs'));
     }
 
     public function show($slug) // <--- Parameter terima string $slug
     {
-        $logo = Logo::where('gymkos_id', 1)->get();
-
         // Cari blog yang slug-nya sesuai parameter & status publish
         $blog = Blog::published()
             ->where('slug', $slug)
@@ -36,6 +32,6 @@ class BlogController extends Controller
             ->take(3)
             ->get();
 
-        return view('blog.show', compact('blog', 'relatedBlogs', 'logo'));
+        return view('blog.show', compact('blog', 'relatedBlogs'));
     }
 }

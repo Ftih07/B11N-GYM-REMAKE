@@ -27,7 +27,7 @@ class RevenueStats extends BaseWidget
         };
 
         return [
-            Stat::make('Pendapatan Kost Istana Merdeka 3', Number::currency($getIncome('Kost Istana Merdeka 3'), 'IDR'))
+            Stat::make('Pendapatan Kost Istana Merdeka 3', Number::currency($getIncome('Istana Merdeka 3'), 'IDR'))
                 ->description('Total Pemasukan')
                 ->descriptionIcon('heroicon-m-home')
                 ->color('success'),
