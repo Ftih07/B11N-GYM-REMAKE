@@ -974,7 +974,7 @@
 	@endphp
 
 	{{-- NAVIGASI UTAMA --}}
-	<nav class="fixed top-0 left-0 w-full z-50 bg-white/95 text-white dark:bg-brand-black/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 h-20">
+	<nav class="fixed top-0 left-0 w-full z-50 bg-white/95 text-gray-800 dark:text-white dark:bg-brand-black/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 h-20">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
 			<div class="flex items-center justify-between h-full">
 
@@ -982,34 +982,28 @@
 				<div class="flex-shrink-0 flex items-center">
 					<a href="{{ route('home') }}" class="flex items-center gap-3">
 						<img class="h-10 w-auto object-contain" src="{{ asset('assets/Logo/empire.png') }}" alt="B1NG Empire Logo">
-						<span class="font-heading font-bold text-xl uppercase tracking-wider sm:block">B1NG Empire</span>
+						<span class="font-heading font-bold text-xl uppercase tracking-wider sm:block text-gray-900 dark:text-white">B1NG Empire</span>
 					</a>
 				</div>
 
-				{{-- DESKTOP MENU (LOOPING) --}}
-				<div class="hidden md:block">
-					<div class="ml-10 flex items-center space-x-6">
+				{{-- DESKTOP MENU (TENGAH) --}}
+				<div class="hidden md:flex flex-1 justify-center ml-10">
+					<div class="flex items-center space-x-6">
 						@foreach($navMenus as $menu)
-
-						{{-- Gunakan Class 'dropdown' dari Bootstrap sebagai wrapper --}}
+						{{-- WRAPPER DROPDOWN ASLI KAMU --}}
 						<div class="dropdown relative h-20 flex items-center group">
-
-							{{-- Parent Link --}}
 							<a href="{{ route($menu['route']) }}"
 								class="dropdown-toggle font-heading uppercase text-sm tracking-widest hover:text-brand-red transition-colors py-2 flex items-center gap-1
-                      {{ Route::currentRouteName() === $menu['route'] ? 'text-brand-red font-bold' : 'text-gray-800 dark:text-white' }}"
+                            {{ Route::currentRouteName() === $menu['route'] ? 'text-brand-red font-bold' : 'text-gray-800 dark:text-white' }}"
 								@if(!empty($menu['submenu'])) role="button" @endif>
-
 								{{ $menu['label'] }}
-
-								{{-- Icon Panah (Manual, bukan dari Bootstrap) --}}
 								@if(!empty($menu['submenu']))
 								<i class="fas fa-chevron-down text-[10px] opacity-50 group-hover:opacity-100 transition-opacity ml-1"></i>
 								@endif
 							</a>
 
-							{{-- Dropdown Menu (Struktur Bootstrap tapi Style Custom) --}}
 							@if(!empty($menu['submenu']))
+							{{-- CLASS ASLI KAMU: custom-dropdown-menu --}}
 							<ul class="dropdown-menu custom-dropdown-menu">
 								@foreach($menu['submenu'] as $sub)
 								<li>
@@ -1025,38 +1019,113 @@
 					</div>
 				</div>
 
-				{{-- MOBILE MENU BUTTON (UPDATE: ANIMASI BARS <-> TIMES) --}}
+				{{-- BAGIAN KANAN: LOGIN / PROFILE (PAKAI STRUKTUR DROPDOWN YG SAMA) --}}
+				<div class="hidden md:flex items-center gap-4 ml-4">
+					@guest
+					{{-- Tombol Login Biasa --}}
+					<a href="{{ route('login') }}" class="px-5 py-2 border border-brand-red text-brand-red hover:bg-brand-red hover:text-white rounded font-heading font-bold uppercase tracking-widest text-xs transition">
+						Login
+					</a>
+					@else
+					{{-- DROPDOWN PROFILE (Di-copy dari struktur menu kamu biar jalannya sama) --}}
+					<div class="dropdown relative h-20 flex items-center group">
+
+						{{-- Trigger: Foto & Nama --}}
+						<a href="#" class="dropdown-toggle flex items-center gap-3 focus:outline-none py-2" role="button">
+							<div class="text-right hidden xl:block">
+								<p class="text-sm font-bold font-heading uppercase text-gray-800 dark:text-white">{{ Auth::user()->name }}</p>
+							</div>
+							<img class="h-9 w-9 rounded border border-gray-300 dark:border-gray-600 object-cover"
+								src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=DC2626&color=fff' }}">
+							<i class="fas fa-chevron-down text-[10px] opacity-50 group-hover:opacity-100 transition-opacity ml-1 text-gray-500"></i>
+						</a>
+
+						{{-- Menu: Pakai class 'dropdown-menu custom-dropdown-menu' punya kamu --}}
+						<ul class="dropdown-menu custom-dropdown-menu custom-dropdown-menu-right"> {{-- Tambahkan class 'custom-dropdown-menu-right' di CSS kalau mau rata kanan --}}
+							<li>
+								<a class="custom-dropdown-item" href="{{ route('dashboard') }}">
+									<i class="fas fa-chart-line mr-2"></i> Dashboard
+								</a>
+							</li>
+							<li>
+								<a class="custom-dropdown-item" href="{{ route('attendance') }}">
+									<i class="fas fa-qrcode mr-2"></i> Riwayat Absensi
+								</a>
+							</li>
+							<li>
+								<a class="custom-dropdown-item" href="{{ route('profile') }}">
+									<i class="fas fa-user-cog mr-2"></i> Edit Profil
+								</a>
+							</li>
+							<li>
+								<hr class="dropdown-divider border-t border-gray-200 dark:border-gray-700 my-1">
+							</li>
+							<li>
+								<form method="POST" action="{{ route('logout') }}">
+									@csrf
+									<button type="submit" class="custom-dropdown-item w-full text-left text-red-500 font-bold">
+										<i class="fas fa-sign-out-alt mr-2"></i> Logout
+									</button>
+								</form>
+							</li>
+						</ul>
+					</div>
+					@endguest
+				</div>
+
+				{{-- MOBILE MENU BUTTON (ASLI) --}}
 				<div class="md:hidden flex items-center">
 					<button id="mobile-menu-btn" class="relative w-10 h-10 flex items-center justify-center text-gray-800 dark:text-white hover:text-brand-red focus:outline-none">
-						{{-- Icon Bars (Default Muncul) --}}
 						<i id="nav-icon-bars" class="fas fa-bars text-2xl transition-all duration-300 transform scale-100 opacity-100 absolute"></i>
-
-						{{-- Icon Times/Silang (Default Hidden) --}}
 						<i id="nav-icon-times" class="fas fa-times text-2xl transition-all duration-300 transform scale-0 opacity-0 absolute"></i>
 					</button>
 				</div>
 			</div>
 		</div>
 
-		{{-- MOBILE MENU (ACCORDION STYLE) --}}
+		{{-- MOBILE MENU (ASLI + LOGIC MEMBER) --}}
 		<div id="mobile-menu" class="hidden md:hidden bg-black dark:bg-brand-gray border-t border-gray-200 dark:border-gray-700 absolute w-full left-0 shadow-lg h-[calc(100vh-80px)] overflow-y-auto pb-20">
-			<div class="px-4 pt-2 pb-4 space-y-1">
+
+			{{-- SHORTCUT MEMBER (PALING ATAS) --}}
+			<div class="px-4 pt-6 pb-2">
+				@guest
+				<a href="{{ route('login') }}" class="block w-full text-center bg-brand-red text-white font-heading font-bold py-3 rounded mb-4 uppercase tracking-widest shadow-md">
+					Login Member
+				</a>
+				@else
+				<div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-black/30 rounded-lg mb-4 border border-gray-200 dark:border-gray-600">
+					<img class="h-12 w-12 rounded object-cover" src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=DC2626&color=fff' }}">
+					<div>
+						<div class="text-sm font-bold font-heading uppercase text-gray-800 dark:text-white">{{ Auth::user()->name }}</div>
+						<div class="text-xs text-brand-red font-bold uppercase tracking-wide">Member Area</div>
+					</div>
+				</div>
+				<div class="grid grid-cols-2 gap-3 mb-6">
+					<a href="{{ route('dashboard') }}" class="text-center py-3 bg-black dark:bg-brand-black text-gray-600 dark:text-gray-300 rounded border border-gray-200 dark:border-gray-600 text-xs font-bold uppercase shadow-sm hover:border-brand-red hover:text-brand-red transition">
+						Dashboard
+					</a>
+					<a href="{{ route('attendance') }}" class="text-center py-3 bg-black dark:bg-brand-black text-gray-600 dark:text-gray-300 rounded border border-gray-200 dark:border-gray-600 text-xs font-bold uppercase shadow-sm hover:border-brand-red hover:text-brand-red transition">
+						Riwayat Absensi
+					</a>
+				</div>
+				<div class="border-b border-gray-100 dark:border-gray-700 mb-2"></div>
+				@endguest
+			</div>
+
+			{{-- LOOPING MENU BAWAAN --}}
+			<div class="px-4 space-y-1">
 				@foreach($navMenus as $index => $menu)
 				<div class="border-b border-gray-100 dark:border-gray-700 last:border-0">
 					@if(empty($menu['submenu']))
-					{{-- Jika tidak ada submenu, langsung link --}}
 					<a href="{{ route($menu['route']) }}" class="block px-3 py-4 text-base font-heading uppercase tracking-widest {{ Route::currentRouteName() === $menu['route'] ? 'text-brand-red font-bold' : 'text-gray-800 dark:text-white' }}">
 						{{ $menu['label'] }}
 					</a>
 					@else
-					{{-- Jika ada submenu, pakai tombol accordion --}}
 					<button onclick="toggleMobileSubmenu('submenu-{{ $index }}')" class="w-full flex justify-between items-center px-3 py-4 text-base font-heading uppercase tracking-widest text-gray-800 dark:text-white hover:text-brand-red focus:outline-none">
 						<span>{{ $menu['label'] }}</span>
 						<i id="icon-submenu-{{ $index }}" class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
 					</button>
-
-					{{-- Container Submenu Mobile --}}
-					<div id="submenu-{{ $index }}" class="hidden bg-gray-50 dark:bg-black/20 pl-6 pr-3 py-2 space-y-2">
+					<div id="submenu-{{ $index }}" class="hidden bg-gray-50 dark:bg-black/20 pl-6 pr-3 py-2 space-y-2 mb-2">
 						@foreach($menu['submenu'] as $sub)
 						<a href="{{ $sub['url'] }}" class="block py-2 text-sm font-sans text-gray-600 dark:text-gray-300 hover:text-brand-red">
 							<i class="fas fa-angle-right mr-2 text-brand-red text-xs"></i> {{ $sub['label'] }}
@@ -1066,6 +1135,15 @@
 					@endif
 				</div>
 				@endforeach
+
+				@auth
+				<form method="POST" action="{{ route('logout') }}" class="pt-6 pb-4">
+					@csrf
+					<button type="submit" class="block w-full text-center px-3 py-3 rounded border border-red-200 dark:border-red-900/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold uppercase text-sm transition">
+						Logout
+					</button>
+				</form>
+				@endauth
 			</div>
 		</div>
 	</nav>

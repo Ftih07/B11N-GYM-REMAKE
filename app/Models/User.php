@@ -3,11 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser; // <--- 1. Tambahkan ini
+use Filament\Panel; // <--- 2. Tambahkan ini
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser // <--- 3. Tambahkan "implements FilamentUser"
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -21,7 +23,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'google_id',
+        'profile_picture',
+        'email_verified_at'
     ];
+
+    // Relasi: User mungkin adalah seorang Member
+    public function member()
+    {
+        return $this->hasOne(Member::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +56,12 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // 4. Tambahkan fungsi ini di bagian bawah
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Pastikan role di database ditulis 'admin' (huruf kecil semua) atau sesuaikan
+        return $this->role === 'admin';
     }
 }

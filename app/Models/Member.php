@@ -29,6 +29,18 @@ class Member extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    // Relasi ke User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Relasi ke Measurements
+    public function measurements()
+    {
+        return $this->hasMany(MemberMeasurement::class);
+    }
+
     // --- MUTATOR PICTURE ---
     protected function picture(): Attribute
     {

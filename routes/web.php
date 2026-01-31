@@ -78,3 +78,36 @@ Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
 
 // Route untuk memproses data yang dikirim (POST)
 Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
+
+use App\Http\Controllers\AuthController;
+
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+use App\Http\Controllers\DashboardController;
+
+// Halaman Login (Tamu only)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
+
+    // Route Google yang tadi
+    Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+});
+
+// Halaman Dashboard (Harus Login)
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Feature Baru
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/attendance', [DashboardController::class, 'attendance'])->name('attendance');
+
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+
+    Route::post('/measurements', [DashboardController::class, 'storeMeasurement'])->name('measurements.store');
+});

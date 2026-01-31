@@ -16,6 +16,7 @@ class PaymentController extends Controller
     {
         $request->validate([
             'gym_id' => 'required|integer', // Validasi ID Gym
+            'member_id' => 'nullable|integer|exists:members,id',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string',
@@ -59,6 +60,7 @@ class PaymentController extends Controller
 
         $payment = new Payment();
         $payment->order_id = $orderID;
+        $payment->member_id = $request->member_id;
         $payment->name = $request->name;
         $payment->email = $request->email;
         $payment->phone = $request->phone;

@@ -11,7 +11,7 @@ class Payment extends Model
 
     use HasFactory;
 
-    protected $fillable = ['order_id', 'name', 'image', 'membership_type', 'price', 'status', 'email', 'phone', 'payment'];
+    protected $fillable = ['order_id', 'member_id', 'name', 'image', 'membership_type', 'price', 'status', 'email', 'phone', 'payment'];
 
     // Properti sementara untuk menampung Gym ID dari Controller
     public $gym_id_temporary = 1; // Default 1 jika tidak diset
@@ -20,6 +20,11 @@ class Payment extends Model
     public function transaction()
     {
         return $this->morphOne(Transaction::class, 'payable');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id');
     }
 
     // --- LOGIC OTOMATIS ---
