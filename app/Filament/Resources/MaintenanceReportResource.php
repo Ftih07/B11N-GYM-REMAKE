@@ -10,6 +10,11 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exports\MaintenanceExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\Action;
+use Carbon\Carbon;
 
 class MaintenanceReportResource extends Resource
 {
@@ -126,6 +131,47 @@ class MaintenanceReportResource extends Resource
                         'success' => 'resolved',
                         'danger' => 'wont_fix',
                     ]),
+            ])
+            // --- TAMBAHKAN BAGIAN EXPORT ---
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Laporan')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success') // Warna tombol orange/kuning
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan Laporan')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m'))
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        return Excel::download(
+                            new MaintenanceExport($data['month'], $data['year']),
+                            'Laporan-Maintenance-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                        );
+                    }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

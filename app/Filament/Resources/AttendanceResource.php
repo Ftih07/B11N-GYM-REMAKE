@@ -14,6 +14,11 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exports\AttendanceExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\Action;
+use Carbon\Carbon;
 
 class AttendanceResource extends Resource
 {
@@ -88,6 +93,50 @@ class AttendanceResource extends Resource
                     }),
             ])
             ->defaultSort('check_in_time', 'desc') // Data terbaru paling atas
+
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m')) // Default bulan sekarang
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                // Generate tahun dari 5 tahun lalu sampai 1 tahun ke depan
+                                $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year) // Default tahun sekarang
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        $filename = 'Laporan-Absensi-' . $data['month'] . '-' . $data['year'] . '.xlsx';
+
+                        return Excel::download(
+                            new AttendanceExport($data['month'], $data['year']),
+                            $filename
+                        );
+                    }),
+            ])
 
             // --- BAGIAN FILTER ---
             ->filters([

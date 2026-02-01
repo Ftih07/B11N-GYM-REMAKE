@@ -10,6 +10,11 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use App\Exports\SurveyExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\Action;
+use Carbon\Carbon;
 
 class SurveyResource extends Resource
 {
@@ -108,6 +113,46 @@ class SurveyResource extends Resource
                     ->label('NPS')
                     ->numeric()
                     ->sortable(),
+            ])
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Data Survey')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('primary') // Warna Ungu biasanya ikut Primary atau bisa set custom hex di theme
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m'))
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        return Excel::download(
+                            new SurveyExport($data['month'], $data['year']),
+                            'Hasil-Survey-Gym-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                        );
+                    }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('promo_interest')

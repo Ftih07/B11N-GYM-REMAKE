@@ -12,6 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Exports\FinanceExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\Action;
+use Carbon\Carbon;
 
 class FinanceResource extends Resource
 {
@@ -97,6 +102,46 @@ class FinanceResource extends Resource
                     ->color(fn($record) => $record->type === 'expense' ? 'danger' : 'success'),
             ])
             ->defaultSort('date', 'desc')
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Laporan')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m'))
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        return Excel::download(
+                            new FinanceExport($data['month'], $data['year']),
+                            'Laporan-Keuangan-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                        );
+                    }),
+            ])
             ->groups([
                 Tables\Grouping\Group::make('gymkos.name')
                     ->label('Cabang')

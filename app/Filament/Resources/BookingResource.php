@@ -5,13 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Models\Booking;
 use Filament\Forms;
-use Filament\Forms\Get; // Tambahan
-use Filament\Forms\Set; // Tambahan
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon; // Tambahan untuk tanggal
+use Carbon\Carbon;
+use App\Exports\BookingExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\Action;
 
 class BookingResource extends Resource
 {
@@ -168,6 +172,46 @@ class BookingResource extends Resource
                 Tables\Columns\ImageColumn::make('payment_proof')
                     ->label('Bukti')
                     ->circular(),
+            ])
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Data Kost')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success') 
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan Masuk')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m'))
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        return Excel::download(
+                            new BookingExport($data['month'], $data['year']),
+                            'Data-Penghuni-Kost-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                        );
+                    }),
             ])
             ->filters([
                 // Filter Bawaan Status Pembayaran

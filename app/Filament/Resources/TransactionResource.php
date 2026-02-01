@@ -22,6 +22,9 @@ use Filament\Forms\Set;
 
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use App\Exports\TransactionExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class TransactionResource extends Resource
 {
@@ -271,6 +274,46 @@ class TransactionResource extends Resource
                     ->label('Waktu')
                     ->dateTime('d M Y H:i') // Format tgl jam indonesia
                     ->sortable(),
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('export_excel')
+                    ->label('Export Data Penjualan')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success') // Warna Hijau
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m'))
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        return Excel::download(
+                            new TransactionExport($data['month'], $data['year']),
+                            'Laporan-Transaksi-POS-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                        );
+                    }),
             ])
             ->defaultSort('created_at', 'desc') // Yang terbaru paling atas
             ->filters([

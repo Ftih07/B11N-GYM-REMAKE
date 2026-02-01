@@ -16,6 +16,8 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action; // Import Action
 use Filament\Notifications\Notification; // Import Notifikasi
 use Carbon\Carbon; // Import Carbon untuk tanggal
+use App\Exports\PaymentExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentResource extends Resource
 {
@@ -95,6 +97,46 @@ class PaymentResource extends Resource
                     }),
 
                 TextColumn::make('created_at')->label('Date')->date(),
+            ])
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Data Transaksi')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('info') // Tombol warna Biru
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan Transaksi')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('m'))
+                            ->required(),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->default(now()->year)
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        return Excel::download(
+                            new PaymentExport($data['month'], $data['year']),
+                            'Rekap-Online-Membership-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                        );
+                    }),
             ])
             ->filters([
                 // Filter status
