@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Transaction;
 use App\Observers\TransactionObserver;
+use App\Models\QrCode;
+use App\Observers\QrCodeObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Transaction::observe(TransactionObserver::class);
+        QrCode::observe(QrCodeObserver::class);
     }
 }

@@ -15,9 +15,4 @@ class Gymkos extends Model
         'address',
         'created_at',
     ];
-
-    public function logos()
-    {
-        return $this->hasMany(Logo::class);
-    }
 }

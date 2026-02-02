@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CategoryTraining extends Model
+class QrCode extends Model
 {
-    //
     use HasFactory;
 
+    // Agar kolom ini bisa diisi massal
     protected $fillable = [
-        'title',
+        'name',
+        'target_url',
+        'qr_path',
     ];
-
-    public function TrainingProgram()
-    {
-        return $this->belongsTo(TrainingProgram::class);
-    }
 }

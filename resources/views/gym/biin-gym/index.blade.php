@@ -642,8 +642,6 @@
 	</style>
 </head>
 
-@foreach ($logo as $logo)
-
 <body>
 	@php
 	// DEFINISI STRUKTUR MENU (Ganti URL sesuai route/anchor aslimu)
@@ -681,7 +679,7 @@
 	'submenu' => [
 	['label' => 'Tentang Kami', 'url' => route('gym.king').'#about'],
 	['label' => 'Fasilitas', 'url' => route('gym.king').'#facilities'],
-	['label' => 'Training Program', 'url' => route('gym.king').'#program'],
+	['label' => 'Training Program', 'url' => route('gym.king').'#training'],
 	['label' => 'Equipments & Tutorials', 'url' => route('gym.king').'#equipments'],
 	['label' => 'Trainer', 'url' => route('gym.king').'#trainer'],
 	['label' => 'Membership', 'url' => route('gym.king').'#membership'],
@@ -1597,7 +1595,9 @@
 		<div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="footer__col">
 				<div class="footer__logo">
-					<a href="#"><img src="{{ asset('storage/' . $logo->image) }}" alt="logo" /></a>
+					<a href="#">
+						<img src="{{ asset('assets/Logo/biin.png') }}" alt="logo" />
+					</a>
 				</div>
 				<p>
 					Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur.
@@ -1964,7 +1964,5 @@
 	</script>
 
 </body>
-@endforeach
-
 
 </html>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Gym;
 
 use App\Http\Controllers\Controller;
-use App\Models\{About, Facilities, Trainer, Blog, CategoryTraining, Equipment, Gallery, Logo, Store, TrainingProgram, Testimoni};
+use App\Models\{About, Facilities, Trainer, Blog, CategoryTraining, Equipment, Gallery, Store, TrainingProgram, Testimoni};
 
 class KingGymController extends Controller
 {
@@ -13,9 +13,8 @@ class KingGymController extends Controller
         $facilities = Facilities::where('gymkos_id', 2)->get();
         $trainer = Trainer::where('gymkos_id', 2)->get();
         $store = Store::find(3);
-        $logo = Logo::where('gymkos_id', 2)->get();
         $about = About::where('gymkos_id', 2)->get();
-        $trainingprograms = TrainingProgram::where('gymkos_id', 1)->get();
+        $trainingprograms = TrainingProgram::where('gymkos_id', 2)->get();
         $gallery = Gallery::where('gymkos_id', 2)->get();
 
         $featuredEquipments = Equipment::where('gymkos_id', 2)
@@ -37,6 +36,6 @@ class KingGymController extends Controller
                 return $testimoni;
             });
 
-        return view('gym.king-gym.index', compact('facilities', 'trainer', 'blog', 'store', 'logo', 'about', 'groupedTrainingPrograms', 'categories', 'testimonis', 'gallery', 'featuredEquipments'));
+        return view('gym.king-gym.index', compact('facilities', 'trainer', 'blog', 'store', 'about', 'groupedTrainingPrograms', 'categories', 'testimonis', 'gallery', 'featuredEquipments'));
     }
 }

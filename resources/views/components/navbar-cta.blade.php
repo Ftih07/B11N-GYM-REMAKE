@@ -34,7 +34,7 @@ $navMenus = [
 'submenu' => [
 ['label' => 'Tentang Kami', 'url' => route('gym.king').'#about'],
 ['label' => 'Fasilitas', 'url' => route('gym.king').'#facilities'],
-['label' => 'Training Program', 'url' => route('gym.king').'#program'],
+['label' => 'Training Program', 'url' => route('gym.king').'#training'],
 ['label' => 'Equipments & Tutorials', 'url' => route('gym.king').'#equipments'],
 ['label' => 'Trainer', 'url' => route('gym.king').'#trainer'],
 ['label' => 'Membership', 'url' => route('gym.king').'#membership'],

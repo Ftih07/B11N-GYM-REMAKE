@@ -16,6 +16,7 @@ use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Controllers\Store\PrintController;
 use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\QrCodePrintController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home'); //Home - Landing Page
 Route::get('/biin-gym', [BiinGymController::class, 'index'])->name('gym.biin'); //B11N Gym
@@ -83,6 +84,8 @@ use App\Http\Controllers\AuthController;
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 
 use App\Http\Controllers\DashboardController;
 

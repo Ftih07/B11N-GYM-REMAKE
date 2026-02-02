@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\LogoResource\Pages;
+namespace App\Filament\Resources\QrCodeResource\Pages;
 
-use App\Filament\Resources\LogoResource;
+use App\Filament\Resources\QrCodeResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListLogos extends ListRecords
+class ListQrCodes extends ListRecords
 {
-    protected static string $resource = LogoResource::class;
+    protected static string $resource = QrCodeResource::class;
 
     protected function getHeaderActions(): array
     {

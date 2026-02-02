@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class GymkosResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Logo & Category Business';
-    protected static ?int $navigationSort = 8;
+    protected static ?string $navigationGroup = 'General Management Website';
+    protected static ?int $navigationSort = 5;
     protected static ?string $model = Gymkos::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';

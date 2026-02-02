@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TrainingProgramResource\Pages;
 use App\Filament\Resources\TrainingProgramResource\RelationManagers;
 use App\Models\TrainingProgram;
+use App\Models\Gymkos; // Pastikan import Model Gymkos
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +14,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\ImageColumn;
+// Import ReplicateAction
+use Filament\Tables\Actions\ReplicateAction;
 
 class TrainingProgramResource extends Resource
 {
@@ -26,7 +29,6 @@ class TrainingProgramResource extends Resource
     {
         return $form
             ->schema([
-                //
                 Forms\Components\TextInput::make('title')
                     ->label('Title Category Training')
                     ->required()
@@ -54,32 +56,24 @@ class TrainingProgramResource extends Resource
     {
         return $table
             ->columns([
-                //
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Title Category Training')
+                    ->label('Title')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Title Category Training')
-                    ->sortable()
-                    ->searchable()
+                    ->label('Description')
                     ->limit(50),
-
                 ImageColumn::make('image')
-                    ->disk('public') // Pastikan sesuai dengan konfigurasi .env
+                    ->disk('public')
                     ->square(),
-
                 Tables\Columns\TextColumn::make('categorytraining.title')
-                    ->limit(50)
-                    ->label('Nama Category Training')
-                    ->sortable()
-                    ->searchable(),
+                    ->label('Category')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
+                    ->label('Gym/Kos')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
                     ->dateTime(),
             ])
             ->filters([
@@ -87,6 +81,27 @@ class TrainingProgramResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                // === FITUR DUPLICATE ===
+                ReplicateAction::make()
+                    ->label('Duplicate ke Gym Lain') // Label tombol
+                    ->icon('heroicon-o-document-duplicate')
+                    ->color('warning') // Warna kuning biar beda
+                    ->modalHeading('Duplikasi Program Latihan')
+                    ->modalDescription('Pilih Gym tujuan. Semua data (Title, Deskripsi, Gambar) akan disalin.')
+                    ->form([
+                        // Form yang muncul di Pop-up
+                        Forms\Components\Select::make('gymkos_id')
+                            ->label('Pilih Gym Tujuan')
+                            ->options(Gymkos::all()->pluck('name', 'id')) // Ambil list Gym
+                            ->searchable()
+                            ->required(),
+                    ])
+                    ->beforeReplicaSaved(function (TrainingProgram $replica, array $data) {
+                        // Timpa gymkos_id hasil copy dengan yang dipilih user di form
+                        $replica->gymkos_id = $data['gymkos_id'];
+                    })
+                    ->successNotificationTitle('Program berhasil diduplikasi ke Gym lain!'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
