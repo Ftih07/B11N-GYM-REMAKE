@@ -18,7 +18,7 @@
     <meta name="description" content="Belanja kebutuhan fitness dari B11N Gym dan K1NG Gym.">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
 
     {{-- 1. FONTS: Mengambil font 'Oswald' untuk Headings (Bold/Industrial) dan 'Poppins' untuk Body --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -29,14 +29,14 @@
     <meta property="og:description" content="Temukan alat rusak atau fasilitas bermasalah? Laporkan segera di sini agar tim maintenance kami bisa memperbaikinya.">
     <meta property="og:url" content="{{ url()->current() }}">
     {{-- Gunakan Logo B11N atau icon maintenance sebagai thumbnail --}}
-    <meta property="og:image" content="{{ asset('assets/Logo/biin.png') }}">
+    <meta property="og:image" content="{{ asset('assets/Logo/empire.png') }}">
     <meta property="og:site_name" content="Maintenance System">
 
     {{-- 5. THEME COLOR (Merah sesuai branding halaman ini) --}}
     <meta name="theme-color" content="#dc2626">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="{{ asset('assets/Logo/biin.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
 
     {{-- Scripts & Styles --}}
     <script src="https://cdn.tailwindcss.com"></script>

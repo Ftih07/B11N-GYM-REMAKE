@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat Absensi - B1NG Empire</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +34,7 @@
     @include('components.navbar')
 
     <div class="container mx-auto p-4 md:p-6 max-w-5xl">
-        
+
         <div class="flex items-center gap-3 mb-6 md:mb-8 border-b border-neutral-800 pb-4">
             <div class="bg-primary p-2 rounded shadow-lg shadow-red-900/20">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,4 +152,5 @@
 
     </div>
 </body>
+
 </html>

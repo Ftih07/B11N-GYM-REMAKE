@@ -1,83 +1,197 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Konfirmasi Booking - Kost Istana Merdeka 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* RESET & BASE */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #1a1a1a;
+            /* Background Gelap Industrial */
             margin: 0;
-            padding: 0;
+            padding: 40px 0;
+            color: #333;
         }
+
+        /* CONTAINER CARD - Tajam & Kokoh */
         .container {
             max-width: 600px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 0;
+            border: none;
+            border-radius: 0px !important;
+            /* STRICTLY SQUARE */
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+            /* Hard Shadow, bukan soft blur */
         }
+
+        /* HEADER - Bold & Heavy */
         .header {
+            background-color: #000000;
+            color: #D4AF37;
+            /* K1NG Gold Color */
+            padding: 30px 20px;
             text-align: center;
-            border-bottom: 2px solid #007BFF;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            border-bottom: 5px solid #D4AF37;
         }
+
+        .header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 40px;
+        }
+
         .content p {
             font-size: 16px;
-            color: #333;
             line-height: 1.6;
+            margin-bottom: 20px;
         }
-        .booking-details {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 10px;
+
+        .highlight-name {
+            font-weight: 700;
+            color: #000;
+            text-decoration: underline;
+            text-decoration-color: #D4AF37;
+            text-decoration-thickness: 3px;
         }
-        .booking-details p {
-            margin: 5px 0;
+
+        /* DATA GRID / SPEC SHEET STYLE */
+        .booking-details-box {
+            border: 2px solid #000;
+            margin-top: 30px;
+            margin-bottom: 30px;
         }
-        .footer {
-            text-align: center;
+
+        .detail-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            width: 40%;
+            background-color: #f4f4f4;
+            padding: 12px 15px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
             font-size: 14px;
-            color: #777;
-            margin-top: 20px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
+            font-weight: 500;
+            border-right: 1px solid #ddd;
+            color: #555;
+            letter-spacing: 1px;
+        }
+
+        .value {
+            width: 60%;
+            padding: 12px 15px;
+            font-weight: 500;
+            color: #000;
+            font-family: 'Roboto', monospace;
+            /* Monospace vibe for data */
+        }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-block;
+            background-color: #000;
+            color: #D4AF37;
+            padding: 4px 10px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #888;
+            border-top: 2px solid #000;
+        }
+
+        .brand-footer {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
-            <h2>Konfirmasi Booking</h2>
+            <h2>Booking Confirmation</h2>
         </div>
 
         <div class="content">
-            <p>Halo <strong>{{ $booking->name }}</strong>,</p>
-            <p>Terima kasih telah melakukan booking di <strong>Kost Istana Merdeka 3</strong>. Berikut adalah detail pemesanan Anda:</p>
+            <p>Halo <span class="highlight-name">{{ $booking->name }}</span>,</p>
+            <p>Permintaan booking Anda telah masuk ke sistem kami. Berikut adalah <strong>Booking Manifest</strong> Anda untuk akses ke <strong>Kost Istana Merdeka 3</strong>.</p>
 
-            <div class="booking-details">
-                <p><strong>Kode Booking:</strong> #{{ $booking->id }}</p>
-                <p><strong>Email:</strong> {{ $booking->email }}</p>
-                <p><strong>No. HP:</strong> {{ $booking->phone }}</p>
-                <p><strong>Tanggal Check-in:</strong> {{ $booking->date }}</p>
-                <p><strong>Nomor Kamar:</strong> {{ $booking->room_number }}</p>
-                <p><strong>Tipe Kamar:</strong> {{ $booking->room_type }}</p>
-                <p><strong>Metode Pembayaran:</strong> {{ $booking->payment }}</p>
-                <p><strong>Status Pembayaran:</strong> {{ ucfirst($booking->status) }}</p>
+            <div class="booking-details-box">
+                <div class="detail-row">
+                    <div class="label">Kode Booking</div>
+                    <div class="value">#{{ $booking->id }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="label">Email</div>
+                    <div class="value">{{ $booking->email }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="label">Check-in</div>
+                    <div class="value">{{ $booking->date }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="label">Kamar</div>
+                    <div class="value">
+                        Room {{ $booking->room_number }} <br>
+                        <span style="font-size:12px; color:#666;">({{ $booking->room_type }})</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="label">Pembayaran</div>
+                    <div class="value">{{ $booking->payment }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="label">Status</div>
+                    <div class="value">
+                        <span class="status-badge">{{ ucfirst($booking->status) }}</span>
+                    </div>
+                </div>
             </div>
 
-            <p>Kami tunggu kedatangan anda di Kost Istana Merdeka 03. Jika Anda memiliki pertanyaan atau ingin mengubah reservasi, silakan hubungi kami.</p>
+            <p>Harap tunjukkan email ini saat kedatangan. Jika ada perubahan data, segera hubungi admin.</p>
 
-            <p>Salam hangat,</p>
-            <p><strong>Kost Istana Merdeka 3</strong></p>
+            <p style="margin-top: 30px;">
+                Stay Safe,<br>
+                <strong style="font-family: 'Oswald', sans-serif; font-size: 18px; text-transform: uppercase;">Management Team</strong>
+            </p>
         </div>
 
         <div class="footer">
-            <p>&copy; 2025 Kost Istana Merdeka 3 | Semua hak dilindungi.</p>
+            <p class="brand-footer">Kost Istana Merdeka 3</p>
+            <p>&copy; 2026 Part of The Empire Network. All Rights Reserved.</p>
         </div>
     </div>
 </body>
+
 </html>

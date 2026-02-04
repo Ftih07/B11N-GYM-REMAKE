@@ -11,7 +11,7 @@
     <meta name="description" content="Jual {{ $product->name }} rasa {{ $product->flavour }}. {{ \Illuminate\Support\Str::limit($product->description, 100) }}.">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/colab.png'))">
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
 
     {{-- 1. FONTS: Oswald & Poppins --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

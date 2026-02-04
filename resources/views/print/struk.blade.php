@@ -7,13 +7,20 @@
     <title>Struk #{{ $transaction->code }}</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
-            /* Font kasir */
-            font-size: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #000000;
+
+            /* Trik agar hasil print lebih tebal/tajam */
+            -webkit-font-smoothing: none;
+            font-weight: bold;
+
+            /* UKURAN FONT UTAMA DINAIKKAN */
+            font-size: 14px;
+
             margin: 0;
-            padding: 10px;
+            /* Padding 0 agar teks mentok kiri kanan, space lebih luas */
+            padding: 2px 0;
             width: 58mm;
-            /* Ukuran kertas thermal standard */
         }
 
         .header,
@@ -22,37 +29,54 @@
             margin-bottom: 10px;
         }
 
-        .bold {
-            font-weight: bold;
+        /* Khusus Nama Toko Besar */
+        .store-name {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+
+        .address {
+            font-size: 12px;
+            /* Alamat tetap kecil biar muat */
+            font-weight: normal;
         }
 
         .line {
-            border-bottom: 1px dashed #000;
-            margin: 5px 0;
+            border-bottom: 2px dashed #000;
+            margin: 8px 0;
         }
 
         table {
             width: 100%;
+            border-collapse: collapse;
         }
 
         td {
             vertical-align: top;
+            padding: 2px 0;
         }
 
         .right {
             text-align: right;
         }
 
-        /* Hilangkan elemen browser saat print */
+        /* Khusus Baris Total agar lebih menonjol */
+        .total-row {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
         @media print {
             @page {
                 margin: 0;
-                size: auto;
+                size: 58mm auto;
             }
 
             body {
                 margin: 0;
-                padding: 10px;
+                padding: 2px 0;
             }
         }
     </style>
@@ -60,14 +84,14 @@
 
 <body onload="window.print()">
     <div class="header">
-        <div class="bold">{{ strtoupper($transaction->gymkos->name ?? 'B11N GYM') }}</div>
-        <div>{{ strtoupper($transaction->gymkos->address ?? 'Jl. Masjid Baru, Arcawinangun') }}</div>
-        <div>Telp: 0896-5384-7651</div>
+        <div class="store-name">{{ strtoupper($transaction->gymkos->name ?? 'B11N GYM') }}</div>
+        <div class="address">{{ strtoupper($transaction->gymkos->address ?? 'Jl. Masjid Baru, Arcawinangun') }}</div>
+        <div class="address">Telp: 0896-5384-7651</div>
     </div>
 
     <div class="line"></div>
 
-    <div>
+    <div style="font-size: 12px;">
         <div>No: {{ $transaction->code }}</div>
         <div>Tgl: {{ $transaction->created_at->format('d-m-Y H:i') }}</div>
         <div>Kasir: {{ $transaction->trainer->name }}</div>
@@ -82,7 +106,7 @@
     <table>
         @foreach($transaction->items as $item)
         <tr>
-            <td colspan="2">{{ $item->product_name }}</td>
+            <td colspan="2" style="padding-bottom: 2px;">{{ $item->product_name }}</td>
         </tr>
         <tr>
             <td>{{ $item->quantity }} x {{ number_format($item->price, 0, ',', '.') }}</td>
@@ -94,9 +118,12 @@
     <div class="line"></div>
 
     <table>
+        <tr class="total-row">
+            <td>TOTAL</td>
+            <td class="right">{{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+        </tr>
         <tr>
-            <td>Total</td>
-            <td class="right bold">{{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+            <td colspan="2" style="height: 5px;"></td>
         </tr>
         <tr>
             <td>Bayar ({{ ucfirst($transaction->payment_method) }})</td>
@@ -112,8 +139,8 @@
 
     <div class="footer">
         <div>Terima Kasih</div>
-        <div>Selamat Berlatih! 💪</div>
-        <div style="margin-top: 5px; font-size: 10px;">Powered by B1NG EMPIRE</div>
+        <div>Selamat Berlatih!</div>
+        <div style="margin-top: 10px; font-size: 10px; font-weight: normal;">Powered by B1NG EMPIRE</div>
     </div>
 
 </body>

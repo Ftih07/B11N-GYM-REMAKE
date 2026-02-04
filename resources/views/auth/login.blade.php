@@ -4,7 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - B1NG Empire</title>
+
+    <title>Login Member - B1NG Empire Gym</title>
+    <meta name="description" content="Masuk ke area member B1NG Empire. Kelola keanggotaan gym, cek jadwal latihan, dan riwayat transaksi Anda dengan mudah.">
+    <meta name="keywords" content="B1NG Empire, Gym, Fitness, Member Area, Login, Kesehatan, Workout">
+    <meta name="author" content="B1NG Empire">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#DC2626">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Login Member - B1NG Empire">
+    <meta property="og:description" content="Akses portal member B1NG Empire Gym untuk kelola aktivitas fitness Anda.">
+    <meta property="og:image" content="{{ asset('assets/Logo/empire.png') }}">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="Login Member - B1NG Empire">
+    <meta property="twitter:description" content="Akses portal member B1NG Empire Gym.">
+    <meta property="twitter:image" content="{{ asset('assets/Logo/empire.png') }}">
+
+    <link rel="icon" href="{{ asset('assets/Logo/empire.png') }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('assets/Logo/empire.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,6 +51,9 @@
 </head>
 
 <body class="bg-dark font-body flex items-center justify-center h-screen px-4 bg-[url('/img/gym-bg-pattern.png')]">
+
+    @include('components.navbar-cta')
+
     <div class="bg-card p-10 rounded-xl shadow-2xl w-full max-w-md border border-neutral-800 relative overflow-hidden group">
 
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-red-500 to-orange-500"></div>
