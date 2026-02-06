@@ -83,639 +83,974 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- Tailwind CSS CDN --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f1a2c',
+                        secondary: '#f6ac0f',
+                        textDark: '#0f172a',
+                        textLight: '#64748b',
+                        extraLight: '#f8fafc',
+                    },
+                    fontFamily: {
+                        heading: ['Oswald', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
-    @vite('resources/css/kost/index.css')
+    <style>
+        .floating-menu .action { opacity: 0; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .floating-menu.active .action { opacity: 1; transform: translateY(0); }
+        .floating-menu.active .action:nth-child(1) { transition-delay: 0.05s; }
+        .floating-menu.active .action:nth-child(2) { transition-delay: 0.1s; }
+        .floating-menu.active .action:nth-child(3) { transition-delay: 0.15s; }
+        .floating-menu.active .action:nth-child(4) { transition-delay: 0.2s; }
+
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.revealed { opacity: 1; transform: translateY(0); }
+        .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-left.revealed { opacity: 1; transform: translateX(0); }
+        .reveal-right { opacity: 0; transform: translateX(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-right.revealed { opacity: 1; transform: translateX(0); }
+        .reveal-stagger > * { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-stagger.revealed > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+        .reveal-stagger.revealed > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+        .reveal-stagger.revealed > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+        .reveal-stagger.revealed > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+        .reveal-stagger.revealed > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+        .reveal-stagger.revealed > *:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+        .reveal-stagger.revealed > *:nth-child(7) { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+        .reveal-stagger.revealed > *:nth-child(8) { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
+        .reveal-stagger.revealed > *:nth-child(9) { opacity: 1; transform: translateY(0); transition-delay: 0.9s; }
+
+        body { font-family: 'Poppins', sans-serif; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+
+        .swiper { padding-bottom: 3rem; }
+        .swiper-pagination-bullet { height: 12px; width: 12px; }
+        .swiper-pagination-bullet-active { background-color: #f6ac0f; }
+
+        .room-layout .room { width: 60px; height: 50px; display: flex; align-items: center; justify-content: center; border: 2px solid #0f1a2c; border-radius: 4px; font-size: 18px; font-weight: bold; color: #0f1a2c; cursor: pointer; transition: all 0.3s; }
+        .room-layout .room:hover:not(.booked) { border-color: #f6ac0f; color: #f6ac0f; }
+        .room-layout .room.booked { background-color: #ef4444; color: white; border-color: #ef4444; cursor: not-allowed; }
+        .room-layout .room.selected { background-color: #22c55e; color: white; border-color: #22c55e; }
+
+        button:disabled { background-color: #ccc; color: #666; cursor: not-allowed; opacity: 0.6; }
+        .form-hidden { display: none !important; }
+    </style>
 </head>
+<body class="bg-white font-body">
 
-<body>
-    <nav>
-        <div class="nav__bar">
-            <div class="nav__header">
-                <div class="logo nav__logo">
-                    <div class="w-14 h-14 sm:w-16 mt-4 sm:h-16">
-                        <a href="#"><img src="assets/Logo/kost.png" alt="logo" /></a>
-                    </div>
-                    <span>KOST ISTANA<br />MERDEKA 3</span>
+<!-- NAVIGATION -->
+<nav class="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="w-14 h-14 sm:w-16 sm:h-16">
+                    <a href="#"><img src="assets/Logo/kost.png" alt="logo" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110" /></a>
                 </div>
-                <div class="nav__menu__btn" id="menu-btn">
-                    <i class="ri-menu-line"></i>
-                </div>
+                <span class="font-heading text-primary font-bold text-lg sm:text-xl leading-tight tracking-wider uppercase">
+                    KOST ISTANA<br /><span class="text-secondary">MERDEKA 03</span>
+                </span>
             </div>
-            <ul class="nav__links" id="nav-links">
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">HOME</a></li>
-                <li class="nav-item"><a href="#about" class="nav-link">TENTANG KAMI</a></li>
-                <li class="nav-item"><a href="#room" class="nav-link">KAMAR</a></li>
-                <li class="nav-item"><a href="#feature" class="nav-link">FASILITAS</a></li>
-                <li class="nav-item"><a href="#booking" class="nav-link">PEMESANAN</a></li>
-                <li class="nav-item"><a href="#contact" class="nav-link">HUBUNGI KAMI</a></li>
+            <ul class="hidden lg:flex items-center gap-8">
+                <li><a href="{{ route('home') }}" class="font-heading text-textDark hover:text-secondary font-semibold text-base transition-colors duration-300 tracking-wider">HOME</a></li>
+                <li><a href="#about" class="font-heading text-textDark hover:text-secondary font-semibold text-base transition-colors duration-300 tracking-wider">TENTANG KAMI</a></li>
+                <li><a href="#room" class="font-heading text-textDark hover:text-secondary font-semibold text-base transition-colors duration-300 tracking-wider">KAMAR</a></li>
+                <li><a href="#feature" class="font-heading text-textDark hover:text-secondary font-semibold text-base transition-colors duration-300 tracking-wider">FASILITAS</a></li>
+                <li><a href="#booking" class="font-heading px-6 py-3 bg-secondary text-white font-semibold text-base rounded hover:bg-white hover:text-secondary border-2 border-secondary transition-all duration-300 shadow-md hover:shadow-lg tracking-wider">PESAN KAMAR</a></li>
+            </ul>
+            <button id="menu-btn" class="lg:hidden text-primary text-3xl hover:text-secondary transition-colors duration-300">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+        <div id="nav-links" class="hidden lg:hidden overflow-hidden transition-all duration-300 ease-in-out">
+            <ul class="pb-6 space-y-2 border-t border-gray-100 mt-2 pt-4">
+                <li><a href="{{ route('home') }}" class="block px-4 py-3 text-textDark hover:text-secondary hover:bg-extraLight font-semibold text-base transition-all duration-300 rounded">HOME</a></li>
+                <li><a href="#about" class="block px-4 py-3 text-textDark hover:text-secondary hover:bg-extraLight font-semibold text-base transition-all duration-300 rounded">TENTANG KAMI</a></li>
+                <li><a href="#room" class="block px-4 py-3 text-textDark hover:text-secondary hover:bg-extraLight font-semibold text-base transition-all duration-300 rounded">KAMAR</a></li>
+                <li><a href="#feature" class="block px-4 py-3 text-textDark hover:text-secondary hover:bg-extraLight font-semibold text-base transition-all duration-300 rounded">FASILITAS</a></li>
+                <li><a href="#booking" class="block px-4 py-3 text-white bg-secondary hover:bg-white hover:text-secondary border-2 border-secondary font-bold text-base transition-all duration-300 rounded text-center shadow-md">PESAN KAMAR</a></li>
             </ul>
         </div>
-    </nav>
-
-    <menu class="z-50">
-        <a href="{{ route('home') }}" class="action"><img src="assets/Logo/empire.png" alt="B1NG Empire" /></a>
-        <a href="{{ route('kost') }}" class="action"><img src="assets/Logo/kost.png" alt="Istana Merdeka 03" /></a>
-        <a href="{{ route('gym.biin') }}" class="action"><img src="assets/Logo/biin.png" alt="B11N Gym" /></a>
-        <a href="{{ route('gym.king') }}" class="action bg-cover object-cover"><img src="assets/Logo/last.png" alt="K1NG Gym" /></a>
-        <a href="#" class="trigger"><i class="fas fa-plus"></i></a>
-    </menu>
-
-    <!-- Header -->
-    <header class="header" id="home" style="
-         background-image: linear-gradient(
-             to left,
-             rgba(0, 0, 0, 0.2),
-             rgba(0, 0, 0, 0.9)
-         ),
-         url('assets/facilities/ber-ac.png');
-         background-size: cover;
-		background-position: center center;
-         background-repeat: no-repeat;
-     ">
-        <div class="section__container header__container">
-            <p class="section__subheader">WELCOME TO</p>
-            <h1>Kost Putra<br />Istana Merdeka 03</h1>
-            <button class="btn">Halo, senang melihat anda 👋🏻</button>
-        </div>
-    </header>
-
-    <!-- About -->
-    <section class="about" id="about">
-        <div class="section__container about__container">
-            <div class="about__grid">
-                <div class="about__image">
-                    <img src="assets/facilities/ac.png" alt="about" />
-                </div>
-                <div class="about__card">
-                    <span><i class="ri-user-line"></i></span>
-                    <h4>Fasilitas Premium</h4>
-                    <p>
-                        Kamar ber-AC, WiFi cepat, kasur empuk, dan lemari luas untuk kenyamanan maksimal.
-                    </p>
-                </div>
-                <div class="about__image">
-                    <img src="assets/home/biin-gym.jpg" alt="about" />
-                </div>
-                <div class="about__card">
-                    <span><i class="ri-calendar-check-line"></i></span>
-                    <h4>Lokasi Strategis</h4>
-                    <p>
-                        Dekat UNSOED dan UMP, memudahkan akses ke kampus dan fasilitas umum.
-                    </p>
-                </div>
-            </div>
-            <div class="about__content">
-                <p class="section__subheader">ABOUT US</p>
-                <h2 class="section__header">Kost Istana Merdeka 03</h2>
-                <p class="section__description">
-                    Selamat datang di Kost Istana Merdeka 3, pilihan terbaik bagi Anda yang mencari hunian premium dengan kenyamanan maksimal. Terletak strategis di atas B11N Gym Purwokerto, kost khusus putra ini menawarkan suasana eksklusif dan tenang, jauh dari kebisingan meskipun berada di area gym.
-
-                    Nikmati fasilitas terbaik seperti AC di setiap kamar dan WiFi berkecepatan tinggi, memastikan Anda tetap nyaman saat beristirahat, belajar, atau bekerja. </p>
-                <button class="btn"><a href="#booking">Pesan Sekarang</a></button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Room -->
-    <section class="room__container" id="room">
-        <p class="section__subheader">Kamar</p>
-        <h2 class="section__header">Tersedia 2 Jenis Kamar</h2>
-        <div class="room__grid">
-            <div class="room__card">
-                <img src="assets/home/istana-merdeka.jpg" alt="room" />
-                <div class="room__card__details">
-                    <div>
-                        <h4>Kamar Non AC</h4>
-                        <p>Nyaman, terjangkau, dan cocok untuk hunian yang hemat.</p>
-                    </div>
-                    <h3>Rp500.000<span>/bulan</span></h3>
-                </div>
-            </div>
-            <div class="room__card">
-                <img src="assets/facilities/ber-ac.png" alt="room" />
-                <div class="room__card__details">
-                    <div>
-                        <h4>Kamar Ber-AC</h4>
-                        <p>Dilengkapi AC untuk kenyamanan ekstra di setiap waktu.</p>
-                    </div>
-                    <h3>Rp750.000<span>/bulan</span></h3>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Room Tour -->
-    <section class="intro">
-        <div class="section__container intro__container">
-            <div class="intro__cotent">
-                <p class="section__subheader">ROOM TOUR</p>
-                <h2 class="section__header">Temukan Kenyamanan di Kost Istana Merdeka 03</h2>
-                <p class="section__description">
-                    Nikmati pengalaman tinggal di Kost Istana Merdeka 3 yang nyaman dan eksklusif. Dengan kamar ber-AC yang bersih dan tertata rapi, kami menghadirkan suasana yang tenang dan kondusif untuk beristirahat maupun beraktivitas. Saksikan video cinematic kami untuk melihat langsung fasilitas yang tersedia dan rasakan kenyamanan yang kami tawarkan.
-                </p>
-                <button class="btn"><a href="#booking">Pesan Sekarang</a></button>
-            </div>
-            <div class="intro__video">
-                <video src="assets/0305.mp4" autoplay muted loop></video>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feature -->
-    <section class="section__container feature__container" id="feature">
-        <p class="section__subheader">FASILITAS</p>
-        <h2 class="section__header">Fasilitas Kami</h2>
-        <div class="feature__grid">
-            <div class="feature__card">
-                <span><i class="ri-price-tag-3-line"></i></span>
-                <h4>Harga Terjangkau</h4>
-                <p>
-                    Nikmati hunian premium dengan fasilitas lengkap tanpa menguras kantong!
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-snowy-line"></i></span>
-                <h4>Kamar Ber-AC</h4>
-                <p>
-                    Udara tetap sejuk sepanjang hari untuk tidur lebih nyaman dan berkualitas.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-wifi-line"></i></span>
-                <h4>WiFi Cepat</h4>
-                <p>
-                    Internet stabil dan kencang untuk kerja, kuliah, atau sekadar streaming santai.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-hotel-bed-line"></i></span>
-                <h4>Kasur Nyaman</h4>
-                <p>
-                    Kasur empuk dan bersih untuk istirahat yang lebih nyenyak setiap malam.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-store-line"></i></span>
-                <h4>Lemari Luas</h4>
-                <p>
-                    Ruang penyimpanan yang cukup untuk menjaga barang tetap rapi dan aman.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-shower-line"></i></span>
-                <h4>Kamar Mandi Bersih</h4>
-                <p>
-                    Kamar mandi luar yang selalu terjaga kebersihannya untuk kenyamanan bersama.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-community-line"></i></span>
-                <h4>Lingkungan Kondusif</h4>
-                <p>
-                    Suasana tenang dan nyaman, cocok untuk belajar maupun beristirahat.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-map-pin-line"></i></span>
-                <h4>Lokasi Strategis</h4>
-                <p>
-                    Dekat kampus UNSOED dan UMP, memudahkan mobilitas ke berbagai tempat.
-                </p>
-            </div>
-
-            <div class="feature__card">
-                <span><i class="ri-shield-check-line"></i></span>
-                <h4>Keamanan Terjamin</h4>
-                <p>
-                    Akses terbatas dan sistem keamanan yang menjaga kenyamanan penghuni 24/7.
-                </p>
-            </div>
-
-        </div>
-    </section>
-
-    <!--Testimoni-->
-    <section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="testimonials">
-        <h2 class="section__header text-sm font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
-        <!-- Slider main container -->
-        <div class="swiper">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper">
-                @foreach ($testimonis as $testimoni)
-                <div class="swiper-slide">
-                    <div class="client__card">
-                        <img src="{{ filter_var($testimoni->image, FILTER_VALIDATE_URL) ? $testimoni->image : asset('storage/' . $testimoni->image) }}"
-                            alt="{{ $testimoni->name }}" />
-                        <div><i class="ri-double-quotes-r"></i></div>
-                        <p>{{ $testimoni->description }}</p>
-                        <h4>{{ $testimoni->name }}</h4>
-                        <div class="rating">
-                            @php
-                            $rating = $testimoni->rating ?? 1; // Default minimal 1
-                            @endphp
-                            @for ($i = 1; $i <= 5; $i++)
-                                <i class="{{ $i <= $rating ? 'fas' : 'far' }} fa-star text-yellow-500 text-base"></i>
-                                @endfor
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-            <!-- If we need pagination -->
-            <div class="swiper-pagination"></div>
-        </div>
-    </section>
-
-    <!-- Gallery -->
-    <section class="gallery" id="gallery">
-        <div class="section__container menu__container">
-            <div class="menu__header">
-                <div>
-                    <p class="section__subheader">GALLERY</p>
-                    <h2 class="section__header">Gallery Kami</h2>
-                    <br>
-                </div>
-                <div class="section__nav">
-                    <span><i class="ri-arrow-left-line"></i></span>
-                    <span><i class="ri-arrow-right-line"></i></span>
-                </div>
-            </div>
-            <div class="menu__images">
-                @foreach ($gallery as $item)
-                <img
-                    src="{{ asset('storage/' . $item->image) }}"
-                    alt="{{ $item->title }}"
-                    class="gallery-thumbnail" />
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- Booking -->
-    <div class="booking-section" id="booking">
-        <section class="booking-container">
-            <form class="booking-form" action="{{ route('kost.book') }}" method="POST" enctype="multipart/form-data" id="bookingForm">
-                <h2 class="section__header-booking">Form Pemesanan Kamar</h2>
-                <p class="booking-subtext">Kost Istana Merdeka 03</p>
-                <hr>
-                @csrf
-
-                <label for="name">Nama Lengkap</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="phone">Nomor WhatsApp</label>
-                <input type="tel" id="phone" name="phone" required>
-
-                <label for="date">Pilih Tanggal</label>
-                <input type="date" id="date" name="date" required>
-                <span id="tooltip" class="hidden absolute bg-red-500 text-white text-xs rounded p-1"></span>
-
-                <label for="room_number">Pilih Nomor Kamar</label>
-                <div class="layout">
-                    <div class="stairs">Tangga</div>
-                    <div class="bathrooms">
-                        <div class="bathroom">Kamar mandi 01</div>
-                        <div class="bathroom">Kamar mandi 02</div>
-                    </div>
-                    <div class="container-room">
-                        @foreach(array_chunk(range(1, 10), 2) as $row)
-                        <div class="room-row">
-                            @foreach($row as $room)
-                            @php
-                            $isBooked = in_array($room, $bookedRooms ?? []);
-                            @endphp
-                            <div class="room {{ $isBooked ? 'booked' : '' }}" data-room="{{ $room }}">
-                                {{ str_pad($room, 2, '0', STR_PAD_LEFT) }}
-                            </div>
-                            @endforeach
-                        </div>
-                        @endforeach
-                    </div>
-                    <div class="balcony">Balkon</div>
-                </div>
-
-                <input type="hidden" id="room_number" name="room_number" required>
-
-                <label for="room_type">Pilih Jenis Kamar</label>
-                <select id="room_type" name="room_type">
-                    <option value="750rb - AC">750rb - AC</option>
-                    <option value="500rb - Non AC">500rb - Non AC</option>
-                </select>
-
-                <label for="paymentMethod">Metode Pembayaran</label>
-                <select id="paymentMethod" name="paymentMethod" required>
-                    <option value="" selected disabled>Pilih Metode</option>
-                    <option value="qris">QRIS</option>
-                    <option value="transfer">Transfer Bank</option>
-                </select>
-
-                <!-- Bagian QRIS -->
-                <div id="qrisSection" class="hidden">
-                    <p>Silakan scan QRIS di bawah ini:</p>
-                    <div class="place-items-center">
-                        <img
-                            src="/assets/img/pembayaran/qris-barcode.png"
-                            alt="QRIS Barcode"
-                            class="img-fluid w-full md:w-1/2" />
-                    </div>
-                </div>
-
-                <!-- Bagian Transfer -->
-                <div id="transferSection" class="hidden">
-                    <p class="text-center">Nomor Rekening: <strong>0461701506</strong></p>
-                    <p class="text-center">An: <strong>Sobiin</strong></p>
-                    <div class="place-items-center">
-                        <img
-                            src="/assets/img/pembayaran/bca.png"
-                            alt="Bank BCA"
-                            class="img-fluid w-1/2" />
-                    </div>
-                </div>
-
-                <label for="paymentProof">Upload Bukti Pembayaran</label>
-                <input type="file" id="paymentProof" name="paymentProof" accept="image/*" required>
-
-                <button type="submit" class="booking-btn flex justify-center items-center gap-2 w-full" id="bookingNow" disabled>
-                    <span id="btnText">Booking Sekarang</span>
-
-                    <span id="btnLoading" class="hidden">
-                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Memproses...
-                    </span>
-                </button>
-            </form>
-        </section>
     </div>
+</nav>
 
-    <!-- Blog -->
-    <section class="section__container news__container" id="blog">
-        <div class="news__header">
-            <div>
-                <p class="section__subheader">BLOG</p>
-                <h2 class="section__header">B1NG EMPIRE Blog</h2>
-                <p class="section__description">
-                    B1NG EMPIRE Blog adalah Website Blog pribadi kami yang didalamnya berisi informasi, tips & trick, dan berita - berita terbaru yang berkaitan dengan B11N Gym, K1NG Gym, dan Kost Istana Merdeka 3.
-                </p>
+<!-- FLOATING ACTION MENU -->
+<div class="floating-menu fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 flex flex-col items-center gap-4">
+    <a href="{{ route('gym.king') }}" class="action w-14 h-14 sm:w-16 sm:h-16 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:border-secondary transition-all duration-300 group">
+        <img src="assets/Logo/last.png" alt="K1NG Gym" class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-full group-hover:scale-110 transition-transform duration-300" />
+    </a>
+    <a href="{{ route('gym.biin') }}" class="action w-14 h-14 sm:w-16 sm:h-16 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:border-secondary transition-all duration-300 group">
+        <img src="assets/Logo/biin.png" alt="B11N Gym" class="w-10 h-10 sm:w-12 sm:h-12 object-contain group-hover:scale-110 transition-transform duration-300" />
+    </a>
+    <a href="{{ route('kost') }}" class="action w-14 h-14 sm:w-16 sm:h-16 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:border-secondary transition-all duration-300 group">
+        <img src="assets/Logo/kost.png" alt="Istana Merdeka 03" class="w-10 h-10 sm:w-12 sm:h-12 object-contain group-hover:scale-110 transition-transform duration-300" />
+    </a>
+    <a href="{{ route('home') }}" class="action w-14 h-14 sm:w-16 sm:h-16 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:border-secondary transition-all duration-300 group">
+        <img src="assets/Logo/empire.png" alt="B1NG Empire" class="w-10 h-10 sm:w-12 sm:h-12 object-contain group-hover:scale-110 transition-transform duration-300" />
+    </a>
+    <a href="#" class="trigger w-14 h-14 sm:w-16 sm:h-16 bg-secondary rounded-full flex items-center justify-center shadow-xl hover:bg-yellow-600 transition-all duration-300 text-white text-xl sm:text-2xl font-bold">
+        <i class="fas fa-plus transition-transform duration-300"></i>
+    </a>
+</div>
+
+<!-- HERO HEADER -->
+<header id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <div class="absolute inset-0 z-0">
+        <img src="assets/facilities/ber-ac.png" alt="Kost Istana Merdeka 03" class="w-full h-full object-cover object-center" />
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
+    </div>
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+        <div class="max-w-2xl reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-6 uppercase">WELCOME TO</p>
+            <h1 class="font-heading text-white font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none mb-8 tracking-tight uppercase">
+                Kost Putra<br /><span class="text-secondary">Istana Merdeka 03</span>
+            </h1>
+            <p class="font-body text-gray-300 text-lg sm:text-xl leading-relaxed mb-10 max-w-xl">
+                Hunian premium eksklusif di atas B11N Gym Purwokerto. Nyaman, strategis, dan terjangkau.
+            </p>
+            <a href="#booking" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
+                Pesan Kamar Sekarang
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="relative py-20 sm:py-24 lg:py-32 bg-white">
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">ABOUT US</p>
+            <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Kost <span class="text-secondary">Istana Merdeka 03</span>
+            </h2>
+            <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
+                Selamat datang di Kost Istana Merdeka 3, pilihan terbaik bagi Anda yang mencari hunian premium dengan kenyamanan maksimal. Terletak strategis di atas B11N Gym Purwokerto, kost khusus putra ini menawarkan suasana eksklusif dan tenang, jauh dari kebisingan meskipun berada di area gym. Nikmati fasilitas terbaik seperti AC di setiap kamar dan WiFi berkecepatan tinggi.
+            </p>
+            <a href="#booking" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
+                Pesan Sekarang
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 reveal-stagger">
+            <div class="group relative overflow-hidden rounded aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
+                <img src="assets/facilities/ac.png" alt="Fasilitas AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+            </div>
+            <div class="bg-extraLight rounded p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="w-16 h-16 mb-6 bg-secondary rounded-sm flex items-center justify-center shadow-md">
+                    <i class="ri-user-line text-2xl text-white"></i>
+                </div>
+                <h4 class="font-heading text-2xl font-bold text-textDark mb-4 tracking-tight uppercase">Fasilitas Premium</h4>
+                <p class="font-body text-textLight leading-relaxed text-base">Kamar ber-AC, WiFi cepat, kasur empuk, dan lemari luas untuk kenyamanan maksimal.</p>
+            </div>
+            <div class="group relative overflow-hidden rounded aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
+                <img src="assets/home/biin-gym.jpg" alt="Lokasi Strategis" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+            </div>
+            <div class="bg-extraLight rounded p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="w-16 h-16 mb-6 bg-secondary rounded-sm flex items-center justify-center shadow-md">
+                    <i class="ri-calendar-check-line text-2xl text-white"></i>
+                </div>
+                <h4 class="font-heading text-2xl font-bold text-textDark mb-4 tracking-tight uppercase">Lokasi Strategis</h4>
+                <p class="font-body text-textLight leading-relaxed text-base">Dekat UNSOED dan UMP, memudahkan akses ke kampus dan fasilitas umum.</p>
             </div>
         </div>
-        <div class="news__grid">
-            @foreach ($blog as $blog)
-            <div class="news__card rounded-lg shadow-md p-5 bg-white dark:bg-slate-900">
-                <a href="{{ route('blogs.show', $blog->slug) }}" target="_blank">
-                    <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-150 sm:h-[200px] object-cover" />
-                    <div class="news__card__title">
-                        <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</p>
+    </div>
+</section>
+<!-- ROOM SECTION -->
+<section id="room" class="relative py-20 sm:py-24 lg:py-32 bg-extraLight">
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">ROOMS</p>
+            <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Tipe <span class="text-secondary">Kamar Kami</span>
+            </h2>
+            <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto">
+                Kami menawarkan dua tipe kamar yang dirancang untuk memenuhi kebutuhan Anda.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto reveal-stagger">
+            <!-- Non AC Room -->
+            <div class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div class="relative overflow-hidden aspect-[4/3]">
+                    <img src="assets/facilities/non-ac.png" alt="Kamar Non AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-primary text-white font-heading text-sm font-bold px-4 py-2 rounded tracking-wider uppercase">Non AC</span>
                     </div>
-                    <h4 class="text-black dark:text-white">{{ $blog->title }}</h4>
-                    <p>{!! Str::limit($blog->content, 100) !!}</p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+                <div class="p-8">
+                    <h3 class="font-heading text-2xl font-bold text-textDark mb-4 tracking-tight uppercase">Kamar Non AC</h3>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Kasur empuk premium</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Lemari pakaian besar</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Meja belajar</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> WiFi kecepatan tinggi</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Kamar mandi bersih</li>
+                    </ul>
+                    <div class="flex items-end gap-2 mb-6">
+                        <span class="font-heading text-3xl font-bold text-primary">Rp 550.000</span>
+                        <span class="text-textLight text-base mb-1">/ bulan</span>
+                    </div>
+                    <a href="#booking" class="block text-center font-heading px-6 py-4 bg-secondary text-white font-semibold rounded hover:bg-white hover:text-secondary border-2 border-secondary transition-all duration-300 shadow-md hover:shadow-lg uppercase tracking-wider">
+                        Pesan Sekarang
+                    </a>
+                </div>
+            </div>
+            <!-- AC Room -->
+            <div class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ring-2 ring-secondary">
+                <div class="relative overflow-hidden aspect-[4/3]">
+                    <img src="assets/facilities/ber-ac.png" alt="Kamar AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-secondary text-white font-heading text-sm font-bold px-4 py-2 rounded tracking-wider uppercase">Populer</span>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+                <div class="p-8">
+                    <h3 class="font-heading text-2xl font-bold text-textDark mb-4 tracking-tight uppercase">Kamar AC</h3>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> AC sejuk 24 jam</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Kasur empuk premium</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Lemari pakaian besar</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> Meja belajar</li>
+                        <li class="flex items-center gap-3 text-textLight"><i class="ri-check-line text-secondary text-lg"></i> WiFi & kamar mandi</li>
+                    </ul>
+                    <div class="flex items-end gap-2 mb-6">
+                        <span class="font-heading text-3xl font-bold text-primary">Rp 700.000</span>
+                        <span class="text-textLight text-base mb-1">/ bulan</span>
+                    </div>
+                    <a href="#booking" class="block text-center font-heading px-6 py-4 bg-secondary text-white font-semibold rounded hover:bg-white hover:text-secondary border-2 border-secondary transition-all duration-300 shadow-md hover:shadow-lg uppercase tracking-wider">
+                        Pesan Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ROOM TOUR VIDEO -->
+<section class="relative py-20 sm:py-24 lg:py-32 bg-primary overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><rect fill=%22none%22 width=%2260%22 height=%2260%22/><path d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></svg>'); background-size: 60px 60px;"></div>
+    </div>
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="reveal">
+                <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">ROOM TOUR</p>
+                <h2 class="font-heading text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                    Lihat <span class="text-secondary">Kamar Kami</span>
+                </h2>
+                <p class="font-body text-gray-300 text-lg sm:text-xl leading-relaxed mb-8">
+                    Lihat langsung suasana kamar kami melalui video room tour. Rasakan kenyamanan dan keindahan kamar kami sebelum Anda memutuskan untuk memesan.
+                </p>
+                <a href="#booking" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
+                    Pesan Sekarang
                 </a>
+            </div>
+            <div class="reveal">
+                <div class="relative rounded overflow-hidden shadow-2xl aspect-video">
+                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" title="Room Tour Kost Istana Merdeka 03" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- FEATURES SECTION -->
+<section id="feature" class="relative py-20 sm:py-24 lg:py-32 bg-white">
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">FEATURES</p>
+            <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Fasilitas <span class="text-secondary">Kami</span>
+            </h2>
+            <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto">
+                Kami menyediakan berbagai fasilitas unggulan untuk menunjang kenyamanan hunian Anda.
+            </p>
+        </div>
+
+        @php
+        $features = [
+            ['icon' => 'fas fa-snowflake', 'title' => 'AC Berkualitas', 'desc' => 'AC modern di setiap kamar untuk kenyamanan suhu optimal sepanjang hari.'],
+            ['icon' => 'fas fa-wifi', 'title' => 'WiFi Cepat', 'desc' => 'Internet berkecepatan tinggi untuk mendukung aktivitas online dan belajar.'],
+            ['icon' => 'fas fa-bed', 'title' => 'Kasur Premium', 'desc' => 'Kasur empuk berkualitas tinggi untuk tidur yang nyenyak dan nyaman.'],
+            ['icon' => 'fas fa-lock', 'title' => 'Keamanan Terjamin', 'desc' => 'Kunci kamar individual dan akses masuk yang aman 24 jam.'],
+            ['icon' => 'fas fa-parking', 'title' => 'Parkir Luas', 'desc' => 'Area parkir yang luas untuk motor dan kendaraan penghuni kost.'],
+            ['icon' => 'fas fa-tint', 'title' => 'Air Bersih', 'desc' => 'Suplai air bersih 24/7 untuk kebutuhan mandi dan mencuci.'],
+            ['icon' => 'fas fa-tshirt', 'title' => 'Mesin Cuci', 'desc' => 'Fasilitas mesin cuci bersama untuk memudahkan kebutuhan laundry.'],
+            ['icon' => 'fas fa-utensils', 'title' => 'Dapur Bersama', 'desc' => 'Dapur lengkap dengan peralatan masak untuk kebutuhan memasak.'],
+            ['icon' => 'fas fa-dumbbell', 'title' => 'Akses Gym', 'desc' => 'Akses langsung ke B11N Gym di lantai bawah untuk berolahraga.'],
+        ];
+        @endphp
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 reveal-stagger">
+            @foreach ($features as $feature)
+            <div class="group bg-extraLight rounded p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:bg-primary">
+                <div class="w-16 h-16 mb-6 bg-secondary rounded-sm flex items-center justify-center shadow-md group-hover:bg-white transition-colors duration-300">
+                    <i class="{{ $feature['icon'] }} text-2xl text-white group-hover:text-secondary transition-colors duration-300"></i>
+                </div>
+                <h4 class="font-heading text-xl font-bold text-textDark mb-3 tracking-tight uppercase group-hover:text-white transition-colors duration-300">{{ $feature['title'] }}</h4>
+                <p class="font-body text-textLight leading-relaxed text-base group-hover:text-gray-300 transition-colors duration-300">{{ $feature['desc'] }}</p>
             </div>
             @endforeach
         </div>
-        @if($blog->count() > 3)
-        <div class=" mt-8 text-center">
-            <a href="{{ route('blogs.index') }}" target="_blank">
-                <button class="btn">
-                    View All
-                </button>
+    </div>
+</section>
+<!-- TESTIMONIALS SECTION -->
+<section class="relative py-20 sm:py-24 lg:py-32 bg-extraLight">
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">TESTIMONIALS</p>
+            <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Apa Kata <span class="text-secondary">Penghuni Kami</span>
+            </h2>
+            <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto">
+                Dengarkan pengalaman para penghuni yang telah merasakan kenyamanan kost kami.
+            </p>
+        </div>
+        <div class="swiper testimonialSwiper reveal">
+            <div class="swiper-wrapper pb-12">
+                @if(isset($testimonis) && count($testimonis) > 0)
+                    @foreach($testimonis as $testi)
+                    <div class="swiper-slide">
+                        <div class="bg-white rounded p-8 shadow-lg hover:shadow-xl transition-all duration-300 mx-2">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 bg-secondary rounded-full flex items-center justify-center text-white font-heading font-bold text-xl uppercase">
+                                    {{ substr($testi->name, 0, 1) }}
+                                </div>
+                                <div>
+                                    <h4 class="font-heading text-textDark font-bold text-lg">{{ $testi->name }}</h4>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        @for($i = 0; $i < 5; $i++)
+                                            <i class="ri-star-fill text-secondary text-sm"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="font-body text-textLight leading-relaxed text-base italic">"{{ $testi->content }}"</p>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <div class="swiper-slide">
+                        <div class="bg-white rounded p-8 shadow-lg mx-2">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 bg-secondary rounded-full flex items-center justify-center text-white font-heading font-bold text-xl">A</div>
+                                <div>
+                                    <h4 class="font-heading text-textDark font-bold text-lg">Ahmad R.</h4>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        @for($i = 0; $i < 5; $i++)
+                                            <i class="ri-star-fill text-secondary text-sm"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="font-body text-textLight leading-relaxed text-base italic">"Kost yang sangat nyaman dan bersih. Fasilitas lengkap dengan harga terjangkau. Sangat direkomendasikan!"</p>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="bg-white rounded p-8 shadow-lg mx-2">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-14 h-14 bg-secondary rounded-full flex items-center justify-center text-white font-heading font-bold text-xl">B</div>
+                                <div>
+                                    <h4 class="font-heading text-textDark font-bold text-lg">Budi S.</h4>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        @for($i = 0; $i < 5; $i++)
+                                            <i class="ri-star-fill text-secondary text-sm"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="font-body text-textLight leading-relaxed text-base italic">"Lokasi sangat strategis, dekat kampus UNSOED. WiFi kencang dan kamar luas. Worth it!"</p>
+                        </div>
+                    </div>
+                @endif
+            </div>
+            <div class="swiper-pagination !relative mt-8"></div>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY SECTION -->
+<section id="gallery" class="relative py-20 sm:py-24 lg:py-32 bg-white">
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">GALLERY</p>
+            <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Galeri <span class="text-secondary">Foto</span>
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+            @if(isset($gallery) && count($gallery) > 0)
+                @foreach($gallery as $item)
+                <div class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer">
+                    <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
+                        <div class="p-6">
+                            <h4 class="font-heading text-white font-bold text-lg uppercase tracking-wider">{{ $item->title }}</h4>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            @else
+                <div class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/facilities/ber-ac.png" alt="Gallery" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
+                        <div class="p-6"><h4 class="font-heading text-white font-bold text-lg uppercase tracking-wider">Kamar AC</h4></div>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/facilities/non-ac.png" alt="Gallery" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
+                        <div class="p-6"><h4 class="font-heading text-white font-bold text-lg uppercase tracking-wider">Kamar Non AC</h4></div>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <img src="assets/facilities/ac.png" alt="Gallery" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
+                        <div class="p-6"><h4 class="font-heading text-white font-bold text-lg uppercase tracking-wider">Fasilitas</h4></div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+</section>
+<!-- BOOKING SECTION -->
+<section id="booking" class="relative py-20 sm:py-24 lg:py-32 bg-primary overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><rect fill=%22none%22 width=%2260%22 height=%2260%22/><path d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></svg>'); background-size: 60px 60px;"></div>
+    </div>
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">BOOKING</p>
+            <h2 class="font-heading text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Pesan <span class="text-secondary">Kamar</span>
+            </h2>
+            <p class="font-body text-gray-300 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto">
+                Isi formulir di bawah ini untuk memesan kamar kost. Pilih tipe kamar dan nomor kamar sesuai ketersediaan.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <!-- Booking Form -->
+            <div class="bg-white rounded p-8 sm:p-10 shadow-2xl reveal">
+                <h3 class="font-heading text-2xl font-bold text-textDark mb-8 tracking-tight uppercase">Form Pemesanan</h3>
+
+                @if(session('success'))
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded">
+                    <p class="text-green-700 font-semibold">{{ session('success') }}</p>
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded">
+                    <p class="text-red-700 font-semibold">{{ session('error') }}</p>
+                </div>
+                @endif
+
+                <form method="POST" action="{{ route('kost.book') }}" enctype="multipart/form-data" id="bookingForm" class="space-y-5">
+                    @csrf
+                    <div>
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Nama Lengkap</label>
+                        <input type="text" name="name" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                    </div>
+                    <div>
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Email</label>
+                        <input type="email" name="email" required placeholder="Masukkan email" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                    </div>
+                    <div>
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">No. Telepon</label>
+                        <input type="tel" name="phone" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Tanggal Masuk</label>
+                            <input type="text" name="date" id="datePicker" required placeholder="Pilih tanggal" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                        </div>
+                        <div>
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Tanggal Keluar</label>
+                            <input type="text" name="end_date" id="endDatePicker" required placeholder="Pilih tanggal" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Tipe Kamar</label>
+                        <select name="room_type" id="roomType" required class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body">
+                            <option value="">Pilih tipe kamar</option>
+                            <option value="500rb - Non AC">Non AC - Rp 550.000/bulan</option>
+                            <option value="750rb - AC">AC - Rp 700.000/bulan</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="room_number" id="selectedRoom" required />
+                    <input type="hidden" name="price" id="roomPrice" />
+
+                    <!-- Room Layout -->
+                    <div>
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-4 uppercase tracking-wider">Pilih Kamar</label>
+                        <div class="room-layout bg-extraLight rounded p-6 border-2 border-gray-200">
+                            <div class="grid grid-cols-5 gap-3 mb-4">
+                                @for($i = 1; $i <= 5; $i++)
+                                <div class="room-cell aspect-square rounded flex items-center justify-center cursor-pointer border-2 border-gray-300 bg-white hover:border-secondary transition-all duration-300 font-heading font-bold text-textDark text-sm
+                                    {{ in_array($i, $bookedRooms ?? []) ? 'booked !bg-red-100 !border-red-300 !text-red-400 !cursor-not-allowed' : '' }}"
+                                    data-room="{{ $i }}" data-type="500rb - Non AC">
+                                    {{ $i }}
+                                </div>
+                                @endfor
+                            </div>
+                            <div class="w-full h-px bg-gray-300 my-4"></div>
+                            <div class="grid grid-cols-5 gap-3 mb-4">
+                                @for($i = 6; $i <= 10; $i++)
+                                <div class="room-cell aspect-square rounded flex items-center justify-center cursor-pointer border-2 border-gray-300 bg-white hover:border-secondary transition-all duration-300 font-heading font-bold text-textDark text-sm
+                                    {{ in_array($i, $bookedRooms ?? []) ? 'booked !bg-red-100 !border-red-300 !text-red-400 !cursor-not-allowed' : '' }}"
+                                    data-room="{{ $i }}" data-type="750rb - AC">
+                                    {{ $i }}
+                                </div>
+                                @endfor
+                            </div>
+                            <div class="flex items-center gap-6 mt-4 text-sm font-body text-textLight">
+                                <div class="flex items-center gap-2"><div class="w-4 h-4 rounded border-2 border-gray-300 bg-white"></div> Tersedia</div>
+                                <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-secondary border-2 border-secondary"></div> Dipilih</div>
+                                <div class="flex items-center gap-2"><div class="w-4 h-4 rounded bg-red-100 border-2 border-red-300"></div> Terisi</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div>
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Metode Pembayaran</label>
+                        <div class="flex gap-4">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="cash" class="hidden peer" checked />
+                                <div class="peer-checked:border-secondary peer-checked:bg-secondary/10 border-2 border-gray-200 rounded p-4 text-center transition-all duration-300 hover:border-secondary">
+                                    <i class="ri-money-dollar-circle-line text-2xl text-textDark peer-checked:text-secondary mb-1 block"></i>
+                                    <span class="font-heading font-semibold text-sm text-textDark uppercase tracking-wider">Cash</span>
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="paymentMethod" value="transfer" class="hidden peer" />
+                                <div class="peer-checked:border-secondary peer-checked:bg-secondary/10 border-2 border-gray-200 rounded p-4 text-center transition-all duration-300 hover:border-secondary">
+                                    <i class="ri-bank-card-line text-2xl text-textDark peer-checked:text-secondary mb-1 block"></i>
+                                    <span class="font-heading font-semibold text-sm text-textDark uppercase tracking-wider">Transfer</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Payment Proof (shown when transfer selected) -->
+                    <div id="paymentProofContainer" class="hidden">
+                        <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Bukti Transfer</label>
+                        <input type="file" name="paymentProof" accept="image/*" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-secondary file:text-white file:font-semibold file:cursor-pointer" />
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full font-heading px-8 py-4 bg-secondary text-white font-semibold text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2">
+                        <span id="btnText">Pesan Sekarang</span>
+                        <span id="btnLoader" class="hidden"><i class="ri-loader-4-line animate-spin text-xl"></i></span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Room Info Side -->
+            <div class="space-y-8 reveal">
+                <div class="bg-white/10 backdrop-blur rounded p-8 border border-white/20">
+                    <h3 class="font-heading text-white text-2xl font-bold mb-6 tracking-tight uppercase">Informasi Harga</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                            <span class="font-body text-gray-300">Kamar Non AC</span>
+                            <span class="font-heading text-secondary font-bold text-xl">Rp 550.000</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                            <span class="font-body text-gray-300">Kamar AC</span>
+                            <span class="font-heading text-secondary font-bold text-xl">Rp 700.000</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-body text-gray-300">Pembayaran</span>
+                            <span class="font-heading text-white font-bold">Per Bulan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded p-8 border border-white/20">
+                    <h3 class="font-heading text-white text-2xl font-bold mb-6 tracking-tight uppercase">Kontak Kami</h3>
+                    <div class="space-y-4">
+                        <a href="https://wa.me/6285747437700" target="_blank" class="flex items-center gap-4 text-gray-300 hover:text-secondary transition-colors duration-300 group">
+                            <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center group-hover:bg-secondary/40 transition-colors duration-300">
+                                <i class="ri-whatsapp-line text-xl text-secondary"></i>
+                            </div>
+                            <span class="font-body">0857-4743-7700</span>
+                        </a>
+                        <a href="https://www.instagram.com/istana_merdeka_03" target="_blank" class="flex items-center gap-4 text-gray-300 hover:text-secondary transition-colors duration-300 group">
+                            <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center group-hover:bg-secondary/40 transition-colors duration-300">
+                                <i class="ri-instagram-line text-xl text-secondary"></i>
+                            </div>
+                            <span class="font-body">@istana_merdeka_03</span>
+                        </a>
+                        <div class="flex items-center gap-4 text-gray-300">
+                            <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
+                                <i class="ri-map-pin-line text-xl text-secondary"></i>
+                            </div>
+                            <span class="font-body">Jl. Merdeka No. 03, Purwokerto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- BLOG SECTION -->
+<section class="relative py-20 sm:py-24 lg:py-32 bg-extraLight">
+    <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 lg:mb-20 reveal">
+            <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">BLOG</p>
+            <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 tracking-tight leading-tight uppercase">
+                Artikel <span class="text-secondary">Terbaru</span>
+            </h2>
+            <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto">
+                Baca artikel terbaru seputar tips hunian, gaya hidup sehat, dan informasi kost.
+            </p>
+        </div>
+        @if(isset($blog) && count($blog) > 0)
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-stagger">
+            @foreach($blog as $item)
+            <article class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                <div class="relative overflow-hidden aspect-[16/10]">
+                    <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-secondary text-white font-heading text-xs font-bold px-3 py-1.5 rounded tracking-wider uppercase">Blog</span>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-4 mb-4 text-sm text-textLight font-body">
+                        <span class="flex items-center gap-1.5"><i class="ri-calendar-line text-secondary"></i> {{ $item->created_at->format('d M Y') }}</span>
+                    </div>
+                    <h3 class="font-heading text-xl font-bold text-textDark mb-3 tracking-tight leading-tight uppercase group-hover:text-secondary transition-colors duration-300">
+                        {{ Str::limit($item->title, 50) }}
+                    </h3>
+                    <p class="font-body text-textLight leading-relaxed text-sm mb-4">
+                        {{ Str::limit(strip_tags($item->content), 100) }}
+                    </p>
+                    <a href="{{ route('blogs.show', $item->slug) }}" class="font-heading text-secondary font-semibold text-sm flex items-center gap-2 hover:gap-3 transition-all duration-300 uppercase tracking-wider">
+                        Baca Selengkapnya <i class="ri-arrow-right-up-line"></i>
+                    </a>
+                </div>
+            </article>
+            @endforeach
+        </div>
+        <div class="text-center mt-12 reveal">
+            <a href="{{ route('blogs.index') }}" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
+                Lihat Semua Artikel
             </a>
         </div>
+        @else
+        <div class="text-center py-12 reveal">
+            <i class="ri-article-line text-6xl text-gray-300 mb-4 block"></i>
+            <p class="font-body text-textLight text-lg">Belum ada artikel tersedia.</p>
+        </div>
         @endif
-    </section>
+    </div>
+</section>
 
-    <footer class="footer" id="contact">
-        <div class="section__container footer__container">
-            <div class="footer__col">
-                <div class="logo footer__logo">
-                    <div class="w-14 h-14 sm:w-16 mt-0 sm:h-16">
-                        <a href="#"><img src="assets/Logo/kost.png" alt="logo" class="mt-3" /></a>
-                    </div> <span>KOST ISTANA<br />MERDEKA 03</span>
+<!-- FOOTER -->
+<footer class="bg-primary pt-20 pb-8">
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 pb-16 border-b border-white/10">
+            <!-- Brand -->
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="assets/Logo/kost.png" alt="Logo" class="w-14 h-14 object-contain" />
+                    <span class="font-heading text-white font-bold text-xl leading-tight tracking-wider uppercase">
+                        KOST ISTANA<br /><span class="text-secondary">MERDEKA 03</span>
+                    </span>
                 </div>
-                <p class="section__description">
-                    Selamat datang di Kost Istana Merdeka 3, pilihan terbaik bagi Anda yang mencari hunian premium dengan kenyamanan maksimal. Terletak strategis di atas B11N Gym Purwokerto, kost khusus putra ini menawarkan suasana eksklusif dan tenang, jauh dari kebisingan meskipun berada di area gym.
-
-                    Nikmati fasilitas terbaik seperti AC di setiap kamar dan WiFi berkecepatan tinggi, memastikan Anda tetap nyaman saat beristirahat, belajar, atau bekerja. </p>
-                <ul class="footer__socials">
-                    <li>
-                        <a href="mailto:sobiin77@gmail.com"><i class="fas fa-envelope"></i></a>
-                    </li>
-                    <li>
-                        <a href="https://wa.me/6281226110988"><i class="ri-whatsapp-line"></i></a>
-                    </li>
-                    <li>
-                        <a href="https://www.instagram.com/biin_gym/"><i class="ri-instagram-fill"></i></a>
-                    </li>
-                    <li>
-                        <a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU"><i class="ri-threads-fill"></i></a>
-                    </li>
+                <p class="font-body text-gray-400 leading-relaxed text-base mb-6">
+                    Hunian premium eksklusif di atas B11N Gym Purwokerto. Nyaman, strategis, dan terjangkau untuk mahasiswa dan profesional muda.
+                </p>
+                <div class="flex items-center gap-4">
+                    <a href="https://www.instagram.com/istana_merdeka_03" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-400 hover:bg-secondary hover:text-white transition-all duration-300">
+                        <i class="ri-instagram-line"></i>
+                    </a>
+                    <a href="https://wa.me/6285747437700" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-400 hover:bg-secondary hover:text-white transition-all duration-300">
+                        <i class="ri-whatsapp-line"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@b1ng_empire" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-400 hover:bg-secondary hover:text-white transition-all duration-300">
+                        <i class="ri-tiktok-line"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 class="font-heading text-white font-bold text-lg mb-6 tracking-wider uppercase">Quick Links</h4>
+                <ul class="space-y-4">
+                    <li><a href="#about" class="font-body text-gray-400 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="ri-arrow-right-s-line text-secondary"></i> Tentang Kami</a></li>
+                    <li><a href="#room" class="font-body text-gray-400 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="ri-arrow-right-s-line text-secondary"></i> Tipe Kamar</a></li>
+                    <li><a href="#feature" class="font-body text-gray-400 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="ri-arrow-right-s-line text-secondary"></i> Fasilitas</a></li>
+                    <li><a href="#gallery" class="font-body text-gray-400 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="ri-arrow-right-s-line text-secondary"></i> Galeri</a></li>
+                    <li><a href="#booking" class="font-body text-gray-400 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="ri-arrow-right-s-line text-secondary"></i> Pesan Kamar</a></li>
+                    <li><a href="{{ route('home') }}" class="font-body text-gray-400 hover:text-secondary transition-colors duration-300 flex items-center gap-2"><i class="ri-arrow-right-s-line text-secondary"></i> B1NG Empire</a></li>
                 </ul>
             </div>
-            <div class="footer__col">
-                <h4>Quick Link</h4>
-                <div class="footer__links">
-                    <li><a href="{{ route('home') }}" target="_blank">B1NG EMPIRE</a></li>
-                    <li><a href="{{ route('gym.biin') }}" target="_blank">B11N Gym Website</a></li>
-                    <li><a href="{{ route('gym.king') }}" target="_blank">K1NG Gym Website</a></li>
-                    <li><a href="{{ route('kost') }}" target="_blank">Kost Istana Merdeka 03 Website</a></li>
-                    <li><a href="{{ route('store.biin-king') }}" target="_blank">B11N & K1NG Gym Store</a></li>
-                    <li><a href="{{ route('blogs.index') }}" target="_blank">B1NG EMPIRE Blog</a></li>
-                </div>
-            </div>
-            <div class="footer__col">
-                <h4>Hubungi Kami</h4>
-                <div class="footer__links">
-                    <a href="tel:+6289653847651">
-
-                        <li>
-                            <span><i class="ri-phone-fill"></i></span>
-                            <div>
-                                <h5>No. Telephone</h5>
-                                <p>+62 896 5384 7651</p>
-                            </div>
-                        </li>
-                    </a>
-                    <a href="mailto:sobiin77@gmail.com">
-
-                        <li>
-                            <span><i class="ri-record-mail-line"></i></span>
-                            <div>
-                                <h5>Email</h5>
-                                <p>sobiin77@gmail.com</p>
-                            </div>
-                        </li>
-                    </a>
-                    <a href="https://www.google.com/maps?q=Jl.+Masjid+Baru,+Arcawinangun,Kec.+Purwokerto+Timur,+Kab.+Banyumas" target="_blank">
-
-                        <li>
-                            <span><i class="ri-map-pin-2-fill"></i></span>
-                            <div>
-                                <h5>Alamat</h5>
-                                <p>Jl. Masjid Baru, Arcawinangun, Kec. Purwokerto Timur, Kab. Banyumas</p>
-                            </div>
-                        </li>
+            <!-- Contact -->
+            <div>
+                <h4 class="font-heading text-white font-bold text-lg mb-6 tracking-wider uppercase">Hubungi Kami</h4>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3 text-gray-400">
+                        <i class="ri-map-pin-line text-secondary mt-1"></i>
+                        <span class="font-body">Jl. Merdeka No. 03, Purwokerto, Jawa Tengah</span>
+                    </li>
+                    <li>
+                        <a href="https://wa.me/6285747437700" target="_blank" class="flex items-center gap-3 text-gray-400 hover:text-secondary transition-colors duration-300">
+                            <i class="ri-whatsapp-line text-secondary"></i>
+                            <span class="font-body">0857-4743-7700</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/istana_merdeka_03" target="_blank" class="flex items-center gap-3 text-gray-400 hover:text-secondary transition-colors duration-300">
+                            <i class="ri-instagram-line text-secondary"></i>
+                            <span class="font-body">@istana_merdeka_03</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="mt-6">
+                    <a href="https://wa.me/6285747437700" target="_blank" class="font-heading inline-block px-6 py-3 bg-secondary text-white font-semibold text-sm rounded shadow-md hover:bg-white hover:text-secondary border-2 border-secondary transition-all duration-300 uppercase tracking-wider">
+                        Hubungi via WhatsApp
                     </a>
                 </div>
             </div>
-
         </div>
-        <div class="footer__bar">
-            Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
+        <div class="pt-8 text-center">
+            <p class="font-body text-gray-500 text-sm">
+                &copy; {{ date('Y') }} Kost Istana Merdeka 03. All rights reserved. Part of
+                <a href="{{ route('home') }}" class="text-secondary hover:text-white transition-colors duration-300 font-semibold">B1NG Empire</a>.
+            </p>
         </div>
-    </footer>
+    </div>
+</footer>
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
 
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="assets/js/home.js"></script>
-
-    <script>
-        // Cek Session Success
-        @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            confirmButtonColor: '#3085d6',
-        });
-        @endif
-
-        // Cek Session Error
-        @if(session('error'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: "{{ session('error') }}",
-            confirmButtonColor: '#d33',
-        });
-        @endif
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            new Swiper(".swiper", {
-                loop: true,
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                slidesPerView: 1,
-                spaceBetween: 20,
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-                breakpoints: {
-                    768: {
-                        slidesPerView: 1,
-                    },
-                    1024: {
-                        slidesPerView: 1,
-                    },
-                },
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const paymentMethod = document.getElementById("paymentMethod");
-            const qrisSection = document.getElementById("qrisSection");
-            const transferSection = document.getElementById("transferSection");
-            const paymentProof = document.getElementById("paymentProof");
-            const bookingNow = document.getElementById("bookingNow");
-
-            function checkForm() {
-                if (paymentMethod.value && paymentProof.files.length > 0) {
-                    bookingNow.removeAttribute("disabled");
-                } else {
-                    bookingNow.setAttribute("disabled", "true");
-                }
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const navLinks = document.getElementById('nav-links');
+    if (menuBtn && navLinks) {
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('hidden');
+            const icon = menuBtn.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('ri-menu-line');
+                icon.classList.toggle('ri-close-line');
             }
-
-            paymentMethod.addEventListener("change", function() {
-                qrisSection.classList.add("hidden");
-                transferSection.classList.add("hidden");
-
-                if (paymentMethod.value === "qris") {
-                    qrisSection.classList.remove("hidden");
-                } else if (paymentMethod.value === "transfer") {
-                    transferSection.classList.remove("hidden");
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.add('hidden');
+                const icon = menuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('ri-close-line');
+                    icon.classList.add('ri-menu-line');
                 }
-
-                checkForm();
-            });
-
-            paymentProof.addEventListener("change", checkForm);
-        });
-
-        document.getElementById("bookingForm").addEventListener("submit", function(event) {
-            const btn = document.getElementById("bookingNow");
-            const btnText = document.getElementById("btnText");
-            const btnLoading = document.getElementById("btnLoading");
-
-            // 1. Disable tombol agar tidak diklik 2x
-            btn.setAttribute("disabled", "true");
-            btn.classList.add("opacity-75", "cursor-not-allowed"); // styling tambahan (opsional)
-
-            // 2. Sembunyikan teks "Booking Sekarang"
-            btnText.classList.add("hidden");
-
-            // 3. Munculkan loading spinner
-            btnLoading.classList.remove("hidden");
-            btnLoading.classList.add("flex", "items-center", "gap-2"); // pastikan flex aktif
-
-            console.log("Form sedang dikirim...");
-
-            // Form akan lanjut submit secara normal ke server
-        });
-
-        // Script untuk menghilangkan Alert otomatis setelah 5 detik
-        setTimeout(function() {
-            document.querySelectorAll('.alert-box').forEach(alert => {
-                alert.style.transition = "opacity 0.5s ease";
-                alert.style.opacity = "0";
-                setTimeout(() => alert.remove(), 500); // Hapus elemen setelah animasi selesai
-            });
-        }, 5000);
-
-        document.addEventListener("DOMContentLoaded", function() {
-            flatpickr("#date", {
-                dateFormat: "Y-m-d", // Format tanggal (YYYY-MM-DD)
             });
         });
+    }
 
-        document.querySelectorAll('.room:not(.booked)').forEach(room => {
-            room.addEventListener('click', function() {
-                document.querySelectorAll('.room').forEach(r => r.classList.remove('selected'));
-                this.classList.add('selected');
-                document.getElementById('room_number').value = this.dataset.room;
-            });
+    // Navbar scroll effect
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            nav.classList.add('shadow-md');
+        } else {
+            nav.classList.remove('shadow-md');
+        }
+    });
+
+    // Floating menu toggle
+    const floatingMenu = document.querySelector('.floating-menu');
+    const trigger = floatingMenu?.querySelector('.trigger');
+    const actions = floatingMenu?.querySelectorAll('.action');
+    let menuOpen = false;
+    if (trigger) {
+        actions.forEach(a => {
+            a.style.opacity = '0';
+            a.style.transform = 'scale(0.5) translateY(20px)';
+            a.style.pointerEvents = 'none';
         });
-    </script>
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            menuOpen = !menuOpen;
+            const icon = trigger.querySelector('i');
+            if (menuOpen) {
+                icon.style.transform = 'rotate(45deg)';
+                actions.forEach((a, i) => {
+                    setTimeout(() => {
+                        a.style.opacity = '1';
+                        a.style.transform = 'scale(1) translateY(0)';
+                        a.style.pointerEvents = 'auto';
+                    }, i * 80);
+                });
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+                actions.forEach(a => {
+                    a.style.opacity = '0';
+                    a.style.transform = 'scale(0.5) translateY(20px)';
+                    a.style.pointerEvents = 'none';
+                });
+            }
+        });
+    }
 
+    // Swiper init
+    new Swiper('.testimonialSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: { delay: 4000, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: {
+            640: { slidesPerView: 1, spaceBetween: 20 },
+            768: { slidesPerView: 2, spaceBetween: 24 },
+            1024: { slidesPerView: 3, spaceBetween: 30 },
+        },
+    });
 
+    // Flatpickr
+    flatpickr('#datePicker', {
+        dateFormat: 'Y-m-d',
+        minDate: 'today',
+        disableMobile: true,
+    });
+    flatpickr('#endDatePicker', {
+        dateFormat: 'Y-m-d',
+        minDate: 'today',
+        disableMobile: true,
+    });
+
+    // Room selection
+    const roomCells = document.querySelectorAll('.room-cell');
+    const selectedRoomInput = document.getElementById('selectedRoom');
+    const roomPriceInput = document.getElementById('roomPrice');
+    const roomTypeSelect = document.getElementById('roomType');
+
+    roomCells.forEach(cell => {
+        cell.addEventListener('click', function() {
+            if (this.classList.contains('booked')) return;
+            roomCells.forEach(c => {
+                if (!c.classList.contains('booked')) {
+                    c.classList.remove('!bg-secondary', '!border-secondary', '!text-white');
+                }
+            });
+            this.classList.add('!bg-secondary', '!border-secondary', '!text-white');
+            const roomNum = this.dataset.room;
+            const roomType = this.dataset.type;
+            selectedRoomInput.value = roomNum;
+            roomTypeSelect.value = roomType;
+            roomPriceInput.value = roomType === '750rb - AC' ? '700000' : '550000';
+        });
+    });
+
+    // Payment method toggle
+    const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+    const proofContainer = document.getElementById('paymentProofContainer');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'transfer') {
+                proofContainer.classList.remove('hidden');
+            } else {
+                proofContainer.classList.add('hidden');
+            }
+        });
+    });
+
+    // Form submit loading
+    const bookingForm = document.getElementById('bookingForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', function(e) {
+            if (!selectedRoomInput.value) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pilih Kamar',
+                    text: 'Silakan pilih nomor kamar terlebih dahulu.',
+                    confirmButtonColor: '#f6ac0f',
+                });
+                return;
+            }
+            submitBtn.disabled = true;
+            btnText.textContent = 'Memproses...';
+            btnLoader.classList.remove('hidden');
+        });
+    }
+
+    // Scroll reveal animation
+    const revealElements = document.querySelectorAll('.reveal, .reveal-stagger');
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                if (entry.target.classList.contains('reveal-stagger')) {
+                    const children = entry.target.children;
+                    Array.from(children).forEach((child, i) => {
+                        setTimeout(() => {
+                            child.style.opacity = '1';
+                            child.style.transform = 'translateY(0)';
+                        }, i * 150);
+                    });
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    revealElements.forEach(el => observer.observe(el));
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+});
+</script>
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session("success") }}',
+        confirmButtonColor: '#f6ac0f',
+    });
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '{{ session("error") }}',
+        confirmButtonColor: '#f6ac0f',
+    });
+</script>
+@endif
 
 </body>
-
 </html>
