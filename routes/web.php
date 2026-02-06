@@ -35,15 +35,6 @@ Route::get('/biin-king-gym-store', [StoreController::class, 'showBiinKingGymStor
 //Product Route
 Route::get('product/{id}', [ProductController::class, 'show'])->name('store.product.show');
 
-//Cart Route
-Route::get('/cart', [CartController::class, 'index'])->name('cart.view');
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-
-//Checkout Route
-Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-
 //Booking Kost Route
 Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])->name('kost.book');
 

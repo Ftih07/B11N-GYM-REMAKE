@@ -4,18 +4,15 @@ namespace App\Filament\Widgets;
 
 use App\Models\Finance;
 use Filament\Widgets\ChartWidget;
-use Flowframe\Trend\Trend;
-use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Facades\DB; // Kita butuh DB facade buat Raw Query
 use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 class KingIncomeChart extends ChartWidget
 {
     protected static ?string $heading = 'Grafik Pendapatan K1NG Gym';
-
-    // Urutan widget (opsional, biar rapi)
     protected static ?int $sort = 2;
 
-    // Opsi Filter
     protected function getFilters(): ?array
     {
         return [
@@ -27,76 +24,87 @@ class KingIncomeChart extends ChartWidget
 
     protected function getData(): array
     {
-        // Ambil filter yang sedang aktif, default ke 'month' (Bulanan)
         $activeFilter = $this->filter ?? 'month';
 
-        // Query Dasar: Cari Income milik K1NG Gym
+        // 1. Siapkan Wadah Data Kosong (Biar grafiknya nyambung dari awal sampai akhir)
+        $dataPoints = [];
+        $labels = [];
+
+        if ($activeFilter === 'day') {
+            // Loop 30 hari ke belakang
+            for ($i = 29; $i >= 0; $i--) {
+                $date = now()->subDays($i)->format('Y-m-d');
+                $dataPoints[$date] = 0; // Default 0
+                $labels[] = \Carbon\Carbon::parse($date)->format('d M');
+            }
+        } elseif ($activeFilter === 'year') {
+            // Loop 5 tahun ke belakang
+            for ($i = 4; $i >= 0; $i--) {
+                $year = now()->subYears($i)->format('Y');
+                $dataPoints[$year] = 0;
+                $labels[] = $year;
+            }
+        } else {
+            // Default: Bulan Jan-Des tahun ini
+            for ($i = 1; $i <= 12; $i++) {
+                $month = now()->setMonth($i)->format('Y-m');
+                $dataPoints[$month] = 0;
+                $labels[] = \Carbon\Carbon::createFromFormat('Y-m', $month)->format('M');
+            }
+        }
+
+        // 2. Query Database (Sama kayak tadi, tapi lebih simpel)
         $query = Finance::query()
             ->where('type', 'income')
             ->whereHas('gymkos', function (Builder $q) {
-                $q->where('name', 'K1NG Gym'); // <--- PENTING: Sesuaikan nama Gym
+                // !!! PENTING: Ganti 'K1NG Gym' jadi 'K1NG Gym' di file satunya !!!
+                $q->where('name', 'K1NG Gym');
             });
 
-        // ... kode atas ...
+        $results = match ($activeFilter) {
+            'day' => $query
+                ->selectRaw('DATE(date) as period, SUM(amount) as aggregate')
+                ->where('date', '>=', now()->subDays(30))
+                ->groupBy('period')
+                ->get(),
 
-        // Logika Trend berdasarkan Filter
-        $data = match ($activeFilter) {
-            'day' => Trend::query($query)
-                ->dateColumn('date') // <--- TAMBAHKAN INI
-                ->between(
-                    start: now()->subDays(30),
-                    end: now(),
-                )
-                ->perDay()
-                ->sum('amount'),
+            'year' => $query
+                ->selectRaw('YEAR(date) as period, SUM(amount) as aggregate')
+                ->where('date', '>=', now()->subYears(5)->startOfYear())
+                ->groupBy('period')
+                ->get(),
 
-            'year' => Trend::query($query)
-                ->dateColumn('date') // <--- TAMBAHKAN INI
-                ->between(
-                    start: now()->subYears(5),
-                    end: now(),
-                )
-                ->perYear()
-                ->sum('amount'),
-
-            // Default: month
-            default => Trend::query($query)
-                ->dateColumn('date') // <--- TAMBAHKAN INI
-                ->between(
-                    start: now()->startOfYear(),
-                    end: now()->endOfYear(),
-                )
-                ->perMonth()
-                ->sum('amount'),
+            default => $query
+                ->selectRaw('DATE_FORMAT(date, "%Y-%m") as period, SUM(amount) as aggregate')
+                ->whereYear('date', now()->year)
+                ->groupBy('period')
+                ->get(),
         };
 
-        // ... kode bawah ...
+        // 3. Gabungkan Data DB ke Wadah Kosong
+        foreach ($results as $row) {
+            // Kalau periodenya ada di wadah, timpa nilai 0 dengan nilai asli
+            if (isset($dataPoints[$row->period])) {
+                $dataPoints[$row->period] = $row->aggregate;
+            }
+        }
 
         return [
             'datasets' => [
                 [
                     'label' => 'Pendapatan',
-                    'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
-                    'borderColor' => '#f59e0b', // Warna Kuning/Orange (sesuai Stats K1NG tadi)
+                    'data' => array_values($dataPoints), // Ambil nilainya saja
+                    'borderColor' => '#f59e0b',
                     'fill' => 'start',
+                    'tension' => 0.3, // Biar garisnya agak melengkung estetik
                 ],
             ],
-            'labels' => $data->map(fn(TrendValue $value) => $this->formatLabel($value->date, $activeFilter)),
+            'labels' => $labels,
         ];
-    }
-
-    // Helper untuk format tanggal di bawah grafik biar enak dibaca
-    private function formatLabel($date, $filter)
-    {
-        return match ($filter) {
-            'day' => \Carbon\Carbon::parse($date)->format('d M'), // 01 Jan
-            'year' => \Carbon\Carbon::parse($date)->format('Y'),    // 2024
-            default => \Carbon\Carbon::parse($date)->format('M'),   // Jan
-        };
     }
 
     protected function getType(): string
     {
-        return 'line'; // Bisa ganti 'bar' kalau mau grafik batang
+        return 'line';
     }
 }
