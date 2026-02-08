@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth overflow-x-hidden">
 
 <head>
     <meta charset="UTF-8" />
@@ -236,42 +236,42 @@
     </style>
 </head>
 
-<body class="bg-primary font-body">
+<body class="bg-primary font-body overflow-x-hidden w-full">
 
     <!-- NAVIGATION BAR -->
     @include('components.navbar-cta')
 
     <!-- HERO HEADER SECTION -->
-    <header id="header" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-extraLight via-white to-gray-50 pt-24">
-        <!-- Background Image with Light Overlay -->
-        <div class="absolute inset-0 z-0 opacity-5">
+    {{-- UPDATE: Class bg-gradient diubah jadi abu-abu (gray-300/100) biar ga silau --}}
+    <header id="header" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-300 via-gray-100 to-gray-300 pt-24">
+
+        {{-- UPDATE: Opacity dinaikkan dikit jadi 10 biar tekstur gym-nya lebih kelihatan --}}
+        <div class="absolute inset-0 z-0 opacity-10 mix-blend-multiply">
             <img src="assets/Hero/b11ngym.jpg" alt="B1NG Empire Hero" class="w-full h-full object-cover object-center" />
         </div>
 
-        <!-- Decorative Elements -->
-        <div class="absolute top-20 right-10 w-72 h-72 bg-secondary/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+        {{-- UPDATE: Tambahan Overlay Hitam Tipis (Opsional, hapus kalau terlalu gelap) --}}
+        <div class="absolute inset-0 bg-black/5 z-0 pointer-events-none"></div>
 
-        <!-- Content Container - Left Aligned -->
+        <div class="absolute top-20 right-10 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+
         <div class="relative z-20 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
             <div class="max-w-3xl mx-auto text-center reveal">
-                <!-- Subheader -->
                 <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-6 uppercase">
                     MEMPERSEMBAHKAN
                 </p>
 
-                <!-- Main Title -->
                 <h1 class="font-heading text-textDark font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none mb-8 sm:mb-10 tracking-tight uppercase">
                     B1NG<br />
                     <span class="text-secondary">EMPIRE</span>
                 </h1>
 
-                <!-- Description -->
-                <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed mb-10 max-w-xl">
+                {{-- UPDATE: Tambah 'font-medium' biar teks deskripsi lebih tebal sedikit & gampang dibaca di background abu --}}
+                <p class="font-body text-textDark font-medium text-lg sm:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
                     Menghadirkan fitness, wellness, dan hunian modern dalam satu ekosistem eksklusif di Purwokerto.
                 </p>
 
-                <!-- CTA Button -->
                 <button class="font-heading px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
                     Jelajahi B1NG Empire
                 </button>

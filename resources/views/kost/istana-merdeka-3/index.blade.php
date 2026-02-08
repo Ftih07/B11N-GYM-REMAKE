@@ -988,8 +988,8 @@
                 </p>
 
                 <div class="flex items-center gap-6 text-xs text-gray-500">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="{{ route('legal') }}" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="{{ route('legal') }}" class="hover:text-white transition-colors">Terms of Service</a>
                 </div>
             </div>
 

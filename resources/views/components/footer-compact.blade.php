@@ -6,8 +6,8 @@
             </p>
 
             <div class="flex items-center gap-6">
-                <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="#" class="hover:text-primary transition-colors">Terms</a>
+                <a href="{{ route('legal') }}" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="{{ route('legal') }}" class="hover:text-primary transition-colors">Terms</a>
             </div>
 
         </div>

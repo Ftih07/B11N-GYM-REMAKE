@@ -173,23 +173,28 @@
 
 {{-- JAVASCRIPT BAWAANMU (Sedikit disesuaikan ID-nya) --}}
 <script>
-    // --- Navbar Mobile Toggle ---
+    // --- 1. Navbar Mobile Toggle (Tombol Hamburger) ---
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     const iconBars = document.getElementById('nav-icon-bars');
     const iconTimes = document.getElementById('nav-icon-times');
 
+    // Fungsi untuk reset icon ke kondisi "Menu Tertutup"
+    function resetMenuIcon() {
+        iconBars.classList.remove('scale-0', 'opacity-0');
+        iconBars.classList.add('scale-100', 'opacity-100');
+        iconTimes.classList.remove('scale-100', 'opacity-100');
+        iconTimes.classList.add('scale-0', 'opacity-0');
+    }
+
     if (btn && menu) {
         btn.addEventListener('click', () => {
             const isHidden = menu.classList.toggle('hidden');
             if (isHidden) {
-                // Menu Tutup
-                iconBars.classList.remove('scale-0', 'opacity-0');
-                iconBars.classList.add('scale-100', 'opacity-100');
-                iconTimes.classList.remove('scale-100', 'opacity-100');
-                iconTimes.classList.add('scale-0', 'opacity-0');
+                // Menu Tutup -> Reset Icon
+                resetMenuIcon();
             } else {
-                // Menu Buka
+                // Menu Buka -> Ubah ke X
                 iconBars.classList.remove('scale-100', 'opacity-100');
                 iconBars.classList.add('scale-0', 'opacity-0');
                 iconTimes.classList.remove('scale-0', 'opacity-0');
@@ -198,7 +203,21 @@
         });
     }
 
-    // --- Mobile Submenu Accordion ---
+    // --- 2. FITUR BARU: Auto Close Saat Klik Link ---
+    // (Ini bagian yang kurang di kodemu sebelumnya)
+    const mobileLinks = document.querySelectorAll('#mobile-menu a');
+
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            // Hanya tutup jika menu sedang terbuka
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.add('hidden'); // Paksa tutup menu
+                resetMenuIcon(); // Balikin icon jadi garis tiga
+            }
+        });
+    });
+
+    // --- 3. Mobile Submenu Accordion ---
     function toggleMobileSubmenu(id) {
         const submenu = document.getElementById(id);
         const icon = document.getElementById('icon-' + id);

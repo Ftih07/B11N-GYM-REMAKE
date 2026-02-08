@@ -1096,6 +1096,26 @@
 			});
 		}
 
+		// --- FITUR BARU: Auto Close Saat Klik Link ---
+		const mobileLinks = document.querySelectorAll('#mobile-menu a');
+
+		mobileLinks.forEach(link => {
+			link.addEventListener('click', () => {
+				// Cek jika menu sedang terbuka (tidak hidden), baru kita tutup
+				if (!menu.classList.contains('hidden')) {
+					menu.classList.add('hidden');
+
+					// Reset Icon ke Bars
+					iconBars.classList.remove('scale-0', 'opacity-0');
+					iconBars.classList.add('scale-100', 'opacity-100');
+
+					// Sembunyikan Icon Times
+					iconTimes.classList.remove('scale-100', 'opacity-100');
+					iconTimes.classList.add('scale-0', 'opacity-0');
+				}
+			});
+		});
+
 		// --- Mobile Submenu Accordion ---
 		function toggleMobileSubmenu(id) {
 			const submenu = document.getElementById(id);
@@ -1109,37 +1129,6 @@
 				icon.classList.remove('rotate-180');
 			}
 		}
-
-		// --- CTA Floating ---
-		let fabOpen = false;
-
-		function toggleFab() {
-			const fabMenu = document.getElementById('fab-menu');
-			const iconOpen = document.getElementById('fab-icon-open');
-			const iconClose = document.getElementById('fab-icon-close');
-			const fabBtn = document.getElementById('fab-btn');
-
-			fabOpen = !fabOpen;
-
-			if (fabOpen) {
-				fabMenu.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-				iconOpen.classList.add('opacity-0', 'scale-0');
-				iconClose.classList.remove('opacity-0', 'scale-0');
-				fabBtn.classList.add('ring-4', 'ring-red-300');
-			} else {
-				fabMenu.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-				iconOpen.classList.remove('opacity-0', 'scale-0');
-				iconClose.classList.add('opacity-0', 'scale-0');
-				fabBtn.classList.remove('ring-4', 'ring-red-300');
-			}
-		}
-
-		document.addEventListener('click', function(event) {
-			const container = document.getElementById('fab-btn').parentElement;
-			if (!container.contains(event.target) && fabOpen) {
-				toggleFab();
-			}
-		});
 	</script>
 
 	<section id="header">
@@ -1151,7 +1140,7 @@
                rgba(0, 0, 0, 0.2),
                rgba(0, 0, 0, 0.9)
            ),
-           url('assets/Hero/king.jpg');
+           url('assets/king-gym/hero.jpg');
            background-size: cover;
           background-position: center center;
            background-repeat: no-repeat;
@@ -1363,7 +1352,7 @@
                rgba(0, 0, 0, 0.2),
                rgba(0, 0, 0, 0.9)
            ),
-           url('assets/home/king-gym.jpg');
+           url('assets/king-gym/membership-hero.jpg');
            background-size: cover;
           background-position: center center;
            background-repeat: no-repeat;
