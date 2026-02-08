@@ -24,7 +24,7 @@ class KingIncomeChart extends ChartWidget
 
     protected function getData(): array
     {
-        $activeFilter = $this->filter ?? 'month';
+        $activeFilter = $this->filter ?? 'day';
 
         // 1. Siapkan Wadah Data Kosong (Biar grafiknya nyambung dari awal sampai akhir)
         $dataPoints = [];
