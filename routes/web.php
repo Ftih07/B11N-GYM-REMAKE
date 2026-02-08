@@ -10,9 +10,7 @@ use App\Http\Controllers\Gym\KingGymController;
 use App\Http\Controllers\Gym\PaymentController;
 
 use App\Http\Controllers\Kost\KostController;
-use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\StoreController;
-use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Controllers\Store\PrintController;
 use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\SurveyController;
@@ -22,6 +20,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home'); //Home - Landin
 Route::get('/biin-gym', [BiinGymController::class, 'index'])->name('gym.biin'); //B11N Gym
 Route::get('/king-gym', [KingGymController::class, 'index'])->name('gym.king'); // K1NG Gym
 Route::get('/kost-istana-merdeka-3', [KostController::class, 'index'])->name('kost'); // Kost Istana Merdeka
+
+Route::view('/legal', 'legal')->name('legal');
 
 // Blog Route
 Route::prefix('blogs')->group(function () {
@@ -78,7 +78,14 @@ Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback
 
 Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 
-use App\Http\Controllers\DashboardController;
+
+// -----------------------------------------------//
+//--------------- Membership Route ---------------//
+// -----------------------------------------------//
+
+use App\Http\Controllers\Member\AttendanceController;
+use App\Http\Controllers\Member\DashboardController;
+use App\Http\Controllers\Member\ProfileController;
 
 // Halaman Login (Tamu only)
 Route::middleware('guest')->group(function () {
@@ -91,17 +98,16 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 });
 
-// Halaman Dashboard (Harus Login)
+// Halaman Dashboard Member (Harus Login)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Feature Baru
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/attendance', [DashboardController::class, 'attendance'])->name('attendance');
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
 
-    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
-    Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::post('/measurements', [DashboardController::class, 'storeMeasurement'])->name('measurements.store');
 });

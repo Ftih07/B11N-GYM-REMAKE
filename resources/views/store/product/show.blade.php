@@ -20,6 +20,7 @@
 
     {{-- 2. ICONS & TAILWIND --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -233,11 +234,7 @@
 
     </main>
 
-    <footer class="bg-brand-black text-white py-8 border-t border-gray-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm">&copy; {{ date('Y') }} B1NG EMPIRE. All Rights Reserved.</p>
-        </div>
-    </footer>
+    @include('components.footer-bing-empire')
 
 </body>
 

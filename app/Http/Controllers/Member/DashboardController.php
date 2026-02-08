@@ -1,30 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Member; // Perhatikan Namespacenya berubah!
 
-use App\Models\Blog;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Blog;
 use App\Models\MemberMeasurement;
-use Illuminate\Support\Facades\Storage; // Tambahkan ini buat handle file
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-
-        // Cek apakah user ini terhubung ke member gym
         $member = $user->member;
-
-        // Ambil history measurements (jika member ada)
         $history = $member ? $member->measurements()->latest()->get() : [];
         $blogs = Blog::published()->latest()->take(3)->get();
 
+        // View arahkan ke folder member
         return view('member.dashboard', compact('user', 'member', 'history', 'blogs'));
     }
 
-    // ... namespace dan use statements yang sudah ada
     public function storeMeasurement(Request $request)
     {
         $request->validate([
@@ -61,46 +57,5 @@ class DashboardController extends Controller
         ]);
 
         return back()->with('success', 'Progress berhasil disimpan!');
-    }
-
-    // Menampilkan halaman Absensi
-    public function attendance()
-    {
-        $member = Auth::user()->member;
-
-        // Jika member belum connect, return array kosong
-        $attendances = $member ? $member->attendances()->latest()->paginate(10) : [];
-
-        return view('member.attendance', compact('attendances'));
-    }
-
-    // Menampilkan halaman Profile
-    public function profile()
-    {
-        $user = Auth::user();
-        $member = $user->member;
-        return view('member.profile', compact('user', 'member'));
-    }
-
-    // Update Profile (Simpan Perubahan)
-    public function updateProfile(Request $request)
-    {
-        $request->validate([
-            'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string|max:255',
-        ]);
-
-        $user = Auth::user();
-        $member = $user->member;
-
-        if ($member) {
-            $member->update([
-                'phone' => $request->phone,
-                'address' => $request->address,
-            ]);
-            return back()->with('success', 'Profil berhasil diperbarui!');
-        }
-
-        return back()->with('error', 'Member tidak ditemukan.');
     }
 }

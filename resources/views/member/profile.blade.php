@@ -133,11 +133,10 @@
                 @csrf
             </form>
         </div>
-
-        <div class="mt-8 text-center text-xs text-gray-600 font-header tracking-widest uppercase">
-            B1NG Empire Member Area &copy; {{ date('Y') }}
-        </div>
     </div>
+
+    @include('components.footer-compact')
+
 </body>
 
 </html>

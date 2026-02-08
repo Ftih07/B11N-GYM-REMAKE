@@ -224,4 +224,7 @@ Panduan lengkap menggunakan {{ $equipment->name }}. {{ \Illuminate\Support\Str::
         </div>
     </div>
 </div>
+
+@include('components.footer-bing-empire')
+
 @endsection

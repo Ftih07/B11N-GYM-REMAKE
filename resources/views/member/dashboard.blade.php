@@ -344,6 +344,8 @@
         }
     </script>
 
+    @include('components.footer-compact')
+
 </body>
 
 </html>

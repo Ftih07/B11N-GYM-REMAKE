@@ -41,7 +41,7 @@
 			"@type": "ExerciseGym",
 			"name": "B11N Gym Purwokerto",
 			"image": "{{ asset('assets/home/biin-gym.jpg') }}",
-			"telephone": "+6281226110988",
+			"telephone": "+6283194288423",
 			"url": "{{ url('/') }}",
 			"address": {
 				"@type": "PostalAddress",
@@ -1528,9 +1528,9 @@
 							Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas </a>
 					</li>
 					<li>
-						<a href="https://wa.me/6281226110988" target="_blank">
+						<a href="https://wa.me/6283194288423" target="_blank">
 							<span><i class="ri-phone-fill"></i></span>
-							+62 812 2611 0988
+							+62 831 9428 8423
 						</a>
 					</li>
 					<li>
@@ -1605,11 +1605,11 @@
 				</div>
 
 				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://wa.me/6281226110988" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
+					<a href="https://wa.me/6283194288423" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
 						<i class="fab fa-whatsapp text-xl group-hover:text-red-600"></i>
 						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Whatsapp</h5>
 					</a>
-					<p class="text-gray-400 text-sm tracking-wide mt-2">0896-5384-7651</p>
+					<p class="text-gray-400 text-sm tracking-wide mt-2">0831 9428 8423</p>
 				</div>
 
 				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
@@ -1626,7 +1626,8 @@
 		<hr class="border-t border-white">
 
 		<div class="footer__bar">
-			Copyright © {{ date('Y') }} B1NG EMPIRE. All rights reserved.
+			&copy; {{ date('Y') }} B11N Gym. All rights reserved. Part of
+			<a href="{{ route('home') }}" class="text-secondary hover:text-white transition-colors duration-300 font-semibold">B1NG Empire</a>.
 		</div>
 	</footer>
 
@@ -1703,7 +1704,7 @@
 
 		function sendPaymentConfirmation(method) {
 			const email = "naufalfathi37@gmail.com"; // Ganti dengan email Anda
-			const whatsappNumber = "6281226110988"; // Ganti dengan nomor WhatsApp Anda
+			const whatsappNumber = "6283194288423"; // Ganti dengan nomor WhatsApp Anda
 
 			const messageBase = `Halo, saya ingin mengonfirmasi pembayaran untuk membership ${selectedMembershipTitle} via (${selectedPaymentMethod.toUpperCase()}).\n`;
 			const messageFooter = `Tolong lampirkan bukti pembayaran Anda disini. \n\nTerima kasih.`;

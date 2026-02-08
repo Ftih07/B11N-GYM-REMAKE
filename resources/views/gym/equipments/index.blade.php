@@ -208,4 +208,7 @@ Katalog lengkap peralatan fitness B1NG Empire. Temukan alat Cardio, Strength, da
         </div>
     </div>
 </div>
+
+@include('components.footer-bing-empire')
+
 @endsection

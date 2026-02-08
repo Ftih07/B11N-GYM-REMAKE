@@ -123,7 +123,7 @@
                         <td class="p-5">
                             @if($row->method == 'face_scan')
                             <span class="bg-purple-900/50 text-purple-300 border border-purple-800 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider">
-                                QR SCAN
+                                FACE SCAN
                             </span>
                             @else
                             <span class="bg-blue-900/50 text-blue-300 border border-blue-800 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider">
@@ -151,6 +151,9 @@
         @endif
 
     </div>
+
+    @include('components.footer-compact')
+
 </body>
 
 </html>

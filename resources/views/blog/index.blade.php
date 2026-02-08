@@ -17,6 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
 
     {{-- 2. ICONS & TAILWIND --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -121,14 +122,7 @@
 
     </main>
 
-    <footer class="bg-brand-black text-white py-10 border-t border-gray-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <img src="{{ asset('assets/Logo/empire.png') }}" alt="Logo" class="h-10 mx-auto mb-6 opacity-80 grayscale hover:grayscale-0 transition">
-            <p class="text-gray-500 text-sm">
-                &copy; {{ date('Y') }} <span class="text-brand-red font-bold">B1NG EMPIRE</span>. All Rights Reserved.
-            </p>
-        </div>
-    </footer>
+    @include('components.footer-bing-empire')
 
 </body>
 
