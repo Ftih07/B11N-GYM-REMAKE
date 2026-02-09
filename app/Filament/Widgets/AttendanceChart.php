@@ -2,17 +2,16 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Attendance; // Pastikan Model Attendance sudah ada
+use App\Models\Attendance;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
 class AttendanceChart extends ChartWidget
 {
     protected static ?string $heading = 'Grafik Kunjungan Gym';
-    protected static ?int $sort = 3; 
+    protected static ?int $sort = 3;
 
+    // Filter Options (Dropdown on the chart)
     protected function getFilters(): ?array
     {
         return [
@@ -26,43 +25,40 @@ class AttendanceChart extends ChartWidget
     {
         $activeFilter = $this->filter ?? 'day';
 
-        // 1. Siapkan Wadah Data Kosong
+        // 1. Prepare Empty Data Containers (To ensure continuous line)
         $dataPoints = [];
         $labels = [];
 
         if ($activeFilter === 'day') {
-            // Loop 30 hari ke belakang
+            // Loop last 30 days
             for ($i = 29; $i >= 0; $i--) {
                 $date = now()->subDays($i)->format('Y-m-d');
-                $dataPoints[$date] = 0;
+                $dataPoints[$date] = 0; // Default 0 visits
                 $labels[] = Carbon::parse($date)->format('d M');
             }
         } elseif ($activeFilter === 'year') {
-            // Loop 5 tahun ke belakang
+            // Loop last 5 years
             for ($i = 4; $i >= 0; $i--) {
                 $year = now()->subYears($i)->format('Y');
                 $dataPoints[$year] = 0;
                 $labels[] = $year;
             }
         } else {
-            // Default: Bulan Jan-Des tahun ini
+            // Default: Jan-Dec of current year
             for ($i = 1; $i <= 12; $i++) {
-                // Pakai create biar aman dari bug tanggal 31
                 $month = Carbon::create(now()->year, $i, 1)->format('Y-m');
                 $dataPoints[$month] = 0;
                 $labels[] = Carbon::createFromFormat('Y-m', $month)->format('M');
             }
         }
 
-        // 2. Query Database (Hitung Jumlah Orang / COUNT)
-        $query = Attendance::query(); // Hapus filter 'type' karena ini bukan keuangan
+        // 2. Query Database (Count Visits)
+        $query = Attendance::query();
 
-        // Jika mau filter berdasarkan Gym tertentu (misal pake relasi)
-        // $query->whereHas('gym', function ($q) { $q->where('name', 'B11N Gym'); });
-
+        // Execute Query based on Filter
         $results = match ($activeFilter) {
             'day' => $query
-                ->selectRaw('DATE(created_at) as period, COUNT(*) as aggregate') // Pakai created_at & COUNT
+                ->selectRaw('DATE(created_at) as period, COUNT(*) as aggregate')
                 ->where('created_at', '>=', now()->subDays(30))
                 ->groupBy('period')
                 ->get(),
@@ -80,7 +76,7 @@ class AttendanceChart extends ChartWidget
                 ->get(),
         };
 
-        // 3. Gabungkan Data
+        // 3. Merge DB Results into Data Containers
         foreach ($results as $row) {
             if (isset($dataPoints[$row->period])) {
                 $dataPoints[$row->period] = $row->aggregate;
@@ -92,10 +88,10 @@ class AttendanceChart extends ChartWidget
                 [
                     'label' => 'Jumlah Pengunjung',
                     'data' => array_values($dataPoints),
-                    'borderColor' => '#3b82f6', // Warna Biru (Primary) biar beda sama duit
-                    'backgroundColor' => 'rgba(59, 130, 246, 0.1)', // Warna arsir tipis di bawah garis
+                    'borderColor' => '#3b82f6', // Blue Line
+                    'backgroundColor' => 'rgba(59, 130, 246, 0.1)', // Light Blue Fill
                     'fill' => 'start',
-                    'tension' => 0.3,
+                    'tension' => 0.3, // Smooth curve
                 ],
             ],
             'labels' => $labels,

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str; // <--- Import ini
+use Illuminate\Support\Str;
 
 class Equipment extends Model
 {
@@ -14,12 +14,12 @@ class Equipment extends Model
 
     protected static function booted()
     {
-        // Pas Bikin Baru (Create)
+        // On Create: Generate slug from name
         static::creating(function ($equipment) {
             $equipment->slug = Str::slug($equipment->name);
         });
 
-        // Pas Update (Optional, biar kalau ganti nama alat, slug ikut ganti)
+        // On Update: Regenerate slug only if name changes
         static::updating(function ($equipment) {
             if ($equipment->isDirty('name')) {
                 $equipment->slug = Str::slug($equipment->name);

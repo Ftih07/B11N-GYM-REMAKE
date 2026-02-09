@@ -8,16 +8,17 @@ use Illuminate\Http\Request;
 
 class PrintController extends Controller
 {
-    // 1. Ubah parameter $id jadi $code (biar sesuai sama Route)
+    // Function Goal: Generate a printable receipt view
+    // Parameter: $code (Transaction Code, e.g., TRX-12345)
     public function printStruk($code)
     {
-        // 2. JANGAN pakai findOrFail($code) langsung, karena itu nyari ID.
-        // Ganti jadi logic where() manual ke kolom code.
+        // 1. Find Transaction by CODE (Not ID)
+        // We use 'where' instead of 'find' because $code is a string column
+        $transaction = Transaction::with(['items', 'trainer', 'gymkos']) // Eager load relationships for performance
+            ->where('code', $code)
+            ->firstOrFail(); // Throw 404 if code not found
 
-        $transaction = Transaction::with(['items', 'trainer', 'gymkos'])
-            ->where('code', $code)  // Cari baris dimana kolom 'code' = $code
-            ->firstOrFail();        // Ambil data pertama, kalau gak ada return 404
-
+        // 2. Return the print view
         return view('print.struk', compact('transaction'));
     }
 }

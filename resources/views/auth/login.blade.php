@@ -51,11 +51,12 @@
 </head>
 
 <body class="bg-dark font-body flex flex-col min-h-screen bg-[url('/img/gym-bg-pattern.png')] bg-cover bg-center text-white">
-
+    <!--Navbar-->
     <div class="w-full">
         @include('components.navbar-cta')
     </div>
 
+    <!--Login Page-->
     <main class="flex-grow flex items-center justify-center px-4 py-10">
 
         <div class="bg-card p-10 rounded-xl shadow-2xl w-full max-w-md border border-neutral-800 relative overflow-hidden group">
@@ -84,6 +85,7 @@
 
     </main>
 
+    <!--Footer-->
     @include('components.footer-compact')
 
 </body>

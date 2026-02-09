@@ -3,29 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\Logo;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
+    // Page: List All Blogs
     public function index()
     {
-        // Ambil semua blog yang statusnya publish, urutkan dari yang terbaru
+        // Fetch published blogs, newest first
         $blogs = Blog::published()->latest()->get();
 
-        // Tampilkan ke view dengan satu variabel saja
         return view('blog.index', compact('blogs'));
     }
 
-    public function show($slug) // <--- Parameter terima string $slug
+    // Page: Detail Blog
+    public function show($slug)
     {
-        // Cari blog yang slug-nya sesuai parameter & status publish
+        // 1. Find blog by Slug (returns 404 if not found)
         $blog = Blog::published()
             ->where('slug', $slug)
-            ->firstOrFail(); // Kalau slug ngawur, auto 404
+            ->firstOrFail();
 
-        // Cari related blogs (kecuali blog yang sedang dibuka)
-        // Kita tetap exclude pakai ID ($blog->id) karena ID lebih cepat buat query exclude
+        // 2. Fetch Related Blogs
+        // Logic: Get 3 latest blogs, EXCLUDING the current one
         $relatedBlogs = Blog::published()
             ->where('id', '!=', $blog->id)
             ->latest()

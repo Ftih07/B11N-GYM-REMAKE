@@ -4,10 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AttendanceResource\Pages;
 use App\Models\Attendance;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -22,30 +19,32 @@ use Carbon\Carbon;
 
 class AttendanceResource extends Resource
 {
+    // --- RESOURCE CONFIG ---
     protected static ?string $model = Attendance::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    protected static ?string $navigationLabel = 'Rekap Absensi';
-    protected static ?string $pluralModelLabel = 'Data Absensi';
-    protected static ?string $navigationGroup = 'Laporan';
+    protected static ?string $navigationLabel = 'Rekap Absensi'; // Menu Label
+    protected static ?string $pluralModelLabel = 'Data Absensi'; // Page Title
+    protected static ?string $navigationGroup = 'Laporan'; // Grouping
     protected static ?int $navigationSort = 1;
 
-    // Kita matikan tombol "Create" karena absen inputnya dari Halaman AbsensiPage, bukan dari sini
+    // --- DISABLE CREATE BUTTON ---
+    // Attendance should be created via the "Absensi Page", not here.
     public static function canCreate(): bool
     {
         return false;
     }
 
+    // --- TABLE SCHEMA ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // 1. KOLOM NAMA (Hybrid: Member / Visitor)
+                // 1. NAME COLUMN (Hybrid Logic)
                 TextColumn::make('member.name')
                     ->label('Nama Pengunjung')
-                    ->searchable(['visitor_name']) // Bisa search visitor juga
+                    ->searchable(['visitor_name']) // Allow searching by visitor name too
                     ->getStateUsing(function (Attendance $record) {
-                        // Logika: Kalau ada member_id, ambil nama member. Kalau ga ada, ambil visitor_name
+                        // Logic: If member_id exists, show Member Name. If not, show Visitor Name.
                         return $record->member_id ? $record->member->name : $record->visitor_name;
                     })
                     ->description(
@@ -56,10 +55,10 @@ class AttendanceResource extends Resource
                     )
                     ->sortable(),
 
-                // 2. KOLOM TIPE KUNJUNGAN (Badge Warna-warni)
+                // 2. VISIT TYPE (Badges)
                 TextColumn::make('visit_type')
                     ->label('Tipe')
-                    ->badge()
+                    ->badge() // Display as a colored badge
                     ->formatStateUsing(fn(string $state): string => match ($state) {
                         'member' => 'Membership',
                         'daily' => 'Harian',
@@ -67,20 +66,20 @@ class AttendanceResource extends Resource
                         default => $state,
                     })
                     ->color(fn(string $state): string => match ($state) {
-                        'member' => 'success', // Hijau
-                        'daily' => 'info',    // Biru
-                        'weekly' => 'warning', // Kuning/Oranye
+                        'member' => 'success', // Green
+                        'daily' => 'info',    // Blue
+                        'weekly' => 'warning', // Orange
                         default => 'gray',
                     })
                     ->sortable(),
 
-                // 3. WAKTU CHECK-IN
+                // 3. CHECK-IN TIME
                 TextColumn::make('check_in_time')
                     ->label('Waktu Masuk')
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
 
-                // 4. METODE ABSEN
+                // 4. ATTENDANCE METHOD
                 TextColumn::make('method')
                     ->label('Metode')
                     ->badge()
@@ -92,14 +91,16 @@ class AttendanceResource extends Resource
                         default => $state,
                     }),
             ])
-            ->defaultSort('check_in_time', 'desc') // Data terbaru paling atas
+            ->defaultSort('check_in_time', 'desc') // Show newest first
 
+            // --- HEADER ACTION: EXPORT EXCEL ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Excel')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->form([
+                        // Modal Form: Select Month & Year
                         Select::make('month')
                             ->label('Bulan')
                             ->options([
@@ -116,31 +117,29 @@ class AttendanceResource extends Resource
                                 '11' => 'November',
                                 '12' => 'Desember',
                             ])
-                            ->default(now()->format('m')) // Default bulan sekarang
+                            ->default(now()->format('m'))
                             ->required(),
                         Select::make('year')
                             ->label('Tahun')
                             ->options(function () {
-                                // Generate tahun dari 5 tahun lalu sampai 1 tahun ke depan
                                 $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
                                 return array_combine($years, $years);
                             })
-                            ->default(now()->year) // Default tahun sekarang
+                            ->default(now()->year)
                             ->required(),
                     ])
                     ->action(function (array $data) {
-                        $filename = 'Laporan-Absensi-' . $data['month'] . '-' . $data['year'] . '.xlsx';
-
+                        // Trigger Download
                         return Excel::download(
                             new AttendanceExport($data['month'], $data['year']),
-                            $filename
+                            'Laporan-Absensi-' . $data['month'] . '-' . $data['year'] . '.xlsx'
                         );
                     }),
             ])
 
-            // --- BAGIAN FILTER ---
+            // --- FILTERS ---
             ->filters([
-                // Filter 1: Berdasarkan Tipe (Member vs Harian vs Mingguan)
+                // Filter 1: By Visit Type
                 SelectFilter::make('visit_type')
                     ->label('Filter Tipe Kunjungan')
                     ->options([
@@ -149,7 +148,7 @@ class AttendanceResource extends Resource
                         'weekly' => 'Mingguan (Non-Member)',
                     ]),
 
-                // Filter 2: Berdasarkan Metode (Scan vs Manual)
+                // Filter 2: By Method
                 SelectFilter::make('method')
                     ->label('Filter Metode')
                     ->options([
@@ -158,7 +157,7 @@ class AttendanceResource extends Resource
                         'manual_visitor' => 'Manual Tamu',
                     ]),
 
-                // Filter 3: Rentang Tanggal (Date Range)
+                // Filter 3: Date Range
                 Filter::make('check_in_time')
                     ->form([
                         DatePicker::make('created_from')->label('Dari Tanggal'),
@@ -166,20 +165,14 @@ class AttendanceResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when(
-                                $data['created_from'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('check_in_time', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('check_in_time', '<=', $date),
-                            );
-                    })
+                            ->when($data['created_from'], fn(Builder $query, $date) => $query->whereDate('check_in_time', '>=', $date))
+                            ->when($data['created_until'], fn(Builder $query, $date) => $query->whereDate('check_in_time', '<=', $date));
+                    }),
             ]);
     }
 
-    // Tambahkan ini di dalam class AttendanceResource
-
+    // --- GLOBAL SEARCH CONFIG ---
+    // Allows searching attendance records from the top bar
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['member']);

@@ -114,8 +114,10 @@
 
 <body class="bg-white text-brand-black dark:bg-brand-black dark:text-gray-200 font-sans antialiased transition-colors duration-300 pt-20">
 
+    <!--Navbar-->
     @include('components.navbar-cta')
 
+    <!--Hero-->
     <div class="relative w-full h-[60vh] md:h-[70vh] bg-gray-900 overflow-hidden">
         <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="w-full h-full object-cover opacity-60">
         <div class="absolute inset-0 bg-gradient-to-t from-white dark:from-brand-black via-transparent to-black/30"></div>
@@ -141,6 +143,7 @@
         </div>
     </div>
 
+    <!--Main Content-->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
 
         <nav class="flex mb-8 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-4" aria-label="Breadcrumb">
@@ -188,6 +191,7 @@
 
     </main>
 
+    <!--Related Blog-->
     @if($relatedBlogs->count() > 0)
     <section class="bg-gray-50 dark:bg-brand-gray py-16 border-t border-gray-200 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -219,6 +223,7 @@
     </section>
     @endif
 
+    <!--Footer-->
     @include('components.footer-bing-empire')
 
 </body>

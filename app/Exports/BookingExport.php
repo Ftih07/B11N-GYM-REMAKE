@@ -19,24 +19,29 @@ class BookingExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
     protected $month;
     protected $year;
 
+    // --- CONSTRUCTOR ---
+    // Initializes the export class with the selected month and year filters
     public function __construct($month, $year)
     {
         $this->month = $month;
         $this->year = $year;
     }
 
+    // --- QUERY DATA ---
+    // Fetches booking records filtered by start date (month & year)
     public function query()
     {
-        // Ambil data berdasarkan tanggal mulai sewa (date)
         return Booking::query()
-            ->whereYear('date', $this->year)
-            ->whereMonth('date', $this->month)
-            ->orderBy('date', 'desc');
+            ->whereYear('date', $this->year)  // Filter by Start Year
+            ->whereMonth('date', $this->month) // Filter by Start Month
+            ->orderBy('date', 'desc'); // Sort by newest booking first
     }
 
+    // --- MAPPING ---
+    // Formats the data for each row in the Excel file
     public function map($booking): array
     {
-        // Translate Status
+        // Logic: Translate Booking Status to Indonesian
         $status = match ($booking->status) {
             'paid' => 'Lunas (Aktif)',
             'pending' => 'Belum Bayar',
@@ -44,57 +49,61 @@ class BookingExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             default => $booking->status,
         };
 
-        // Translate Payment
+        // Logic: Translate Payment Method to Readable Text
         $payment = match ($booking->payment) {
             'qris' => 'QRIS',
             'transfer' => 'Transfer Bank',
             'cash' => 'Tunai',
-            default => ucfirst($booking->payment),
+            default => ucfirst($booking->payment), // Capitalize first letter for others
         };
 
+        // Return the formatted row data
         return [
-            $booking->date,         // A. Tanggal Mulai (Raw date biar bisa di-format Excel)
-            $booking->end_date,     // B. Tanggal Selesai
-            $booking->name,         // C. Nama Penghuni
-            'Kamar ' . $booking->room_number, // D. Nomor Kamar
-            $booking->room_type,    // E. Tipe Kamar
-            $booking->phone,        // F. No HP
-            $payment,               // G. Metode Bayar
-            $status,                // H. Status
+            $booking->date,        // Start Date (Raw format for Excel flexibility)
+            $booking->end_date,    // End Date
+            $booking->name,        // Tenant Name
+            'Kamar ' . $booking->room_number, // Room Number with prefix
+            $booking->room_type,   // Room Type
+            $booking->phone,       // Phone Number
+            $payment,              // Payment Method (Translated)
+            $status,               // Booking Status (Translated)
         ];
     }
 
+    // --- HEADINGS ---
+    // Defines the column titles for the Excel header row
     public function headings(): array
     {
         return [
-            'Tanggal Masuk',
-            'Berakhir Tanggal',
-            'Nama Penghuni',
-            'Nomor Kamar',
-            'Tipe & Harga',
-            'No. WhatsApp',
-            'Metode Pembayaran',
-            'Status Pembayaran',
+            'Tanggal Masuk',      // Check-in Date
+            'Berakhir Tanggal',   // Check-out Date
+            'Nama Penghuni',      // Tenant Name
+            'Nomor Kamar',        // Room Number
+            'Tipe & Harga',       // Room Type & Price info
+            'No. WhatsApp',       // Phone Number
+            'Metode Pembayaran',  // Payment Method
+            'Status Pembayaran',  // Payment Status
         ];
     }
 
-    // --- LOGIC STYLING KUNING & BOLD ---
+    // --- STYLING ---
+    // Styles the header row (Row 1) with yellow background and bold text
     public function styles(Worksheet $sheet)
     {
         return [
-            // Baris 1 (Header)
+            // Target Row 1
             1 => [
                 'font' => [
                     'bold' => true,
                     'size' => 12,
-                    'color' => ['argb' => 'FF000000'], // Teks Hitam
+                    'color' => ['argb' => 'FF000000'], // Black Text
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFFFFF00'], // BACKGROUND KUNING
+                    'startColor' => ['argb' => 'FFFFFF00'], // YELLOW Background
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Center align
                 ],
             ],
         ];

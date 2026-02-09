@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Models\Payment;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -13,36 +12,42 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Tables\Actions\Action; // Import Action
-use Filament\Notifications\Notification; // Import Notifikasi
-use Carbon\Carbon; // Import Carbon untuk tanggal
+use Filament\Tables\Actions\Action;
+use Filament\Notifications\Notification;
+use Carbon\Carbon;
 use App\Exports\PaymentExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
+    
+    // Badge: Alert admin about 'pending' payments count
     public static function getNavigationBadge(): ?string
     {
-        return Payment::where('status', 'pending')->count(); // Badge hitung yg pending aja biar admin aware
+        return Payment::where('status', 'pending')->count();
     }
 
     protected static ?string $model = Payment::class;
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card'; // Icon: Credit Card
     protected static ?string $navigationLabel = 'Online Membership';
 
+    // --- FORM CONFIGURATION (View/Edit Payment) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Menampilkan Member ID (Readonly) jika ada
+                // Member ID (Only visible if payment is linked to existing member)
                 TextInput::make('member_id')
                     ->label('Member ID Linked')
-                    ->disabled()
+                    ->disabled() // Read-only
                     ->visible(fn($record) => $record?->member_id !== null),
 
                 TextInput::make('name')->required(),
                 TextInput::make('email')->required(),
                 TextInput::make('phone')->required(),
+                
+                // Payment Proof Upload
                 FileUpload::make('image')
                     ->image()
                     ->directory('payment_receipts')
@@ -70,15 +75,17 @@ class PaymentResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION (List View) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('order_id')->searchable(),
 
-                // 1. Field Member Linked (Menampilkan Nama Member jika ada relasi)
+                // Linked Member Column
                 TextColumn::make('member.name')
                     ->label('Member Linked')
+                    // Logic: Show "ID" if linked, "New Register" if null
                     ->description(fn(Payment $record) => $record->member_id ? "ID: " . $record->member_id : "New Register")
                     ->color('info')
                     ->searchable(),
@@ -87,7 +94,7 @@ class PaymentResource extends Resource
                 TextColumn::make('payment'),
                 TextColumn::make('membership_type'),
 
-                // Status dengan warna
+                // Status Badge
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -98,27 +105,21 @@ class PaymentResource extends Resource
 
                 TextColumn::make('created_at')->label('Date')->date(),
             ])
+            
+            // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Data Transaksi')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('info') // Tombol warna Biru
+                    ->color('info')
                     ->form([
                         Select::make('month')
                             ->label('Bulan Transaksi')
                             ->options([
-                                '01' => 'Januari',
-                                '02' => 'Februari',
-                                '03' => 'Maret',
-                                '04' => 'April',
-                                '05' => 'Mei',
-                                '06' => 'Juni',
-                                '07' => 'Juli',
-                                '08' => 'Agustus',
-                                '09' => 'September',
-                                '10' => 'Oktober',
-                                '11' => 'November',
-                                '12' => 'Desember',
+                                '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
+                                '04' => 'April', '05' => 'Mei', '06' => 'Juni',
+                                '07' => 'Juli', '08' => 'Agustus', '09' => 'September',
+                                '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
                             ])
                             ->default(now()->format('m'))
                             ->required(),
@@ -139,7 +140,6 @@ class PaymentResource extends Resource
                     }),
             ])
             ->filters([
-                // Filter status
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -148,47 +148,48 @@ class PaymentResource extends Resource
                     ]),
             ])
             ->actions([
-                // Tombol Edit Bawaan
                 Tables\Actions\EditAction::make(),
 
-                // 2. Button APPROVE (Logic Perpanjang Member)
+                // --- CUSTOM ACTION: APPROVE & EXTEND MEMBER ---
                 Action::make('approve')
                     ->label('Approve')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->requiresConfirmation() // Minta konfirmasi dulu biar ga kepencet
-                    ->visible(fn(Payment $record) => $record->status === 'pending') // Hanya muncul jika status pending
+                    ->requiresConfirmation()
+                    ->visible(fn(Payment $record) => $record->status === 'pending') // Only show if Pending
                     ->action(function (Payment $record) {
 
-                        // A. Update Status Payment jadi Confirmed
+                        // 1. Update Payment Status
                         $record->update(['status' => 'confirmed']);
 
-                        // B. Logic Perpanjang Member (Jika ada member_id)
+                        // 2. LOGIC: Extend Membership (If linked to a member)
                         if ($record->member_id && $record->member) {
                             $member = $record->member;
 
-                            // Cek tanggal expire sekarang
+                            // Check current expiry date
                             $currentEnd = $member->membership_end_date ? Carbon::parse($member->membership_end_date) : now();
 
-                            // Jika sudah kadaluarsa, mulai dari HARI INI. Jika belum, tambah dari tanggal expire lama.
+                            // Logic: If expired -> Start from TODAY. If active -> Add to LAST EXPIRY date.
                             if ($currentEnd->isPast()) {
                                 $newEndDate = now()->addDays(30);
                             } else {
                                 $newEndDate = $currentEnd->addDays(30);
                             }
 
-                            // Update Tabel Member
+                            // Update Member Data
                             $member->update([
                                 'membership_end_date' => $newEndDate,
-                                'status' => 'active' // Pastikan status jadi active
+                                'status' => 'active'
                             ]);
 
+                            // Send Success Notification
                             Notification::make()
                                 ->title('Success')
                                 ->body("Payment confirmed & Member diperpanjang sampai " . $newEndDate->format('d M Y'))
                                 ->success()
                                 ->send();
                         } else {
+                            // If New Register / No Member Linked
                             Notification::make()
                                 ->title('Success')
                                 ->body("Payment confirmed (User Baru / Non-Member)")
@@ -197,7 +198,7 @@ class PaymentResource extends Resource
                         }
                     }),
 
-                // 3. Button REJECT
+                // --- CUSTOM ACTION: REJECT ---
                 Action::make('reject')
                     ->label('Reject')
                     ->icon('heroicon-o-x-circle')
@@ -214,7 +215,7 @@ class PaymentResource extends Resource
                             ->send();
                     }),
             ])
-            ->defaultSort('created_at', 'desc'); // Biar yang terbaru di atas
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

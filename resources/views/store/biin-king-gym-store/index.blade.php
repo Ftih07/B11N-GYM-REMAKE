@@ -77,8 +77,10 @@
     </div>
     @endif
 
+    <!-- NAVBAR -->
     @include('components.navbar-cta')
 
+    <!-- HERO -->
     @if ($store)
     <div class="relative w-full h-[100vh] md:h-[100vh] flex items-center justify-center bg-gray-900 overflow-hidden mt-20">
         <div class="absolute inset-0 z-0">
@@ -99,6 +101,7 @@
     </div>
     @endif
 
+    <!-- MAIN CONTENT -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-gray-800 pb-6">
@@ -221,6 +224,7 @@
 
     </main>
 
+    <!-- FOOTER -->
     @include('components.footer-bing-empire')
 
 </body>

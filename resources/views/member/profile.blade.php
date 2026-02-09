@@ -33,8 +33,10 @@
 
 <body class="bg-dark text-gray-200 font-body min-h-screen">
 
+    <!-- NAVBAR -->
     @include('components.navbar')
 
+    <!-- MAIN CONTENT -->
     <div class="container mx-auto p-6 max-w-2xl">
 
         @if(session('success'))
@@ -135,6 +137,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     @include('components.footer-compact')
 
 </body>

@@ -7,21 +7,23 @@ use Illuminate\Http\Request;
 
 class SurveyController extends Controller
 {
+    // Page: Show Survey Form
     public function index()
     {
         return view('survey.form');
     }
 
+    // Logic: Store Survey Data
     public function store(Request $request)
     {
-        // Validasi
+        // 1. Validation Logic
         $validated = $request->validate([
             'is_membership' => 'boolean',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string',
 
-            // Wajib diisi HANYA JIKA is_membership dicentang (bernilai 1/true)
+            // Conditional Validation: Only required if 'is_membership' is checked
             'member_duration' => 'required_if:is_membership,1',
             'renewal_chance' => 'required_if:is_membership,1|integer|min:1|max:5',
 
@@ -33,7 +35,7 @@ class SurveyController extends Controller
             'promo_interest' => 'required|string',
         ]);
 
-        // Simpan Data
+        // 2. Save Data
         Survey::create($validated);
 
         return redirect()->back()->with('success', 'Terima kasih atas masukan Anda!');

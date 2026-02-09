@@ -9,16 +9,16 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-// Import untuk Action di tabel
 use Filament\Tables\Actions\Action;
 
 class QrCodeResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
     protected static ?string $model = QrCode::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
     protected static ?string $navigationLabel = 'QR Code Generator';
 
+    // --- FORM CONFIGURATION ---
     public static function form(Form $form): Form
     {
         return $form
@@ -29,37 +29,44 @@ class QrCodeResource extends Resource
                             ->label('Nama QR Code')
                             ->required()
                             ->maxLength(255),
+
+                        // URL Input
                         Forms\Components\TextInput::make('target_url')
                             ->label('Target URL')
-                            ->url()
+                            ->url() // Validate URL format
                             ->required()
                             ->maxLength(65535)
                             ->columnSpanFull()
                             ->helperText('Masukkan URL lengkap, contoh: https://google.com'),
 
-                        // Kita tampilkan preview gambar jika sedang mode Edit dan gambarnya ada
+                        // CUSTOM VIEW: Preview QR Code
+                        // This loads a Blade file to show the QR image dynamically
                         Forms\Components\ViewField::make('preview_qr')
                             ->view('filament.forms.components.qr-preview')
-                            ->hiddenOn('create') // Sembunyikan saat membuat baru
+                            ->hiddenOn('create') // Hide when creating new (since no data yet)
                             ->columnSpanFull(),
                     ]),
             ]);
     }
 
+    // --- TABLE CONFIGURATION ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Menampilkan Thumbnail Gambar di tabel
+                // Display Generated QR Image
                 Tables\Columns\ImageColumn::make('qr_path')
                     ->label('QR Image')
                     ->disk('public')
-                    ->square(),
+                    ->square(), // Force square aspect ratio
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('target_url')
                     ->limit(30)
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -70,14 +77,15 @@ class QrCodeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                // --- TOMBOL PRINT KHUSUS ---
+
+                // --- CUSTOM ACTION: PRINT QR ---
                 Action::make('print')
                     ->label('Print')
                     ->icon('heroicon-o-printer')
                     ->color('success')
-                    // Ini akan membuka route khusus di tab baru
+                    // Open a specific route/controller to handle printing
                     ->url(fn(QrCode $record): string => route('qr-code.print', $record))
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab(), // Open in new tab for printing
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -86,12 +94,9 @@ class QrCodeResource extends Resource
             ]);
     }
 
-    // ... sisa file relations dan pages biarkan default
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

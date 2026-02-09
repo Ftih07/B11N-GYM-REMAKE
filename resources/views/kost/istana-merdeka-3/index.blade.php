@@ -371,6 +371,7 @@
             </div>
         </div>
     </section>
+
     <!-- ROOM SECTION -->
     <section id="room" class="relative py-20 sm:py-24 lg:py-32 bg-extraLight">
         <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -387,7 +388,7 @@
                 <!-- Non AC Room -->
                 <div class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                     <div class="relative overflow-hidden aspect-[4/3]">
-                        <img src="assets/facilities/non-ac.png" alt="Kamar Non AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <img src="assets/facilities/ber-ac.png" alt="Kamar Non AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute top-4 left-4">
                             <span class="bg-primary text-white font-heading text-sm font-bold px-4 py-2 rounded tracking-wider uppercase">Non AC</span>
                         </div>
@@ -461,12 +462,13 @@
                 </div>
                 <div class="reveal">
                     <div class="relative rounded overflow-hidden shadow-2xl aspect-video">
-                        <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" title="Room Tour Kost Istana Merdeka 03" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                        <iframe src="https://www.youtube.com/embed/Sy3d9kAt4rY?si=cs_6LSDLp3PHBkw4" title="Room Tour Kost Istana Merdeka 03" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- FEATURES SECTION -->
     <section id="feature" class="relative py-20 sm:py-24 lg:py-32 bg-white">
         <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -504,6 +506,7 @@
             </div>
         </div>
     </section>
+
     <!-- TESTIMONIALS SECTION -->
     <section id="testimonials" class="relative py-20 sm:py-24 lg:py-32 bg-extraLight">
         <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -610,7 +613,7 @@
                     </div>
                 </div>
                 <div class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
-                    <img src="assets/facilities/non-ac.png" alt="Gallery" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <img src="assets/facilities/ber-ac.png" alt="Gallery" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
                         <div class="p-6">
                             <h4 class="font-heading text-white font-bold text-lg uppercase tracking-wider">Kamar Non AC</h4>
@@ -630,6 +633,7 @@
         </div>
     </section>
 
+    <!-- BOOKING FORM -->
     <section id="booking" class="relative py-20 sm:py-24 lg:py-32 bg-primary overflow-hidden">
         <div class="absolute inset-0 opacity-5">
             <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><rect fill=%22none%22 width=%2260%22 height=%2260%22/><path d=%22M0 0h60v60H0z%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></svg>'); background-size: 60px 60px;"></div>
@@ -883,7 +887,7 @@
         </div>
     </section>
 
-    <!-- FOOTER SECTION -->
+    <!-- CUSTOM FOOTER SECTION -->
     <footer id="contact" class="relative bg-neutral-900/95 text-white border-t border-gray-800 font-sans">
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#f6ac0f] to-transparent opacity-50"></div>
 

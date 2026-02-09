@@ -35,8 +35,10 @@
 
 <body class="bg-dark text-gray-200 font-body min-h-screen">
 
+    <!-- NAVBAR -->
     @include('components.navbar')
 
+    <!-- MAIN CONTENT -->
     <div class="container mx-auto p-6 max-w-7xl">
 
         @if(session('success'))
@@ -237,6 +239,7 @@
         @endif
     </div>
 
+    <!-- RENEW MEMBERSHIP MODAL -->
     <div id="renewModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity" onclick="toggleModal('renewModal')"></div>
 
@@ -344,6 +347,7 @@
         }
     </script>
 
+    <!-- FOOTER -->
     @include('components.footer-compact')
 
 </body>

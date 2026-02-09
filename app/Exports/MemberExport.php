@@ -21,7 +21,8 @@ class MemberExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
     protected $month;
     protected $year;
 
-    // Terima parameter mode, bulan, dan tahun
+    // --- CONSTRUCTOR ---
+    // Receives export mode ('all' or 'period') and date filters
     public function __construct($mode, $month = null, $year = null)
     {
         $this->mode = $mode;
@@ -29,13 +30,15 @@ class MemberExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
         $this->year = $year;
     }
 
+    // --- QUERY DATA ---
+    // Fetches member data based on the selected mode
     public function query()
     {
         $query = Member::query()
-            ->with('gymkos') // Load relasi cabang
+            ->with('gymkos') // Eager load branch relationship
             ->orderBy('join_date', 'desc');
 
-        // Jika mode-nya 'period', baru kita filter tanggalnya
+        // Logic: Apply date filter ONLY if mode is 'period'
         if ($this->mode === 'period' && $this->month && $this->year) {
             $query->whereYear('join_date', $this->year)
                 ->whereMonth('join_date', $this->month);
@@ -44,11 +47,13 @@ class MemberExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
         return $query;
     }
 
+    // --- MAPPING ---
+    // Formats each row (Calculates remaining days, formats dates)
     public function map($member): array
     {
-        // Hitung sisa hari membership
+        // Logic: Calculate Remaining Membership Days
         $endDate = Carbon::parse($member->membership_end_date);
-        $sisaHari = now()->diffInDays($endDate, false); // false biar ada nilai minus kalau lewat
+        $sisaHari = now()->diffInDays($endDate, false); // 'false' allows negative values for expired dates
 
         $statusMasa = '';
         if ($sisaHari > 0) {
@@ -60,46 +65,50 @@ class MemberExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
         }
 
         return [
-            $member->gymkos->name ?? '-',             // A. Cabang
-            $member->name,                            // B. Nama
-            $member->phone,                           // C. No HP
-            $member->email,                           // D. Email
-            Carbon::parse($member->join_date)->format('d/m/Y'), // E. Tgl Gabung
-            $endDate->format('d/m/Y'),                // F. Tgl Habis
-            $statusMasa,                              // G. Status Hitungan Hari
-            $member->status === 'active' ? 'AKTIF' : 'TIDAK AKTIF', // H. Status Sistem
-            $member->address,                         // I. Alamat
+            $member->gymkos->name ?? '-',          // Branch Name
+            $member->name,                         // Member Name
+            $member->phone,                        // Phone Number
+            $member->email,                        // Email
+            Carbon::parse($member->join_date)->format('d/m/Y'), // Join Date
+            $endDate->format('d/m/Y'),             // Expiration Date
+            $statusMasa,                           // Calculated Status (Active/Expired)
+            $member->status === 'active' ? 'AKTIF' : 'TIDAK AKTIF', // System Status
+            $member->address,                      // Address
         ];
     }
 
+    // --- HEADINGS ---
+    // Defines column titles
     public function headings(): array
     {
         return [
-            'Cabang Gym',
-            'Nama Member',
-            'No. WhatsApp',
-            'Email',
-            'Tanggal Bergabung',
-            'Membership Berakhir',
-            'Sisa Masa Aktif',
-            'Status Sistem',
-            'Alamat Lengkap',
+            'Cabang Gym',          // Branch
+            'Nama Member',         // Name
+            'No. WhatsApp',        // Phone
+            'Email',               // Email
+            'Tanggal Bergabung',   // Join Date
+            'Membership Berakhir', // End Date
+            'Sisa Masa Aktif',     // Remaining Days
+            'Status Sistem',       // System Status
+            'Alamat Lengkap',      // Address
         ];
     }
 
+    // --- STYLING ---
+    // Styles the header row with TEAL background and WHITE text
     public function styles(Worksheet $sheet)
     {
         return [
-            // Header: Background TEAL, Text Putih
+            // Target Row 1
             1 => [
                 'font' => [
                     'bold' => true,
                     'size' => 12,
-                    'color' => ['argb' => 'FFFFFFFF'],
+                    'color' => ['argb' => 'FFFFFFFF'], // White Text
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FF009688'], // TEAL
+                    'startColor' => ['argb' => 'FF009688'], // TEAL Background
                 ],
             ],
         ];

@@ -11,27 +11,22 @@ use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
+        // 1. Register Observers
         Transaction::observe(TransactionObserver::class);
         QrCode::observe(QrCodeObserver::class);
 
-        // --- SOLUSI: BUNGKUS DALAM VIEW COMPOSER ---
-        // Tanda '*' artinya data ini dikirim ke SEMUA view, sama seperti View::share
+        // 2. Global View Data (Navigation Menu)
+        // Using View Composer ensures '$navMenus' is available in EVERY blade file
         View::composer('*', function ($view) {
 
-            // Masukkan array menu kamu DI DALAM sini
+            // Define Global Menu Structure
             $navMenus = [
                 [
                     'label' => 'Home',
@@ -51,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
                         ['label' => 'Tentang Kami', 'url' => route('gym.biin') . '#about'],
                         ['label' => 'Fasilitas', 'url' => route('gym.biin') . '#facility'],
                         ['label' => 'Training Program', 'url' => route('gym.biin') . '#training'],
-                        ['label' => 'Equipments & Tutorials', 'url' => route('gym.biin') . '#equipments'],
+                        ['label' => 'Equipments', 'url' => route('gym.biin') . '#equipments'],
                         ['label' => 'Trainer', 'url' => route('gym.biin') . '#trainer'],
                         ['label' => 'Membership', 'url' => route('gym.biin') . '#membership'],
                         ['label' => 'Store', 'url' => route('gym.biin') . '#store'],
@@ -60,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
                         ['label' => 'Contact Us', 'url' => route('gym.biin') . '#contact'],
                     ]
                 ],
+                // ... (Other Menus: K1NG Gym, Kost, Store, Blog, Support)
                 [
                     'label' => 'K1NG Gym',
                     'route' => 'gym.king',
@@ -93,12 +89,12 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'label' => 'Store',
                     'route' => 'store.biin-king',
-                    'submenu' => [] // Kosong karena direct link
+                    'submenu' => []
                 ],
                 [
                     'label' => 'Blog',
                     'route' => 'blogs.index',
-                    'submenu' => [] // Kosong karena direct link
+                    'submenu' => []
                 ],
                 [
                     'label' => 'Support',
@@ -110,7 +106,7 @@ class AppServiceProvider extends ServiceProvider
                 ],
             ];
 
-            // Kirim variabel ke view
+            // Inject variable to views
             $view->with('navMenus', $navMenus);
         });
     }

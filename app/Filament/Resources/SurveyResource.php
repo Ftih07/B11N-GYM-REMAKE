@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use App\Exports\SurveyExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
@@ -18,6 +17,7 @@ use Carbon\Carbon;
 
 class SurveyResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
     public static function getNavigationBadge(): ?string
     {
         return Survey::count();
@@ -29,40 +29,46 @@ class SurveyResource extends Resource
     protected static ?string $navigationGroup = 'Gym Management';
     protected static ?int $navigationSort = 3;
 
-    // 1. Agar tombol "New Survey" hilang (karena data dari public form)
+    // Disable "Create New Survey" button (Data comes from public form only)
     public static function canCreate(): bool
     {
         return false;
     }
 
+    // --- FORM CONFIGURATION (Read Only / Review) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                // Section 1: Identity
                 Forms\Components\Section::make('Identitas Responden')
                     ->schema([
                         Forms\Components\TextInput::make('name')->label('Nama'),
                         Forms\Components\TextInput::make('phone')->label('WhatsApp'),
+
+                        // Toggle: Is Active Member?
                         Forms\Components\Toggle::make('is_membership')
                             ->label('Member Aktif?')
                             ->inline(false),
                     ])->columns(3),
 
+                // Section 2: Membership Details (Conditional Visibility)
                 Forms\Components\Section::make('Detail Keanggotaan')
                     ->schema([
                         Forms\Components\TextInput::make('member_duration')->label('Lama Member'),
                         Forms\Components\TextInput::make('renewal_chance')->label('Peluang Perpanjang (1-5)'),
                     ])
+                    // Only show this section if 'is_membership' is TRUE
                     ->visible(fn($record) => $record?->is_membership ?? false)
                     ->columns(2),
 
+                // Section 3: Survey Results
                 Forms\Components\Section::make('Hasil Survey')
                     ->schema([
                         Forms\Components\TextInput::make('fitness_goal')->label('Tujuan'),
                         Forms\Components\TextInput::make('rating_equipment')->label('Rating Alat'),
                         Forms\Components\TextInput::make('rating_cleanliness')->label('Kebersihan'),
 
-                        // Perbaikan: Hapus ->colors() agar tidak error
                         Forms\Components\TextInput::make('nps_score')
                             ->label('NPS (1-10)')
                             ->numeric(),
@@ -70,6 +76,7 @@ class SurveyResource extends Resource
                         Forms\Components\Textarea::make('feedback')->columnSpanFull(),
                     ])->columns(4),
 
+                // Section 4: Marketing / Promo
                 Forms\Components\Section::make('Marketing')
                     ->schema([
                         Forms\Components\TextInput::make('promo_interest')
@@ -84,12 +91,13 @@ class SurveyResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y H:i') // Tambah jam biar detail
+                    ->dateTime('d M Y H:i')
                     ->label('Waktu')
                     ->sortable(),
 
@@ -101,6 +109,7 @@ class SurveyResource extends Resource
                     ->label('Member?')
                     ->boolean(),
 
+                // Badge for Promo Interest
                 Tables\Columns\TextColumn::make('promo_interest')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -114,11 +123,13 @@ class SurveyResource extends Resource
                     ->numeric()
                     ->sortable(),
             ])
+
+            // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Data Survey')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('primary') // Warna Ungu biasanya ikut Primary atau bisa set custom hex di theme
+                    ->color('primary')
                     ->form([
                         Select::make('month')
                             ->label('Bulan')
@@ -167,7 +178,7 @@ class SurveyResource extends Resource
                     ->label('Hanya Member'),
             ])
             ->actions([
-                // 2. Ubah EditAction jadi ViewAction (Modal Popup)
+                // Use ViewAction instead of EditAction (Read-only popup)
                 Tables\Actions\ViewAction::make(),
             ])
             ->defaultSort('created_at', 'desc');
@@ -177,7 +188,7 @@ class SurveyResource extends Resource
     {
         return [
             'index' => Pages\ListSurveys::route('/'),
-            // 3. Hapus baris 'create' dan 'edit' di sini
+            // Removed 'create' and 'edit' pages
         ];
     }
 }

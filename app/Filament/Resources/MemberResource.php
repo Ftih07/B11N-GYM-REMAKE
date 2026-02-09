@@ -14,24 +14,26 @@ use App\Exports\MemberExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Get; // Penting buat logika hide/show form
+use Filament\Forms\Get;
 use Filament\Tables\Actions\Action;
 use Carbon\Carbon;
 
 class MemberResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
     public static function getNavigationBadge(): ?string
     {
         return Member::count();
     }
 
     protected static ?string $model = Member::class;
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-users'; // Icon: Users
     protected static ?string $navigationGroup = 'Membership & Absensi';
     protected static ?string $navigationLabel = 'Manajemen Membership';
     protected static ?string $pluralModelLabel = 'Data Membership';
     protected static ?int $navigationSort = 2;
 
+    // --- FORM CONFIGURATION (Create/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
@@ -39,7 +41,7 @@ class MemberResource extends Resource
                 Forms\Components\Section::make('Data Member')
                     ->columns(2)
                     ->schema([
-                        // Anggap gymkos_id otomatis diambil dari user login/session
+                        // Relationship to Gym Branch
                         Forms\Components\Select::make('gymkos_id')
                             ->relationship('gymkos', 'name')
                             ->required(),
@@ -48,11 +50,8 @@ class MemberResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        Forms\Components\TextInput::make('email')
-                            ->email(),
-
-                        Forms\Components\TextInput::make('phone')
-                            ->tel(),
+                        Forms\Components\TextInput::make('email')->email(),
+                        Forms\Components\TextInput::make('phone')->tel(),
 
                         Forms\Components\Textarea::make('address')
                             ->rows(2)
@@ -62,20 +61,20 @@ class MemberResource extends Resource
                             ->default(now())
                             ->required(),
 
+                        // --- REAL-TIME STATUS LOGIC ---
                         Forms\Components\DatePicker::make('membership_end_date')
                             ->label('Berlaku Sampai')
                             ->required()
-                            ->live() // Agar reaktif
+                            ->live() // Listens for changes
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
-                                // Logic Real-time di Form:
-                                // Jika tanggal diisi & belum lewat, set active. Jika lewat, inactive.
+                                // Logic: If date is today or future -> Active, else -> Inactive
                                 if ($state) {
                                     $isActive = \Carbon\Carbon::parse($state)->endOfDay()->isFuture() || \Carbon\Carbon::parse($state)->isToday();
                                     $set('status', $isActive ? 'active' : 'inactive');
                                 }
                             }),
 
-                        // Status dibuat ReadOnly atau Disabled karena ngikut tanggal
+                        // Status is auto-set by date logic above
                         Forms\Components\Select::make('status')
                             ->options([
                                 'active' => 'Aktif',
@@ -83,32 +82,32 @@ class MemberResource extends Resource
                             ])
                             ->default('active')
                             ->required()
-                            // ->disabled() // Opsional: kalau mau user bener2 gabisa ubah
-                            ->dehydrated(), // Wajib ada kalau didisabled, biar tetep kesimpen ke DB
+                            ->dehydrated(), // Ensures value is saved even if disabled
 
-                        // --- MODIFIKASI DISINI ---
+                        // --- WEBCAM & FACE RECOGNITION INPUT ---
 
-                        // 1. Input Webcam (Kita passing nama field descriptornya)
+                        // 1. Custom Webcam View
                         ViewField::make('picture')
-                            ->view('filament.forms.components.webcam-input')
+                            ->view('filament.forms.components.webcam-input') // Loads custom Blade view
                             ->viewData([
-                                'descriptorField' => 'face_descriptor' // Beritahu view target fieldnya
+                                'descriptorField' => 'face_descriptor' // Pass target field name for AI data
                             ])
                             ->label('Foto Wajah')
                             ->columnSpanFull(),
 
-                        // 2. Field Descriptor (Hidden tapi required logic)
+                        // 2. Face Descriptor (Hidden AI Data)
                         Forms\Components\Textarea::make('face_descriptor')
                             ->label('Face Descriptor (Auto Generated)')
                             ->rows(3)
-                            ->readOnly() // User gaboleh edit manual
-                            ->required() // Wajib ada isinya (hasil scan)
+                            ->readOnly() // Prevent manual editing
+                            ->required() // Must be generated from webcam
                             ->helperText('Otomatis terisi saat wajah terdeteksi di kamera.')
                             ->columnSpanFull(),
                     ]),
             ]);
     }
 
+    // --- TABLE CONFIGURATION (List View) ---
     public static function table(Table $table): Table
     {
         return $table
@@ -116,17 +115,18 @@ class MemberResource extends Resource
                 Tables\Columns\ImageColumn::make('picture')->circular(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
 
-                // Tampilkan sisa hari membership
+                // Membership Expiry & Diff
                 Tables\Columns\TextColumn::make('membership_end_date')
                     ->label('Masa Berlaku')
                     ->date()
                     ->description(fn(Member $record) => $record->membership_end_date?->diffForHumans()),
 
+                // Status Badge
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'active' => 'success',
-                        'inactive' => 'danger', // Merah kalau mati
+                        'inactive' => 'danger',
                     })
                     ->formatStateUsing(fn(string $state) => match ($state) {
                         'active' => 'Aktif',
@@ -135,13 +135,15 @@ class MemberResource extends Resource
 
                 Tables\Columns\TextColumn::make('join_date')->date(),
             ])
+
+            // --- HEADER ACTION: DYNAMIC EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Data Member')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('info') // Warna Cyan/Biru Muda
+                    ->color('info')
                     ->form([
-                        // 1. Pilihan Mode Export
+                        // 1. Export Mode Selection (All vs Period)
                         Radio::make('mode')
                             ->label('Pilih Tipe Export')
                             ->options([
@@ -149,9 +151,9 @@ class MemberResource extends Resource
                                 'period' => 'Filter Berdasarkan Bulan Bergabung',
                             ])
                             ->default('all')
-                            ->live(), // Agar form di bawahnya bisa bereaksi
+                            ->live(), // Toggles visibility of inputs below
 
-                        // 2. Select Bulan (Hanya muncul jika mode == period)
+                        // 2. Month Selector (Visible only if mode == period)
                         Select::make('month')
                             ->label('Bulan Bergabung')
                             ->options([
@@ -172,7 +174,7 @@ class MemberResource extends Resource
                             ->visible(fn(Get $get) => $get('mode') === 'period')
                             ->required(fn(Get $get) => $get('mode') === 'period'),
 
-                        // 3. Select Tahun (Hanya muncul jika mode == period)
+                        // 3. Year Selector (Visible only if mode == period)
                         Select::make('year')
                             ->label('Tahun Bergabung')
                             ->options(function () {
@@ -184,7 +186,7 @@ class MemberResource extends Resource
                             ->required(fn(Get $get) => $get('mode') === 'period'),
                     ])
                     ->action(function (array $data) {
-                        // Tentukan Nama File
+                        // Determine Filename & Params
                         if ($data['mode'] === 'all') {
                             $filename = 'Semua-Data-Member-' . date('d-m-Y') . '.xlsx';
                             $month = null;
@@ -195,6 +197,7 @@ class MemberResource extends Resource
                             $year = $data['year'];
                         }
 
+                        // Trigger Download
                         return Excel::download(
                             new MemberExport($data['mode'], $month, $year),
                             $filename

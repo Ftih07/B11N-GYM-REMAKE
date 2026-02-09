@@ -3,51 +3,52 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
-use App\Models\Product;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use App\Exports\TransactionExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class TransactionResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
     protected static ?string $model = Transaction::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-receipt-refund';
+    protected static ?string $navigationIcon = 'heroicon-o-receipt-refund'; // Icon: Receipt
     protected static ?string $navigationLabel = 'Rekap Transaksi';
     protected static ?string $pluralModelLabel = 'Laporan Transaksi';
     protected static ?string $navigationGroup = 'Laporan';
     protected static ?int $navigationSort = 1;
 
+    // --- FORM CONFIGURATION (POS Input) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                // Section 1: Transaction Info
                 Section::make('Informasi Transaksi')
                     ->columns(2)
                     ->schema([
+                        // Cashier Selection
                         Select::make('trainer_id')
                             ->relationship('trainer', 'name')
                             ->required()
                             ->label('Kasir Bertugas'),
 
+                        // Gym Branch Selection
                         Select::make('gymkos_id')
                             ->relationship('gymkos', 'name')
                             ->required(),
@@ -71,18 +72,21 @@ class TransactionResource extends Resource
                             ->default(now()),
                     ]),
 
+                // Section 2: Shopping Cart (Repeater)
                 Section::make('Keranjang Belanja')
                     ->schema([
                         Repeater::make('items')
                             ->relationship()
                             ->schema([
+                                // Product Selection
                                 Select::make('product_id')
                                     ->label('Produk')
                                     ->options(Product::all()->pluck('name', 'id'))
                                     ->required()
                                     ->searchable()
-                                    ->reactive()
+                                    ->reactive() // Trigger update immediately
                                     ->afterStateUpdated(function ($state, Set $set) {
+                                        // Auto-fill Price & Name when product selected
                                         $product = Product::find($state);
                                         if ($product) {
                                             $set('price', $product->price);
@@ -92,6 +96,7 @@ class TransactionResource extends Resource
 
                                 Forms\Components\Hidden::make('product_name'),
 
+                                // Quantity Input (Live Calculation)
                                 TextInput::make('quantity')
                                     ->numeric()
                                     ->default(0)
@@ -99,11 +104,12 @@ class TransactionResource extends Resource
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                                        // 1. Calculate Subtotal per Item
                                         $price = $get('price') ?? 0;
                                         $subtotal = $state * $price;
                                         $set('subtotal', $subtotal);
 
-                                        // HITUNG TOTAL LANGSUNG
+                                        // 2. Calculate Grand Total
                                         $items = $get('../../items');
                                         $total = collect($items)->sum(fn($item) => $item['subtotal'] ?? 0);
                                         $set('../../total_amount', $total);
@@ -123,12 +129,13 @@ class TransactionResource extends Resource
                             ])
                             ->columns(4)
                             ->live()
+                            // Recalculate Total if Item Removed/Added
                             ->afterStateUpdated(function (Get $get, Set $set) {
                                 $items = $get('items');
                                 $sum = collect($items)->sum(fn($item) => $item['subtotal'] ?? 0);
                                 $set('total_amount', $sum);
 
-                                // Tambahan: Update otomatis paid amount jika metode bayar sudah dipilih (opsional tapi bagus)
+                                // Auto-fill Paid Amount if Cashless
                                 if (in_array($get('payment_method'), ['qris', 'transfer'])) {
                                     $set('paid_amount', $sum);
                                     $set('change_amount', 0);
@@ -136,6 +143,7 @@ class TransactionResource extends Resource
                             }),
                     ]),
 
+                // Section 3: Payment Details
                 Section::make('Pembayaran')
                     ->columns(2)
                     ->schema([
@@ -146,7 +154,7 @@ class TransactionResource extends Resource
                             ->readOnly()
                             ->dehydrated(),
 
-                        // FIX: Logika Otomatis QRIS/Transfer
+                        // Payment Method Logic
                         Select::make('payment_method')
                             ->options([
                                 'cash' => 'Tunai',
@@ -154,26 +162,26 @@ class TransactionResource extends Resource
                                 'transfer' => 'Transfer Bank',
                             ])
                             ->required()
-                            ->live() // Gunakan live agar langsung trigger
+                            ->live()
                             ->afterStateUpdated(function ($state, Get $get, Set $set) {
-                                // Jika pilih QRIS atau Transfer, samakan Uang Diterima dengan Total
+                                // If Cashless -> Paid Amount = Total (No Change)
                                 if (in_array($state, ['qris', 'transfer'])) {
                                     $total = $get('total_amount');
                                     $set('paid_amount', $total);
                                     $set('change_amount', 0);
                                 } else {
-                                    // Jika balik ke Cash, kosongkan biar kasir input manual
+                                    // If Cash -> Reset for manual input
                                     $set('paid_amount', 0);
                                     $set('change_amount', 0 - $get('total_amount'));
                                 }
                             }),
 
-                        // FIX: Mengatasi Bug Input Angka Hilang
+                        // Paid Amount Input (Calculates Change)
                         TextInput::make('paid_amount')
                             ->label('Uang Diterima')
                             ->numeric()
                             ->prefix('Rp')
-                            ->live(onBlur: true) // PENTING: Hitung hanya setelah selesai ketik/klik luar
+                            ->live(onBlur: true) // Calc only after typing finishes
                             ->afterStateUpdated(function ($state, Get $get, Set $set) {
                                 $total = $get('total_amount');
                                 $change = $state - $total;
@@ -189,36 +197,32 @@ class TransactionResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION (List View) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // 1. Kode Transaksi (Bisa dicopy & Searchable)
+                // 1. Transaction Code
                 Tables\Columns\TextColumn::make('code')
                     ->label('Kode TRX')
                     ->weight('bold')
-                    ->copyable() // Biar bisa dicopy admin
+                    ->copyable()
                     ->searchable()
                     ->sortable(),
 
-                // Badge Penanda Asal Transaksi (Online / Manual)
+                // 2. Source Badge (Online vs Offline)
                 Tables\Columns\TextColumn::make('source_label')
                     ->label('Asal')
                     ->badge()
                     ->getStateUsing(function ($record) {
-                        // Cek isi kolom payable_type
-                        if ($record->payable_type === 'App\Models\Booking') {
-                            return 'Booking Kost'; // Online Kost
-                        } elseif ($record->payable_type === 'App\Models\Payment') {
-                            return 'Member Online'; // Online Gym
-                        } else {
-                            return 'Kasir / POS'; // Transaksi Manual (payable null)
-                        }
+                        if ($record->payable_type === 'App\Models\Booking') return 'Booking Kost';
+                        elseif ($record->payable_type === 'App\Models\Payment') return 'Member Online';
+                        else return 'Kasir / POS';
                     })
                     ->colors([
-                        'info'    => 'Booking Kost',   // Biru
-                        'success' => 'Member Online',  // Hijau
-                        'gray'    => 'Kasir / POS',    // Abu-abu
+                        'info'    => 'Booking Kost',
+                        'success' => 'Member Online',
+                        'gray'    => 'Kasir / POS',
                     ])
                     ->icon(fn($state) => match ($state) {
                         'Booking Kost' => 'heroicon-m-home',
@@ -226,7 +230,6 @@ class TransactionResource extends Resource
                         default => 'heroicon-m-computer-desktop',
                     }),
 
-                // 2. Nama Kasir (Ambil dari relasi trainer)
                 Tables\Columns\TextColumn::make('trainer.name')
                     ->label('Kasir')
                     ->sortable()
@@ -236,31 +239,25 @@ class TransactionResource extends Resource
                     ->label('Customer')
                     ->placeholder('-'),
 
-                // 3. Cabang Gym (Disembunyikan default biar ga penuh, bisa ditoggle)
-                Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Cabang')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                // 4. Total Uang (Ada Sumary di bawah tabel otomatis)
+                // 3. Total Amount with Summary
                 Tables\Columns\TextColumn::make('total_amount')
                     ->label('Total')
                     ->money('IDR')
                     ->sortable()
                     ->summarize(Tables\Columns\Summarizers\Sum::make()->money('IDR')->label('Total Omset')),
 
-                // 5. Metode Bayar (Pakai Badge warna)
+                // 4. Payment Method Badge
                 Tables\Columns\TextColumn::make('payment_method')
                     ->label('Metode')
                     ->badge()
                     ->formatStateUsing(fn(string $state): string => strtoupper($state))
                     ->color(fn(string $state): string => match ($state) {
-                        'cash' => 'success',   // Hijau
-                        'qris' => 'info',      // Biru
-                        'transfer' => 'warning', // Kuning
+                        'cash' => 'success',
+                        'qris' => 'info',
+                        'transfer' => 'warning',
                         default => 'gray',
                     }),
 
-                // 6. Status Transaksi
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -269,17 +266,19 @@ class TransactionResource extends Resource
                         'cancelled' => 'danger',
                     }),
 
-                // 7. Tanggal Transaksi
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Waktu')
-                    ->dateTime('d M Y H:i') // Format tgl jam indonesia
+                    ->dateTime('d M Y H:i')
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
+
+            // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Tables\Actions\Action::make('export_excel')
                     ->label('Export Data Penjualan')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('success') // Warna Hijau
+                    ->color('success')
                     ->form([
                         Select::make('month')
                             ->label('Bulan')
@@ -315,26 +314,17 @@ class TransactionResource extends Resource
                         );
                     }),
             ])
-            ->defaultSort('created_at', 'desc') // Yang terbaru paling atas
-            ->filters([
-                // Filter Status (Lunas/Pending)
-                Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        'paid' => 'Lunas',
-                        'pending' => 'Pending',
-                        'cancelled' => 'Batal',
-                    ]),
 
-                // Filter Metode Bayar
+            // --- FILTERS ---
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(['paid' => 'Lunas', 'pending' => 'Pending', 'cancelled' => 'Batal']),
+
                 Tables\Filters\SelectFilter::make('payment_method')
                     ->label('Metode Bayar')
-                    ->options([
-                        'cash' => 'Tunai',
-                        'qris' => 'QRIS',
-                        'transfer' => 'Transfer',
-                    ]),
+                    ->options(['cash' => 'Tunai', 'qris' => 'QRIS', 'transfer' => 'Transfer']),
 
-                // Filter Tanggal (PENTING BUAT KASIR CEK OMSET HARIAN)
+                // DATE RANGE FILTER
                 Tables\Filters\Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Dari Tanggal'),
@@ -342,27 +332,20 @@ class TransactionResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when(
-                                $data['created_from'],
-                                fn(Builder $query, $date) => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn(Builder $query, $date) => $query->whereDate('created_at', '<=', $date),
-                            );
+                            ->when($data['created_from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
                     })
             ])
             ->actions([
+                // --- PRINT STRUK ACTION ---
                 Tables\Actions\Action::make('print')
                     ->label('Cetak')
                     ->icon('heroicon-o-printer')
                     ->color('info')
-                    // --- TAMBAHANNYA DISINI ---
-                    // Tombol hanya akan muncul jika status === 'paid'
-                    ->visible(fn(Transaction $record) => $record->status === 'paid')
-                    // --------------------------
-                    ->url(fn(Transaction $record) => route('print.struk', $record->code))
+                    ->visible(fn(Transaction $record) => $record->status === 'paid') // Only show if paid
+                    ->url(fn(Transaction $record) => route('print.struk', $record->code)) // Opens route for printing
                     ->openUrlInNewTab(),
+
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -374,6 +357,7 @@ class TransactionResource extends Resource
             ]);
     }
 
+    // --- INFOLIST VIEW (Detail Popup) ---
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -391,6 +375,7 @@ class TransactionResource extends Resource
                         ])
                     ]),
 
+                // List Items (Detail Belanjaan)
                 Infolists\Components\Section::make('Daftar Barang')
                     ->schema([
                         Infolists\Components\RepeatableEntry::make('items')
@@ -403,9 +388,10 @@ class TransactionResource extends Resource
                                         Infolists\Components\TextEntry::make('subtotal')->label('Subtotal')->money('IDR')->weight('bold'),
                                     ]),
                             ])
-                            ->columns(2) // Tampilan grid
+                            ->columns(2)
                     ]),
 
+                // Summary Total
                 Infolists\Components\Section::make('Total')
                     ->schema([
                         Infolists\Components\Grid::make(3)
@@ -420,9 +406,7 @@ class TransactionResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

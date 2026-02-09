@@ -47,8 +47,10 @@
 
 <body class="bg-gray-50 text-brand-black dark:bg-brand-black dark:text-gray-200 font-sans antialiased transition-colors duration-300 pt-24">
 
+    <!-- NAVBAR -->
     @include('components.navbar-cta')
 
+    <!-- MAIN CONTENT -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <nav class="flex mb-8 text-sm text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
@@ -234,6 +236,7 @@
 
     </main>
 
+    <!-- FOOTER -->
     @include('components.footer-bing-empire')
 
 </body>

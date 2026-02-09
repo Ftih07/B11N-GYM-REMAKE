@@ -9,7 +9,6 @@ class QrCode extends Model
 {
     use HasFactory;
 
-    // Agar kolom ini bisa diisi massal
     protected $fillable = [
         'name',
         'target_url',

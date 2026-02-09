@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function index() // Saya ubah nama functionnya jadi index biar standar
+    public function index()
     {
         $user = Auth::user();
         $member = $user->member;
         return view('member.profile', compact('user', 'member'));
     }
 
-    public function update(Request $request) // Saya ubah jadi update
+    public function update(Request $request)
     {
         $request->validate([
             'phone' => 'nullable|string|max:15',
@@ -25,6 +25,7 @@ class ProfileController extends Controller
         $user = Auth::user();
         $member = $user->member;
 
+        // Update Member Details
         if ($member) {
             $member->update([
                 'phone' => $request->phone,

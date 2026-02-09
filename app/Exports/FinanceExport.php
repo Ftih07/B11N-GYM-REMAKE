@@ -21,24 +21,30 @@ class FinanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
     protected $month;
     protected $year;
 
+    // --- CONSTRUCTOR ---
+    // Initializes the export class with the selected financial period
     public function __construct($month, $year)
     {
         $this->month = $month;
         $this->year = $year;
     }
 
+    // --- QUERY DATA ---
+    // Fetches financial records filtered by date
     public function query()
     {
         return Finance::query()
-            ->with('gymkos') // Eager load relasi biar cepat
-            ->whereYear('date', $this->year)
-            ->whereMonth('date', $this->month)
-            ->orderBy('date', 'asc'); // Biasanya keuangan urut dari tanggal awal ke akhir
+            ->with('gymkos') // Eager load the branch relationship for speed
+            ->whereYear('date', $this->year)  // Filter Year
+            ->whereMonth('date', $this->month) // Filter Month
+            ->orderBy('date', 'asc'); // Sort chronologically (Oldest -> Newest)
     }
 
+    // --- MAPPING ---
+    // Formats each row for the Excel report
     public function map($finance): array
     {
-        // Translate Tipe biar bahasa Indonesia
+        // Logic: Translate Transaction Type to Indonesian
         $tipe = match ($finance->type) {
             'income' => 'Pemasukan',
             'expense' => 'Pengeluaran',
@@ -46,53 +52,57 @@ class FinanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
         };
 
         return [
-            $finance->date->format('d/m/Y'), // A. Tanggal
-            $finance->gymkos->name,          // B. Cabang
-            $tipe,                           // C. Tipe
-            $finance->description,           // D. Keterangan
-            $finance->amount,                // E. Nominal (Raw Number)
+            $finance->date->format('d/m/Y'), // Date (DD/MM/YYYY)
+            $finance->gymkos->name,          // Branch Name (Gym/Kost)
+            $tipe,                           // Transaction Type (Pemasukan/Pengeluaran)
+            $finance->description,           // Description/Notes
+            $finance->amount,                // Amount (Raw number for Excel calculation)
         ];
     }
 
+    // --- HEADINGS ---
+    // Defines the column titles for the first row
     public function headings(): array
     {
         return [
-            'Tanggal',
-            'Cabang Gym/Kos',
-            'Tipe Transaksi',
-            'Keterangan',
-            'Nominal (IDR)',
+            'Tanggal',          // Date
+            'Cabang Gym/Kos',   // Branch
+            'Tipe Transaksi',   // Transaction Type
+            'Keterangan',       // Description
+            'Nominal (IDR)',    // Amount
         ];
     }
 
-    // --- LOGIC STYLING KUNING & BOLD ---
+    // --- STYLING ---
+    // Styles the header row with yellow background and bold text
     public function styles(Worksheet $sheet)
     {
         return [
-            // Baris 1 (Header)
+            // Target Row 1
             1 => [
                 'font' => [
                     'bold' => true,
                     'size' => 12,
-                    'color' => ['argb' => 'FF000000'], // Teks Hitam
+                    'color' => ['argb' => 'FF000000'], // Black Text
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFFFFF00'], // BACKGROUND KUNING
+                    'startColor' => ['argb' => 'FFFFFF00'], // YELLOW Background
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Center align
                 ],
             ],
         ];
     }
 
-    // Ini FITUR PENTING buat Keuangan
-    // Mengatur kolom E (Nominal) supaya formatnya Accounting/Number di Excel
+    // --- COLUMN FORMATTING ---
+    // IMPORTANT: Formats the 'Amount' column as a proper Number in Excel
+    // This allows the admin to use SUM() formulas immediately without formatting issues.
     public function columnFormats(): array
     {
         return [
-            'E' => '#,##0', // Format angka dengan pemisah ribuan
+            'E' => '#,##0', // Column E (Nominal): Number format with thousands separator (e.g., 10,000)
         ];
     }
 }

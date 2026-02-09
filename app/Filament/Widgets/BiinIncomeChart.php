@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Finance;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB; // Kita butuh DB facade buat Raw Query
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
@@ -26,26 +25,23 @@ class BiinIncomeChart extends ChartWidget
     {
         $activeFilter = $this->filter ?? 'day';
 
-        // 1. Siapkan Wadah Data Kosong (Biar grafiknya nyambung dari awal sampai akhir)
+        // 1. Prepare Empty Data Containers
         $dataPoints = [];
         $labels = [];
 
         if ($activeFilter === 'day') {
-            // Loop 30 hari ke belakang
             for ($i = 29; $i >= 0; $i--) {
                 $date = now()->subDays($i)->format('Y-m-d');
-                $dataPoints[$date] = 0; // Default 0
+                $dataPoints[$date] = 0;
                 $labels[] = \Carbon\Carbon::parse($date)->format('d M');
             }
         } elseif ($activeFilter === 'year') {
-            // Loop 5 tahun ke belakang
             for ($i = 4; $i >= 0; $i--) {
                 $year = now()->subYears($i)->format('Y');
                 $dataPoints[$year] = 0;
                 $labels[] = $year;
             }
         } else {
-            // Default: Bulan Jan-Des tahun ini
             for ($i = 1; $i <= 12; $i++) {
                 $month = now()->setMonth($i)->format('Y-m');
                 $dataPoints[$month] = 0;
@@ -53,11 +49,11 @@ class BiinIncomeChart extends ChartWidget
             }
         }
 
-        // 2. Query Database (Sama kayak tadi, tapi lebih simpel)
+        // 2. Query Database (Sum Amount)
         $query = Finance::query()
-            ->where('type', 'income')
+            ->where('type', 'income') // Only Income
             ->whereHas('gymkos', function (Builder $q) {
-                // !!! PENTING: Ganti 'B11N Gym' jadi 'K1NG Gym' di file satunya !!!
+                // Filter by Gym Name (Adjust 'B11N Gym' as needed)
                 $q->where('name', 'B11N Gym');
             });
 
@@ -81,9 +77,8 @@ class BiinIncomeChart extends ChartWidget
                 ->get(),
         };
 
-        // 3. Gabungkan Data DB ke Wadah Kosong
+        // 3. Merge Data
         foreach ($results as $row) {
-            // Kalau periodenya ada di wadah, timpa nilai 0 dengan nilai asli
             if (isset($dataPoints[$row->period])) {
                 $dataPoints[$row->period] = $row->aggregate;
             }
@@ -93,10 +88,10 @@ class BiinIncomeChart extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Pendapatan',
-                    'data' => array_values($dataPoints), // Ambil nilainya saja
-                    'borderColor' => '#f59e0b',
+                    'data' => array_values($dataPoints),
+                    'borderColor' => '#f59e0b', // Amber/Orange Line
                     'fill' => 'start',
-                    'tension' => 0.3, // Biar garisnya agak melengkung estetik
+                    'tension' => 0.3,
                 ],
             ],
             'labels' => $labels,

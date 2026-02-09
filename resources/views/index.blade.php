@@ -598,6 +598,7 @@
         </div>
     </section>
 
+    <!-- FOOTER -->
     @include('components.footer-bing-empire')
 
     <script>

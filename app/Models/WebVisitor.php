@@ -9,14 +9,15 @@ class WebVisitor extends Model
 {
     use HasFactory;
 
-    // Supaya bisa diisi lewat script Middleware tadi
+    // Allow mass assignment for these fields (Security)
     protected $fillable = [
         'ip_address',
         'visit_date',
         'user_agent',
     ];
 
-    // Opsional: Biar kolom visit_date otomatis jadi objek Carbon (enak buat format tanggal)
+    // Data Casting
+    // Automatically converts 'visit_date' to a Carbon object when retrieved
     protected $casts = [
         'visit_date' => 'date',
     ];

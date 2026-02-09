@@ -25,11 +25,8 @@ class Transaction extends Model
         return $this->belongsTo(Trainer::class);
     }
 
-    // --- TAMBAHKAN INI ---
     public function gymkos()
     {
-        // Pastikan kamu punya model Gymkos. 
-        // Jika nama modelnya berbeda (misal Gym), sesuaikan class-nya.
         return $this->belongsTo(Gymkos::class);
     }
     

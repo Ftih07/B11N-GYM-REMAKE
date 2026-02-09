@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use App\Exports\MaintenanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
@@ -18,20 +17,27 @@ use Carbon\Carbon;
 
 class MaintenanceReportResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
+
+    // Badge: Shows total count of reports in the sidebar
     public static function getNavigationBadge(): ?string
     {
         return MaintenanceReport::count();
     }
+
     protected static ?string $model = MaintenanceReport::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationGroup = 'Gym Management';
     protected static ?string $navigationLabel = 'Laporan Kerusakan';
     protected static ?int $navigationSort = 3;
 
+    // --- FORM CONFIGURATION ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                // SECTION 1: Report Information (Read-Only / Disabled)
+                // This ensures admin sees exactly what user reported without accidental edits
                 Forms\Components\Section::make('Informasi Laporan')
                     ->description('Data yang dikirim oleh pelapor (Read Only)')
                     ->schema([
@@ -42,13 +48,13 @@ class MaintenanceReportResource extends Resource
                         Forms\Components\Select::make('gymkos_id')
                             ->relationship('gymkos', 'name')
                             ->label('Lokasi')
-                            ->disabled() // Ganti readOnly() jadi ini
-                            ->dehydrated(), // PENTING: Agar datanya tetap terkirim saat save (kadang disabled bikin data ga masuk)
+                            ->disabled()
+                            ->dehydrated(), // IMPORTANT: Ensures value is saved even if input is disabled
 
                         Forms\Components\Select::make('equipment_id')
                             ->relationship('equipment', 'name')
                             ->label('Alat')
-                            ->disabled() // Ganti readOnly() jadi ini
+                            ->disabled()
                             ->dehydrated(),
 
                         Forms\Components\TextInput::make('severity')
@@ -60,17 +66,19 @@ class MaintenanceReportResource extends Resource
                             ->columnSpanFull()
                             ->readOnly(),
 
+                        // Evidence Photo Viewer
                         Forms\Components\FileUpload::make('evidence_photo')
                             ->label('Bukti Foto')
                             ->image()
                             ->directory('maintenance-evidence')
-                            ->downloadable() // Agar admin bisa download fotonya
-                            ->openable() // Agar bisa di klik zoom
+                            ->downloadable() // Admin can download original file
+                            ->openable() // Admin can zoom/view file in new tab
                             ->columnSpanFull()
-                            ->disabled() // Ganti readOnly() jadi ini
+                            ->disabled()
                             ->dehydrated(),
                     ])->columns(2),
 
+                // SECTION 2: Admin Action (Status Update)
                 Forms\Components\Section::make('Tindak Lanjut (Admin)')
                     ->description('Update status perbaikan disini.')
                     ->schema([
@@ -91,17 +99,18 @@ class MaintenanceReportResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION ---
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('created_at', 'desc') // Newest reports first
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tgl Lapor')
                     ->dateTime('d M Y')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('gymkos.name') // Relasi ke gym
+                Tables\Columns\TextColumn::make('gymkos.name')
                     ->label('Lokasi')
                     ->sortable()
                     ->searchable(),
@@ -109,12 +118,14 @@ class MaintenanceReportResource extends Resource
                 Tables\Columns\TextColumn::make('equipment.name')
                     ->label('Alat')
                     ->searchable()
+                    // Limit description length in table view
                     ->description(fn(MaintenanceReport $record): string => \Illuminate\Support\Str::limit($record->description, 30)),
 
                 Tables\Columns\ImageColumn::make('evidence_photo')
                     ->label('Foto')
                     ->circular(),
 
+                // Severity Badge (Green/Low -> Red/Critical)
                 Tables\Columns\BadgeColumn::make('severity')
                     ->label('Keparahan')
                     ->colors([
@@ -124,6 +135,7 @@ class MaintenanceReportResource extends Resource
                     ])
                     ->formatStateUsing(fn(string $state): string => ucfirst($state)),
 
+                // Status Badge
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'gray' => 'pending',
@@ -132,13 +144,15 @@ class MaintenanceReportResource extends Resource
                         'danger' => 'wont_fix',
                     ]),
             ])
-            // --- TAMBAHKAN BAGIAN EXPORT ---
+
+            // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Laporan')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('success') // Warna tombol orange/kuning
+                    ->color('success')
                     ->form([
+                        // Modal Form: Select Month & Year
                         Select::make('month')
                             ->label('Bulan Laporan')
                             ->options([
@@ -167,6 +181,7 @@ class MaintenanceReportResource extends Resource
                             ->required(),
                     ])
                     ->action(function (array $data) {
+                        // Download Excel
                         return Excel::download(
                             new MaintenanceExport($data['month'], $data['year']),
                             'Laporan-Maintenance-' . $data['month'] . '-' . $data['year'] . '.xlsx'
@@ -188,7 +203,8 @@ class MaintenanceReportResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
 
-                // Action Cepat untuk menandai "Selesai" tanpa masuk form edit
+                // --- CUSTOM ROW ACTION: MARK RESOLVED ---
+                // Quick button to resolve issue without opening Edit form
                 Tables\Actions\Action::make('mark_resolved')
                     ->label('Selesai')
                     ->icon('heroicon-o-check-circle')
@@ -196,8 +212,9 @@ class MaintenanceReportResource extends Resource
                     ->requiresConfirmation()
                     ->action(fn(MaintenanceReport $record) => $record->update([
                         'status' => 'resolved',
-                        'fixed_at' => now(),
+                        'fixed_at' => now(), // Set finish time to now
                     ]))
+                    // Only show this button if status is NOT resolved
                     ->visible(fn(MaintenanceReport $record) => $record->status !== 'resolved'),
             ])
             ->bulkActions([

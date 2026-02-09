@@ -891,7 +891,7 @@
 
 
 <body>
-	{{-- NAVIGASI UTAMA --}}
+	{{-- CUSTOM NAVBAR --}}
 	<nav class="fixed top-0 left-0 w-full z-50 bg-white/95 text-gray-800 dark:text-white dark:bg-brand-black/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 h-20">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
 			<div class="flex items-center justify-between h-full">
@@ -1066,7 +1066,7 @@
 		</div>
 	</nav>
 
-	{{-- JAVASCRIPT --}}
+	{{-- NAVBAR JAVASCRIPT --}}
 	<script>
 		// --- Navbar Mobile Toggle (UPDATED) ---
 		const btn = document.getElementById('mobile-menu-btn');
@@ -1131,6 +1131,7 @@
 		}
 	</script>
 
+	{{-- HERO --}}
 	<section id="header">
 		<header class="header">
 			<div class="relative flex items-center justify-center h-screen bg-black text-white"
@@ -1161,6 +1162,7 @@
 		</header>
 	</section>
 
+	{{-- ABOUT US --}}
 	<section class="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="about">
 		<div class="about__header text-center">
 			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">Tentang Kami</h2>
@@ -1180,6 +1182,7 @@
 		</div>
 	</section>
 
+	{{-- FACILITY --}}
 	<section class="max-w-[1200px] mx-auto px-4 py-20" id="facilities">
 		<div class="about__header text-center">
 			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">
@@ -1206,6 +1209,7 @@
 		</div>
 	</section>
 
+	{{-- TRAINING PROGRAM --}}
 	<section class="py-8" id="training">
 		@foreach ($groupedTrainingPrograms as $categoryId => $trainingPrograms)
 		@php
@@ -1247,6 +1251,7 @@
 		@endforeach
 	</section>
 
+	{{-- GYM EQUIPMENT --}}
 	<section class="py-20 bg-white text-gray-900" id="equipments">
 		<div class="container mx-auto px-4">
 
@@ -1327,6 +1332,7 @@
 		</div>
 	</section>
 
+	{{-- TRAINER --}}
 	<section class="trainer__container max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="trainer">
 		<h2 class="section__header text-2xl sm:text-3xl md:text-3xl lg:text-3xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>
 		<div class="trainer__grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
@@ -1345,6 +1351,7 @@
 		</div>
 	</section>
 
+	{{-- MEMEBRSHIP --}}
 	<section class="membership"
 		style="
            background-image: linear-gradient(
@@ -1660,6 +1667,7 @@
 		</div>
 	</section>
 
+	{{-- STORE --}}
 	@if ($store)
 	<section
 		style="background-image: url('{{ asset('storage/' . $store->image) }}'); background-size: cover; background-position: center;"
@@ -1680,6 +1688,7 @@
 	</section>
 	@endif
 
+	{{-- TESTIMONIAL --}}
 	<section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="testimonials">
 		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
 		<div class="swiper">
@@ -1708,6 +1717,7 @@
 		</div>
 	</section>
 
+	{{-- BLOG --}}
 	@section('content')
 	<section class="blog" id="blog">
 		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
@@ -1732,6 +1742,7 @@
 		</div>
 	</section>
 
+	{{-- MAPS EMBED --}}
 	<section class="w-full mx-auto" id="contact">
 		<div class="flex-dir-row" style="width: 100%; height: 300px;">
 			<div class="" style="width: 100%; height: 100%;">
@@ -1740,6 +1751,7 @@
 		</div>
 	</section>
 
+	{{-- CUSTOM FOOTER --}}
 	<footer class="footer">
 		<div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
 			<div class="footer__col">

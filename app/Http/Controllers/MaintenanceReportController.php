@@ -3,40 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
-use App\Models\Gymkos; // Pastikan model Gymkos di-import
+use App\Models\Gymkos;
 use App\Models\MaintenanceReport;
 use Illuminate\Http\Request;
 
 class MaintenanceReportController extends Controller
 {
+    // Page: Show Maintenance Form
     public function create()
     {
-        // Kita kirim daftar Gym, bukan Equipment
+        // Send Gym list so user can select location first
         $gyms = Gymkos::all();
         return view('maintenance.create', compact('gyms'));
     }
 
-    // Method API untuk mengambil alat berdasarkan Gym ID
+    // API Endpoint: Get equipments by Gym ID
+    // Used by Javascript/AJAX in the frontend form
     public function getEquipments($gymId)
     {
         $equipments = Equipment::where('gymkos_id', $gymId)
-            ->where('status', '!=', 'broken')
+            ->where('status', '!=', 'broken') // Don't show already broken items
             ->with(['gallery' => function ($query) {
-                $query->orderBy('order_index', 'asc')->limit(1); // Ambil 1 foto pertama saja
+                $query->orderBy('order_index', 'asc')->limit(1); // Get thumbnail
             }])
             ->get()
             ->map(function ($item) {
-                // Cek apakah ada foto di gallery, jika tidak pakai placeholder
+                // Determine Image URL
                 $firstPhoto = $item->gallery->first();
                 $imageUrl = $firstPhoto
                     ? asset('storage/' . $firstPhoto->file_path)
-                    : 'https://placehold.co/400x300?text=No+Image'; // Gambar default kalau kosong
+                    : 'https://placehold.co/400x300?text=No+Image';
 
                 return [
                     'id' => $item->id,
                     'name' => $item->name,
                     'category' => $item->category,
-                    'description' => \Illuminate\Support\Str::limit($item->description, 50), // Deskripsi pendek
+                    'description' => \Illuminate\Support\Str::limit($item->description, 50),
                     'image_url' => $imageUrl
                 ];
             });
@@ -44,10 +46,9 @@ class MaintenanceReportController extends Controller
         return response()->json($equipments);
     }
 
+    // Logic: Store Report
     public function store(Request $request)
     {
-        // ... (Kode store kamu sama seperti sebelumnya, tidak perlu ubah)
-        // Cuma pastikan validationnya tetap berjalan
         $validated = $request->validate([
             'reporter_name' => 'required|string|max:255',
             'equipment_id' => 'required|exists:equipments,id',
@@ -61,10 +62,11 @@ class MaintenanceReportController extends Controller
             $photoPath = $request->file('evidence_photo')->store('maintenance-evidence', 'public');
         }
 
+        // Find Gym ID based on Equipment
         $equipment = Equipment::find($request->equipment_id);
 
         MaintenanceReport::create([
-            'gymkos_id' => $equipment->gymkos_id,
+            'gymkos_id' => $equipment->gymkos_id, // Auto-fill Gym ID
             'equipment_id' => $validated['equipment_id'],
             'reporter_name' => $validated['reporter_name'],
             'severity' => $validated['severity'],

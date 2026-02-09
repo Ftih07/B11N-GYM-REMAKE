@@ -44,9 +44,10 @@
 </head>
 
 <body class="bg-gray-50 text-brand-black dark:bg-brand-black dark:text-gray-200 font-sans antialiased transition-colors duration-300 pt-20">
-
+    <!--Navbar-->
     @include('components.navbar-cta')
 
+    <!--Hero-->
     <div class="relative w-full h-[100vh] flex items-center justify-center bg-gray-900 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <img src="{{ asset('assets/Hero/b11ngym.jpg') }}" alt="Blog Background" class="w-full h-full object-cover opacity-50">
@@ -66,6 +67,7 @@
         </div>
     </div>
 
+    <!--Main Content-->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-gray-800 pb-6">
@@ -122,6 +124,7 @@
 
     </main>
 
+    <!--Footer-->
     @include('components.footer-bing-empire')
 
 </body>

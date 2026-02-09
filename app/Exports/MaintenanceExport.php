@@ -20,24 +20,30 @@ class MaintenanceExport implements FromQuery, WithHeadings, WithMapping, ShouldA
     protected $month;
     protected $year;
 
+    // --- CONSTRUCTOR ---
+    // Initializes the export class with the selected period
     public function __construct($month, $year)
     {
         $this->month = $month;
         $this->year = $year;
     }
 
+    // --- QUERY DATA ---
+    // Fetches maintenance reports filtered by creation date
     public function query()
     {
         return MaintenanceReport::query()
-            ->with(['gymkos', 'equipment']) // Eager Load
-            ->whereYear('created_at', $this->year)
-            ->whereMonth('created_at', $this->month)
-            ->orderBy('created_at', 'desc');
+            ->with(['gymkos', 'equipment']) // Eager Load relations to prevent N+1 query problem
+            ->whereYear('created_at', $this->year)  // Filter Year
+            ->whereMonth('created_at', $this->month) // Filter Month
+            ->orderBy('created_at', 'desc'); // Sort by newest report
     }
 
+    // --- MAPPING ---
+    // Formats each row for the Excel report
     public function map($record): array
     {
-        // 1. Translate Status
+        // Logic: Translate Status to Indonesian
         $status = match ($record->status) {
             'pending' => 'Menunggu (Pending)',
             'in_progress' => 'Sedang Dikerjakan',
@@ -46,7 +52,7 @@ class MaintenanceExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             default => $record->status,
         };
 
-        // 2. Translate Severity (Keparahan)
+        // Logic: Translate Severity Level
         $severity = match ($record->severity) {
             'low' => 'Rendah',
             'medium' => 'Sedang',
@@ -55,58 +61,62 @@ class MaintenanceExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             default => $record->severity,
         };
 
-        // 3. Generate Link Foto (Jika ada)
-        // Pastikan APP_URL di .env sudah benar agar link bisa dibuka
-        $photoLink = $record->evidence_photo 
-            ? url(Storage::url($record->evidence_photo)) 
+        // Logic: Generate Full URL for Evidence Photo
+        // Uses Laravel's Storage facade to create a clickable link
+        $photoLink = $record->evidence_photo
+            ? url(Storage::url($record->evidence_photo))
             : 'Tidak ada foto';
 
-        // 4. Tanggal Selesai
-        $fixedDate = $record->fixed_at 
-            ? \Carbon\Carbon::parse($record->fixed_at)->format('d/m/Y H:i') 
+        // Logic: Format Fixed Date (if resolved)
+        $fixedDate = $record->fixed_at
+            ? \Carbon\Carbon::parse($record->fixed_at)->format('d/m/Y H:i')
             : '-';
 
         return [
-            $record->created_at->format('d/m/Y'), // A. Tanggal Lapor
-            $record->gymkos->name ?? '-',         // B. Lokasi
-            $record->equipment->name ?? 'Umum',   // C. Alat
-            $record->reporter_name,               // D. Pelapor
-            $record->description,                 // E. Keluhan
-            $severity,                            // F. Tingkat Keparahan
-            $photoLink,                           // G. Link Bukti Foto (Klikable)
-            $status,                              // H. Status Terkini
-            $fixedDate                            // I. Tanggal Selesai
+            $record->created_at->format('d/m/Y'), // Report Date
+            $record->gymkos->name ?? '-',         // Branch Location
+            $record->equipment->name ?? 'Umum',   // Equipment Name (or General)
+            $record->reporter_name,               // Reporter Name
+            $record->description,                 // Issue Description
+            $severity,                            // Severity Level
+            $photoLink,                           // Clickable Photo Link
+            $status,                              // Current Status
+            $fixedDate                            // Date Resolved
         ];
     }
 
+    // --- HEADINGS ---
+    // Defines the column titles
     public function headings(): array
     {
         return [
-            'Tanggal Lapor',
-            'Lokasi Cabang',
-            'Nama Alat/Fasilitas',
-            'Dilaporkan Oleh',
-            'Deskripsi Masalah',
-            'Tingkat Keparahan',
-            'Link Bukti Foto',
-            'Status Perbaikan',
-            'Waktu Selesai',
+            'Tanggal Lapor',       // Report Date
+            'Lokasi Cabang',       // Branch Location
+            'Nama Alat/Fasilitas', // Equipment Name
+            'Dilaporkan Oleh',     // Reported By
+            'Deskripsi Masalah',   // Description
+            'Tingkat Keparahan',   // Severity
+            'Link Bukti Foto',     // Photo Evidence
+            'Status Perbaikan',    // Repair Status
+            'Waktu Selesai',       // Completion Time
         ];
     }
 
+    // --- STYLING ---
+    // Styles the header row with ORANGE background
     public function styles(Worksheet $sheet)
     {
         return [
-            // Baris 1 (Header) dengan Warna Orange
+            // Target Row 1
             1 => [
                 'font' => [
                     'bold' => true,
                     'size' => 12,
-                    'color' => ['argb' => 'FF000000'], // Text Hitam
+                    'color' => ['argb' => 'FF000000'], // Black Text
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFFF9800'], // BACKGROUND ORANGE
+                    'startColor' => ['argb' => 'FFFF9800'], // ORANGE Background (Alert color)
                 ],
             ],
         ];

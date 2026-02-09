@@ -19,36 +19,39 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
     protected $month;
     protected $year;
 
-    // Terima parameter filter dari Filament
+    // --- CONSTRUCTOR ---
+    // Receives the month and year inputs passed from the Filament action
     public function __construct($month, $year)
     {
         $this->month = $month;
         $this->year = $year;
     }
 
+    // --- QUERY DATA ---
+    // Fetches the raw data from the database based on the filters
     public function query()
     {
-        // Query data sesuai filter bulan & tahun
-        // Kita load relasi member biar query-nya cepat (Eager Loading)
         return Attendance::query()
-            ->with('member')
-            ->whereYear('check_in_time', $this->year)
-            ->whereMonth('check_in_time', $this->month)
-            ->orderBy('check_in_time', 'desc');
+            ->with('member') // Eager load 'member' to speed up the process
+            ->whereYear('check_in_time', $this->year)  // Filter by Year
+            ->whereMonth('check_in_time', $this->month) // Filter by Month
+            ->orderBy('check_in_time', 'desc'); // Sort by newest first
     }
 
-    // Mapping data biar "Manusiawi" dibaca Admin
+    // --- MAPPING ---
+    // Formats each row before it enters the Excel file (Human-readable format)
     public function map($attendance): array
     {
-        // Logic Nama (Sama kayak di Resource kamu)
+        // Logic: Determine if it's a Member or a Visitor
+        // If member_id exists, use Member Name. If not, use Visitor Name.
         $nama = $attendance->member_id ? $attendance->member->name : $attendance->visitor_name;
 
-        // Logic Status Member
+        // Logic: Determine Membership Status
         $statusMember = $attendance->member_id
-            ? 'Member Tetap'
-            : 'Non-Member (' . ($attendance->visitor_phone ?? '-') . ')';
+            ? 'Member Tetap' // Permanent Member
+            : 'Non-Member (' . ($attendance->visitor_phone ?? '-') . ')'; // Visitor + Phone
 
-        // Translate Tipe Kunjungan
+        // Logic: Translate 'Visit Type' to Indonesian
         $tipeKunjungan = match ($attendance->visit_type) {
             'member' => 'Membership',
             'daily' => 'Harian',
@@ -56,7 +59,7 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
             default => $attendance->visit_type,
         };
 
-        // Translate Metode Absen
+        // Logic: Translate 'Attendance Method' to Indonesian
         $metode = match ($attendance->method) {
             'face_scan' => 'Scan Wajah',
             'manual' => 'Input Manual',
@@ -64,8 +67,9 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
             default => $attendance->method,
         };
 
+        // Return the row data
         return [
-            $attendance->check_in_time->format('d/m/Y H:i'), // Format Tanggal Rapi
+            $attendance->check_in_time->format('d/m/Y H:i'), // Format: DD/MM/YYYY HH:MM
             $nama,
             $statusMember,
             $tipeKunjungan,
@@ -73,35 +77,37 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
         ];
     }
 
-    // Judul Header Kolom
+    // --- HEADINGS ---
+    // Defines the titles for the columns in the first row
     public function headings(): array
     {
         return [
-            'Waktu Masuk',
-            'Nama Pengunjung',
-            'Status Keanggotaan',
-            'Tipe Kunjungan',
-            'Metode Absen',
+            'Waktu Masuk',       // Check-in Time
+            'Nama Pengunjung',   // Visitor Name
+            'Status Keanggotaan', // Membership Status
+            'Tipe Kunjungan',    // Visit Type
+            'Metode Absen',      // Attendance Method
         ];
     }
 
-    // --- LOGIC STYLING KUNING & BOLD ---
+    // --- STYLING ---
+    // Applies CSS-like styles to the Excel sheet
     public function styles(Worksheet $sheet)
     {
         return [
-            // Baris 1 (Header)
+            // Target Row 1 (The Header)
             1 => [
                 'font' => [
-                    'bold' => true,
+                    'bold' => true, // Make text Bold
                     'size' => 12,
-                    'color' => ['argb' => 'FF000000'], // Teks Hitam
+                    'color' => ['argb' => 'FF000000'], // Black Text color
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FFFFFF00'], // BACKGROUND KUNING
+                    'startColor' => ['argb' => 'FFFFFF00'], // YELLOW Background color
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Center align text
                 ],
             ],
         ];

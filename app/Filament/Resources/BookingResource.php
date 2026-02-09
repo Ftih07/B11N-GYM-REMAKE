@@ -5,11 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Models\Booking;
 use Filament\Forms;
-use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use App\Exports\BookingExport;
@@ -19,7 +17,9 @@ use Filament\Tables\Actions\Action;
 
 class BookingResource extends Resource
 {
-    // Badge Notification (Tetap pertahankan)
+    // --- NAVIGATION SETTINGS ---
+
+    // Notification Badge: Shows count of 'pending' bookings in sidebar
     public static function getNavigationBadge(): ?string
     {
         return Booking::where('status', 'pending')->count() ?: null;
@@ -27,17 +27,10 @@ class BookingResource extends Resource
 
     protected static ?string $model = Booking::class;
 
-    // --- UBAH ICON ---
-    // Ganti 'calendar' jadi 'users' (karena manage orang) atau 'home-modern' (manage properti)
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-users'; // Icon for User Management
+    protected static ?string $navigationLabel = 'Manajemen Penghuni'; // Sidebar Label
 
-    // --- UBAH LABEL SIDEBAR ---
-    // Opsi 1: "Manajemen Penghuni" (Terasa profesional)
-    // Opsi 2: "Data Sewa Kost" (Jelas & to the point)
-    protected static ?string $navigationLabel = 'Manajemen Penghuni';
-
-    // --- TAMBAHAN: UBAH LABEL TOMBOL ---
-    // Biar tombolnya jadi "Tambah Penghuni", bukan "New Booking"
+    // Rename standard "New Booking" button to "Penghuni Kost"
     public static function getModelLabel(): string
     {
         return 'Penghuni Kost';
@@ -48,6 +41,7 @@ class BookingResource extends Resource
         return 'Data Penghuni';
     }
 
+    // --- FORM CONFIGURATION (Create/Edit) ---
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -56,14 +50,14 @@ class BookingResource extends Resource
                 Forms\Components\TextInput::make('email')->email()->required(),
                 Forms\Components\TextInput::make('phone')->required(),
 
-                // --- UPDATE: LOGIC TANGGAL OTOMATIS ---
+                // AUTO-CALCULATE DATE LOGIC
                 Forms\Components\DatePicker::make('date')
                     ->label('Tanggal Mulai')
                     ->required()
-                    ->live() // Agar reaktif
+                    ->live() // Watch for changes
                     ->afterStateUpdated(function ($state, Set $set) {
                         if ($state) {
-                            // Otomatis set tanggal selesai 1 bulan kedepan
+                            // Automatically set 'end_date' to 1 month after 'start_date'
                             $set('end_date', Carbon::parse($state)->addMonth()->format('Y-m-d'));
                         }
                     }),
@@ -80,14 +74,16 @@ class BookingResource extends Resource
                     ])
                     ->required(),
 
+                // DYNAMIC ROOM AVAILABILITY LOGIC
                 Forms\Components\Select::make('room_number')
                     ->options(function () {
-                        // Cek kamar yang statusnya PAID dan tanggal sewanya BELUM BERAKHIR
+                        // 1. Get list of occupied rooms (Status 'paid' AND lease not expired)
                         $occupiedRooms = Booking::where('status', 'paid')
                             ->where('end_date', '>=', now())
                             ->pluck('room_number')
                             ->toArray();
 
+                        // 2. Generate list 1-10, then remove occupied rooms
                         return collect(range(1, 10))->mapWithKeys(fn($num) => ["$num" => "Room $num"])
                             ->except($occupiedRooms);
                     })->required(),
@@ -95,12 +91,12 @@ class BookingResource extends Resource
                 Forms\Components\Select::make('payment')->options([
                     'qris' => 'QRIS',
                     'transfer' => 'Transfer Bank',
-                    'cash' => 'Cash / Tunai', // Tambahan opsional
+                    'cash' => 'Cash / Tunai',
                 ])->required(),
 
                 Forms\Components\FileUpload::make('payment_proof')
                     ->directory('bukti_pembayaran')
-                    ->columnSpanFull(), // Biar agak lebar gambarnya
+                    ->columnSpanFull(),
 
                 Forms\Components\Select::make('status')->options([
                     'pending' => 'Pending',
@@ -110,11 +106,11 @@ class BookingResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION (List View) ---
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table
-            // Urutkan dari yang terbaru (biar tagihan baru muncul di atas)
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('created_at', 'desc') // Show newest bookings first
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
@@ -125,19 +121,17 @@ class BookingResource extends Resource
                     ->label('Kamar')
                     ->sortable(),
 
-                // Kolom Tanggal Mulai
                 Tables\Columns\TextColumn::make('date')
                     ->label('Mulai')
                     ->date('d M Y')
                     ->sortable(),
 
-                // Kolom Tanggal Selesai (Baru)
                 Tables\Columns\TextColumn::make('end_date')
                     ->label('Selesai')
                     ->date('d M Y')
                     ->sortable(),
 
-                // --- BADGE STATUS HUNI (LOGIC PENGHUNI AKTIF) ---
+                // COMPUTED STATUS COLUMN (Active vs Expired)
                 Tables\Columns\TextColumn::make('status_huni')
                     ->label('Status Huni')
                     ->badge()
@@ -147,20 +141,20 @@ class BookingResource extends Resource
 
                         if ($record->status === 'paid') {
                             if ($endDate >= $today) {
-                                return 'Aktif';
+                                return 'Aktif'; // Active Tenant
                             } else {
-                                return 'Habis Masa Sewa';
+                                return 'Habis Masa Sewa'; // Expired Lease
                             }
                         }
-                        return 'Belum Lunas'; // Jika pending/cancelled
+                        return 'Belum Lunas'; // Payment Pending
                     })
                     ->colors([
                         'success' => 'Aktif',
                         'danger' => 'Habis Masa Sewa',
                         'warning' => 'Belum Lunas',
                     ]),
-                // -----------------------------------------------
 
+                // Payment Status Badge
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -173,12 +167,14 @@ class BookingResource extends Resource
                     ->label('Bukti')
                     ->circular(),
             ])
+            // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Data Kost')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('success') 
+                    ->color('success')
                     ->form([
+                        // Modal Form for selecting Month/Year
                         Select::make('month')
                             ->label('Bulan Masuk')
                             ->options([
@@ -207,6 +203,7 @@ class BookingResource extends Resource
                             ->required(),
                     ])
                     ->action(function (array $data) {
+                        // Trigger Excel Download using Maatwebsite
                         return Excel::download(
                             new BookingExport($data['month'], $data['year']),
                             'Data-Penghuni-Kost-' . $data['month'] . '-' . $data['year'] . '.xlsx'
@@ -214,11 +211,10 @@ class BookingResource extends Resource
                     }),
             ])
             ->filters([
-                // Filter Bawaan Status Pembayaran
                 Tables\Filters\SelectFilter::make('status')
                     ->options(['pending' => 'Pending', 'paid' => 'Paid']),
 
-                // --- FILTER BARU: HANYA YANG AKTIF ---
+                // CUSTOM FILTER: Active Tenants Only (Default ON)
                 Tables\Filters\Filter::make('active_tenants')
                     ->label('Penghuni Aktif Saja')
                     ->query(
@@ -226,48 +222,46 @@ class BookingResource extends Resource
                             ->where('status', 'paid')
                             ->where('end_date', '>=', now())
                     )
-                    ->default(), // Default nyala, biar admin ga pusing liat data lama
-                // -------------------------------------
+                    ->default(),
             ])
             ->actions([
-                // --- TOMBOL PERPANJANG (LOGIC BARU: REPLICATE) ---
+                // --- CUSTOM ACTION: EXTEND LEASE (PERPANJANG) ---
                 Tables\Actions\Action::make('perpanjang')
                     ->label('Perpanjang')
-                    ->icon('heroicon-m-arrow-path') // Ikon refresh/cycle
+                    ->icon('heroicon-m-arrow-path')
                     ->color('info')
-                    ->visible(fn(Booking $record) => $record->status === 'paid') // Hanya muncul kalau status paid
+                    ->visible(fn(Booking $record) => $record->status === 'paid') // Only visible if paid
                     ->requiresConfirmation()
                     ->modalHeading('Perpanjang Sewa Penghuni')
-                    ->modalDescription('Sistem akan membuat TAGIHAN BARU untuk bulan berikutnya. Data lama tetap tersimpan sebagai history.')
+                    ->modalDescription('System will create a NEW INVOICE for the next month.')
                     ->modalSubmitActionLabel('Ya, Buat Tagihan Baru')
                     ->action(function (Booking $record) {
-                        // 1. Hitung tanggal baru
+                        // 1. Calculate new dates (Start tomorrow, End +1 Month)
                         $lastEndDate = Carbon::parse($record->end_date);
-                        $newStartDate = $lastEndDate->copy()->addDay(); // Mulai besoknya
-                        $newEndDate = $newStartDate->copy()->addMonth(); // Sampai bulan depan
+                        $newStartDate = $lastEndDate->copy()->addDay();
+                        $newEndDate = $newStartDate->copy()->addMonth();
 
-                        // 2. DUPLIKASI DATA (PENTING!)
+                        // 2. REPLICATE LOGIC: Clone existing data
                         $newBooking = $record->replicate();
 
-                        // 3. Update data duplikat dengan info baru
+                        // 3. Update clone with new details
                         $newBooking->date = $newStartDate;
                         $newBooking->end_date = $newEndDate;
-                        $newBooking->status = 'pending'; // Reset jadi pending biar ditagih
-                        $newBooking->payment_proof = null; // Kosongkan bukti bayar
+                        $newBooking->status = 'pending'; // Reset to pending for payment
+                        $newBooking->payment_proof = null; // Clear old proof
                         $newBooking->created_at = now();
                         $newBooking->updated_at = now();
 
-                        // 4. Simpan (Ini akan men-trigger 'booted' di Model Booking -> Buat Transaction Baru)
+                        // 4. Save (Creates new record in DB)
                         $newBooking->save();
 
-                        // Notifikasi
+                        // 5. Send Notification
                         \Filament\Notifications\Notification::make()
                             ->title('Tagihan Perpanjangan Dibuat')
                             ->body('Penghuni diperpanjang s/d ' . $newEndDate->format('d M Y'))
                             ->success()
                             ->send();
                     }),
-                // -------------------------------------------------
 
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

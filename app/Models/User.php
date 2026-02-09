@@ -58,10 +58,9 @@ class User extends Authenticatable implements FilamentUser // <--- 3. Tambahkan 
         ];
     }
 
-    // 4. Tambahkan fungsi ini di bagian bawah
+    // Fungsi Dashboard Filament hanya bisa diakses user role admin
     public function canAccessPanel(Panel $panel): bool
     {
-        // Pastikan role di database ditulis 'admin' (huruf kecil semua) atau sesuaikan
         return $this->role === 'admin';
     }
 }

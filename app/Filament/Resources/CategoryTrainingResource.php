@@ -3,30 +3,28 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryTrainingResource\Pages;
-use App\Filament\Resources\CategoryTrainingResource\RelationManagers;
 use App\Models\CategoryTraining;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryTrainingResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Training Program';
-
+    // --- NAVIGATION SETTINGS ---
+    protected static ?string $navigationGroup = 'Training Program'; // Sidebar Group
     protected static ?string $model = CategoryTraining::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-    protected static ?int $navigationSort = 7;
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap'; // Icon for 'Training'
+    protected static ?int $navigationSort = 7; // Order position
 
+    // --- FORM CONFIGURATION (Create/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                // Input field for the Training Category name
                 Forms\Components\TextInput::make('title')
                     ->label('Title Category Training')
                     ->required()
@@ -34,16 +32,20 @@ class CategoryTrainingResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION (List View) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+                // Display Record ID
                 Tables\Columns\TextColumn::make('id'),
+
+                // Display Category Title
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title Category Training')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(), // Enable search
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime(),

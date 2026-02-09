@@ -31,8 +31,10 @@
 
 <body class="bg-dark text-gray-200 font-body min-h-screen pb-10">
 
+    <!-- NAVBAR -->
     @include('components.navbar')
 
+    <!-- MAIN CONTENT -->
     <div class="container mx-auto p-4 md:p-6 max-w-5xl">
 
         <div class="flex items-center gap-3 mb-6 md:mb-8 border-b border-neutral-800 pb-4">
@@ -152,6 +154,7 @@
 
     </div>
 
+    <!-- FOOTER -->
     @include('components.footer-compact')
 
 </body>

@@ -8,13 +8,11 @@ class Finance extends Model
 {
     protected $guarded = [];
 
-    // Casting tipe data agar formatnya benar
     protected $casts = [
         'date' => 'date',
         'amount' => 'decimal:2',
     ];
 
-    // Relasi opsional (jika keuangan berasal dari transaksi POS)
     public function transaction()
     {
         return $this->belongsTo(Transaction::class);
@@ -22,6 +20,6 @@ class Finance extends Model
     
     public function gymkos()
     {
-        return $this->belongsTo(Gymkos::class); // Asumsi ada model Gymkos
+        return $this->belongsTo(Gymkos::class); 
     }
 }

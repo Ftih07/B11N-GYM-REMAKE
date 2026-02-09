@@ -6,32 +6,33 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MemberMeasurement;
-use Illuminate\Support\Facades\Storage; // Tambahkan ini buat handle file
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
+    // --- DASHBOARD HOME ---
     public function index()
     {
         $user = Auth::user();
+        $member = $user->member; // Get linked Member data
 
-        // Cek apakah user ini terhubung ke member gym
-        $member = $user->member;
-
-        // Ambil history measurements (jika member ada)
+        // Get Measurement History (if member exists)
         $history = $member ? $member->measurements()->latest()->get() : [];
+
+        // Show latest blogs in dashboard
         $blogs = Blog::published()->latest()->take(3)->get();
 
         return view('member.dashboard', compact('user', 'member', 'history', 'blogs'));
     }
 
-    // ... namespace dan use statements yang sudah ada
+    // --- MEASUREMENT: STORE PROGRESS ---
     public function storeMeasurement(Request $request)
     {
         $request->validate([
             'weight' => 'nullable|numeric',
             'waist_size' => 'nullable|numeric',
             'arm_size' => 'nullable|numeric',
-            'thigh_size' => 'nullable|numeric', // Validasi baru
+            'thigh_size' => 'nullable|numeric',
             'notes' => 'nullable|string',
             'progress_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Max 5MB
         ]);
@@ -45,17 +46,17 @@ class DashboardController extends Controller
         // Handle File Upload
         $photoPath = null;
         if ($request->hasFile('progress_photo')) {
-            // Simpan ke folder 'storage/app/public/progress_photos'
             $photoPath = $request->file('progress_photo')->store('progress_photos', 'public');
         }
 
+        // Save to Database
         MemberMeasurement::create([
             'member_id' => $member->id,
             'weight' => $request->weight,
             'waist_size' => $request->waist_size,
             'arm_size' => $request->arm_size,
-            'thigh_size' => $request->thigh_size, // Input baru
-            'progress_photo' => $photoPath,        // Path foto
+            'thigh_size' => $request->thigh_size,
+            'progress_photo' => $photoPath,
             'notes' => $request->notes,
             'measured_at' => now(),
         ]);
@@ -63,18 +64,18 @@ class DashboardController extends Controller
         return back()->with('success', 'Progress berhasil disimpan!');
     }
 
-    // Menampilkan halaman Absensi
+    // --- ATTENDANCE PAGE ---
     public function attendance()
     {
         $member = Auth::user()->member;
 
-        // Jika member belum connect, return array kosong
+        // Pagination for attendance history
         $attendances = $member ? $member->attendances()->latest()->paginate(10) : [];
 
         return view('member.attendance', compact('attendances'));
     }
 
-    // Menampilkan halaman Profile
+    // --- PROFILE PAGE ---
     public function profile()
     {
         $user = Auth::user();
@@ -82,7 +83,7 @@ class DashboardController extends Controller
         return view('member.profile', compact('user', 'member'));
     }
 
-    // Update Profile (Simpan Perubahan)
+    // --- PROFILE: UPDATE ---
     public function updateProfile(Request $request)
     {
         $request->validate([
@@ -93,6 +94,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $member = $user->member;
 
+        // Only update Member data (User table data like email/name is managed via Google)
         if ($member) {
             $member->update([
                 'phone' => $request->phone,

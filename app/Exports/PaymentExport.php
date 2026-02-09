@@ -20,24 +20,30 @@ class PaymentExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
     protected $month;
     protected $year;
 
+    // --- CONSTRUCTOR ---
+    // Initializes the export class with the selected period
     public function __construct($month, $year)
     {
         $this->month = $month;
         $this->year = $year;
     }
 
+    // --- QUERY DATA ---
+    // Fetches payment records filtered by transaction date
     public function query()
     {
         return Payment::query()
-            ->with('member') // Eager load relasi member
-            ->whereYear('created_at', $this->year)
-            ->whereMonth('created_at', $this->month)
-            ->orderBy('created_at', 'desc');
+            ->with('member') // Eager load 'member' relationship to avoid N+1 queries
+            ->whereYear('created_at', $this->year)  // Filter Year
+            ->whereMonth('created_at', $this->month) // Filter Month
+            ->orderBy('created_at', 'desc'); // Sort by newest transaction
     }
 
+    // --- MAPPING ---
+    // Formats each row for the Excel report
     public function map($payment): array
     {
-        // 1. Logic Status
+        // Logic: Translate Payment Status to Indonesian/Readable format
         $status = match ($payment->status) {
             'pending' => 'MENUNGGU VERIFIKASI',
             'confirmed' => 'LUNAS (CONFIRMED)',
@@ -45,66 +51,72 @@ class PaymentExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
             default => strtoupper($payment->status),
         };
 
-        // 2. Logic Tipe Member (Baru vs Lama)
+        // Logic: Determine User Type (New vs Renewal)
+        // If member_id exists, it's a renewal. If null, it's a new registration.
         $tipeUser = $payment->member_id
             ? 'Member Lama (Perpanjang)'
             : 'Pendaftar Baru';
 
-        // 3. Link Bukti Bayar
-        // Pastikan APP_URL di .env sudah benar (http://localhost:8000 atau domain kamu)
+        // Logic: Generate Full URL for Payment Proof Image
+        // Uses Laravel's Storage facade to create a clickable link
         $buktiBayar = $payment->image
             ? url(Storage::url($payment->image))
             : 'Tidak ada bukti';
 
-        // 4. Nama (Ambil dari relasi jika ada, atau dari input form)
+        // Logic: Determine Name Source
+        // Prioritize Member Name if linked, otherwise use the name from the payment form
         $nama = $payment->member_id && $payment->member
             ? $payment->member->name
             : $payment->name;
 
         return [
-            $payment->created_at->format('d/m/Y H:i'), // A. Tanggal Transaksi
-            $payment->order_id,                        // B. Order ID
-            $nama,                                     // C. Nama
-            $tipeUser,                                 // D. Status User
-            $payment->membership_type,                 // E. Paket
-            $payment->payment,                         // F. Metode Bayar
-            $payment->phone,                           // G. No WA
-            $status,                                   // H. Status Pembayaran
-            $buktiBayar,                               // I. Link Bukti (Klikable)
+            $payment->created_at->format('d/m/Y H:i'), // Transaction Date
+            $payment->order_id,                        // Order ID (Unique)
+            $nama,                                     // Payer Name
+            $tipeUser,                                 // User Type
+            $payment->membership_type,                 // Package Name
+            $payment->payment,                         // Payment Method
+            $payment->phone,                           // WhatsApp Number
+            $status,                                   // Payment Status
+            $buktiBayar,                               // Proof of Payment Link
         ];
     }
 
+    // --- HEADINGS ---
+    // Defines the column titles
     public function headings(): array
     {
         return [
-            'Waktu Transaksi',
-            'Order ID',
-            'Nama Member/Pendaftar',
-            'Tipe Pendaftar',
-            'Paket Membership',
-            'Metode Pembayaran',
-            'No. WhatsApp',
-            'Status',
-            'Link Bukti Transfer',
+            'Waktu Transaksi',      // Transaction Time
+            'Order ID',             // Unique Order ID
+            'Nama Member/Pendaftar', // Payer Name
+            'Tipe Pendaftar',       // Registration Type
+            'Paket Membership',     // Membership Package
+            'Metode Pembayaran',    // Payment Method
+            'No. WhatsApp',         // Contact
+            'Status',               // Status
+            'Link Bukti Transfer',  // Proof Link
         ];
     }
 
+    // --- STYLING ---
+    // Styles the header row with BLUE background (Financial theme)
     public function styles(Worksheet $sheet)
     {
         return [
-            // Header: Background BIRU, Text Putih (Biar beda dan fresh)
+            // Target Row 1
             1 => [
                 'font' => [
                     'bold' => true,
                     'size' => 12,
-                    'color' => ['argb' => 'FFFFFFFF'], // Text Putih
+                    'color' => ['argb' => 'FFFFFFFF'], // White Text
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['argb' => 'FF2196F3'], // BACKGROUND BIRU MATERIAL
+                    'startColor' => ['argb' => 'FF2196F3'], // MATERIAL BLUE Background
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Center align
                 ],
             ],
         ];

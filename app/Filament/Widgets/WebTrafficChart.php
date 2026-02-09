@@ -13,7 +13,7 @@ class WebTrafficChart extends ChartWidget
 
     protected function getData(): array
     {
-        // Default: 30 Hari terakhir
+        // 1. Prepare Empty Data (Last 30 Days)
         $dataPoints = [];
         $labels = [];
 
@@ -23,17 +23,18 @@ class WebTrafficChart extends ChartWidget
             $labels[] = Carbon::parse($date)->format('d M');
         }
 
-        // Query Unique Visitor per hari
+        // 2. Query DB: Count Unique Visitors per Day
+        // Assuming `visit_date` is a Date column
         $results = WebVisitor::selectRaw('visit_date, COUNT(*) as aggregate')
             ->where('visit_date', '>=', now()->subDays(30))
             ->groupBy('visit_date')
             ->get();
 
+        // 3. Merge Results
         foreach ($results as $row) {
-            // FIX: Format dulu Object Carbon-nya jadi string 'Y-m-d'
-            // Karena di Model kita pakai casts => date, maka dia jadi Object.
-            // Kita balikin jadi string biar bisa jadi Key Array.
-            $dateString = $row->visit_date->format('Y-m-d');
+            // FIX: Convert Carbon Object to String Key
+            // This handles the case where `visit_date` is cast to a date object in the Model
+            $dateString = is_object($row->visit_date) ? $row->visit_date->format('Y-m-d') : $row->visit_date;
 
             if (isset($dataPoints[$dateString])) {
                 $dataPoints[$dateString] = $row->aggregate;
@@ -45,7 +46,7 @@ class WebTrafficChart extends ChartWidget
                 [
                     'label' => 'Unique Visitors',
                     'data' => array_values($dataPoints),
-                    'borderColor' => '#10b981', // Warna Emerald/Hijau
+                    'borderColor' => '#10b981', // Emerald Green
                     'backgroundColor' => 'rgba(16, 185, 129, 0.1)',
                     'fill' => 'start',
                     'tension' => 0.3,

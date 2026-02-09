@@ -11,8 +11,8 @@ class Store extends Model
 
     protected $fillable = [
         'title',
-        'subheading', // TAMBAHAN BARU
-        'location',   // TAMBAHAN BARU
+        'subheading', 
+        'location',   
         'description',
         'image',
     ];

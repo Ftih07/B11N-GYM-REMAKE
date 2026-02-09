@@ -9,40 +9,43 @@ use Illuminate\Http\Request;
 
 class EquipmentPageController extends Controller
 {
-    // Halaman List Semua Alat (Global)
+    // --- PAGE: LIST ALL EQUIPMENTS ---
     public function index(Request $request)
     {
         $gyms = Gymkos::all();
 
+        // Start Query
         $query = Equipment::where('status', 'active')
-            ->with(['gallery', 'gymkos']);
+            ->with(['gallery', 'gymkos']); // Eager loading
 
+        // Filter by Category (if present in URL)
         if ($request->has('category') && $request->category != null) {
             $query->where('category', $request->category);
         }
 
+        // Filter by Gym Location
         if ($request->filled('gym')) {
             $query->where('gymkos_id', $request->gym);
         }
 
+        // Pagination & Append Query String (so filters persist on page 2, 3...)
         $equipments = $query->latest()->paginate(9)->withQueryString();
 
         return view('gym.equipments.index', compact('equipments', 'gyms'));
     }
 
-    // Halaman Detail
-    public function show($slug) // <--- Parameter terima $slug (bukan $id lagi)
+    // --- PAGE: EQUIPMENT DETAIL ---
+    public function show($slug)
     {
-        // 1. Cari alat berdasarkan slug
+        // 1. Find equipment by SLUG (SEO Friendly)
         $equipment = Equipment::with(['gallery', 'gymkos'])
             ->where('slug', $slug)
-            ->firstOrFail(); // Kalau slug salah -> 404
+            ->firstOrFail(); // Returns 404 if not found
 
-        // 2. Logic Related (Tetap pakai ID buat exclude, ini lebih aman & cepat)
+        // 2. Logic: Related Equipments (Exclude current item)
         $relatedEquipments = Equipment::where('status', 'active')
-            ->where('id', '!=', $equipment->id) // Exclude ID alat yang sedang dibuka
-            // ->where('gymkos_id', $equipment->gymkos_id) // Opsional: kalau mau related by lokasi yg sama
-            ->inRandomOrder()
+            ->where('id', '!=', $equipment->id)
+            ->inRandomOrder() // Shuffle results
             ->take(3)
             ->get();
 

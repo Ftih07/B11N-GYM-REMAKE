@@ -7,12 +7,11 @@ use Illuminate\Http\Request;
 
 class QrCodePrintController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
+    // Logic: Handle Single Invocation
+    // This controller only does one thing: show the print view
     public function __invoke(QrCode $qrCode)
     {
-        // Kita passing data QrCode ke view khusus print
+        // Pass the QrCode model to the view
         return view('print.qr-code', compact('qrCode'));
     }
 }

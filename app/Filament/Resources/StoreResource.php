@@ -9,19 +9,16 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-// HAPUS baris SoftDeletingScope karena kamu tidak pakai soft delete
-// use Illuminate\Database\Eloquent\SoftDeletingScope; 
 
 class StoreResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
     protected static ?string $navigationGroup = 'Store Management';
     protected static ?int $navigationSort = 6;
-
     protected static ?string $model = Store::class;
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront'; // Icon: Storefront
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
-
+    // --- FORM CONFIGURATION ---
     public static function form(Form $form): Form
     {
         return $form
@@ -31,20 +28,19 @@ class StoreResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                // --- TAMBAHAN BARU: SUBHEADING ---
+                // Subheading (Optional)
                 Forms\Components\TextInput::make('subheading')
                     ->label('Subheading / Slogan')
                     ->placeholder('Contoh: Pusat Gym Terlengkap')
                     ->maxLength(255),
 
-                // --- PERUBAHAN: IMAGE JADI TIDAK WAJIB ---
-                // Hapus '->required()' karena di database sudah nullable
+                // Image Upload (Optional / Nullable)
                 Forms\Components\FileUpload::make('image')
                     ->label('Store Image')
-                    ->directory('stores') // Saran: rapikan ke folder stores
+                    ->directory('stores') // Save to 'stores' folder
                     ->image(),
 
-                // --- TAMBAHAN BARU: LOCATION ---
+                // Address / Location
                 Forms\Components\Textarea::make('location')
                     ->label('Location / Alamat')
                     ->rows(2)
@@ -58,6 +54,7 @@ class StoreResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION ---
     public static function table(Table $table): Table
     {
         return $table
@@ -67,16 +64,15 @@ class StoreResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                // --- TAMBAHAN BARU: SUBHEADING ---
+                // Toggleable Slogan Column (Hidden by default to save space)
                 Tables\Columns\TextColumn::make('subheading')
                     ->label('Slogan')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true), // Sembunyikan biar tabel ga penuh
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Store Image'),
 
-                // --- TAMBAHAN BARU: LOCATION ---
                 Tables\Columns\TextColumn::make('location')
                     ->label('Location')
                     ->limit(30)
@@ -94,11 +90,11 @@ class StoreResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // Tidak perlu filter Trash karena tidak ada soft delete
+                // No filters needed
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), // Delete biasa (langsung hilang)
+                Tables\Actions\DeleteAction::make(), // Hard Delete
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -109,9 +105,7 @@ class StoreResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

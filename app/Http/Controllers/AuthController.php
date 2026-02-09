@@ -11,37 +11,37 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    // 1. Redirect ke Google
+    // 1. Redirect user to Google Login Page
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    // 2. Callback dari Google
+    // 2. Handle Callback from Google
     public function handleGoogleCallback()
     {
         try {
-            // Ambil data user dari Google
+            // Get user data from Google
             $googleUser = Socialite::driver('google')->user();
 
-            // Cari user berdasarkan google_id ATAU email
+            // Find existing user by Google ID OR Email
             $user = User::where('google_id', $googleUser->id)
                 ->orWhere('email', $googleUser->email)
                 ->first();
 
             if (!$user) {
-                // Kalo user belum ada, Buat User Baru (Register Otomatis)
+                // Scenario A: User doesn't exist -> Create New User
                 $user = User::create([
                     'name' => $googleUser->name,
                     'email' => $googleUser->email,
                     'google_id' => $googleUser->id,
                     'role' => 'customer', // Default role
-                    'password' => bcrypt(Str::random(16)), // Password acak (karena login pake Google)
-                    'email_verified_at' => now(), // Anggap verified karena dari Google
+                    'password' => bcrypt(Str::random(16)), // Random password (since they use Google)
+                    'email_verified_at' => now(), // Auto verify
                     'profile_picture' => $googleUser->avatar,
                 ]);
             } else {
-                // Kalo user udah ada tapi belum ada google_id (misal dulu daftar manual), update datanya
+                // Scenario B: User exists -> Update Google ID/Avatar if missing
                 if (!$user->google_id) {
                     $user->update([
                         'google_id' => $googleUser->id,
@@ -51,20 +51,19 @@ class AuthController extends Controller
                 }
             }
 
-            // --- FITUR AUTO-CONNECT MEMBER ---
-            // Cek apakah email ini terdaftar di tabel Members?
+            // --- AUTO-CONNECT MEMBER LOGIC ---
+            // Check if this email exists in the 'members' table (from admin input)
             $member = Member::where('email', $user->email)->first();
 
-            // Jika ada di tabel Member tapi belum punya user_id, sambungkan!
+            // If found in Members table but not linked to a User account yet -> Link them!
             if ($member && is_null($member->user_id)) {
                 $member->update(['user_id' => $user->id]);
             }
 
-            // Login User
+            // Log the user in
             Auth::login($user);
 
-            return redirect()->intended('/dashboard'); // Redirect ke halaman utama
-
+            return redirect()->intended('/dashboard');
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Login Gagal: ' . $e->getMessage());
         }

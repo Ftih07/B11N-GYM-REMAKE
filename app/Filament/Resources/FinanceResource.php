@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FinanceResource\Pages;
-use App\Filament\Resources\FinanceResource\RelationManagers;
 use App\Models\Finance;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Exports\FinanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
@@ -20,30 +17,32 @@ use Carbon\Carbon;
 
 class FinanceResource extends Resource
 {
+    // --- NAVIGATION SETTINGS ---
     protected static ?string $model = Finance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes'; // Icon: Banknotes
     protected static ?string $navigationLabel = 'Rekap Keuangan';
     protected static ?string $pluralModelLabel = 'Laporan Keuangan';
-    protected static ?string $navigationGroup = 'Laporan';
+    protected static ?string $navigationGroup = 'Laporan'; // Grouped under "Laporan"
     protected static ?int $navigationSort = 1;
 
+    // --- FORM CONFIGURATION (Input Income/Expense) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Section::make('Input Keuangan')
                     ->schema([
-                        // Pilih Tipe: Pemasukan / Pengeluaran
+                        // Type Selection: Income vs Expense
                         Forms\Components\Select::make('type')
                             ->options([
                                 'income' => 'Pemasukan (Income)',
                                 'expense' => 'Pengeluaran (Expense)',
                             ])
                             ->required()
-                            ->default('expense'), // Default ke expense karena income biasanya otomatis dari POS
+                            ->default('expense'), // Default to expense
 
-                        // Pilih Gym (Penting untuk tahu pengeluaran cabang mana)
+                        // Relationship: Link finance record to a specific Gym Branch
                         Forms\Components\Select::make('gymkos_id')
                             ->relationship('gymkos', 'name')
                             ->required()
@@ -57,7 +56,7 @@ class FinanceResource extends Resource
                         Forms\Components\TextInput::make('amount')
                             ->required()
                             ->numeric()
-                            ->prefix('Rp')
+                            ->prefix('Rp') // Visual prefix
                             ->label('Nominal'),
 
                         Forms\Components\Textarea::make('description')
@@ -69,6 +68,7 @@ class FinanceResource extends Resource
             ]);
     }
 
+    // --- TABLE CONFIGURATION (Report View) ---
     public static function table(Table $table): Table
     {
         return $table
@@ -86,28 +86,31 @@ class FinanceResource extends Resource
                     ->searchable()
                     ->limit(30),
 
-                // Badge Tipe
+                // Type Badge: Green for Income, Red for Expense
                 Tables\Columns\TextColumn::make('type')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
-                        'income' => 'success', // Hijau
-                        'expense' => 'danger', // Merah
+                        'income' => 'success', // Green
+                        'expense' => 'danger', // Red
                     })
                     ->formatStateUsing(fn(string $state): string => ucfirst($state)),
 
-                // Nominal
+                // Amount Column: Formatted as IDR currency
                 Tables\Columns\TextColumn::make('amount')
                     ->money('IDR')
                     ->sortable()
                     ->color(fn($record) => $record->type === 'expense' ? 'danger' : 'success'),
             ])
-            ->defaultSort('date', 'desc')
+            ->defaultSort('date', 'desc') // Sort by newest date
+
+            // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Laporan')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->form([
+                        // Modal Form: Select Month & Year
                         Select::make('month')
                             ->label('Bulan')
                             ->options([
@@ -136,20 +139,25 @@ class FinanceResource extends Resource
                             ->required(),
                     ])
                     ->action(function (array $data) {
+                        // Trigger download using 'FinanceExport' class
                         return Excel::download(
                             new FinanceExport($data['month'], $data['year']),
                             'Laporan-Keuangan-' . $data['month'] . '-' . $data['year'] . '.xlsx'
                         );
                     }),
             ])
+
+            // --- GROUPING CONFIGURATION ---
             ->groups([
+                // Group rows by Gym Name (Collapsible)
                 Tables\Grouping\Group::make('gymkos.name')
                     ->label('Cabang')
-                    ->collapsible(), // Biar bisa dibuka tutup per cabang
+                    ->collapsible(),
             ])
-            ->defaultGroup('gymkos.name') // Default langsung terkelompok
+            ->defaultGroup('gymkos.name') // Enable grouping by default
+
             ->filters([
-                // Filter biar gampang cari Income doang / Expense doang
+                // Filter dropdown: Show only Income or Expense
                 Tables\Filters\SelectFilter::make('type')
                     ->options([
                         'income' => 'Income',
