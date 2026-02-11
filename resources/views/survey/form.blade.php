@@ -4,125 +4,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Survey B11N Gym</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>Survei Pelanggan - B11N Gym & K1NG Gym</title>
+    <meta name="description" content="Formulir survei kepuasan pelanggan B11N Gym. Bantu kami meningkatkan layanan dengan memberikan penilaian Anda.">
+    <meta name="author" content="B1NG EMPIRE IT Support">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#dc030a">
+
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc030a',
+                        'primary-dark': 'rgb(135, 6, 12)',
+                        secondary: '#0a0a0a',
+                        textDark: '#0a0a0a',
+                        textLight: '#737373',
+                        extraLight: '#f5f5f5',
+                    },
+                    fontFamily: {
+                        heading: ['Oswald', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="radio"] {
+            accent-color: #dc030a;
+        }
+
+        input[type="checkbox"] {
+            accent-color: #dc030a;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 py-10 px-4">
+<body class="bg-white min-h-screen flex flex-col">
 
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Survey Kepuasan Pelanggan</h2>
+    <div class="w-full z-50">
+        @include('components.navbar-cta')
+    </div>
 
-        @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-4 rounded mb-4">
-            {{ session('success') }}
-        </div>
-        @endif
+    <main class="flex-grow flex items-center justify-center p-4 py-8 mt-20">
 
-        <form action="{{ route('survey.store') }}" method="POST" x-data="{ isMember: false }">
-            @csrf
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2">Nama Lengkap</label>
-                <input type="text" name="name" required class="w-full border p-2 rounded">
+        <div class="bg-white shadow-2xl w-full max-w-4xl overflow-hidden rounded-lg border border-gray-200">
+            {{-- Header --}}
+            <div class="bg-primary px-6 py-5">
+                <h1 class="text-white text-2xl font-heading font-bold tracking-wider uppercase">Survei Pelanggan</h1>
+                <p class="text-white/80 text-sm mt-1 font-body">Nilai fasilitas, kebersihan, dan layanan kami</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700 font-bold mb-2">Email</label>
-                    <input type="email" name="email" required class="w-full border p-2 rounded">
+            <div class="p-6">
+                @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-bold mb-2">No. WhatsApp</label>
-                    <input type="text" name="phone" required class="w-full border p-2 rounded">
-                </div>
-            </div>
+                @endif
 
-            <div class="mb-6 bg-blue-50 p-4 rounded border border-blue-200">
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="is_membership" value="1" x-model="isMember" class="form-checkbox h-5 w-5 text-blue-600">
-                    <span class="ml-2 text-gray-700 font-semibold">Saya adalah Member Aktif</span>
-                </label>
+                <form action="{{ route('survey.store') }}" method="POST" x-data="{ isMember: false }">
+                    @csrf
 
-                <div x-show="isMember" x-transition class="mt-4 pt-4 border-t border-blue-200">
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm mb-1">Sudah berapa lama jadi member?</label>
-                        <input type="text" name="member_duration" placeholder="Contoh: 3 Bulan" class="w-full border p-2 rounded">
+                    {{-- Row 1: Nama, Email, Nomor Whatsapp --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nama anda</label>
+                                <input type="text" name="name" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
+                                    placeholder="Contoh: Alex">
+                            </div>
+                            <div>
+                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Email</label>
+                                <input type="email" name="email" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
+                                    placeholder="Contoh: Alex@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nomor Whatsapp</label>
+                                <input type="text" name="phone" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
+                                    placeholder="Contoh: 081234567890">
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm mb-1">Kemungkinan perpanjang (1-5)?</label>
-                        <select name="renewal_chance" class="w-full border p-2 rounded">
-                            <option value="">Pilih...</option>
-                            <option value="1">1 - Sangat Kecil</option>
-                            <option value="3">3 - Ragu-ragu</option>
-                            <option value="5">5 - Pasti Perpanjang</option>
+
+                    {{-- Row 2: Member Checkbox + Tujuan Utama Fitness --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
+                        <div class="text-center mb-3">
+                            <label class="block text-primary text-sm font-semibold font-heading uppercase tracking-wide">Tujuan Utama Fitness</label>
+                        </div>
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <label class="inline-flex items-center cursor-pointer whitespace-nowrap">
+                                <input type="checkbox" name="is_membership" value="1" x-model="isMember" class="form-checkbox h-5 w-5">
+                                <span class="ml-2 text-textDark font-semibold font-body">Saya adalah member aktif</span>
+                            </label>
+                            <div class="flex-1">
+                                <input type="text" name="fitness_goal" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
+                                    placeholder="Contoh: Alex">
+                            </div>
+                        </div>
+
+                        {{-- Member Detail Popup --}}
+                        <div x-show="isMember" x-transition class="mt-4 pt-4 border-t border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Sudah berapa lama jadi member?</label>
+                                    <input type="text" name="member_duration" placeholder="Contoh: 3 Bulan"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
+                                </div>
+                                <div>
+                                    <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Kemungkinan perpanjang (1-5)?</label>
+                                    <select name="renewal_chance"
+                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
+                                        <option value="">Pilih...</option>
+                                        <option value="1">1 - Sangat Kecil</option>
+                                        <option value="3">3 - Ragu-ragu</option>
+                                        <option value="5">5 - Pasti Perpanjang</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Row 3: Kebersihan Rating 1-10 --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
+                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Kebersihan</label>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
+                            <div class="flex gap-3 md:gap-6 flex-1 justify-center">
+                                @for($i = 1; $i <= 10; $i++)
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="radio" name="rating_cleanliness" value="{{ $i }}" class="mb-1" required>
+                                    <span class="text-xs text-textDark font-body">{{ $i }}</span>
+                                </label>
+                                @endfor
+                            </div>
+                            <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Baik</span>
+                        </div>
+                    </div>
+
+                    {{-- Row 4: Rating Alat 1-10 --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
+                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Rating Alat</label>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
+                            <div class="flex gap-3 md:gap-6 flex-1 justify-center">
+                                @for($i = 1; $i <= 10; $i++)
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="radio" name="rating_equipment" value="{{ $i }}" class="mb-1" required>
+                                    <span class="text-xs text-textDark font-body">{{ $i }}</span>
+                                </label>
+                                @endfor
+                            </div>
+                            <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Baik</span>
+                        </div>
+                    </div>
+
+                    {{-- Row 5: NPS Score 1-10 --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
+                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Seberapa mungkin anda merekomendasikan kami?</label>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
+                            <div class="flex gap-3 md:gap-6 flex-1 justify-center">
+                                @for($i = 1; $i <= 10; $i++)
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="radio" name="nps_score" value="{{ $i }}" class="mb-1" required>
+                                    <span class="text-xs text-textDark font-body">{{ $i }}</span>
+                                </label>
+                                @endfor
+                            </div>
+                            <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Baik</span>
+                        </div>
+                    </div>
+
+                    {{-- Row 6: Kritik dan Saran --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
+                        <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Kritik dan Saran</label>
+                        <textarea name="feedback" rows="4"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
+                            placeholder="Contoh: Kabel putus, baut kendor ..."></textarea>
+                    </div>
+
+                    {{-- Row 7: Tertarik Promo --}}
+                    <div class="border-2 border-gray-200 rounded-lg p-4 mb-8">
+                        <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Tertarik Promo</label>
+                        <select name="promo_interest" required
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
+                            <option value="none">Belum tertarik saat ini</option>
+                            <option value="paket_a">Paket A (Bayar 6 Free 2)</option>
+                            <option value="paket_b">Paket B (Bayar 9 Free 3)</option>
+                            <option value="paket_c">Paket C (Bayar 12 Free 4 - Best Value!)</option>
                         </select>
                     </div>
-                </div>
-            </div>
 
-            <hr class="my-6">
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2">Tujuan Utama Fitness</label>
-                <input type="text" name="fitness_goal" required class="w-full border p-2 rounded" placeholder="Tulis tujuan Anda (misal: Menurunkan berat badan, dll)">
+                    {{-- Submit Button --}}
+                    <button type="submit"
+                        class="w-full bg-primary text-white font-heading font-bold py-4 rounded-lg hover:bg-white hover:text-primary border-2 border-primary transition duration-300 shadow-lg text-lg tracking-wider uppercase">
+                        Kirim Survey
+                    </button>
+                </form>
             </div>
+        </div>
+    </main>
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-gray-700 font-bold mb-2">Rating Alat (1-5)</label>
-                    <select name="rating_equipment" required class="w-full border p-2 rounded">
-                        <option value="">Pilih Rating...</option>
-                        <option value="1">1 - Buruk</option>
-                        <option value="2">2 - Kurang</option>
-                        <option value="3">3 - Cukup</option>
-                        <option value="4">4 - Bagus</option>
-                        <option value="5">5 - Sangat Bagus</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 font-bold mb-2">Kebersihan (1-5)</label>
-                    <select name="rating_cleanliness" required class="w-full border p-2 rounded">
-                        <option value="">Pilih Rating...</option>
-                        <option value="1">1 - Buruk</option>
-                        <option value="2">2 - Kurang</option>
-                        <option value="3">3 - Cukup</option>
-                        <option value="4">4 - Bagus</option>
-                        <option value="5">5 - Sangat Bagus</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2">Seberapa mungkin merekomendasikan kami? (NPS 1-10)</label>
-                <div class="flex justify-between text-xs text-gray-500 mb-1">
-                    <span>Gak banget</span>
-                    <span>Pasti Rekomen</span>
-                </div>
-                <input type="range" name="nps_score" min="1" max="10" value="5" oninput="this.nextElementSibling.value = this.value" class="w-full">
-                <output class="text-center block font-bold text-lg text-blue-600">5</output>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2">Kritik & Saran</label>
-                <textarea name="feedback" rows="3" class="w-full border p-2 rounded"></textarea>
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-gray-700 font-bold mb-2">Tertarik Promo?</label>
-                <select name="promo_interest" required class="w-full border p-2 rounded bg-yellow-50">
-                    <option value="none">Belum tertarik saat ini</option>
-                    <option value="paket_a">Paket A (Bayar 6 Free 2)</option>
-                    <option value="paket_b">Paket B (Bayar 9 Free 3)</option>
-                    <option value="paket_c">Paket C (Bayar 12 Free 4 - Best Value!)</option>
-                </select>
-            </div>
-
-            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition">
-                Kirim Survey
-            </button>
-        </form>
+    <div class="w-full mt-auto">
+        @include('components.footer-bing-empire')
     </div>
+
 </body>
 
 </html>

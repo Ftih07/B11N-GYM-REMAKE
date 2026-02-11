@@ -28,8 +28,8 @@ class SurveyController extends Controller
             'renewal_chance' => 'required_if:is_membership,1|integer|min:1|max:5',
 
             'fitness_goal' => 'required|string',
-            'rating_equipment' => 'required|integer|min:1|max:5',
-            'rating_cleanliness' => 'required|integer|min:1|max:5',
+            'rating_equipment' => 'required|integer|min:1|max:10',
+            'rating_cleanliness' => 'required|integer|min:1|max:10',
             'nps_score' => 'required|integer|min:1|max:10',
             'feedback' => 'nullable|string',
             'promo_interest' => 'required|string',
