@@ -15,6 +15,6 @@ class AttendanceController extends Controller
         // Fetch Attendance History (Paginated)
         $attendances = $member ? $member->attendances()->latest()->paginate(10) : [];
 
-        return view('member.attendance', compact('attendances'));
+        return view('member.attendance', compact('attendances', 'member'));
     }
 }

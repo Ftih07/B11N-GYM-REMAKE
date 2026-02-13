@@ -29,13 +29,11 @@
     </script>
 </head>
 
-<body class="bg-dark text-gray-200 font-body min-h-screen pb-10">
-
-    <!-- NAVBAR -->
+<body class="bg-dark text-gray-200 font-body min-h-screen flex flex-col">
+    
     @include('components.navbar')
 
-    <!-- MAIN CONTENT -->
-    <div class="container mx-auto p-4 md:p-6 max-w-5xl">
+    <div class="container mx-auto p-4 md:p-6 max-w-5xl flex-grow">
 
         <div class="flex items-center gap-3 mb-6 md:mb-8 border-b border-neutral-800 pb-4">
             <div class="bg-primary p-2 rounded shadow-lg shadow-red-900/20">
@@ -47,6 +45,9 @@
                 Riwayat <span class="text-primary">Kehadiran</span>
             </h2>
         </div>
+
+        {{-- LOGIC CEK MEMBER --}}
+        @if($member)
 
         <div class="block md:hidden space-y-4">
             @forelse($attendances as $row)
@@ -152,9 +153,19 @@
         </div>
         @endif
 
+        @else
+        {{-- ALERT JIKA BUKAN MEMBER --}}
+        <div class="text-center bg-yellow-900/20 border border-yellow-700/50 p-6 rounded-lg mt-6">
+            <svg class="w-12 h-12 text-yellow-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <p class="text-yellow-500 font-bold mb-1">DATA MEMBER TIDAK DITEMUKAN</p>
+            <p class="text-gray-400 text-sm">Email ini belum terdaftar di sistem gym kami. Hubungi resepsionis untuk aktivasi.</p>
+        </div>
+        @endif
+
     </div>
 
-    <!-- FOOTER -->
     @include('components.footer-compact')
 
 </body>

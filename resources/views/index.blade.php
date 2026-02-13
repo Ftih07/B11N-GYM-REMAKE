@@ -7,10 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     {{-- 1. TITLE: Branding Kuat + Keyword Utama --}}
-    <title>B1NG EMPIRE - Ekosistem Gym & Kost Premium Purwokerto</title>
+    <title>B1NG EMPIRE - Unit Usaha Gym & Kost Premium Purwokerto</title>
 
     {{-- 2. META DESCRIPTION: Menjelaskan hubungan antar bisnis --}}
-    <meta name="description" content="B1NG EMPIRE adalah induk usaha dari B11N Gym, K1NG Gym, dan Kost Istana Merdeka 03. Solusi gaya hidup sehat dan hunian nyaman di Purwokerto dalam satu ekosistem.">
+    <meta name="description" content="B1NG EMPIRE adalah induk usaha dari B11N Gym, K1NG Gym, dan Kost Istana Merdeka 03. Solusi gaya hidup sehat dan hunian nyaman di Purwokerto dalam satu unit usaha.">
 
     {{-- 3. KEYWORDS: Gabungan semua brand --}}
     <meta name="keywords" content="b1ng empire, b11n gym, k1ng gym, kost istana merdeka 03, gym purwokerto, fitness center banyumas, kost putra purwokerto, bisnis gym purwokerto">
@@ -269,7 +269,7 @@
 
                 {{-- UPDATE: Tambah 'font-medium' biar teks deskripsi lebih tebal sedikit & gampang dibaca di background abu --}}
                 <p class="font-body text-textDark font-medium text-lg sm:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
-                    Menghadirkan fitness, wellness, dan hunian modern dalam satu ekosistem eksklusif di Purwokerto.
+                    Menghadirkan fitness, wellness, dan hunian modern dalam satu unit usaha eksklusif di Purwokerto.
                 </p>
 
                 <button class="font-heading px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
@@ -297,52 +297,13 @@
 
                 <!-- Description -->
                 <p class="font-body text-textLight text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
-                    B1NG EMPIRE adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu website. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding.
+                    B1NG EMPIRE adalah sebuah konsep di mana beberapa bisnis atau layanan yang berbeda-beda, namun memiliki kesamaan dalam hal kepemilikan atau target audiens, digabungkan ke dalam satu unit usaha. Tujuannya adalah untuk memberikan pengalaman pengguna yang lebih baik, meningkatkan efisiensi, dan memperkuat branding.
                 </p>
 
                 <!-- CTA Button -->
                 <a href="#website" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
                     Mulai Sekarang
                 </a>
-            </div>
-
-            <!-- Grid Layout: Images & Cards (DI BAWAH) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 reveal-stagger">
-
-                <!-- B11N & K1NG Gym Image -->
-                <div class="group relative overflow-hidden rounded aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
-                    <img src="assets/home/biin-gym.jpg" alt="B11N & K1NG Gym" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                </div>
-
-                <!-- B11N & K1NG Gym Card -->
-                <div class="bg-extraLight rounded p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div class="w-16 h-16 mb-6 bg-secondary rounded-sm flex items-center justify-center shadow-md">
-                        <i class="fas fa-dumbbell text-2xl text-white"></i>
-                    </div>
-                    <h4 class="font-heading text-2xl font-bold text-textDark mb-4 tracking-tight uppercase">B11N & K1NG GYM</h4>
-                    <p class="font-body text-textLight leading-relaxed text-base">
-                        Dua tempat fitness & gym kami yang berada di Purwokerto
-                    </p>
-                </div>
-
-                <!-- Kost Image -->
-                <div class="group relative overflow-hidden rounded aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
-                    <img src="assets/home/kost.jpg" alt="Kost Istana Merdeka 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                </div>
-
-                <!-- Kost Card -->
-                <div class="bg-extraLight rounded p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div class="w-16 h-16 mb-6 bg-secondary rounded-sm flex items-center justify-center shadow-md">
-                        <i class="fas fa-bed text-2xl text-white"></i>
-                    </div>
-                    <h4 class="font-heading text-2xl font-bold text-textDark mb-4 tracking-tight uppercase">Kost Istana Merdeka 3</h4>
-                    <p class="font-body text-textLight leading-relaxed text-base">
-                        Tempat Kost Putra yang terletak diatas B11N Gym Purwokerto
-                    </p>
-                </div>
-
             </div>
 
         </div>
@@ -355,10 +316,10 @@
             <!-- Section Header -->
             <div class="text-center mb-16 lg:mb-20 reveal">
                 <p class="font-heading text-secondary font-semibold text-base sm:text-lg tracking-[0.3em] mb-4 uppercase">
-                    Beberapa Ekosistem Kami
+                    Beberapa Unit Usaha Kami
                 </p>
                 <h2 class="font-heading text-textDark font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight uppercase">
-                    Ekosistem <span class="text-secondary">Kami</span>
+                    Unit Usaha <span class="text-secondary">Kami</span>
                 </h2>
             </div>
 
@@ -374,7 +335,7 @@
 
                         <!-- Badge -->
                         <div class="absolute top-4 right-4 bg-secondary px-4 py-2 rounded shadow-md">
-                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">TERMURAH</span>
+                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">GYM</span>
                         </div>
                     </div>
 
@@ -387,7 +348,7 @@
 
                         <!-- Button -->
                         <a href="{{ route('gym.biin') }}" target="_blank" class="font-heading inline-block px-6 py-3 bg-secondary text-white font-semibold text-sm rounded shadow-md hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-lg transition-all duration-300 hover:scale-105 uppercase tracking-wider mt-6 self-start">
-                            Kunjungi Ekosistem
+                            Kunjungi Unit Usaha
                         </a>
                     </div>
                 </div>
@@ -396,12 +357,12 @@
                 <div class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
                     <!-- Image Container -->
                     <div class="relative h-64 sm:h-72 overflow-hidden flex-shrink-0">
-                        <img src="assets/home/king-gym.jpg" alt="K1NG Gym" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <img src="assets/king-gym/hero.jpg" alt="K1NG Gym" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
                         <!-- Badge -->
                         <div class="absolute top-4 right-4 bg-secondary px-4 py-2 rounded shadow-md">
-                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">CABANG BARU</span>
+                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">GYM</span>
                         </div>
                     </div>
 
@@ -414,7 +375,7 @@
 
                         <!-- Button -->
                         <a href="{{ route('gym.king') }}" target="_blank" class="font-heading inline-block px-6 py-3 bg-secondary text-white font-semibold text-sm rounded shadow-md hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-lg transition-all duration-300 hover:scale-105 uppercase tracking-wider mt-6 self-start">
-                            Kunjungi Ekosistem
+                            Kunjungi Unit Usaha
                         </a>
                     </div>
                 </div>
@@ -428,7 +389,7 @@
 
                         <!-- Badge -->
                         <div class="absolute top-4 right-4 bg-secondary px-4 py-2 rounded shadow-md">
-                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">KHUSUS PUTRA</span>
+                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">KOST KHUSUS PUTRA</span>
                         </div>
                     </div>
 
@@ -441,7 +402,7 @@
 
                         <!-- Button -->
                         <a href="{{ route('kost') }}" target="_blank" class="font-heading inline-block px-6 py-3 bg-secondary text-white font-semibold text-sm rounded shadow-md hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-lg transition-all duration-300 hover:scale-105 uppercase tracking-wider mt-6 self-start">
-                            Kunjungi Ekosistem
+                            Kunjungi Unit Usaha
                         </a>
                     </div>
                 </div>
@@ -503,7 +464,7 @@
 
                     <!-- CTA Button -->
                     <a href="{{ route('store.biin-king') }}" target="_blank" class="font-heading inline-flex items-center gap-3 px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
-                        Kunjungi Website
+                        Kunjungi Store
                         <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform duration-300"></i>
                     </a>
                 </div>

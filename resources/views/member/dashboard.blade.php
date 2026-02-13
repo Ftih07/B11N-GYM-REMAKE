@@ -23,9 +23,9 @@
                         body: ['Poppins', 'sans-serif'],
                     },
                     colors: {
-                        dark: '#0a0a0a', // Hitam Pekat
-                        card: '#171717', // Abu Gelap
-                        primary: '#DC2626', // Merah Bold
+                        dark: '#0a0a0a',
+                        card: '#171717',
+                        primary: '#DC2626',
                     }
                 }
             }
@@ -35,10 +35,8 @@
 
 <body class="bg-dark text-gray-200 font-body min-h-screen">
 
-    <!-- NAVBAR -->
     @include('components.navbar')
 
-    <!-- MAIN CONTENT -->
     <div class="container mx-auto p-6 max-w-7xl">
 
         @if(session('success'))
@@ -50,12 +48,8 @@
         </div>
         @endif
 
-        @if(!$member)
-        <div class="bg-yellow-900/30 border border-yellow-600/50 p-6 rounded-lg text-center">
-            <h2 class="font-header text-2xl font-bold text-yellow-500 uppercase tracking-wide">Akun Belum Terhubung</h2>
-            <p class="mt-2 text-gray-400">Email kamu (<span class="text-white">{{ $user->email }}</span>) belum terdaftar sebagai member gym. Silahkan hubungi admin di resepsionis.</p>
-        </div>
-        @else
+        {{-- LOGIC CEK MEMBER --}}
+        @if($member)
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -105,18 +99,15 @@
                     </form>
                 </div>
 
-                @if($member)
                 <div class="bg-card border border-neutral-800 p-6 rounded-lg shadow-xl mt-6 lg:hidden">
                     <h3 class="font-header text-xl font-bold text-white mb-2">Status Member</h3>
                     <p class="text-sm text-gray-400">Expired: <span class="text-white font-bold">{{ \Carbon\Carbon::parse($member->membership_end_date)->format('d M Y') }}</span></p>
                     <button onclick="toggleModal('renewModal')" class="mt-4 w-full bg-green-700 hover:bg-green-800 text-white py-2 rounded text-sm font-bold uppercase">Perpanjang</button>
                 </div>
-                @endif
             </div>
 
             <div class="lg:col-span-2 space-y-6">
 
-                @if($member)
                 <div class="hidden lg:flex bg-gradient-to-r from-neutral-800 to-neutral-900 border border-neutral-800 p-6 rounded-lg shadow-xl justify-between items-center relative overflow-hidden">
                     <div class="absolute right-0 top-0 h-full w-1/3 bg-primary/5 -skew-x-12 transform translate-x-10"></div>
 
@@ -144,7 +135,6 @@
                         </button>
                     </div>
                 </div>
-                @endif
 
                 <div class="bg-card border border-neutral-800 rounded-lg shadow-xl overflow-hidden">
                     <div class="p-4 border-b border-neutral-800 flex justify-between items-center">
@@ -191,6 +181,16 @@
             </div>
         </div>
 
+        @else
+        <div class="text-center bg-yellow-900/20 border border-yellow-700/50 p-6 rounded-lg mt-6">
+            <svg class="w-12 h-12 text-yellow-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <p class="text-yellow-500 font-bold mb-1">DATA MEMBER TIDAK DITEMUKAN</p>
+            <p class="text-gray-400 text-sm">Email ini (<span class="text-white">{{ $user->email ?? 'Akun Anda' }}</span>) belum terdaftar di sistem gym kami. Hubungi resepsionis untuk aktivasi.</p>
+        </div>
+        @endif
+
         <div class="mt-12 mb-8">
             <div class="flex justify-between items-end mb-6 border-b border-neutral-800 pb-2">
                 <h3 class="font-header text-3xl font-bold text-white uppercase italic tracking-wide">
@@ -235,11 +235,9 @@
             </div>
             @endif
         </div>
-
-        @endif
     </div>
 
-    <!-- RENEW MEMBERSHIP MODAL -->
+    @if($member)
     <div id="renewModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity" onclick="toggleModal('renewModal')"></div>
 
@@ -311,24 +309,18 @@
             </div>
         </div>
     </div>
+    @endif
 
     <script>
         function toggleModal(modalID) {
             const modal = document.getElementById(modalID);
-
-            // Cukup toggle class 'hidden'. 
-            // Karena class 'flex' sudah ada di HTML, dia otomatis ke tengah saat muncul.
             modal.classList.toggle('hidden');
-
-            // Logic tambahan untuk reset form & scroll
             if (!modal.classList.contains('hidden')) {
-                // Saat Terbuka
-                document.body.style.overflow = 'hidden'; // Matikan scroll body
+                document.body.style.overflow = 'hidden';
                 document.getElementById('paymentMethodSelect').value = 'qris';
                 togglePaymentInfo();
             } else {
-                // Saat Tertutup
-                document.body.style.overflow = 'auto'; // Nyalakan scroll body
+                document.body.style.overflow = 'auto';
             }
         }
 
@@ -347,7 +339,6 @@
         }
     </script>
 
-    <!-- FOOTER -->
     @include('components.footer-compact')
 
 </body>

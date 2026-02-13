@@ -1791,7 +1791,7 @@
 					<img
 						src="{{ asset('storage/' . $item->image) }}"
 						alt="{{ $item->title }}"
-						class="gallery-thumbnail h-20 w-20 object-cover"
+						class="gallery-thumbnail"
 						data-bs-toggle="modal"
 						data-bs-target="#galleryModal"
 						data-title="{{ $item->title }}"
