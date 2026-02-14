@@ -9,6 +9,7 @@
         "php": "^8.2",
         "filament/filament": "^3.2.0",
         "flowframe/laravel-trend": "^0.4.0",
+        "intervention/image": "^3.11",
         "laravel/framework": "^11.31",
         "laravel/socialite": "^5.24",
         "laravel/tinker": "^2.9",
