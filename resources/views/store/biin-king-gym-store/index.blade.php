@@ -102,7 +102,7 @@
     @endif
 
     <!-- MAIN CONTENT -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <main id="product-display" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-gray-800 pb-6">
             <div>
@@ -119,7 +119,7 @@
 
         <div class="flex flex-wrap gap-3 mb-12">
             {{-- Tombol All --}}
-            <a href="{{ route('store.biin-king', ['category' => null]) }}"
+            <a href="{{ route('store.biin-king', ['category' => null]) }}#product-display"
                 class="px-6 py-2 rounded-full font-heading uppercase tracking-wide text-sm transition-all duration-300 border 
                {{ is_null(request('category')) 
                   ? 'bg-brand-black text-white border-brand-black dark:bg-white dark:text-black' 
@@ -130,7 +130,7 @@
 
             {{-- Loop Kategori --}}
             @foreach($categories as $category)
-            <a href="{{ route('store.biin-king', ['category' => $category->id]) }}"
+            <a href="{{ route('store.biin-king', ['category' => $category->id]) }}#product-display"
                 class="px-6 py-2 rounded-full font-heading uppercase tracking-wide text-sm transition-all duration-300 border
                {{ request('category') == $category->id 
                   ? 'bg-brand-black text-white border-brand-black dark:bg-white dark:text-black' 
@@ -158,7 +158,7 @@
             <div class="group relative bg-white dark:bg-brand-gray rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-800 flex flex-col h-full">
 
                 <div class="relative w-full pt-[100%] overflow-hidden bg-gray-100 dark:bg-gray-900">
-                    <img src="{{ asset('storage/' . $product->image) }}"
+                    <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=500&auto=format&fit=crop' }}"
                         alt="{{ $product->name }}"
                         class="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
 
@@ -181,26 +181,9 @@
                     </div>
 
                     <div class="flex-grow text-sm text-gray-500 dark:text-gray-400 space-y-2 mb-4">
-                        @if(empty($product->flavour) && empty($product->serving_option))
                         <p class="line-clamp-2 text-xs leading-relaxed">
                             {{ $product->description ?? 'No description.' }}
                         </p>
-                        @else
-                        <div class="flex flex-col gap-1 text-xs font-medium">
-                            @if(!empty($product->flavour))
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-utensils w-4 text-center opacity-50"></i>
-                                <span>{{ $product->flavour }}</span>
-                            </div>
-                            @endif
-                            @if(!empty($product->serving_option))
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-box-open w-4 text-center opacity-50"></i>
-                                <span>{{ $product->serving_option }}</span>
-                            </div>
-                            @endif
-                        </div>
-                        @endif
                     </div>
 
                     <a href="{{ route('store.product.show', $product->id) }}"
@@ -210,6 +193,53 @@
                 </div>
             </div>
             @endforeach
+        </div>
+
+        <div class="mt-12 px-4 flex justify-center">
+            @if ($products->hasPages())
+            <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center gap-2">
+
+                {{-- Tombol Previous --}}
+                @if ($products->onFirstPage())
+                <span class="px-4 py-2 text-sm text-gray-400 border border-gray-200 rounded-lg cursor-not-allowed dark:border-gray-700">
+                    Previous
+                </span>
+                @else
+                <a href="{{ $products->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}#product-display"
+                    class="px-4 py-2 text-sm text-brand-black bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-brand-red transition-colors dark:bg-brand-gray dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
+                    Previous
+                </a>
+                @endif
+
+                {{-- Loop Nomor Halaman --}}
+                @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                @if ($page == $products->currentPage())
+                {{-- Halaman Aktif (Merah/Hitam) --}}
+                <span class="px-4 py-2 text-sm font-bold text-white bg-brand-black border border-brand-black rounded-lg dark:bg-white dark:text-brand-black dark:border-white">
+                    {{ $page }}
+                </span>
+                @else
+                {{-- Halaman Tidak Aktif --}}
+                <a href="{{ $url . '&' . http_build_query(request()->except('page')) }}#product-display"
+                    class="px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-brand-red hover:text-brand-red transition-all dark:bg-brand-gray dark:text-gray-400 dark:border-gray-700 dark:hover:text-white">
+                    {{ $page }}
+                </a>
+                @endif
+                @endforeach
+
+                {{-- Tombol Next --}}
+                @if ($products->hasMorePages())
+                <a href="{{ $products->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}#product-display"
+                    class="px-4 py-2 text-sm text-brand-black bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-brand-red transition-colors dark:bg-brand-gray dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
+                    Next
+                </a>
+                @else
+                <span class="px-4 py-2 text-sm text-gray-400 border border-gray-200 rounded-lg cursor-not-allowed dark:border-gray-700">
+                    Next
+                </span>
+                @endif
+            </nav>
+            @endif
         </div>
 
         @if($products->isEmpty())

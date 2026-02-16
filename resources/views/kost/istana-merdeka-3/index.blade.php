@@ -388,7 +388,7 @@
                 <!-- Non AC Room -->
                 <div class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                     <div class="relative overflow-hidden aspect-[4/3]">
-                        <img src="assets/facilities/ber-ac.png" alt="Kamar Non AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <img src="assets/home/istana-merdeka.jpg" alt="Kamar Non AC" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute top-4 left-4">
                             <span class="bg-primary text-white font-heading text-sm font-bold px-4 py-2 rounded tracking-wider uppercase">Non AC</span>
                         </div>

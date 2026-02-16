@@ -33,10 +33,18 @@ class GalleryResource extends Resource
 
                 // Image Upload Configuration
                 Forms\Components\FileUpload::make('image')
-                    ->label('Image')
-                    ->directory('gallery') // Save to 'storage/app/public/gallery'
-                    ->image() // Validate file is an image
-                    ->required(),
+                    ->label('Image (1:1)')
+                    ->directory('gallery')
+                    ->image()
+                    ->required()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '1:1',
+                    ])
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('1080')
+                    ->imageResizeTargetHeight('1080'),
 
                 // RELATIONSHIP: Link this image to a specific Gym/Kost
                 Forms\Components\Select::make('gymkos_id')

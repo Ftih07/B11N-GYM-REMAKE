@@ -17,7 +17,9 @@ class ProductController extends Controller
         // Get products from SAME category, but EXCLUDE current product
         $relatedProducts = Product::where('category_products_id', $product->category_products_id)
             ->where('id', '!=', $product->id)
-            ->limit(4) // Show max 4 items
+            ->where('status', 'ready')
+            ->inRandomOrder(crc32(session()->getId()))
+            ->limit(4)
             ->get();
 
         return view('store.product.show', compact('product', 'relatedProducts'));

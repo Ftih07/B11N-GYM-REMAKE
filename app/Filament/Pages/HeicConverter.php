@@ -23,6 +23,8 @@ class HeicConverter extends Page implements HasForms
 {
     use InteractsWithForms;
 
+    protected static ?string $navigationGroup = 'Tools';
+    protected static ?int $navigationSort = 8;
     protected static ?string $navigationIcon = 'heroicon-o-photo'; // Ganti icon biar lebih umum
     protected static ?string $navigationLabel = 'Image Tool'; // Ganti Label
     protected static ?string $title = 'Compress & Convert Gambar'; // Ganti Title
@@ -41,22 +43,22 @@ class HeicConverter extends Page implements HasForms
         return $form
             ->schema([
                 Section::make('Upload Gambar')
-                    ->description('Bisa untuk HEIC (iPhone), JPG, PNG, atau WEBP.')
+                    ->description('Gunakan hanya pada saat kebutuhan mendesak, karena proses ini akan memakan beban server besar')
                     ->schema([
                         FileUpload::make('image_file')
                             ->label('Pilih File Gambar')
                             ->acceptedFileTypes([
                                 'image/heic',
                                 'image/heif',
-                                'application/octet-stream', 
+                                'application/octet-stream',
                                 'image/jpeg',
                                 'image/png',
-                                'image/webp', 
+                                'image/webp',
                             ])
                             ->required()
                             ->disk('local')
                             ->directory('temp-uploads')
-                            ->maxSize(20480), 
+                            ->maxSize(20480),
 
                         Grid::make(3)
                             ->schema([
@@ -67,7 +69,7 @@ class HeicConverter extends Page implements HasForms
                                         'jpg' => 'JPG (Cocok untuk Foto)',
                                         'png' => 'PNG (Transparan/Lossless)',
                                     ])
-                                    ->default('webp') 
+                                    ->default('webp')
                                     ->required()
                                     ->live(),
 
@@ -75,6 +77,7 @@ class HeicConverter extends Page implements HasForms
                                     ->label('Resize Lebar (px)')
                                     ->numeric()
                                     ->placeholder('Contoh: 1080')
+                                    ->default(1080)
                                     ->helperText('Wajib isi 1080/800 jika ingin size turun drastis!'),
 
                                 TextInput::make('quality')

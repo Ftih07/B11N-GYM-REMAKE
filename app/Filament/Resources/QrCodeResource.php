@@ -14,6 +14,8 @@ use Filament\Tables\Actions\Action;
 class QrCodeResource extends Resource
 {
     // --- NAVIGATION SETTINGS ---
+    protected static ?string $navigationGroup = 'Tools';
+    protected static ?int $navigationSort = 8;
     protected static ?string $model = QrCode::class;
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
     protected static ?string $navigationLabel = 'QR Code Generator';

@@ -23,11 +23,12 @@ class StoreController extends Controller
 
         // 2. Fetch Products with Logic
         $products = Product::where('status', 'ready')
+            ->inRandomOrder(crc32(session()->getId()))
             // Conditional Query: Only apply where clause if $categoryId exists
             ->when($categoryId, function ($query) use ($categoryId) {
                 $query->where('category_products_id', $categoryId);
             })
-            ->get();
+            ->paginate(8);
 
         // 3. Fetch Store Info (Hardcoded ID 3 based on your logic)
         $store = Store::find(3);

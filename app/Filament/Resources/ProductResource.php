@@ -3,139 +3,188 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Grid;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
     // --- NAVIGATION SETTINGS ---
+    protected static ?string $navigationGroup = 'Store Management';
+    protected static ?int $navigationSort = 6;
+    protected static ?string $model = Product::class;
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
-    // Badge: Shows total number of products
     public static function getNavigationBadge(): ?string
     {
         return Product::count();
     }
 
-    protected static ?string $navigationGroup = 'Store Management';
-    protected static ?int $navigationSort = 6;
-    protected static ?string $model = Product::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag'; // Icon: Shopping Bag
-
-    // --- FORM CONFIGURATION (Create/Edit Product) ---
+    // --- FORM CONFIGURATION ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required()->maxLength(255),
-                Forms\Components\Textarea::make('description')->required()->maxLength(255),
+                // KIRI: Informasi Utama Produk
+                Forms\Components\Group::make()
+                    ->schema([
+                        Section::make('Informasi Produk')
+                            ->description('Detail nama, deskripsi, dan rasa.')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Nama Produk')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->columnSpanFull(), // Memanjang penuh
 
-                // Image Upload
-                Forms\Components\FileUpload::make('image')->directory('product'),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Deskripsi')
+                                    ->required()
+                                    ->rows(4)
+                                    ->columnSpanFull(),
 
-                // Pricing Input
-                Forms\Components\TextInput::make('price')
-                    ->numeric()
-                    ->required()
-                    ->label('Price')
-                    ->placeholder('e.g., 10000, 20000'),
+                                Forms\Components\TextInput::make('flavour')
+                                    ->label('Varian Rasa')
+                                    ->placeholder('Contoh: Coklat, Vanilla')
+                                    ->columnSpan(1), // Setengah kolom
 
-                // Product Details (Serving Size & Flavour)
-                Forms\Components\TextInput::make('serving_option')
-                    ->label('Takaran Sajian Product')
-                    ->placeholder('e.g., 1kg, 1 scoop, 1 sajian'),
+                                Forms\Components\TextInput::make('serving_option')
+                                    ->label('Takaran Saji')
+                                    ->placeholder('Contoh: 1 Scoop (30g)')
+                                    ->columnSpan(1),
+                            ])->columns(2), // Dalam section ini dibagi 2 kolom
 
-                Forms\Components\TextInput::make('flavour')
-                    ->label('Flavour')
-                    ->placeholder('e.g., Coklat, Vanilla'),
+                        Section::make('Gambar Produk')
+                            ->schema([
+                                Forms\Components\FileUpload::make('image')
+                                    ->label('Upload Gambar')
+                                    ->image() // Validasi harus gambar
+                                    ->imageEditor() // Fitur crop/edit bawaan Filament
+                                    ->directory('product')
+                                    ->columnSpanFull(),
+                            ]),
+                    ])->columnSpan(2), // Grup Kiri memakan 2/3 lebar layar
 
-                // Status Selection
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'soldout' => 'Sold Out',
-                        'ready' => 'Ready',
-                    ])->required(),
+                // KANAN: Harga, Status & Relasi
+                Forms\Components\Group::make()
+                    ->schema([
+                        Section::make('Harga & Status')
+                            ->schema([
+                                Forms\Components\TextInput::make('price')
+                                    ->label('Harga (IDR)')
+                                    ->numeric()
+                                    ->prefix('Rp') // Ada tulisan Rp di depan input
+                                    ->required(),
 
-                // RELATIONSHIP: Link to Store
-                Forms\Components\Select::make('stores_id')
-                    ->relationship('store', 'title')
-                    ->required(),
+                                Forms\Components\Select::make('status')
+                                    ->options([
+                                        'ready' => 'Ready Stock',
+                                        'soldout' => 'Sold Out',
+                                    ])
+                                    ->required()
+                                    ->native(false), // Tampilan dropdown lebih modern
+                            ]),
 
-                // RELATIONSHIP: Link to Product Category
-                Forms\Components\Select::make('category_products_id')
-                    ->relationship('categoryproduct', 'name')
-                    ->required(),
-            ]);
+                        Section::make('Kategori & Lokasi')
+                            ->schema([
+                                Forms\Components\Select::make('category_products_id')
+                                    ->label('Kategori')
+                                    ->relationship('categoryproduct', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->createOptionForm([
+                                        // Opsional: Bisa bikin kategori baru langsung dari sini
+                                        Forms\Components\TextInput::make('name')->required(),
+                                    ])
+                                    ->required(),
+
+                                Forms\Components\Select::make('stores_id')
+                                    ->label('Toko / Lokasi')
+                                    ->relationship('store', 'title')
+                                    ->required(),
+                            ]),
+                    ])->columnSpan(1), // Grup Kanan memakan 1/3 lebar layar
+            ])
+            ->columns(3); // Layout utama dibagi 3 kolom (2 kiri, 1 kanan)
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- TABLE CONFIGURATION ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Product Name')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('description')
-                    ->label('Description Product')
-                    ->sortable()
-                    ->limit(50) // Truncate text
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('serving_option')
-                    ->label('Takaran Sajian Product')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('flavour')
-                    ->label('Rasa Product')
-                    ->sortable()
-                    ->limit(50)
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('price')
-                    ->label('Product Price')
-                    ->sortable()
-                    ->searchable(),
-
+                // Gambar kecil di awal
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('Product Image')
+                    ->label('Image')
+                    ->circular(), // Biar bulat (opsional, hapus jika mau kotak)
+
+                // Nama Produk & Varian digabung biar hemat tempat
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Product')
+                    ->description(fn(Product $record): string => $record->flavour ?? '-') // Subtitle di bawah nama
+                    ->searchable()
                     ->sortable()
-                    ->searchable(),
+                    ->weight('bold'),
 
-                Tables\Columns\TextColumn::make('status')->sortable(),
-
-                // Display Related Category Name (Dot Notation)
+                // Kategori
                 Tables\Columns\TextColumn::make('categoryproduct.name')
-                    ->limit(50)
-                    ->label('Category Product')
+                    ->label('Category')
                     ->sortable()
-                    ->searchable(),
+                    ->badge() // Tampil seperti tag
+                    ->color('gray'),
 
-                // Display Related Store Title (Dot Notation)
+                // Harga dengan format Rupiah
+                Tables\Columns\TextColumn::make('price')
+                    ->label('Price')
+                    ->money('IDR', locale: 'id') // Otomatis format Rp 100.000
+                    ->sortable(),
+
+                // Status dengan Warna
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'ready' => 'success', // Hijau
+                        'soldout' => 'danger', // Merah
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'ready' => 'Ready',
+                        'soldout' => 'Sold Out',
+                        default => $state,
+                    }),
+
+                // Toko
                 Tables\Columns\TextColumn::make('store.title')
-                    ->limit(50)
                     ->label('Store')
                     ->sortable()
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true), // Default sembunyi, user bisa centang kalau mau lihat
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc') // Produk terbaru di atas
             ->filters([
-                //
+                // Filter berdasarkan Status
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'ready' => 'Ready',
+                        'soldout' => 'Sold Out',
+                    ]),
+                // Filter berdasarkan Kategori
+                Tables\Filters\SelectFilter::make('category_products_id')
+                    ->label('Category')
+                    ->relationship('categoryproduct', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

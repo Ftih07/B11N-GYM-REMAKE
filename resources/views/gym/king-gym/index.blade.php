@@ -1459,7 +1459,7 @@
 							Masuk sebagai member dari B11N & K1NG Gym
 						</li>
 					</ul>
-					<h3><sup>Rp</sup>80.000<span>/Bulan</span></h3>
+					<h3><sup>Rp</sup>85.000<span>/Bulan</span></h3>
 					<button
 						class="btn btn__primary" onclick="openPaymentModal('Bulanan')">
 						Beli Sekarang

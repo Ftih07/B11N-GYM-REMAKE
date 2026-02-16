@@ -69,7 +69,8 @@
 
             <div class="relative group">
                 <div class="aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                    <img src="{{ asset('storage/' . $product->image) }}"
+                    <img
+                        src="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=500&auto=format&fit=crop' }}"
                         alt="{{ $product->name }}"
                         class="w-full h-full object-cover object-center transform transition duration-500 hover:scale-105">
                 </div>
@@ -131,7 +132,7 @@
                     {{-- Logic WA Link --}}
                     @php
                     $waMessage = "Halo admin, saya mau pesan *{$product->name}* ({$product->flavour}). Apakah stok masih ada?";
-                    $waLink = "https://wa.me/6281226110988?text=" . urlencode($waMessage); // Ganti nomor sesuai kebutuhan
+                    $waLink = "https://wa.me/6283194288423?text=" . urlencode($waMessage); // Ganti nomor sesuai kebutuhan
                     $btnClass = ($product->stores_id == 3) ? 'bg-brand-red hover:bg-red-700' : 'bg-brand-orange hover:bg-orange-600';
                     @endphp
 
@@ -171,7 +172,7 @@
 
                     {{-- Image Section --}}
                     <div class="relative w-full pt-[100%] overflow-hidden bg-gray-100 dark:bg-gray-900">
-                        <img src="{{ asset('storage/' . $related->image) }}"
+                        <img src="{{ $related->image ? asset('storage/' . $related->image) : 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=500&auto=format&fit=crop' }}"
                             alt="{{ $related->name }}"
                             class="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
 
