@@ -25,6 +25,21 @@ $brandBorder = $isKing ? 'border-yellow-500' : 'border-red-600';
 // Warna Hover
 $hoverText = $isKing ? 'hover:text-yellow-600' : 'hover:text-red-600';
 $groupHoverText = $isKing ? 'group-hover:text-yellow-600' : 'group-hover:text-red-600';
+
+// ==========================================
+// LOGIKA PILIH FOTO DENGAN ORDER_INDEX = 0
+// ==========================================
+
+// OPSI A (STRICT): Hanya cari yang angkanya 0 persis.
+// $firstPhoto = $equipment->gallery->where('order_index', 0)->first();
+
+// OPSI B (REKOMENDASI): Urutkan dari angka terkecil (0, 1, 2...), lalu ambil yang paling atas.
+$firstPhoto = $equipment->gallery->sortBy('order_index')->first();
+
+// Generate URL Gambar
+$shareImage = $firstPhoto
+? asset('storage/' . $firstPhoto->file_path)
+: asset('assets/Logo/biin.png'); // Fallback ke logo jika tidak ada foto sama sekali
 @endphp
 
 @section('title')

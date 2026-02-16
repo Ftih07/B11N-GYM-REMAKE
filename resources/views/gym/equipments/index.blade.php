@@ -9,6 +9,7 @@ Katalog lengkap peralatan fitness B1NG Empire. Temukan alat Cardio, Strength, da
 @endsection
 
 @section('meta_keywords', 'alat gym purwokerto, treadmill, smith machine, leg press, b1ng gym equipment')
+@section('meta_image', asset('assets/compressed-1771109800.webp'))
 
 {{-- Schema Markup CollectionPage --}}
 @push('json-ld')
@@ -35,7 +36,7 @@ Katalog lengkap peralatan fitness B1NG Empire. Temukan alat Cardio, Strength, da
 <div class="relative bg-neutral-900 pt-36 pb-24 border-b-4 border-red-600">
     {{-- Background Image with Overlay --}}
     <div class="absolute inset-0 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop"
+        <img src="/assets/compressed-1771109800.webp"
             class="w-full h-full object-cover opacity-20 grayscale">
         <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-neutral-900"></div>
     </div>

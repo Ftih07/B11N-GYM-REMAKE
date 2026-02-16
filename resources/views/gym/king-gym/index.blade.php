@@ -27,7 +27,7 @@
 	<meta property="og:title" content="K1NG Gym Purwokerto - Empower The King On You">
 	<meta property="og:description" content="Pusat kebugaran di Ledug dengan alat lengkap, suasana nyaman, dan harga terjangkau. Gabung sekarang!">
 	<meta property="og:url" content="{{ url()->current() }}">
-	<meta property="og:image" content="{{ asset('assets/Hero/king.jpg') }}">
+	<meta property="og:image" content="{{ asset('assets/king-gym/hero.jpg') }}">
 	<meta property="og:site_name" content="K1NG Gym">
 
 	{{-- Favicon --}}
