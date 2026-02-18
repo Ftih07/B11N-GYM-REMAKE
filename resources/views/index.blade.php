@@ -272,9 +272,10 @@
                     Menghadirkan fitness, wellness, dan hunian modern dalam satu unit usaha eksklusif di Purwokerto.
                 </p>
 
-                <button class="font-heading px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
+                <a href="#about"
+                    class="font-heading px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider inline-block">
                     Jelajahi B1NG Empire
-                </button>
+                </a>
             </div>
         </div>
     </header>
@@ -301,7 +302,7 @@
                 </p>
 
                 <!-- CTA Button -->
-                <a href="#website" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
+                <a href="#ecosystem" class="font-heading inline-block px-10 py-5 bg-secondary text-white font-semibold text-base sm:text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary hover:shadow-xl transition-all duration-300 hover:scale-105 uppercase tracking-wider">
                     Mulai Sekarang
                 </a>
             </div>

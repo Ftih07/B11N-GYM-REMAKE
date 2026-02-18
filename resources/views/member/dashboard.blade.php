@@ -147,36 +147,73 @@
                             <thead class="bg-neutral-900 text-gray-500 uppercase text-xs tracking-wider">
                                 <tr>
                                     <th class="p-4 font-bold font-header">Tanggal</th>
-                                    <th class="p-4 font-bold font-header">Berat (Kg)</th>
-                                    <th class="p-4 font-bold font-header hidden sm:table-cell">Pinggang</th>
-                                    <th class="p-4 font-bold font-header hidden sm:table-cell">Paha</th>
-                                    <th class="p-4 font-bold font-header">Foto</th>
+                                    <th class="p-4 font-bold font-header">Berat</th>
+                                    <th class="p-4 font-bold font-header hidden md:table-cell">Detail (cm)</th>
+                                    <th class="p-4 font-bold font-header text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-neutral-800">
                                 @forelse($history as $item)
                                 <tr class="hover:bg-neutral-800/50 transition duration-150">
-                                    <td class="p-4 text-white font-medium">{{ \Carbon\Carbon::parse($item->measured_at)->format('d/m/y') }}</td>
-                                    <td class="p-4 text-primary font-bold">{{ $item->weight ?? '-' }}</td>
-                                    <td class="p-4 hidden sm:table-cell">{{ $item->waist_size ? $item->waist_size : '-' }}</td>
-                                    <td class="p-4 hidden sm:table-cell">{{ $item->thigh_size ? $item->thigh_size : '-' }}</td>
                                     <td class="p-4">
-                                        @if($item->progress_photo)
-                                        <a href="{{ Storage::url($item->progress_photo) }}" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs border border-blue-900 bg-blue-900/20 px-2 py-1 rounded">LIHAT</a>
-                                        @else
-                                        <span class="text-gray-600">-</span>
-                                        @endif
+                                        <div class="text-white font-medium">{{ \Carbon\Carbon::parse($item->measured_at)->format('d/m/y') }}</div>
+                                        <div class="md:hidden text-[10px] text-gray-500 mt-1 uppercase">
+                                            P:{{ $item->waist_size ?? '-' }} | L:{{ $item->arm_size ?? '-' }} | Ph:{{ $item->thigh_size ?? '-' }}
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="text-primary font-bold text-base">{{ $item->weight ?? '-' }}</span><span class="text-[10px] ml-1">kg</span>
+                                    </td>
+                                    <td class="p-4 hidden md:table-cell">
+                                        <div class="grid grid-cols-3 gap-2 text-[11px]">
+                                            <div><span class="block text-gray-600 uppercase">Pinggang</span><span class="text-white">{{ $item->waist_size ?? '-' }}</span></div>
+                                            <div><span class="block text-gray-600 uppercase">Lengan</span><span class="text-white">{{ $item->arm_size ?? '-' }}</span></div>
+                                            <div><span class="block text-gray-600 uppercase">Paha</span><span class="text-white">{{ $item->thigh_size ?? '-' }}</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                                            @if($item->progress_photo)
+                                            <a href="{{ Storage::url($item->progress_photo) }}" target="_blank" class="text-blue-400 hover:text-blue-300 text-[10px] font-bold border border-blue-900 bg-blue-900/20 px-2 py-1.5 rounded uppercase text-center">Foto</a>
+                                            @endif
+
+                                            <button
+                                                onclick="showNotes('{{ \Carbon\Carbon::parse($item->measured_at)->format('d M Y') }}', {{ json_encode($item->notes) }})"
+                                                class="text-gray-400 hover:text-white text-[10px] font-bold border border-neutral-700 bg-neutral-800 px-2 py-1.5 rounded uppercase">
+                                                Notes
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="5" class="p-8 text-center text-gray-600 italic">Belum ada data progress. Mulai latihan hari ini!</td>
+                                    <td colspan="4" class="p-8 text-center text-gray-600 italic">Belum ada data progress.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <div id="notesModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div class="bg-neutral-900 border border-neutral-800 p-6 rounded-lg max-w-sm w-full shadow-2xl">
+                        <h4 id="notesDate" class="font-header text-primary font-bold uppercase tracking-widest text-sm mb-2"></h4>
+                        <p id="notesContent" class="text-gray-300 text-sm leading-relaxed mb-6 italic"></p>
+                        <button onclick="closeNotes()" class="w-full bg-neutral-800 hover:bg-neutral-700 text-white font-bold py-2 rounded uppercase text-xs">Tutup</button>
+                    </div>
+                </div>
+
+                <script>
+                    function showNotes(date, text) {
+                        document.getElementById('notesDate').innerText = 'Catatan - ' + date;
+                        document.getElementById('notesContent').innerText = text || 'Tidak ada catatan.';
+                        document.getElementById('notesModal').classList.remove('hidden');
+                    }
+
+                    function closeNotes() {
+                        document.getElementById('notesModal').classList.add('hidden');
+                    }
+                </script>
 
             </div>
         </div>

@@ -117,29 +117,74 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap gap-3 mb-12">
-            {{-- Tombol All --}}
-            <a href="{{ route('store.biin-king', ['category' => null]) }}#product-display"
-                class="px-6 py-2 rounded-full font-heading uppercase tracking-wide text-sm transition-all duration-300 border 
-               {{ is_null(request('category')) 
-                  ? 'bg-brand-black text-white border-brand-black dark:bg-white dark:text-black' 
-                  : 'bg-transparent text-gray-500 border-gray-300 hover:border-brand-black hover:text-brand-black dark:border-gray-700 dark:text-gray-400 dark:hover:text-white' 
-               }}">
-                All Products
-            </a>
+        {{-- === FILTER & SEARCH BAR (REFINED UI) === --}}
+        <div class="mb-12">
+            {{--
+                FIX 1: Tambahkan #product-display di akhir route action.
+                Ini memaksa browser untuk langsung loncat ke ID "product-display" setelah reload/submit.
+            --}}
+            <form action="{{ route('store.biin-king') }}#product-display" method="GET" class="w-full">
 
-            {{-- Loop Kategori --}}
-            @foreach($categories as $category)
-            <a href="{{ route('store.biin-king', ['category' => $category->id]) }}#product-display"
-                class="px-6 py-2 rounded-full font-heading uppercase tracking-wide text-sm transition-all duration-300 border
-               {{ request('category') == $category->id 
-                  ? 'bg-brand-black text-white border-brand-black dark:bg-white dark:text-black' 
-                  : 'bg-transparent text-gray-500 border-gray-300 hover:border-brand-black hover:text-brand-black dark:border-gray-700 dark:text-gray-400 dark:hover:text-white' 
-               }}">
-                {{ $category->name }}
-            </a>
-            @endforeach
+                {{-- Container Flex: Mobile Stack (Vertical), Desktop Row (Horizontal) --}}
+                <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+
+                    {{-- 1. SEARCH INPUT (Paling Lebar) --}}
+                    <div class="relative w-full md:flex-grow group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400 group-focus-within:text-brand-red transition-colors"></i>
+                        </div>
+                        <input type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Cari produk..."
+                            class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent dark:bg-brand-gray dark:border-gray-700 dark:text-gray-200 dark:focus:ring-brand-orange transition-all shadow-sm">
+                    </div>
+
+                    {{-- 2. CATEGORY DROPDOWN (Fixed Width di Desktop biar rapi) --}}
+                    {{-- FIX 2: Saya ubah width md:w-64 jadi md:min-w-[220px] biar lega --}}
+                    <div class="relative w-full md:w-auto md:min-w-[220px]">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-filter text-gray-400"></i>
+                        </div>
+
+                        <select name="category"
+                            class="w-full pl-11 pr-10 py-3 rounded-lg border border-gray-300 bg-white text-gray-700 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent dark:bg-brand-gray dark:border-gray-700 dark:text-gray-200 dark:focus:ring-brand-orange transition-all shadow-sm truncate">
+                            <option value="">Semua Kategori</option>
+                            @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                            @endforeach
+                        </select>
+
+                        {{-- Custom Chevron Icon (Pojok Kanan) --}}
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+
+                    {{-- 3. APPLY BUTTON --}}
+                    <button type="submit"
+                        class="w-full md:w-auto px-6 py-3 bg-brand-black text-white font-heading font-bold uppercase tracking-wider rounded-lg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-white dark:text-brand-black dark:hover:bg-gray-200 transition-all shadow-lg transform active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap">
+                        <span>Apply</span>
+                        {{-- Ikon panah kecil opsional --}}
+                        {{-- <i class="fas fa-arrow-right text-sm"></i> --}}
+                    </button>
+
+                    {{-- 4. RESET BUTTON (Hanya Icon, Muncul jika ada filter) --}}
+                    @if(request('search') || request('category'))
+                    <a href="{{ route('store.biin-king') }}#product-display"
+                        class="w-full md:w-auto px-4 py-3 flex items-center justify-center text-red-600 font-bold hover:bg-red-50 rounded-lg transition-colors dark:text-red-400 dark:hover:bg-brand-gray border border-gray-200 md:border-transparent hover:border-red-200"
+                        title="Reset Filter">
+                        <i class="fas fa-sync-alt"></i>
+                        <span class="ml-2 md:hidden">Reset Filter</span> {{-- Teks muncul cuma di HP --}}
+                    </a>
+                    @endif
+
+                </div>
+            </form>
         </div>
+        {{-- === END FILTER BAR === --}}
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             @foreach ($products as $product)
