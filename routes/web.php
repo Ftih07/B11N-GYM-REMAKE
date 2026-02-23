@@ -16,6 +16,11 @@ use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\QrCodePrintController;
 
+use App\Http\Controllers\SitemapController;
+
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+
 Route::get('/', [HomeController::class, 'index'])->name('home'); //Home - Landing Page
 Route::get('/biin-gym', [BiinGymController::class, 'index'])->name('gym.biin'); //B11N Gym
 Route::get('/king-gym', [KingGymController::class, 'index'])->name('gym.king'); // K1NG Gym
