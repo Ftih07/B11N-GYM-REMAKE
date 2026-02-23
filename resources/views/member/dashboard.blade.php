@@ -35,6 +35,8 @@
 
 <body class="bg-dark text-gray-200 font-body min-h-screen">
 
+    @include('components.global-loader')
+
     @include('components.navbar')
 
     <div class="container mx-auto p-6 max-w-7xl">

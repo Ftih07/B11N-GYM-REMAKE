@@ -62,6 +62,8 @@
 
 <body class="bg-white min-h-screen flex flex-col">
 
+    @include('components.global-loader')
+
     <div class="w-full z-50">
         @include('components.navbar-cta')
     </div>
@@ -155,11 +157,11 @@
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
                             <div class="flex gap-3 md:gap-6 flex-1 justify-center">
                                 @for($i = 1; $i <= 10; $i++)
-                                <label class="flex flex-col items-center cursor-pointer">
+                                    <label class="flex flex-col items-center cursor-pointer">
                                     <input type="radio" name="rating_cleanliness" value="{{ $i }}" class="mb-1" required>
                                     <span class="text-xs text-textDark font-body">{{ $i }}</span>
-                                </label>
-                                @endfor
+                                    </label>
+                                    @endfor
                             </div>
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Baik</span>
                         </div>
@@ -172,11 +174,11 @@
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
                             <div class="flex gap-3 md:gap-6 flex-1 justify-center">
                                 @for($i = 1; $i <= 10; $i++)
-                                <label class="flex flex-col items-center cursor-pointer">
+                                    <label class="flex flex-col items-center cursor-pointer">
                                     <input type="radio" name="rating_equipment" value="{{ $i }}" class="mb-1" required>
                                     <span class="text-xs text-textDark font-body">{{ $i }}</span>
-                                </label>
-                                @endfor
+                                    </label>
+                                    @endfor
                             </div>
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Baik</span>
                         </div>
@@ -189,11 +191,11 @@
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
                             <div class="flex gap-3 md:gap-6 flex-1 justify-center">
                                 @for($i = 1; $i <= 10; $i++)
-                                <label class="flex flex-col items-center cursor-pointer">
+                                    <label class="flex flex-col items-center cursor-pointer">
                                     <input type="radio" name="nps_score" value="{{ $i }}" class="mb-1" required>
                                     <span class="text-xs text-textDark font-body">{{ $i }}</span>
-                                </label>
-                                @endfor
+                                    </label>
+                                    @endfor
                             </div>
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Baik</span>
                         </div>

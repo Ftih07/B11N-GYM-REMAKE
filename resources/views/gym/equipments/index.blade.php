@@ -24,6 +24,8 @@ Katalog lengkap peralatan fitness B1NG Empire. Temukan alat Cardio, Strength, da
 </script>
 @endpush
 
+@include('components.global-loader')
+
 @include('components.navbar-cta')
 
 @section('content')

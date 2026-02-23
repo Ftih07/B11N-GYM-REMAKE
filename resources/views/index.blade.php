@@ -238,6 +238,8 @@
 
 <body class="bg-primary font-body overflow-x-hidden w-full">
 
+    @include('components.global-loader')
+
     <!-- NAVIGATION BAR -->
     @include('components.navbar-cta')
 

@@ -33,6 +33,8 @@
 
 <body class="bg-dark text-gray-200 font-body min-h-screen">
 
+    @include('components.global-loader')
+
     <!-- NAVBAR -->
     @include('components.navbar')
 

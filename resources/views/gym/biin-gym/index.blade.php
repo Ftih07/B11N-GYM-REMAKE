@@ -643,6 +643,8 @@
 </head>
 
 <body>
+	@include('components.global-loader')
+
 	{{-- CUSTOM NAVBAR --}}
 	<nav class="fixed top-0 left-0 w-full z-50 bg-white/95 text-gray-800 dark:text-white dark:bg-brand-black/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 h-20">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">

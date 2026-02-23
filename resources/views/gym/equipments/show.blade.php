@@ -66,6 +66,8 @@ Panduan lengkap menggunakan {{ $equipment->name }}. {{ \Illuminate\Support\Str::
 </script>
 @endpush
 
+@include('components.global-loader')
+
 @include('components.navbar-cta')
 
 {{-- BACKGROUND UTAMA: ABU-ABU TERANG (Clean Look) --}}

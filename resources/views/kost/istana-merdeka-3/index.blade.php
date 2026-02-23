@@ -305,6 +305,8 @@
 
 <body class="bg-white font-body">
 
+    @include('components.global-loader')
+
     <!-- NAVIGATION -->
     @include('components.navbar-cta')
 

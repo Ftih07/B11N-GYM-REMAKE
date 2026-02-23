@@ -51,6 +51,9 @@
 </head>
 
 <body class="bg-dark font-body flex flex-col min-h-screen bg-[url('/img/gym-bg-pattern.png')] bg-cover bg-center text-white">
+
+    @include('components.global-loader')
+
     <!--Navbar-->
     <div class="w-full">
         @include('components.navbar-cta')

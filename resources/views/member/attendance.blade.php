@@ -30,7 +30,9 @@
 </head>
 
 <body class="bg-dark text-gray-200 font-body min-h-screen flex flex-col">
-    
+
+    @include('components.global-loader')
+
     @include('components.navbar')
 
     <div class="container mx-auto p-4 md:p-6 max-w-5xl flex-grow">

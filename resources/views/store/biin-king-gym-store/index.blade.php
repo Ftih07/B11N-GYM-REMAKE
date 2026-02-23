@@ -77,6 +77,8 @@
     </div>
     @endif
 
+    @include('components.global-loader')
+
     <!-- NAVBAR -->
     @include('components.navbar-cta')
 

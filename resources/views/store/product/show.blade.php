@@ -47,6 +47,8 @@
 
 <body class="bg-gray-50 text-brand-black dark:bg-brand-black dark:text-gray-200 font-sans antialiased transition-colors duration-300 pt-24">
 
+    @include('components.global-loader')
+
     <!-- NAVBAR -->
     @include('components.navbar-cta')
 

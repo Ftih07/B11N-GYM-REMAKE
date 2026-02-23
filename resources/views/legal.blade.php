@@ -6,6 +6,8 @@
 @section('content')
 <script src="//unpkg.com/alpinejs" defer></script>
 
+@include('components.global-loader')
+
 @include('components.navbar-cta')
 
 <div class="min-h-screen bg-neutral-950 text-neutral-300 font-poppins py-12 px-4 sm:px-6 lg:px-8 mt-20">

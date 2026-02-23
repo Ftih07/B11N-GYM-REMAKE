@@ -118,6 +118,8 @@
 
 <body class="bg-white min-h-screen flex flex-col">
 
+    @include('components.global-loader')
+
     <div class="w-full z-50">
         @include('components.navbar-cta')
     </div>
