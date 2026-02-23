@@ -7,8 +7,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     {{-- SEO & Meta Tags --}}
-    <title>{{ $product->name }} ({{ $product->flavour }}) - Rp{{ number_format($product->price, 0, ',', '.') }}</title>
-    <meta name="description" content="Jual {{ $product->name }} rasa {{ $product->flavour }}. {{ \Illuminate\Support\Str::limit($product->description, 100) }}.">
+    <title>{{ $product->name }} @if($product->flavour)({{ $product->flavour }})@endif - Rp{{ number_format($product->price, 0, ',', '.') }} | B1NG EMPIRE</title>
+    <meta name="description" content="Jual {{ $product->name }} @if($product->flavour)rasa {{ $product->flavour }}@endif. {{ \Illuminate\Support\Str::limit(strip_tags($product->description), 150) }}">
+    <meta name="keywords" content="b1ng empire, b11n gym, k1ng gym, gym purwokerto, suplemen fitness, {{ \Illuminate\Support\Str::slug($product->name, ', ') }}, {{ $product->categoryproduct->name ?? '' }}">
+    <meta name="author" content="B1NG EMPIRE">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph / Social Media --}}
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="{{ $product->name }} - B1NG EMPIRE">
+    <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 150, '...') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="B1NG EMPIRE">
+    {{-- Logic Gambar OG: Pakai gambar produk kalau ada, kalau nggak ada pakai placeholder --}}
+    <meta property="og:image" content="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=500&auto=format&fit=crop' }}">
+
+    {{-- Extra untuk Produk E-Commerce --}}
+    <meta property="product:price:amount" content="{{ $product->price }}">
+    <meta property="product:price:currency" content="IDR">
+    <meta property="product:availability" content="{{ $product->status == 'ready' ? 'in stock' : 'out of stock' }}">
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
@@ -226,7 +243,7 @@
                         </div>
 
                         {{-- Button --}}
-                        <a href="{{ route('store.product.show', $related->id) }}"
+                        <a href="{{ route('store.product.show', $related->slug) }}"
                             class="w-full block text-center py-3 rounded-lg font-heading font-bold uppercase tracking-wider text-sm text-white transition-all transform active:scale-95 {{ $btnColor }}">
                             View Details
                         </a>

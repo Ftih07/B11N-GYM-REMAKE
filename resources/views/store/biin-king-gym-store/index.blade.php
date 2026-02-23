@@ -15,7 +15,23 @@
     };
     @endphp
     <title>{{ $pageTitle }} - Pusat Nutrisi Fitness Purwokerto</title>
-    <meta name="description" content="Belanja kebutuhan fitness dari B11N Gym dan K1NG Gym.">
+
+    {{-- Bikin description lebih dinamis ngikutin title --}}
+    <meta name="description" content="Belanja kebutuhan fitness dan suplemen original dari B11N Gym dan K1NG Gym Purwokerto. Dapatkan {{ strtolower($pageTitle) }} terbaik di sini.">
+    <meta name="keywords" content="katalog produk b1ng empire, suplemen fitness purwokerto, b11n gym, k1ng gym, {{ strtolower($pageTitle) }}">
+    <meta name="author" content="B1NG EMPIRE">
+
+    {{-- Canonical URL sangat penting untuk halaman dengan filter/search pencarian --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph (Untuk preview kalau link disebar di WA/IG/FB) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $pageTitle }} - B1NG EMPIRE">
+    <meta property="og:description" content="Belanja kebutuhan fitness dan suplemen original dari B11N Gym dan K1NG Gym Purwokerto.">
+    <meta property="og:url" content="{{ request()->fullUrl() }}">
+    <meta property="og:site_name" content="B1NG EMPIRE">
+    {{-- Menggunakan background hero sebagai gambar preview, kalau null pakai logo --}}
+    <meta property="og:image" content="{{ isset($store) && $store->image ? asset('storage/' . $store->image) : asset('assets/Logo/empire.png') }}">
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
@@ -233,7 +249,7 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('store.product.show', $product->id) }}"
+                    <a href="{{ route('store.product.show', $product->slug) }}"
                         class="w-full block text-center py-3 rounded-lg font-heading font-bold uppercase tracking-wider text-sm text-white transition-all transform active:scale-95 {{ $btnColor }}">
                         View Details
                     </a>

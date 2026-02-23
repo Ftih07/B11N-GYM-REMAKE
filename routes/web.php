@@ -38,7 +38,7 @@ Route::prefix('blogs')->group(function () {
 Route::get('/biin-king-gym-store', [StoreController::class, 'showBiinKingGymStore'])->name('store.biin-king');
 
 //Product Route
-Route::get('product/{id}', [ProductController::class, 'show'])->name('store.product.show');
+Route::get('product/{product}', [ProductController::class, 'show'])->name('store.product.show');
 
 //Booking Kost Route
 Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])->name('kost.book');
