@@ -7,18 +7,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- 1. SEO META TAGS --}}
     <title>Survei Pelanggan - B11N Gym & K1NG Gym</title>
-    <meta name="description" content="Formulir survei kepuasan pelanggan B11N Gym. Bantu kami meningkatkan layanan dengan memberikan penilaian Anda.">
+    <meta name="description" content="Formulir survei kepuasan pelanggan B11N Gym dan K1NG Gym. Bantu kami meningkatkan layanan dengan memberikan penilaian dan masukan Anda.">
+    <meta name="keywords" content="survei pelanggan gym, feedback b11n gym, ulasan k1ng gym, gym purwokerto, b1ng empire">
     <meta name="author" content="B1NG EMPIRE IT Support">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#dc030a">
+    <link rel="canonical" href="{{ url()->current() }}">
 
+    {{-- 2. OPEN GRAPH (Untuk Preview Link di WhatsApp/Facebook/IG) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Survei Kepuasan Member B11N & K1NG Gym">
+    <meta property="og:description" content="Bantu kami jadi lebih baik! Isi survei singkat ini dan bagikan pengalaman latihanmu bersama kami.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="B1NG EMPIRE">
+    {{-- Kita pakai default-image-og.webp yang abang setup sebelumnya --}}
+    <meta property="og:image" content="{{ asset('assets/default-image-og.webp') }}">
+
+    {{-- 3. TWITTER CARD --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Survei Kepuasan B11N & K1NG Gym">
+    <meta name="twitter:description" content="Bantu kami jadi lebih baik! Isi survei singkat ini dan bagikan pengalaman latihanmu.">
+    <meta name="twitter:image" content="{{ asset('assets/default-image-og.webp') }}">
+
+    {{-- 4. ICONS & FONTS --}}
     <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+
+    {{-- 5. SCRIPTS: Tailwind, AlpineJS, SweetAlert2 --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -39,8 +62,8 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    {{-- 6. CUSTOM STYLES --}}
     <style>
         html {
             scroll-behavior: smooth;
@@ -50,10 +73,7 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        input[type="radio"] {
-            accent-color: #dc030a;
-        }
-
+        input[type="radio"],
         input[type="checkbox"] {
             accent-color: #dc030a;
         }

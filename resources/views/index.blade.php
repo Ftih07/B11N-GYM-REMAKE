@@ -30,7 +30,7 @@
     <meta property="og:title" content="B1NG EMPIRE - Gym, Store & Residence">
     <meta property="og:description" content="Satu tujuan untuk kebugaran dan kenyamanan. Kunjungi B11N Gym, K1NG Gym, dan Kost Istana Merdeka 03.">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('assets/Logo/empire.png') }}">
+    <meta property="og:image" content="{{ asset('assets/default-image-og.webp') }}">
     <meta property="og:site_name" content="B1NG EMPIRE">
 
     {{-- 6. SCHEMA MARKUP (Organization - Parent Company) --}}
@@ -84,7 +84,7 @@
                 extend: {
                     colors: {
                         primary: '#0f1a2c',
-                        secondary: '#f6ac0f',
+                        secondary: '#dc030a',
                         textDark: '#0f172a',
                         textLight: '#64748b',
                         extraLight: '#f8fafc',
@@ -244,19 +244,21 @@
     @include('components.navbar-cta')
 
     <!-- HERO HEADER SECTION -->
-    {{-- UPDATE: Class bg-gradient diubah jadi abu-abu (gray-300/100) biar ga silau --}}
-    <header id="header" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-300 via-gray-100 to-gray-300 pt-24">
+    {{-- UPDATE 2: Background utama diubah jadi bg-black --}}
+    <header id="header" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-black pt-24">
 
-        {{-- UPDATE: Opacity dinaikkan dikit jadi 10 biar tekstur gym-nya lebih kelihatan --}}
-        <div class="absolute inset-0 z-0 opacity-10 mix-blend-multiply">
-            <img src="assets/Hero/b11ngym.jpg" alt="B1NG Empire Hero" class="w-full h-full object-cover object-center" />
+        {{-- UPDATE 3: mix-blend dihapus, opacity diatur ke 40 agar foto terlihat tapi tidak dominan --}}
+        <div class="absolute inset-0 z-0">
+            <img src="assets/Hero/b11ngym.jpg" alt="B1NG Empire Hero" class="w-full h-full object-cover object-center opacity-40" />
         </div>
 
-        {{-- UPDATE: Tambahan Overlay Hitam Tipis (Opsional, hapus kalau terlalu gelap) --}}
-        <div class="absolute inset-0 bg-black/5 z-0 pointer-events-none"></div>
+        {{-- UPDATE 4: Tambahan efek Vignette (gradient gelap di pinggir & atas/bawah) persis seperti style B11N Gym --}}
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-0 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-black/80 z-0 pointer-events-none"></div>
 
-        <div class="absolute top-20 right-10 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+        {{-- UPDATE 5: Dekorasi blur disesuaikan opacity-nya --}}
+        <div class="absolute top-20 right-10 w-72 h-72 bg-secondary/20 rounded-full blur-3xl z-0"></div>
+        <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary/30 rounded-full blur-3xl z-0"></div>
 
         <div class="relative z-20 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
             <div class="max-w-3xl mx-auto text-center reveal">
@@ -264,13 +266,14 @@
                     MEMPERSEMBAHKAN
                 </p>
 
-                <h1 class="font-heading text-textDark font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none mb-8 sm:mb-10 tracking-tight uppercase">
+                {{-- UPDATE 6: Warna teks judul diubah jadi text-white --}}
+                <h1 class="font-heading text-white font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-none mb-8 sm:mb-10 tracking-tight uppercase">
                     B1NG<br />
                     <span class="text-secondary">EMPIRE</span>
                 </h1>
 
-                {{-- UPDATE: Tambah 'font-medium' biar teks deskripsi lebih tebal sedikit & gampang dibaca di background abu --}}
-                <p class="font-body text-textDark font-medium text-lg sm:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
+                {{-- UPDATE 7: Warna teks deskripsi diubah jadi text-gray-200 supaya lebih mudah dibaca --}}
+                <p class="font-body text-gray-200 font-normal text-lg sm:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
                     Menghadirkan fitness, wellness, dan hunian modern dalam satu unit usaha eksklusif di Purwokerto.
                 </p>
 

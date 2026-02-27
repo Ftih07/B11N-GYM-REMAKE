@@ -15,13 +15,13 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="Login Member - B1NG Empire">
     <meta property="og:description" content="Akses portal member B1NG Empire Gym untuk kelola aktivitas fitness Anda.">
-    <meta property="og:image" content="{{ asset('assets/Logo/empire.png') }}">
+    <meta property="og:image" content="{{ asset('assets/default-image-og.webp') }}">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="Login Member - B1NG Empire">
     <meta property="twitter:description" content="Akses portal member B1NG Empire Gym.">
-    <meta property="twitter:image" content="{{ asset('assets/Logo/empire.png') }}">
+    <meta property="twitter:image" content="{{ asset('assets/default-image-og.webp') }}">
 
     <link rel="icon" href="{{ asset('assets/Logo/empire.png') }}" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('assets/Logo/empire.png') }}">

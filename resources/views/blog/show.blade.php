@@ -9,16 +9,31 @@
     {{-- SEO Meta Tags --}}
     <title>{{ $blog->title }} - B1NG EMPIRE Blog</title>
     <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
-    <meta name="keywords" content="gym, fitness, kost, purwokerto, b11n gym, k1ng gym, {{ Str::slug($blog->title, ', ') }}">
+    {{-- Ganti Str::slug dengan judul asli atau biarkan title-nya saja --}}
+    <meta name="keywords" content="gym purwokerto, fitness, kost istana merdeka, b11n gym, k1ng gym, {{ $blog->title }}">
     <meta name="author" content="B1NG EMPIRE">
     <link rel="canonical" href="{{ url()->current() }}">
 
-    {{-- Open Graph --}}
+    {{-- Open Graph (Facebook, WA, LinkedIn) --}}
     <meta property="og:type" content="article">
     <meta property="og:title" content="{{ $blog->title }}">
     <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
-    <meta property="og:image" content="{{ asset('storage/' . $blog->image) }}">
     <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="B1NG EMPIRE">
+    {{-- Kasih fallback image jaga-jaga kalau $blog->image kosong --}}
+    <meta property="og:image" content="{{ $blog->image ? asset('storage/' . $blog->image) : asset('assets/default-image-og.webp') }}">
+
+    {{-- Khusus tipe "article" --}}
+    <meta property="article:published_time" content="{{ $blog->created_at->toIso8601String() }}">
+    <meta property="article:modified_time" content="{{ $blog->updated_at->toIso8601String() }}">
+    {{-- Kalau ada relasi ke kategori blog, bisa di-uncomment ini: --}}
+    {{-- <meta property="article:section" content="{{ $blog->category->name ?? 'Fitness & Health' }}"> --}}
+
+    {{-- Twitter Card (Opsional tapi sangat disarankan) --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $blog->title }}">
+    <meta name="twitter:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 150) }}">
+    <meta name="twitter:image" content="{{ $blog->image ? asset('storage/' . $blog->image) : asset('assets/default-image-og.webp') }}">
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">

@@ -29,7 +29,7 @@
     <meta property="og:description" content="Temukan alat rusak atau fasilitas bermasalah? Laporkan segera di sini agar tim maintenance kami bisa memperbaikinya.">
     <meta property="og:url" content="{{ url()->current() }}">
     {{-- Gunakan Logo B11N atau icon maintenance sebagai thumbnail --}}
-    <meta property="og:image" content="{{ asset('assets/Logo/empire.png') }}">
+    <meta property="og:image" content="{{ asset('assets/default-image-og.webp') }}">
     <meta property="og:site_name" content="Maintenance System">
 
     {{-- 5. THEME COLOR (Sesuai B11N Gym) --}}

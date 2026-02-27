@@ -6,9 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    {{-- SEO Meta Tags --}}
+    {{-- SEO & Meta Tags --}}
     <title>Blog B1NG EMPIRE - Tips Fitness, Gym & Info Kost Eksklusif</title>
     <meta name="description" content="Temukan artikel terbaru seputar tips latihan fitness di B11N & K1NG Gym, panduan hidup sehat, serta info kost eksklusif Istana Merdeka 03.">
+
+    {{-- Tambahan Keywords spesifik target lokal Purwokerto --}}
+    <meta name="keywords" content="blog b1ng empire, tips fitness, artikel gym purwokerto, b11n gym, k1ng gym, kost eksklusif purwokerto, istana merdeka 03, gaya hidup sehat">
+    <meta name="author" content="B1NG EMPIRE">
+
+    {{-- Canonical URL --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph / Social Media (Untuk preview link di WA/Sosmed) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Blog B1NG EMPIRE - Tips Fitness & Info Kost">
+    <meta property="og:description" content="Temukan artikel terbaru seputar tips latihan fitness di B11N & K1NG Gym, panduan hidup sehat, serta info kost eksklusif Istana Merdeka 03.">
+    <meta property="og:url" content="{{ request()->fullUrl() }}">
+    <meta property="og:site_name" content="B1NG EMPIRE">
+
+    {{-- Karena ini halaman index blog, pakai logo default atau banner blog kalau ada --}}
+    <meta property="og:image" content="{{ asset('assets/default-image-og.webp') }}">
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">

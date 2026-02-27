@@ -31,7 +31,7 @@
     <meta property="og:url" content="{{ request()->fullUrl() }}">
     <meta property="og:site_name" content="B1NG EMPIRE">
     {{-- Menggunakan background hero sebagai gambar preview, kalau null pakai logo --}}
-    <meta property="og:image" content="{{ isset($store) && $store->image ? asset('storage/' . $store->image) : asset('assets/Logo/empire.png') }}">
+    <meta property="og:image" content="{{ asset('assets/default-image-og.webp') }}">
 
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
