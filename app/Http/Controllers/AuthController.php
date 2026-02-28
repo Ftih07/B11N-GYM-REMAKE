@@ -69,6 +69,62 @@ class AuthController extends Controller
         }
     }
 
+    // 3. Redirect user to Facebook Login Page
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    // 4. Handle Callback from Facebook
+    public function handleFacebookCallback()
+    {
+        try {
+            // Get user data from Facebook
+            $facebookUser = Socialite::driver('facebook')->user();
+
+            // Find existing user by Facebook ID OR Email
+            $user = User::where('facebook_id', $facebookUser->id)
+                ->orWhere('email', $facebookUser->email)
+                ->first();
+
+            if (!$user) {
+                // Scenario A: User doesn't exist -> Create New User
+                $user = User::create([
+                    'name' => $facebookUser->name,
+                    'email' => $facebookUser->email,
+                    'facebook_id' => $facebookUser->id,
+                    'role' => 'customer', // Default role
+                    'password' => bcrypt(Str::random(16)),
+                    'email_verified_at' => now(),
+                    'profile_picture' => $facebookUser->avatar,
+                ]);
+            } else {
+                // Scenario B: User exists -> Update Facebook ID/Avatar if missing
+                if (!$user->facebook_id) {
+                    $user->update([
+                        'facebook_id' => $facebookUser->id,
+                        // Boleh di-update avatarnya atau nggak, opsional
+                        'profile_picture' => $user->profile_picture ?? $facebookUser->avatar,
+                    ]);
+                }
+            }
+
+            // --- AUTO-CONNECT MEMBER LOGIC ---
+            $member = Member::where('email', $user->email)->first();
+
+            if ($member && is_null($member->user_id)) {
+                $member->update(['user_id' => $user->id]);
+            }
+
+            // Log the user in
+            Auth::login($user);
+
+            return redirect()->intended('/dashboard');
+        } catch (\Exception $e) {
+            return redirect('/login')->with('error', 'Login Facebook Gagal: ' . $e->getMessage());
+        }
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();

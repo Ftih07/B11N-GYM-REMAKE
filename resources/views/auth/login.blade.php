@@ -73,9 +73,15 @@
             </div>
 
             <a href="{{ route('auth.google') }}"
-                class="group flex items-center justify-center w-full bg-white hover:bg-gray-200 text-gray-900 font-bold py-4 px-6 rounded transition duration-300 transform hover:-translate-y-1 shadow-lg">
+                class="group flex items-center justify-center w-full bg-white hover:bg-gray-200 text-gray-900 font-bold py-4 px-6 rounded transition duration-300 transform hover:-translate-y-1 shadow-lg mb-4">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6 mr-4 group-hover:scale-110 transition">
                 <span class="font-body">Masuk dengan Google</span>
+            </a>
+
+            <a href="{{ route('auth.facebook') }}"
+                class="group flex items-center justify-center w-full bg-[#1877F2] hover:bg-[#166FE5] text-white font-bold py-4 px-6 rounded transition duration-300 transform hover:-translate-y-1 shadow-lg">
+                <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="w-6 h-6 mr-4 group-hover:scale-110 transition filter brightness-0 invert">
+                <span class="font-body">Masuk dengan Facebook</span>
             </a>
 
             <div class="mt-8 pt-8 border-t border-neutral-800 text-center">

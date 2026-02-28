@@ -54,9 +54,17 @@
                 <div class="relative">
                     <img src="{{ $user->profile_picture ?? 'https://via.placeholder.com/150' }}"
                         class="w-32 h-32 rounded-full border-4 border-neutral-800 shadow-xl object-cover">
-                    <div class="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow-md" title="Terhubung dengan Google">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
+
+                    {{-- Logic Dinamis Logo OAuth --}}
+                    @if($user->facebook_id)
+                    <div class="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow-md" title="Terhubung dengan Facebook">
+                        <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="w-5 h-5" alt="Facebook Icon">
                     </div>
+                    @elseif($user->google_id)
+                    <div class="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow-md" title="Terhubung dengan Google">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google Icon">
+                    </div>
+                    @endif
                 </div>
 
                 <h2 class="mt-4 text-3xl font-header font-bold text-white uppercase tracking-wide">{{ $user->name }}</h2>

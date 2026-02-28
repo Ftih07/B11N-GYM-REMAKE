@@ -76,11 +76,6 @@ Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
 // Route untuk memproses data yang dikirim (POST)
 Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
 
-use App\Http\Controllers\AuthController;
-
-Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
-
 Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 
 
@@ -91,6 +86,7 @@ Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-co
 use App\Http\Controllers\Member\AttendanceController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\ProfileController;
+use App\Http\Controllers\AuthController;
 
 // Halaman Login (Tamu only)
 Route::middleware('guest')->group(function () {
@@ -98,9 +94,13 @@ Route::middleware('guest')->group(function () {
         return view('auth.login');
     })->name('login');
 
-    // Route Google yang tadi
-    Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
-    Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+    // Route Google
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+    // Route Facebook
+    Route::get('/auth/facebook', [AuthController::class, 'redirectToFacebook'])->name('auth.facebook');
+    Route::get('/auth/facebook/callback', [AuthController::class, 'handleFacebookCallback'])->name('auth.facebook.callback');
 });
 
 // Halaman Dashboard Member (Harus Login)
