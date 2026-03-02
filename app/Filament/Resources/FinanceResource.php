@@ -14,6 +14,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
 use Carbon\Carbon;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Database\Eloquent\Builder;
 
 class FinanceResource extends Resource
 {
@@ -163,6 +165,57 @@ class FinanceResource extends Resource
                         'income' => 'Income',
                         'expense' => 'Expense',
                     ]),
+
+                // --- TAMBAHAN: Filter Bulan dan Tahun ---
+                Filter::make('bulan_tahun')
+                    ->form([
+                        Select::make('month')
+                            ->label('Bulan')
+                            ->options([
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->placeholder('Semua Bulan'),
+                        Select::make('year')
+                            ->label('Tahun')
+                            ->options(function () {
+                                $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
+                                return array_combine($years, $years);
+                            })
+                            ->placeholder('Semua Tahun'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['month'] ?? null, // <-- Tambahkan "?? null" di sini
+                                fn(Builder $query, $month): Builder => $query->whereMonth('date', $month),
+                            )
+                            ->when(
+                                $data['year'] ?? null, // <-- Tambahkan "?? null" di sini juga
+                                fn(Builder $query, $year): Builder => $query->whereYear('date', $year),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['month'] ?? null) {
+                            $monthName = Carbon::createFromFormat('m', $data['month'])->translatedFormat('F');
+                            $indicators[] = 'Bulan: ' . $monthName;
+                        }
+                        if ($data['year'] ?? null) {
+                            $indicators[] = 'Tahun: ' . $data['year'];
+                        }
+                        return $indicators;
+                    }),
             ]);
     }
 

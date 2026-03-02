@@ -59,7 +59,15 @@
                     <button class="flex items-center gap-3 focus:outline-none">
                         <div class="text-right hidden xl:block">
                             <p class="text-sm font-bold text-white uppercase font-header">{{ Auth::user()->name }}</p>
-                            <p class="text-[10px] text-gray-400 uppercase tracking-widest">Member Area</p>
+
+                            @php
+                            $desktopStatusClass = Auth::user()->status === 'active' ? 'text-green-400' : 'text-red-500';
+                            $desktopStatusLabel = Auth::user()->status === 'active' ? 'ACTIVE MEMBER' : 'INACTIVE / EXPIRED';
+                            @endphp
+
+                            <p class="text-[10px] {{ $desktopStatusClass }} font-bold uppercase tracking-widest">
+                                {{ $desktopStatusLabel }}
+                            </p>
                         </div>
                         <img class="h-10 w-10 rounded border-2 border-neutral-600 object-cover"
                             src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=DC2626&color=fff' }}"
@@ -86,7 +94,7 @@
 
             {{-- MOBILE MENU BUTTON --}}
             <div class="md:hidden flex items-center">
-                <button id="mobile-menu-btn" class="relative w-10 h-10 flex items-center justify-center text-white hover:text-red-500 focus:outline-none">
+                <button id="mobile-menu-btn" aria-label="Buka menu navigasi" class="relative w-10 h-10 flex items-center justify-center text-white hover:text-red-500 focus:outline-none">
                     {{-- Icon Bars --}}
                     <svg id="nav-icon-bars" class="w-6 h-6 transition-all duration-300 transform scale-100 opacity-100 absolute" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -114,7 +122,16 @@
                 <img class="h-12 w-12 rounded object-cover" src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=DC2626&color=fff' }}">
                 <div>
                     <div class="text-base font-bold text-white font-header uppercase">{{ Auth::user()->name }}</div>
-                    <div class="text-xs text-green-400 font-medium tracking-wide">● Active Member</div>
+
+                    @php
+                    // Cek status user yang sedang login
+                    $statusClass = Auth::user()->status === 'active' ? 'text-green-400' : 'text-red-500';
+                    $statusLabel = Auth::user()->status === 'active' ? '● Active Member' : '● Inactive / Expired Member';
+                    @endphp
+
+                    <div class="text-xs {{ $statusClass }} font-medium tracking-wide uppercase">
+                        {{ $statusLabel }}
+                    </div>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3 mb-6">

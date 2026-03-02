@@ -347,7 +347,7 @@
 
                     <!-- Content -->
                     <div class="p-8 flex flex-col flex-grow">
-                        <h4 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">B11N Gym Purwokerto</h4>
+                        <h3 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">B11N Gym Purwokerto</h3>
                         <p class="font-body text-textLight leading-relaxed text-base flex-grow">
                             Tempat gym yang saat ini menyandang status sebagai tempat gym termurah di Purwokerto
                         </p>
@@ -533,9 +533,9 @@
 
                         <!-- Content -->
                         <div class="p-6 sm:p-8">
-                            <h4 class="font-heading text-textDark font-bold text-lg sm:text-xl mb-3 tracking-tight leading-tight line-clamp-2 group-hover:text-secondary transition-colors duration-300 uppercase">
+                            <h3 class="font-heading text-textDark font-bold text-lg sm:text-xl mb-3 tracking-tight leading-tight line-clamp-2 group-hover:text-secondary transition-colors duration-300 uppercase">
                                 {{ $blog->title }}
-                            </h4>
+                            </h3>
                             <p class="font-body text-textLight leading-relaxed text-base line-clamp-3 mb-4">
                                 {!! Str::limit(strip_tags($blog->content), 100) !!}
                             </p>

@@ -3,12 +3,14 @@
 namespace App\Filament\Resources\FinanceResource\Pages;
 
 use App\Filament\Resources\FinanceResource;
-use App\Filament\Resources\FinanceResource\Widgets\FinanceStats; // Import Widget tadi
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Pages\Concerns\ExposesTableToWidgets; // 1. Tambahkan use ini
 
 class ListFinances extends ListRecords
 {
+    use ExposesTableToWidgets; // 2. Tambahkan trait ini di dalam class
+
     protected static string $resource = FinanceResource::class;
 
     protected function getHeaderActions(): array
@@ -18,12 +20,11 @@ class ListFinances extends ListRecords
         ];
     }
 
-    // --- TAMBAHKAN BAGIAN INI ---
+    // Pastikan widget abang dipanggil di sini
     protected function getHeaderWidgets(): array
     {
         return [
-            FinanceStats::class,
+            FinanceResource\Widgets\FinanceStats::class, 
         ];
     }
-    // ----------------------------
 }

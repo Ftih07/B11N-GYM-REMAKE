@@ -28,15 +28,15 @@
                 <div class="flex items-center gap-3 pt-2">
                     @php
                     $socials = [
-                    ['icon' => 'ri-whatsapp-line', 'url' => 'https://wa.me/6283194288423'],
-                    ['icon' => 'ri-instagram-fill', 'url' => 'https://www.instagram.com/biin_gym/'],
-                    ['icon' => 'ri-threads-fill', 'url' => 'https://www.threads.net/@biin_gym'],
-                    ['icon' => 'fas fa-envelope', 'url' => 'mailto:sobiin77@gmail.com'],
+                    ['icon' => 'ri-whatsapp-line', 'url' => 'https://wa.me/6283194288423', 'label' => 'WhatsApp B1IN Gym'],
+                    ['icon' => 'ri-instagram-fill', 'url' => 'https://www.instagram.com/biin_gym/', 'label' => 'Instagram B1IN Gym'],
+                    ['icon' => 'ri-threads-fill', 'url' => 'https://www.threads.net/@biin_gym', 'label' => 'Threads B1IN Gym'],
+                    ['icon' => 'fas fa-envelope', 'url' => 'mailto:sobiin77@gmail.com', 'label' => 'Email B1IN Gym'],
                     ];
                     @endphp
 
                     @foreach($socials as $social)
-                    <a href="{{ $social['url'] }}" target="_blank" class="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 transform hover:-translate-y-1">
+                    <a href="{{ $social['url'] }}" aria-label="{{ $social['label'] }}" target="_blank" class="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="{{ $social['icon'] }} text-lg"></i>
                     </a>
                     @endforeach
@@ -97,15 +97,15 @@
         </div>
 
         <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p class="text-gray-500 text-xs text-center md:text-left">
-                Copyright &copy; {{ date('Y') }} <span class="text-red-600 font-bold">B1NG EMPIRE</span>. All rights reserved.
+            <p class="text-gray-400 text-xs text-center md:text-left">
+                Copyright &copy; {{ date('Y') }} <span class="text-red-500 font-bold">B1NG EMPIRE</span>. All rights reserved.
             </p>
 
-            <div class="flex items-center gap-6 text-xs text-gray-500">
+            <div class="flex items-center gap-6 text-xs text-gray-400">
                 <a href="{{ route('legal') }}" class="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="{{ route('legal') }}" class="hover:text-white transition-colors">Terms of Service</a>
             </div>
         </div>
 
     </div>
-</footer> 
+</footer>

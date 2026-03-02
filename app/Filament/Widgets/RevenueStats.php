@@ -31,23 +31,35 @@ class RevenueStats extends BaseWidget
         };
 
         return [
-            // Stats Card 1: Kost
-            Stat::make('Pendapatan Kost Istana Merdeka 3', Number::currency($getIncome('Istana Merdeka 3'), 'IDR'))
-                ->description('Pemasukan ' . $now->format('F Y'))
-                ->descriptionIcon('heroicon-m-home')
-                ->color('success'), // Green
-
-            // Stats Card 2: B11N Gym
+            // Stats Card 1: B11N Gym
             Stat::make('Pendapatan B11N Gym', Number::currency($getIncome('B11N Gym'), 'IDR'))
                 ->description('Pemasukan ' . $now->format('F Y'))
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('warning'), // Yellow
 
-            // Stats Card 3: K1NG Gym
+            // Stats Card 2: K1NG Gym
             Stat::make('Pendapatan K1NG Gym', Number::currency($getIncome('K1NG Gym'), 'IDR'))
                 ->description('Pemasukan ' . $now->format('F Y'))
                 ->descriptionIcon('heroicon-m-trophy')
                 ->color('info'), // Blue
+
+            // Stats Card 3: Kost
+            Stat::make('Pendapatan Kost Istana Merdeka 3', Number::currency($getIncome('Istana Merdeka 3'), 'IDR'))
+                ->description('Pemasukan ' . $now->format('F Y'))
+                ->descriptionIcon('heroicon-m-home')
+                ->color('success'), // Green
+
+            // Stats Card 4: Istana Merdeka 02 - Karang Wangkal
+            Stat::make('Pendapatan Istana Merdeka 02 - Karang Wangkal', Number::currency($getIncome('Istana Merdeka 02 - Karang Wangkal'), 'IDR'))
+                ->description('Pemasukan ' . $now->format('F Y'))
+                ->descriptionIcon('heroicon-m-trophy')
+                ->color('danger'), // Biru Tua / Warna Utama Tema
+
+            // Stats Card 5: Istana Merdeka 01 - Pabuaran
+            Stat::make('Pendapatan Istana Merdeka 01 - Pabuaran', Number::currency($getIncome('Istana Merdeka 01 - Pabuaran'), 'IDR'))
+                ->description('Pemasukan ' . $now->format('F Y'))
+                ->descriptionIcon('heroicon-m-trophy')
+                ->color('gray'), // Abu-abu elegan
         ];
     }
 }

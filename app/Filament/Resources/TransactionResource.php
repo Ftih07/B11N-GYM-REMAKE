@@ -21,6 +21,7 @@ use Filament\Infolists\Infolist;
 use App\Exports\TransactionExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 
 class TransactionResource extends Resource
@@ -193,6 +194,18 @@ class TransactionResource extends Resource
                             ->numeric()
                             ->prefix('Rp')
                             ->readOnly(),
+
+                        FileUpload::make('proof_of_payment')
+                            ->label('Bukti Pembayaran')
+                            ->image()
+                            ->directory('transaction-proofs')
+                            ->nullable()
+                            // --- FITUR KOMPRESI BAWAAN FILAMENT ---
+                            ->imageResizeMode('contain') // Menjaga proporsi asli, tidak dicrop
+                            ->imageResizeTargetWidth('1024') // Batasi maksimal lebar
+                            ->imageResizeTargetHeight('1024') // Batasi maksimal tinggi
+                            // --------------------------------------
+                            ->columnSpanFull(),
                     ]),
             ]);
     }
@@ -317,6 +330,12 @@ class TransactionResource extends Resource
 
             // --- FILTERS ---
             ->filters([
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->relationship('gymkos', 'name')
+                    ->label('Cabang')
+                    ->searchable()
+                    ->preload(),
+
                 Tables\Filters\SelectFilter::make('status')
                     ->options(['paid' => 'Lunas', 'pending' => 'Pending', 'cancelled' => 'Batal']),
 
@@ -337,6 +356,23 @@ class TransactionResource extends Resource
                     })
             ])
             ->actions([
+                Tables\Actions\Action::make('view_proof')
+                    ->label('Bukti')
+                    ->icon('heroicon-o-photo')
+                    ->color('success')
+                    ->visible(fn(Transaction $record) => $record->proof_of_payment !== null)
+                    ->modalHeading('Bukti Pembayaran')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Tutup')
+                    ->infolist([
+                        Infolists\Components\ImageEntry::make('proof_of_payment')
+                            ->hiddenLabel()
+                            ->extraImgAttributes([
+                                'alt' => 'Bukti Pembayaran',
+                                'style' => 'border-radius: 8px; max-height: 500px; width: auto; margin: 0 auto; display: block;',
+                            ]),
+                    ]),
+
                 // --- PRINT STRUK ACTION ---
                 Tables\Actions\Action::make('print')
                     ->label('Cetak')

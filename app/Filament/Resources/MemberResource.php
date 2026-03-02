@@ -100,7 +100,6 @@ class MemberResource extends Resource
                             ->label('Face Descriptor (Auto Generated)')
                             ->rows(3)
                             ->readOnly() // Prevent manual editing
-                            ->required() // Must be generated from webcam
                             ->helperText('Otomatis terisi saat wajah terdeteksi di kamera.')
                             ->columnSpanFull(),
                     ]),

@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class WebTrafficChart extends ChartWidget
 {
     protected static ?string $heading = 'Traffic Pengunjung Website (Unique)';
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
 
     protected function getData(): array
     {
