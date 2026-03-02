@@ -110,6 +110,8 @@ class MemberResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            // 1. TAMBAHIN DEFAULT SORT DI SINI (Berdasarkan yang terakhir diupdate)
+            ->defaultSort('updated_at', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('picture')->circular(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
@@ -203,7 +205,23 @@ class MemberResource extends Resource
                         );
                     }),
             ])
-            ->filters([])
+            // 2. TAMBAHIN FILTER DI SINI
+            ->filters([
+                // Filter berdasarkan relasi Gymkos
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->relationship('gymkos', 'name')
+                    ->label('Cabang Gym')
+                    ->searchable()
+                    ->preload(),
+
+                // Filter tambahan: berdasarkan Status (Aktif / Tidak Aktif)
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'active' => 'Aktif',
+                        'inactive' => 'Tidak Aktif (Expired)',
+                    ])
+                    ->label('Status Membership'),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);
