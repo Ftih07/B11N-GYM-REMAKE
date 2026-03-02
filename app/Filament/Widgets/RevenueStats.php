@@ -42,24 +42,6 @@ class RevenueStats extends BaseWidget
                 ->description('Pemasukan ' . $now->format('F Y'))
                 ->descriptionIcon('heroicon-m-trophy')
                 ->color('info'), // Blue
-
-            // Stats Card 3: Kost
-            Stat::make('Pendapatan Kost Istana Merdeka 3', Number::currency($getIncome('Istana Merdeka 3'), 'IDR'))
-                ->description('Pemasukan ' . $now->format('F Y'))
-                ->descriptionIcon('heroicon-m-home')
-                ->color('success'), // Green
-
-            // Stats Card 4: Istana Merdeka 02 - Karang Wangkal
-            Stat::make('Pendapatan Istana Merdeka 02 - Karang Wangkal', Number::currency($getIncome('Istana Merdeka 02 - Karang Wangkal'), 'IDR'))
-                ->description('Pemasukan ' . $now->format('F Y'))
-                ->descriptionIcon('heroicon-m-trophy')
-                ->color('danger'), // Biru Tua / Warna Utama Tema
-
-            // Stats Card 5: Istana Merdeka 01 - Pabuaran
-            Stat::make('Pendapatan Istana Merdeka 01 - Pabuaran', Number::currency($getIncome('Istana Merdeka 01 - Pabuaran'), 'IDR'))
-                ->description('Pemasukan ' . $now->format('F Y'))
-                ->descriptionIcon('heroicon-m-trophy')
-                ->color('gray'), // Abu-abu elegan
         ];
     }
 }

@@ -20,18 +20,20 @@ class MemberExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
     protected $mode;
     protected $month;
     protected $year;
+    protected $gymkosId; // 1. Tambahkan property baru
 
     // --- CONSTRUCTOR ---
-    // Receives export mode ('all' or 'period') and date filters
-    public function __construct($mode, $month = null, $year = null)
+    // Receives export mode ('all' or 'period'), date filters, and optional branch
+    public function __construct($mode, $month = null, $year = null, $gymkosId = null) // 2. Tambah parameter
     {
         $this->mode = $mode;
         $this->month = $month;
         $this->year = $year;
+        $this->gymkosId = $gymkosId; // 3. Set property
     }
 
     // --- QUERY DATA ---
-    // Fetches member data based on the selected mode
+    // Fetches member data based on the selected mode and optional branch
     public function query()
     {
         $query = Member::query()
@@ -42,6 +44,11 @@ class MemberExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
         if ($this->mode === 'period' && $this->month && $this->year) {
             $query->whereYear('join_date', $this->year)
                 ->whereMonth('join_date', $this->month);
+        }
+
+        // 4. Tambahkan kondisi filter Gymkos jika ada (tidak null)
+        if ($this->gymkosId !== null) {
+            $query->where('gymkos_id', $this->gymkosId);
         }
 
         return $query;

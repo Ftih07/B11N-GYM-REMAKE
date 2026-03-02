@@ -144,6 +144,13 @@ class MemberResource extends Resource
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
                     ->form([
+                        // Filter Cabang (Gymkos) ditaruh paling atas
+                        Select::make('gymkos_id')
+                            ->label('Cabang (Gym/Kos)')
+                            ->options(\App\Models\Gymkos::all()->pluck('name', 'id'))
+                            ->placeholder('Semua Cabang') // Kosong berarti 'All'
+                            ->default(null),
+
                         // 1. Export Mode Selection (All vs Period)
                         Radio::make('mode')
                             ->label('Pilih Tipe Export')
@@ -179,7 +186,7 @@ class MemberResource extends Resource
                         Select::make('year')
                             ->label('Tahun Bergabung')
                             ->options(function () {
-                                $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
+                                $years = range(\Carbon\Carbon::now()->year - 5, \Carbon\Carbon::now()->year + 1);
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
@@ -187,20 +194,24 @@ class MemberResource extends Resource
                             ->required(fn(Get $get) => $get('mode') === 'period'),
                     ])
                     ->action(function (array $data) {
+                        // Ambil variabel Gymkos
+                        $gymkosId = $data['gymkos_id'] ?? null;
+                        $gymName = $gymkosId ? \App\Models\Gymkos::find($gymkosId)->name : 'All-Cabang';
+
                         // Determine Filename & Params
                         if ($data['mode'] === 'all') {
-                            $filename = 'Semua-Data-Member-' . date('d-m-Y') . '.xlsx';
+                            $filename = "Semua-Data-Member-{$gymName}-" . date('d-m-Y') . ".xlsx";
                             $month = null;
                             $year = null;
                         } else {
-                            $filename = 'Data-Member-Join-' . $data['month'] . '-' . $data['year'] . '.xlsx';
+                            $filename = "Data-Member-Join-{$gymName}-" . $data['month'] . "-" . $data['year'] . ".xlsx";
                             $month = $data['month'];
                             $year = $data['year'];
                         }
 
-                        // Trigger Download
+                        // Trigger Download (Tambah parameter ke-4)
                         return Excel::download(
-                            new MemberExport($data['mode'], $month, $year),
+                            new MemberExport($data['mode'], $month, $year, $gymkosId),
                             $filename
                         );
                     }),

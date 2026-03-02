@@ -112,6 +112,13 @@ class FinanceResource extends Resource
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->form([
+                        // Filter Cabang (Gymkos)
+                        Select::make('gymkos_id')
+                            ->label('Cabang (Gym/Kos)')
+                            ->options(\App\Models\Gymkos::all()->pluck('name', 'id'))
+                            ->placeholder('Semua Cabang') // Memungkinkan opsi All (null)
+                            ->default(null),
+
                         // Modal Form: Select Month & Year
                         Select::make('month')
                             ->label('Bulan')
@@ -131,20 +138,30 @@ class FinanceResource extends Resource
                             ])
                             ->default(now()->format('m'))
                             ->required(),
+
                         Select::make('year')
                             ->label('Tahun')
                             ->options(function () {
-                                $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
+                                $years = range(\Carbon\Carbon::now()->year - 5, \Carbon\Carbon::now()->year + 1);
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
                             ->required(),
                     ])
                     ->action(function (array $data) {
+                        // Ambil Data
+                        $month = $data['month'];
+                        $year = $data['year'];
+                        $gymkosId = $data['gymkos_id'] ?? null;
+
+                        // Bikin nama file dinamis biar jelas laporannya
+                        $gymName = $gymkosId ? \App\Models\Gymkos::find($gymkosId)->name : 'All-Cabang';
+                        $fileName = "Laporan-Keuangan-{$gymName}-{$month}-{$year}.xlsx";
+
                         // Trigger download using 'FinanceExport' class
                         return Excel::download(
-                            new FinanceExport($data['month'], $data['year']),
-                            'Laporan-Keuangan-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            new FinanceExport($month, $year, $gymkosId), // Tambah parameter ke-3
+                            $fileName
                         );
                     }),
             ])

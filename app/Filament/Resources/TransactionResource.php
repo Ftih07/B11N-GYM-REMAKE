@@ -82,7 +82,14 @@ class TransactionResource extends Resource
                                 // Product Selection
                                 Select::make('product_id')
                                     ->label('Produk')
-                                    ->options(Product::all()->pluck('name', 'id'))
+                                    ->options(
+                                        Product::all()->mapWithKeys(function ($product) {
+                                            // Format tampilannya: "Nama Produk (Rp 13.000)"
+                                            return [
+                                                $product->id => "{$product->name} (Rp " . number_format($product->price, 0, ',', '.') . ")"
+                                            ];
+                                        })
+                                    )
                                     ->required()
                                     ->searchable()
                                     ->reactive() // Trigger update immediately
@@ -293,6 +300,12 @@ class TransactionResource extends Resource
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->form([
+                        Select::make('gymkos_id') // Tambahan Filter Gymkos
+                            ->label('Cabang (Gymkos)')
+                            ->options(\App\Models\Gymkos::all()->pluck('name', 'id'))
+                            ->placeholder('Semua Cabang') // Kosong berarti 'All'
+                            ->default(null),
+
                         Select::make('month')
                             ->label('Bulan')
                             ->options([
@@ -311,19 +324,29 @@ class TransactionResource extends Resource
                             ])
                             ->default(now()->format('m'))
                             ->required(),
+
                         Select::make('year')
                             ->label('Tahun')
                             ->options(function () {
-                                $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+                                $years = range(now()->year - 2, now()->year + 1);
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
                             ->required(),
                     ])
                     ->action(function (array $data) {
+                        // Ambil variabel
+                        $month = $data['month'];
+                        $year = $data['year'];
+                        $gymkosId = $data['gymkos_id'] ?? null; // Nullable
+
+                        // Bikin nama file dinamis
+                        $gymName = $gymkosId ? \App\Models\Gymkos::find($gymkosId)->name : 'All-Cabang';
+                        $fileName = "Laporan-Transaksi-POS-{$gymName}-{$month}-{$year}.xlsx";
+
                         return Excel::download(
-                            new TransactionExport($data['month'], $data['year']),
-                            'Laporan-Transaksi-POS-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            new TransactionExport($month, $year, $gymkosId), // Tambahin parameter ke-3
+                            $fileName
                         );
                     }),
             ])

@@ -20,24 +20,32 @@ class TransactionExport implements FromQuery, WithHeadings, WithMapping, ShouldA
 
     protected $month;
     protected $year;
+    protected $gymkosId; // 1. Tambahkan property baru
 
     // --- CONSTRUCTOR ---
-    // Initializes the export class with the selected period
-    public function __construct($month, $year)
+    // Initializes the export class with the selected period and optional branch
+    public function __construct($month, $year, $gymkosId = null) // 2. Tambahkan parameter gymkosId (default null)
     {
         $this->month = $month;
         $this->year = $year;
+        $this->gymkosId = $gymkosId; // 3. Set property
     }
 
     // --- QUERY DATA ---
-    // Fetches transaction records filtered by date
+    // Fetches transaction records filtered by date and optional branch
     public function query()
     {
-        return Transaction::query()
+        $query = Transaction::query()
             ->with(['trainer', 'gymkos', 'items.product']) // Eager Load to avoid N+1 queries
             ->whereYear('created_at', $this->year)  // Filter Year
-            ->whereMonth('created_at', $this->month) // Filter Month
-            ->orderBy('created_at', 'desc'); // Sort by newest transaction
+            ->whereMonth('created_at', $this->month); // Filter Month
+
+        // 4. Tambahkan kondisi filter Gymkos jika ada (tidak null)
+        if ($this->gymkosId !== null) {
+            $query->where('gymkos_id', $this->gymkosId);
+        }
+
+        return $query->orderBy('created_at', 'desc'); // Sort by newest transaction
     }
 
     // --- MAPPING ---

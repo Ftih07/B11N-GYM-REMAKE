@@ -34,13 +34,13 @@ class GlobalFinanceStats extends BaseWidget
 
         return [
             // Stat Card 1: Income
-            Stat::make('Pemasukan Bulan Ini', Number::currency($income, 'IDR'))
+            Stat::make('Total Pemasukan Bulan Ini', Number::currency($income, 'IDR'))
                 ->description('Periode: ' . $now->format('F Y'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'), // Green
 
             // Stat Card 2: Expense
-            Stat::make('Pengeluaran Bulan Ini', Number::currency($expense, 'IDR'))
+            Stat::make('Total Pengeluaran Bulan Ini', Number::currency($expense, 'IDR'))
                 ->description('Periode: ' . $now->format('F Y'))
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'), // Red

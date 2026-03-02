@@ -20,24 +20,32 @@ class FinanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
 
     protected $month;
     protected $year;
+    protected $gymkosId; // 1. Properti baru
 
     // --- CONSTRUCTOR ---
-    // Initializes the export class with the selected financial period
-    public function __construct($month, $year)
+    // Initializes the export class with the selected financial period and optional branch
+    public function __construct($month, $year, $gymkosId = null) // 2. Tambah parameter
     {
         $this->month = $month;
         $this->year = $year;
+        $this->gymkosId = $gymkosId; // 3. Set properti
     }
 
     // --- QUERY DATA ---
-    // Fetches financial records filtered by date
+    // Fetches financial records filtered by date and optional branch
     public function query()
     {
-        return Finance::query()
+        $query = Finance::query()
             ->with('gymkos') // Eager load the branch relationship for speed
             ->whereYear('date', $this->year)  // Filter Year
-            ->whereMonth('date', $this->month) // Filter Month
-            ->orderBy('date', 'asc'); // Sort chronologically (Oldest -> Newest)
+            ->whereMonth('date', $this->month); // Filter Month
+
+        // 4. Filter berdasarkan gymkos_id jika ada pilihan
+        if ($this->gymkosId !== null) {
+            $query->where('gymkos_id', $this->gymkosId);
+        }
+
+        return $query->orderBy('date', 'asc'); // Sort chronologically (Oldest -> Newest)
     }
 
     // --- MAPPING ---
@@ -53,7 +61,7 @@ class FinanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoS
 
         return [
             $finance->date->format('d/m/Y'), // Date (DD/MM/YYYY)
-            $finance->gymkos->name,          // Branch Name (Gym/Kost)
+            $finance->gymkos->name ?? '-',   // Branch Name (Gym/Kost) - pakai coalesce operator buat aman
             $tipe,                           // Transaction Type (Pemasukan/Pengeluaran)
             $finance->description,           // Description/Notes
             $finance->amount,                // Amount (Raw number for Excel calculation)
