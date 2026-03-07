@@ -657,33 +657,54 @@
                 <div class="bg-white rounded p-8 sm:p-10 shadow-2xl reveal">
                     <h3 class="font-heading text-2xl font-bold text-textDark mb-8 tracking-tight uppercase">Form Pemesanan</h3>
 
+                    <p class="text-xs text-gray-500 mb-6">
+                        <span class="text-red-500">*</span> wajib diisi
+                    </p>
+
                     <form method="POST" action="{{ route('kost.book') }}" enctype="multipart/form-data" id="bookingForm" class="space-y-5">
                         @csrf
 
                         <div>
-                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Nama Lengkap</label>
-                            <input type="text" name="name" required placeholder="Masukkan nama lengkap" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">
+                                Nama Lengkap <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="name" required placeholder="Masukkan nama lengkap"
+                                class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
                         </div>
 
                         <div>
-                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Email</label>
-                            <input type="email" name="email" required placeholder="Masukkan email" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" name="email" required placeholder="Masukkan email"
+                                class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
                         </div>
 
                         <div>
-                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">No. WhatsApp</label>
-                            <input type="tel" name="phone" required placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">
+                                No. WhatsApp <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" name="phone" required placeholder="08xxxxxxxxxx"
+                                class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
                         </div>
 
                         <div>
-                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Tanggal Masuk</label>
-                            <input type="text" name="date" id="datePicker" required placeholder="Pilih tanggal" class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">
+                                Tanggal Masuk <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="date" id="datePicker" required placeholder="Pilih tanggal"
+                                class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body placeholder:text-textLight" />
                         </div>
 
                         <div>
-                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Pilih Jenis Kamar</label>
+                            <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">
+                                Pilih Jenis Kamar <span class="text-red-500">*</span>
+                            </label>
+
                             <div class="relative">
-                                <select name="room_type" id="roomType" required class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body appearance-none cursor-pointer">
+                                <select name="room_type" id="roomType" required
+                                    class="w-full px-4 py-3 bg-extraLight border-2 border-gray-200 rounded focus:border-secondary focus:ring-0 focus:outline-none transition-colors duration-300 text-textDark font-body appearance-none cursor-pointer">
+
                                     <option value="" disabled selected>-- Pilih Tipe --</option>
                                     <option value="500rb - Non AC">Non AC - Rp 500.000/bulan</option>
                                     <option value="750rb - AC">AC - Rp 750.000/bulan</option>
@@ -770,8 +791,23 @@
                             </div>
 
                             <div class="mt-6 pt-4 border-t border-gray-200">
-                                <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">Upload Bukti Pembayaran</label>
-                                <input type="file" name="paymentProof" id="paymentProof" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-secondary/10 file:text-secondary hover:file:bg-secondary/20 cursor-pointer" />
+
+                                <label class="block font-heading text-textDark font-semibold text-sm mb-2 uppercase tracking-wider">
+                                    Upload Bukti Pembayaran <span class="text-red-500">*</span>
+                                </label>
+
+                                <input
+                                    type="file"
+                                    name="paymentProof"
+                                    id="paymentProof"
+                                    required
+                                    accept="image/png,image/jpeg,image/jpg"
+                                    class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-secondary/10 file:text-secondary hover:file:bg-secondary/20 cursor-pointer" />
+
+                                <p class="text-xs text-gray-400 mt-2">
+                                    Upload screenshot bukti transfer atau QRIS yang sudah dibayar (PNG/JPG).
+                                </p>
+
                             </div>
                         </div>
 

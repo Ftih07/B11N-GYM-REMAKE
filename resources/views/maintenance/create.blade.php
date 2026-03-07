@@ -147,13 +147,13 @@
                     {{-- Row 1: Nama & Lokasi (Desain Asli) --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nama anda</label>
+                            <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nama anda <span class="text-red-500">*</span></label>
                             <input type="text" name="reporter_name" required
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
                                 placeholder="Contoh: Alex">
                         </div>
                         <div>
-                            <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Lokasi Gym / Kost</label>
+                            <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Lokasi Gym / Kost <span class="text-red-500">*</span></label>
                             <select id="gymSelect"
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
                                 <option value="" disabled selected>Pilih Lokasi</option>
@@ -169,7 +169,7 @@
 
                         {{-- Kolom Kiri: Pilih Alat --}}
                         <div>
-                            <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Pilih alat yang bermasalah</label>
+                            <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Pilih alat yang bermasalah <span class="text-red-500">*</span></label>
 
                             <div id="loadingMessage" class="hidden text-center text-textLight py-4 font-body">
                                 Memuat data alat...
@@ -190,7 +190,7 @@
 
                         {{-- Kolom Kanan: Tingkat Keparahan (Desain Asli) --}}
                         <div>
-                            <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Tingkat Keparahan</label>
+                            <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Tingkat Keparahan <span class="text-red-500">*</span></label>
                             <div class="flex flex-col gap-2">
                                 <label class="severity-option border-2 border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-extraLight hover:border-primary transition">
                                     <input type="radio" name="severity" value="low" class="w-4 h-4">
@@ -214,7 +214,7 @@
 
                     {{-- Deskripsi (Desain Asli) --}}
                     <div class="mb-6">
-                        <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Deskripsi</label>
+                        <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Deskripsi <span class="text-red-500">*</span></label>
                         <textarea name="description" rows="4" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
                             placeholder="Contoh: Kabel putus, baut kendor ..."></textarea>

@@ -1614,32 +1614,48 @@
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
+								<p class="text-xs text-gray-500 mb-3">
+									<span class="text-red-500">*</span> wajib diisi
+								</p>
 								<form id="paymentForm" enctype="multipart/form-data">
 
 									<input type="hidden" name="gym_id" value="2">
 
 									<div class="mb-3">
-										<label class="block font-medium">Nama:</label>
-										<input type="text" name="name" class="w-full border p-2 rounded" required>
+										<label class="block font-medium">
+											Nama <span class="text-red-500">*</span>
+										</label>
+										<input type="text" name="name" placeholder="Masukkan nama lengkap" class="w-full border p-2 rounded" required>
 									</div>
 
 									<div class="mb-3">
-										<label class="block font-medium">Email:</label>
-										<input type="email" name="email" class="w-full border p-2 rounded" required>
+										<label class="block font-medium">
+											Email <span class="text-red-500">*</span>
+										</label>
+										<input type="email" name="email" placeholder="Masukkan email aktif" class="w-full border p-2 rounded" required>
 									</div>
 
 									<div class="mb-3">
-										<label class="block font-medium">No. Telp:</label>
-										<input type="tel" name="phone" class="w-full border p-2 rounded" required>
+										<label class="block font-medium">
+											No. Telp <span class="text-red-500">*</span>
+										</label>
+										<input type="tel" name="phone" placeholder="Masukkan no. telepon aktif" class="w-full border p-2 rounded" required>
 									</div>
 
 									<div class="mb-3">
-										<label class="block font-medium">Upload Bukti Pembayaran:</label>
-										<input type="file" name="image" accept="image/*" class="w-full border p-2 rounded" required>
+										<label class="block font-medium">
+											Upload Bukti Pembayaran <span class="text-red-500">*</span>
+										</label>
+										<input type="file" name="image" accept="image/png,image/jpeg,image/jpg" class="w-full border p-2 rounded" required>
+										<p class="text-xs text-gray-400 mt-1">
+											Upload screenshot bukti transfer atau QRIS yang sudah dibayar.
+										</p>
 									</div>
 
 									<div class="mb-3">
-										<label class="block font-medium">Pilih Membership:</label>
+										<label class="block font-medium">
+											Pilih Membership <span class="text-red-500">*</span>
+										</label>
 										<select name="membership_type" class="w-full border p-2 rounded" required>
 											<option value="Member Harian">Member Harian (Rp 10.000)</option>
 											<option value="Member Mingguan">Member Mingguan (Rp 30.000)</option>
@@ -1648,7 +1664,9 @@
 									</div>
 
 									<div class="mb-3">
-										<label class="block font-medium">Metode Pembayaran:</label>
+										<label class="block font-medium">
+											Metode Pembayaran <span class="text-red-500">*</span>
+										</label>
 										<select name="payment" class="w-full border p-2 rounded" required>
 											<option value="qris">QRIS</option>
 											<option value="transfer">Transfer Bank</option>

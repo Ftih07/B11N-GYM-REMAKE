@@ -111,19 +111,19 @@
                     <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nama anda</label>
+                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nama anda <span class="text-red-500">*</span></label>
                                 <input type="text" name="name" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
                                     placeholder="Contoh: Alex">
                             </div>
                             <div>
-                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Email</label>
+                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Email <span class="text-red-500">*</span></label>
                                 <input type="email" name="email" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
                                     placeholder="Contoh: Alex@example.com">
                             </div>
                             <div>
-                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nomor Whatsapp</label>
+                                <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Nomor Whatsapp <span class="text-red-500">*</span></label>
                                 <input type="text" name="phone" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
                                     placeholder="Contoh: 081234567890">
@@ -134,7 +134,7 @@
                     {{-- Row 2: Member Checkbox + Tujuan Utama Fitness --}}
                     <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
                         <div class="text-center mb-3">
-                            <label class="block text-primary text-sm font-semibold font-heading uppercase tracking-wide">Tujuan Utama Fitness</label>
+                            <label class="block text-primary text-sm font-semibold font-heading uppercase tracking-wide">Tujuan Utama Fitness <span class="text-red-500">*</span></label>
                         </div>
                         <div class="flex flex-col md:flex-row md:items-center gap-4">
                             <label class="inline-flex items-center cursor-pointer whitespace-nowrap">
@@ -144,7 +144,7 @@
                             <div class="flex-1">
                                 <input type="text" name="fitness_goal" required
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
-                                    placeholder="Contoh: Alex">
+                                    placeholder="Contoh: Untuk Kebugaran">
                             </div>
                         </div>
 
@@ -152,12 +152,12 @@
                         <div x-show="isMember" x-transition class="mt-4 pt-4 border-t border-gray-200">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Sudah berapa lama jadi member?</label>
+                                    <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Sudah berapa lama jadi member? <span class="text-red-500">*</span></label>
                                     <input type="text" name="member_duration" placeholder="Contoh: 3 Bulan"
                                         class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
                                 </div>
                                 <div>
-                                    <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Kemungkinan perpanjang (1-5)?</label>
+                                    <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Kemungkinan perpanjang (1-5)? <span class="text-red-500">*</span></label>
                                     <select name="renewal_chance"
                                         class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
                                         <option value="">Pilih...</option>
@@ -172,7 +172,7 @@
 
                     {{-- Row 3: Kebersihan Rating 1-10 --}}
                     <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
-                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Kebersihan</label>
+                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Kebersihan <span class="text-red-500">*</span></label>
                         <div class="flex items-center justify-between gap-1">
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
                             <div class="flex gap-3 md:gap-6 flex-1 justify-center">
@@ -189,7 +189,7 @@
 
                     {{-- Row 4: Rating Alat 1-10 --}}
                     <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
-                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Rating Alat</label>
+                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Rating Alat <span class="text-red-500">*</span></label>
                         <div class="flex items-center justify-between gap-1">
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
                             <div class="flex gap-3 md:gap-6 flex-1 justify-center">
@@ -206,7 +206,7 @@
 
                     {{-- Row 5: NPS Score 1-10 --}}
                     <div class="border-2 border-gray-200 rounded-lg p-4 mb-6">
-                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Seberapa mungkin anda merekomendasikan kami?</label>
+                        <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Seberapa mungkin anda merekomendasikan kami? <span class="text-red-500">*</span></label>
                         <div class="flex items-center justify-between gap-1">
                             <span class="text-xs text-primary font-semibold font-body whitespace-nowrap">Sangat Buruk</span>
                             <div class="flex gap-3 md:gap-6 flex-1 justify-center">
@@ -226,7 +226,7 @@
                         <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Kritik dan Saran</label>
                         <textarea name="feedback" rows="4"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body"
-                            placeholder="Contoh: Kabel putus, baut kendor ..."></textarea>
+                            placeholder="Contoh: Perlu penambahan alat ..."></textarea>
                     </div>
 
                     {{-- Row 7: Tertarik Promo --}}
