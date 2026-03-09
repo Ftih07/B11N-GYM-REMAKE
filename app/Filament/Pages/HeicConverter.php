@@ -18,6 +18,7 @@ use Filament\Forms\Components\Grid;
 use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\Encoders\PngEncoder;
+use ZipArchive;
 
 class HeicConverter extends Page implements HasForms
 {
@@ -47,6 +48,7 @@ class HeicConverter extends Page implements HasForms
                     ->schema([
                         FileUpload::make('image_file')
                             ->label('Pilih File Gambar')
+                            ->multiple()
                             ->acceptedFileTypes([
                                 'image/heic',
                                 'image/heif',
@@ -96,46 +98,58 @@ class HeicConverter extends Page implements HasForms
     public function convert()
     {
         $state = $this->form->getState();
-        $path = Storage::disk('local')->path($state['image_file']);
+        $files = $state['image_file'];
 
         try {
+
             $manager = new ImageManager(new Driver());
-            $image = $manager->read($path);
 
-            // 1. Resize Logic
-            if (!empty($state['width'])) {
-                $image->scaleDown(width: $state['width']);
+            $zipName = 'compressed-images-' . time() . '.zip';
+            $zipPath = storage_path('app/' . $zipName);
+
+            $zip = new ZipArchive;
+            $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+            foreach ($files as $file) {
+
+                $path = Storage::disk('local')->path($file);
+                $image = $manager->read($path);
+
+                // Resize
+                if (!empty($state['width'])) {
+                    $image->scaleDown(width: $state['width']);
+                }
+
+                $format = $state['format'];
+                $quality = (int) $state['quality'];
+                $filename = pathinfo($file, PATHINFO_FILENAME);
+
+                if ($format === 'jpg') {
+                    $encoded = $image->encode(new JpegEncoder(quality: $quality));
+                    $ext = '.jpg';
+                } elseif ($format === 'webp') {
+                    $encoded = $image->encode(new WebpEncoder(quality: $quality));
+                    $ext = '.webp';
+                } else {
+                    $encoded = $image->encode(new PngEncoder());
+                    $ext = '.png';
+                }
+
+                $zip->addFromString($filename . $ext, $encoded);
+
+                Storage::disk('local')->delete($file);
             }
 
-            // 2. Encode Logic
-            $format = $state['format'];
-            $quality = (int) $state['quality'];
-            $filename = 'compressed-' . time();
+            $zip->close();
 
-            if ($format === 'jpg') {
-                $encoded = $image->encode(new JpegEncoder(quality: $quality));
-                $mime = 'image/jpeg';
-                $ext = '.jpg';
-            } elseif ($format === 'webp') {
-                $encoded = $image->encode(new WebpEncoder(quality: $quality));
-                $mime = 'image/webp';
-                $ext = '.webp';
-            } else {
-                $encoded = $image->encode(new PngEncoder());
-                $mime = 'image/png';
-                $ext = '.png';
-            }
-
-            Storage::disk('local')->delete($state['image_file']);
             $this->form->fill();
 
-            return response()->streamDownload(function () use ($encoded) {
-                echo $encoded;
-            }, $filename . $ext, ['Content-Type' => $mime]);
+            return response()->download($zipPath)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
+
             Notification::make()
                 ->title('Gagal Memproses')
-                ->body('Pastikan file gambar valid. Error: ' . $e->getMessage())
+                ->body($e->getMessage())
                 ->danger()
                 ->send();
         }

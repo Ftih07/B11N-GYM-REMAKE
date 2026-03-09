@@ -18,7 +18,7 @@ class TrainerResource extends Resource
         return Trainer::count();
     }
 
-    protected static ?string $navigationGroup = 'Employee Management';
+    protected static ?string $navigationGroup = 'Managemen Karyawan';
     protected static ?int $navigationSort = 4;
     protected static ?string $model = Trainer::class;
     protected static ?string $navigationIcon = 'heroicon-o-user-group'; // Icon: User Group
