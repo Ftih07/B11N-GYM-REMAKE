@@ -67,6 +67,21 @@ class TrainingProgramResource extends Resource
                 Tables\Columns\TextColumn::make('gymkos.name')->label('Gym/Kos')->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime(),
             ])
+            ->filters([
+                // 1. Filter Lokasi Gym/Kos
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->relationship('gymkos', 'name')
+                    ->label('Filter Lokasi Gym')
+                    ->searchable()
+                    ->preload(),
+
+                // 2. Filter Kategori Program Latihan
+                Tables\Filters\SelectFilter::make('category_trainings_id')
+                    ->relationship('categorytraining', 'title')
+                    ->label('Filter Kategori')
+                    ->searchable()
+                    ->preload(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
 

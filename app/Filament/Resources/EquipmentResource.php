@@ -127,6 +127,34 @@ class EquipmentResource extends Resource
                     ->counts('maintenanceReports') // Laravel relationship count
                     ->label('Reports'),
             ])
+            // --- TAMBAHKAN FILTERS DI SINI ---
+            ->filters([
+                // 1. Filter Lokasi Gym
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->relationship('gymkos', 'name')
+                    ->label('Lokasi Gym')
+                    ->searchable()
+                    ->preload(),
+
+                // 2. Filter Kategori Alat
+                Tables\Filters\SelectFilter::make('category')
+                    ->label('Kategori')
+                    ->options([
+                        'Cardio' => 'Cardio',
+                        'Strength' => 'Strength',
+                        'Furniture' => 'Furniture',
+                        'Electronics' => 'Electronics',
+                    ]),
+
+                // 3. Filter Status Kondisi
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status Alat')
+                    ->options([
+                        'active' => 'Active',
+                        'maintenance' => 'Under Maintenance',
+                        'broken' => 'Broken',
+                    ]),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);

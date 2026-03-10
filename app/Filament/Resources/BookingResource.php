@@ -72,7 +72,24 @@ class BookingResource extends Resource
                         '750rb - AC' => '750rb - AC',
                         '500rb - Non AC' => '500rb - Non AC'
                     ])
-                    ->required(),
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function ($state, Set $set) {
+                        if ($state === '750rb - AC') {
+                            $set('price', 750000);
+                        } elseif ($state === '500rb - Non AC') {
+                            $set('price', 500000);
+                        } else {
+                            $set('price', null);
+                        }
+                    }),
+
+                Forms\Components\TextInput::make('price')
+                    ->label('Total Harga')
+                    ->numeric()
+                    ->required()
+                    ->readOnly()
+                    ->prefix('Rp'),
 
                 // DYNAMIC ROOM AVAILABILITY LOGIC
                 Forms\Components\Select::make('room_number')
@@ -86,7 +103,7 @@ class BookingResource extends Resource
                         // 2. Generate list 1-10, then remove occupied rooms
                         return collect(range(1, 10))->mapWithKeys(fn($num) => ["$num" => "Room $num"])
                             ->except($occupiedRooms);
-                    })->required(),
+                    }),
 
                 Forms\Components\Select::make('payment')->options([
                     'qris' => 'QRIS',

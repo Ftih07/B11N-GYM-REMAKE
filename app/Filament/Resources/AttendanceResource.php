@@ -42,7 +42,6 @@ class AttendanceResource extends Resource
                 // 1. NAME COLUMN (Hybrid Logic)
                 TextColumn::make('member.name')
                     ->label('Nama Pengunjung')
-                    ->searchable(['visitor_name']) // Allow searching by visitor name too
                     ->getStateUsing(function (Attendance $record) {
                         // Logic: If member_id exists, show Member Name. If not, show Visitor Name.
                         return $record->member_id ? $record->member->name : $record->visitor_name;
@@ -53,20 +52,28 @@ class AttendanceResource extends Resource
                             ? 'Member Tetap'
                             : 'Non-Member (' . ($record->visitor_phone ?? '-') . ')'
                     )
-                    ->sortable(),
+                    ->sortable()
+                    // --- GUNAKAN CUSTOM QUERY UNTUK SEARCHABLE ---
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query
+                            ->where('visitor_name', 'like', "%{$search}%")
+                            ->orWhereHas('member', function (Builder $q) use ($search) {
+                                $q->where('name', 'like', "%{$search}%");
+                            });
+                    }),
 
                 // 2. VISIT TYPE (Badges)
                 TextColumn::make('visit_type')
                     ->label('Tipe')
                     ->badge() // Display as a colored badge
                     ->formatStateUsing(fn(string $state): string => match ($state) {
-                        'member' => 'Membership',
+                        'membership' => 'Membership',
                         'daily' => 'Harian',
                         'weekly' => 'Mingguan',
                         default => $state,
                     })
                     ->color(fn(string $state): string => match ($state) {
-                        'member' => 'success', // Green
+                        'membership' => 'success', // Green
                         'daily' => 'info',    // Blue
                         'weekly' => 'warning', // Orange
                         default => 'gray',
@@ -143,7 +150,7 @@ class AttendanceResource extends Resource
                 SelectFilter::make('visit_type')
                     ->label('Filter Tipe Kunjungan')
                     ->options([
-                        'member' => 'Membership',
+                        'membership' => 'Membership',
                         'daily' => 'Harian (Non-Member)',
                         'weekly' => 'Mingguan (Non-Member)',
                     ]),

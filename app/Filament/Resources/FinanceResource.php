@@ -90,6 +90,7 @@ class FinanceResource extends Resource
 
                 // Type Badge: Green for Income, Red for Expense
                 Tables\Columns\TextColumn::make('type')
+                    ->searchable()
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'income' => 'success', // Green
@@ -99,6 +100,7 @@ class FinanceResource extends Resource
 
                 // Amount Column: Formatted as IDR currency
                 Tables\Columns\TextColumn::make('amount')
+                    ->searchable()
                     ->money('IDR')
                     ->sortable()
                     ->color(fn($record) => $record->type === 'expense' ? 'danger' : 'success'),

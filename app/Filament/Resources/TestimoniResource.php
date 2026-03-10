@@ -91,6 +91,37 @@ class TestimoniResource extends Resource
                     ->label('Created At')
                     ->dateTime(),
             ])
+            ->filters([
+                // 1. Filter Berdasarkan Rating (Bintang)
+                Tables\Filters\SelectFilter::make('rating')
+                    ->label('Filter Rating')
+                    ->options([
+                        5 => '⭐⭐⭐⭐⭐ (5 Stars)',
+                        4 => '⭐⭐⭐⭐ (4 Stars)',
+                        3 => '⭐⭐⭐ (3 Stars)',
+                        2 => '⭐⭐ (2 Stars)',
+                        1 => '⭐ (1 Star)',
+                    ]),
+
+                // 2. Filter Berdasarkan Lokasi Gym/Kos
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->relationship('gymkos', 'name')
+                    ->label('Lokasi Gym/Kos')
+                    ->searchable()
+                    ->preload(),
+
+                // 3. Filter Rentang Waktu Ulasan Dibuat
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')->label('Dari Tanggal'),
+                        Forms\Components\DatePicker::make('created_until')->label('Sampai Tanggal'),
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query
+                            ->when($data['created_from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
+                    }),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);

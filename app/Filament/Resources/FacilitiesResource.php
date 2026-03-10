@@ -63,6 +63,7 @@ class FacilitiesResource extends Resource
                     ->label('Facilities Image'),
 
                 Tables\Columns\TextColumn::make('description')
+                    ->searchable()
                     ->label('Description')
                     ->limit(50), // Show only first 50 chars
 

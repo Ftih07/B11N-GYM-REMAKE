@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class PaymentResource extends Resource
 {
     // --- NAVIGATION SETTINGS ---
-    
+
     // Badge: Alert admin about 'pending' payments count
     public static function getNavigationBadge(): ?string
     {
@@ -46,7 +46,7 @@ class PaymentResource extends Resource
                 TextInput::make('name')->required(),
                 TextInput::make('email')->required(),
                 TextInput::make('phone')->required(),
-                
+
                 // Payment Proof Upload
                 FileUpload::make('image')
                     ->image()
@@ -80,7 +80,7 @@ class PaymentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('order_id')->searchable(),
+                TextColumn::make('order_id')->searchable()->copyable(),
 
                 // Linked Member Column
                 TextColumn::make('member.name')
@@ -91,12 +91,13 @@ class PaymentResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('name')->searchable(),
-                TextColumn::make('payment'),
-                TextColumn::make('membership_type'),
+                TextColumn::make('payment')->searchable(),
+                TextColumn::make('membership_type')->searchable(),
 
                 // Status Badge
                 TextColumn::make('status')
                     ->badge()
+                    ->searchable()
                     ->color(fn(string $state): string => match ($state) {
                         'pending' => 'warning',
                         'confirmed' => 'success',
@@ -105,7 +106,7 @@ class PaymentResource extends Resource
 
                 TextColumn::make('created_at')->label('Date')->date(),
             ])
-            
+
             // --- HEADER ACTION: EXCEL EXPORT ---
             ->headerActions([
                 Action::make('export_excel')
@@ -116,10 +117,18 @@ class PaymentResource extends Resource
                         Select::make('month')
                             ->label('Bulan Transaksi')
                             ->options([
-                                '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
-                                '04' => 'April', '05' => 'Mei', '06' => 'Juni',
-                                '07' => 'Juli', '08' => 'Agustus', '09' => 'September',
-                                '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
+                                '01' => 'Januari',
+                                '02' => 'Februari',
+                                '03' => 'Maret',
+                                '04' => 'April',
+                                '05' => 'Mei',
+                                '06' => 'Juni',
+                                '07' => 'Juli',
+                                '08' => 'Agustus',
+                                '09' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
                             ])
                             ->default(now()->format('m'))
                             ->required(),

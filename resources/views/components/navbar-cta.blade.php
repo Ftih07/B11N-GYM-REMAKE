@@ -61,8 +61,12 @@
                             <p class="text-sm font-bold text-white uppercase font-header">{{ Auth::user()->name }}</p>
 
                             @php
-                            $desktopStatusClass = Auth::user()->status === 'active' ? 'text-green-400' : 'text-red-500';
-                            $desktopStatusLabel = Auth::user()->status === 'active' ? 'ACTIVE MEMBER' : 'INACTIVE / EXPIRED';
+                            $memberData = Auth::user()->member;
+
+                            $isActive = ($memberData && $memberData->status === 'active');
+
+                            $desktopStatusClass = $isActive ? 'text-green-400' : 'text-red-500';
+                            $desktopStatusLabel = $isActive ? 'ACTIVE MEMBER' : 'INACTIVE / EXPIRED';
                             @endphp
 
                             <p class="text-[10px] {{ $desktopStatusClass }} font-bold uppercase tracking-widest">
@@ -124,9 +128,12 @@
                     <div class="text-base font-bold text-white font-header uppercase">{{ Auth::user()->name }}</div>
 
                     @php
-                    // Cek status user yang sedang login
-                    $statusClass = Auth::user()->status === 'active' ? 'text-green-400' : 'text-red-500';
-                    $statusLabel = Auth::user()->status === 'active' ? '● Active Member' : '● Inactive / Expired Member';
+                    $memberData = Auth::user()->member;
+
+                    $isActive = ($memberData && $memberData->status === 'active');
+
+                    $statusClass = $isActive ? 'text-green-400' : 'text-red-500';
+                    $statusLabel = $isActive ? '● Active Member' : '● Inactive / Expired Member';
                     @endphp
 
                     <div class="text-xs {{ $statusClass }} font-medium tracking-wide uppercase">

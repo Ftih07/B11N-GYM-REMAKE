@@ -67,6 +67,7 @@ class AboutResource extends Resource
 
                 // Column: Description (Shortened)
                 Tables\Columns\TextColumn::make('description')
+                    ->searchable()
                     ->label('Description')
                     ->limit(50), // Only show first 50 chars
 

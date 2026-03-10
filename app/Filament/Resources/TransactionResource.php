@@ -257,6 +257,7 @@ class TransactionResource extends Resource
 
                 Tables\Columns\TextColumn::make('customer_name')
                     ->label('Customer')
+                    ->searchable()
                     ->placeholder('-'),
 
                 // 3. Total Amount with Summary
@@ -264,6 +265,7 @@ class TransactionResource extends Resource
                     ->label('Total')
                     ->money('IDR')
                     ->sortable()
+                    ->searchable()
                     ->summarize(Tables\Columns\Summarizers\Sum::make()->money('IDR')->label('Total Omset')),
 
                 // 4. Payment Method Badge
@@ -358,6 +360,31 @@ class TransactionResource extends Resource
                     ->label('Cabang')
                     ->searchable()
                     ->preload(),
+
+                Tables\Filters\SelectFilter::make('source')
+                    ->label('Asal Transaksi')
+                    ->options([
+                        'App\Models\Booking' => 'Booking Kost',
+                        'App\Models\Payment' => 'Member Online',
+                        'pos' => 'Kasir / POS',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if (empty($data['value'])) {
+                            return $query;
+                        }
+
+                        if ($data['value'] === 'pos') {
+                            return $query->where(function ($q) {
+                                $q->whereNull('payable_type')
+                                    ->orWhereNotIn('payable_type', [
+                                        'App\Models\Booking',
+                                        'App\Models\Payment'
+                                    ]);
+                            });
+                        }
+
+                        return $query->where('payable_type', $data['value']);
+                    }),
 
                 Tables\Filters\SelectFilter::make('status')
                     ->options(['paid' => 'Lunas', 'pending' => 'Pending', 'cancelled' => 'Batal']),

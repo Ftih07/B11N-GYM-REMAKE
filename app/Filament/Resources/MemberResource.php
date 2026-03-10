@@ -114,8 +114,10 @@ class MemberResource extends Resource
             ->defaultSort('updated_at', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('picture')->circular(),
-                Tables\Columns\TextColumn::make('name')->searchable(),
-
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Member')
+                    ->searchable(['name', 'email']),
+                    
                 // Membership Expiry & Diff
                 Tables\Columns\TextColumn::make('membership_end_date')
                     ->label('Masa Berlaku')
