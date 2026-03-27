@@ -16,12 +16,47 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    // Icon yang muncul di Sidebar (bisa diganti sesuai selera)
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
-    // Kelompokin menu di sidebar
     protected static ?string $navigationGroup = 'User Directory';
     protected static ?int $navigationSort = 10;
+
+    // --- TAMBAHAN: FORM CREATE/EDIT ---
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Section::make('Informasi Akun Karyawan')
+                    ->description('Buat kredensial login untuk karyawan baru. Role otomatis diset sebagai Employee.')
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nama Lengkap')
+                            ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('email')
+                            ->label('Alamat Email')
+                            ->email()
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('password')
+                            ->label('Password')
+                            ->password()
+                            ->revealable()
+                            // Wajib diisi saat create, opsional saat edit
+                            ->required(fn(string $context): bool => $context === 'create')
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state))
+                            ->maxLength(255),
+
+                        // KUNCI ROLE: Disembunyikan dari form tapi nilainya dikirim ke database
+                        Forms\Components\Hidden::make('role')
+                            ->default('employee'),
+                    ])
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
@@ -44,6 +79,7 @@ class UserResource extends Resource
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'admin' => 'danger', // Merah buat Admin biar match tema B1NG Empire
+                        'employee' => 'warning', // Kuning/Warning untuk karyawan
                         'user' => 'gray',
                         default => 'gray',
                     })
@@ -60,35 +96,42 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // Filter berdasarkan role
                 Tables\Filters\SelectFilter::make('role')
                     ->options([
                         'admin' => 'Admin',
-                        'user' => 'User',
+                        'employee' => 'Karyawan / Employee',
+                        'user' => 'User / Customer',
                     ]),
+            ])
+            // Tambahkan tombol Create di Header Tabel
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('Tambah Karyawan')
+                    ->icon('heroicon-o-plus'),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-        ];
+        return [];
     }
 
-    // Nampilin jumlah total user di sidebar
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
+    // 1. HAPUS FUNGSI canCreate() AGAR DEFAULTNYA JADI TRUE
+    // public static function canCreate(): bool
+    // {
+    //     return false; 
+    // }
 
     public static function getPages(): array
     {
         return [
+            // Karena hanya ada halaman index, kita arahkan aksi create menggunakan Modal.
+            // Form akan otomatis muncul di popup modal saat tombol "Tambah Karyawan" diklik.
             'index' => Pages\ListUsers::route('/'),
         ];
     }

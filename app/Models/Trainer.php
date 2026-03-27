@@ -16,14 +16,20 @@ class Trainer extends Model
         'urls',
         'image',
         'gymkos_id',
+        'user_id',
     ];
 
     protected $casts = [
         'urls' => 'array', // Cast kolom JSON menjadi array
     ];
-    
+
     public function gymkos()
     {
         return $this->belongsTo(Gymkos::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

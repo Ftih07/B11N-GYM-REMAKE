@@ -36,6 +36,11 @@ class User extends Authenticatable implements FilamentUser // <--- 3. Tambahkan 
         return $this->hasOne(Member::class);
     }
 
+    public function trainer()
+    {
+        return $this->hasOne(Trainer::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

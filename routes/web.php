@@ -51,7 +51,7 @@ Route::get('/login', function () {
 })->name('login');
 
 // Route Print Struk Customer
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/print/transaction/{code}', [PrintController::class, 'printStruk'])
         ->name('print.struk');
 });
@@ -115,4 +115,42 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::post('/measurements', [DashboardController::class, 'storeMeasurement'])->name('measurements.store');
+});
+
+
+// -----------------------------------------------//
+//--------------- Employee Route -----------------//
+// -----------------------------------------------//
+
+use App\Http\Controllers\Employee\AuthController as EmployeeAuthController;
+use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;;
+
+use App\Http\Controllers\Employee\TransactionController as EmployeeTransactionController;
+use App\Http\Controllers\Employee\ProductController as EmployeeProductController;
+
+// --- RUTE KHUSUS KARYAWAN (EMPLOYEE) ---
+Route::prefix('employee')->name('employee.')->group(function () {
+
+    Route::middleware('guest')->group(function () {
+        // Panggil pakai nama aliasnya: EmployeeAuthController
+        Route::get('/login', [EmployeeAuthController::class, 'showLoginForm'])->name('login');
+
+        Route::post('/login', [EmployeeAuthController::class, 'login'])
+            ->middleware('throttle:5,1')
+            ->name('login.post');
+    });
+
+    Route::middleware(['auth', 'employee'])->group(function () {
+        Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logout', [EmployeeAuthController::class, 'logout'])->name('logout');
+
+        // <--- CRUD Transaksi (POS) --->
+        Route::post('/transaction', [EmployeeTransactionController::class, 'store'])->name('transaction.store');
+        Route::get('/transaction/{transaction}/edit', [EmployeeTransactionController::class, 'edit'])->name('transaction.edit');
+        Route::put('/transaction/{transaction}', [EmployeeTransactionController::class, 'update'])->name('transaction.update');
+        Route::delete('/transaction/{transaction}', [EmployeeTransactionController::class, 'destroy'])->name('transaction.destroy');
+
+        // <--- CRUD Produk Manajemen --->
+        Route::resource('products', EmployeeProductController::class);
+    });
 });

@@ -69,7 +69,6 @@ class HeicConverter extends Page implements HasForms
                                     ->options([
                                         'webp' => 'WEBP (Paling Ringan - Recommended)',
                                         'jpg' => 'JPG (Cocok untuk Foto)',
-                                        'png' => 'PNG (Transparan/Lossless)',
                                     ])
                                     ->default('webp')
                                     ->required()

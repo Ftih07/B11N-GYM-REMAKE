@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TrainerResource\Pages;
 use App\Models\Trainer;
+use App\Models\User; // <-- Pastikan Model User di-import
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -30,7 +31,22 @@ class TrainerResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Trainer Details')
                     ->schema([
-                        Forms\Components\TextInput::make('name')->required(),
+                        // --- TAMBAHAN: Select User Akun Karyawan ---
+                        Forms\Components\Select::make('user_id')
+                            ->label('Tautkan ke Akun Login (Opsional)')
+                            ->relationship('user', 'name', function ($query) {
+                                // Filter hanya tampilkan user yang role-nya 'employee' 
+                                // dan belum ditautkan ke trainer lain (kecuali yang sedang diedit)
+                                return $query->where('role', 'employee');
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->nullable()
+                            ->helperText('Pilih akun login karyawan. Biarkan kosong jika trainer belum punya akun.'),
+
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nama Trainer')
+                            ->required(),
 
                         Forms\Components\Textarea::make('description')
                             ->required()
@@ -59,7 +75,7 @@ class TrainerResource extends Resource
                             ->directory('trainer'),
 
                         Forms\Components\Select::make('gymkos_id')
-                            ->label('Gymkos')
+                            ->label('Gymkos (Cabang)')
                             ->relationship('gymkos', 'name')
                             ->required(),
                     ])
@@ -71,25 +87,48 @@ class TrainerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('description')->limit(50),
-
-                // Display Social URLs
-                Tables\Columns\TextColumn::make('urls.whatsapp')->label('WhatsApp'),
-                Tables\Columns\TextColumn::make('urls.instagram')->label('Instagram'),
-                Tables\Columns\TextColumn::make('urls.facebook')->label('Facebook'),
-
                 Tables\Columns\ImageColumn::make('image')->label('Image'),
+
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Trainer')
+                    ->sortable()
+                    ->searchable(),
+
+                // --- TAMBAHAN: Tampilkan Email Akun Tertaut di Tabel ---
+                Tables\Columns\TextColumn::make('user.email')
+                    ->label('Akun Login')
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('Belum ditautkan')
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('gymkos.name')
                     ->label('Nama Gym/Kos')
                     ->sortable(),
 
+                // Display Social URLs (Bisa di-toggle hidden biar tabel nggak kepanjangan)
+                Tables\Columns\TextColumn::make('urls.whatsapp')
+                    ->label('WhatsApp')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('urls.instagram')
+                    ->label('Instagram')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('urls.facebook')
+                    ->label('Facebook')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(), // Tambahan Delete action biar lengkap
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
