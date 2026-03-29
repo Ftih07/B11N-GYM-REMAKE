@@ -12,89 +12,97 @@ use Filament\Tables\Table;
 
 class FacilitiesResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'General Management Website';
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Website';
+    protected static ?string $navigationLabel = 'Fasilitas';
+    protected static ?string $pluralModelLabel = 'Data Fasilitas';
     protected static ?int $navigationSort = 5;
     protected static ?string $model = Facilities::class;
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern'; // Ikon untuk gedung/fasilitas
 
-    protected static ?string $navigationIcon = 'heroicon-o-home-modern'; // Icon for buildings/facilities
-
-    // --- FORM CONFIGURATION (Create/Edit) ---
+    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
-                    ->label('Facilities Title')
+                    ->label('Nama Fasilitas')
                     ->required()
                     ->maxLength(255),
 
-                // Upload facility image to 'storage/app/public/facilities'
+                // RELASI: Hubungkan fasilitas ini ke Gym/Kos tertentu
+                Forms\Components\Select::make('gymkos_id')
+                    ->label('Cabang (Gym/Kos)')
+                    ->relationship('gymkos', 'name') // Pilih gymkos, tampilkan 'name'-nya
+                    ->required(),
+
+                // Upload gambar fasilitas ke 'storage/app/public/facilities'
                 Forms\Components\FileUpload::make('image')
-                    ->label('Facilities Image')
+                    ->label('Foto Fasilitas')
                     ->directory('facilities')
                     ->image()
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
 
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->nullable() // Optional field
-                    ->maxLength(1000),
-
-                // RELATIONSHIP: Link this facility to a specific Gym/Kos
-                Forms\Components\Select::make('gymkos_id')
-                    ->label('Gymkos')
-                    ->relationship('gymkos', 'name') // Select gymkos, display its 'name'
-                    ->required(),
+                    ->label('Deskripsi Fasilitas')
+                    ->nullable() // Field opsional
+                    ->maxLength(1000)
+                    ->columnSpanFull(),
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Foto'),
+
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Facilities Title')
+                    ->label('Nama Fasilitas')
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('Facilities Image'),
-
                 Tables\Columns\TextColumn::make('description')
+                    ->label('Deskripsi')
                     ->searchable()
-                    ->label('Description')
-                    ->limit(50), // Show only first 50 chars
+                    ->limit(50), // Tampilkan hanya 50 karakter pertama
 
-                // Display Related Gym Name using Dot Notation
+                // Tampilkan Nama Cabang Terkait menggunakan Dot Notation
                 Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
+                    ->label('Cabang Gym / Kos')
                     ->sortable()
-                    ->searchable(), // Enable searching by Gym Name
+                    ->searchable(), // Aktifkan pencarian berdasarkan Nama Gym
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Ditambahkan Pada')
+                    ->dateTime('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->relationship('gymkos', 'name')
+                    ->label('Filter Cabang')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

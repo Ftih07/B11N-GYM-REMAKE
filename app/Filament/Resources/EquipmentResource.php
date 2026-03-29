@@ -12,32 +12,34 @@ use Filament\Tables\Table;
 
 class EquipmentResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
+    // --- PENGATURAN NAVIGASI ---
 
-    // Show total equipment count in sidebar badge
+    // Menampilkan jumlah total alat di badge sidebar
     public static function getNavigationBadge(): ?string
     {
-        return Equipment::count();
+        return Equipment::count() ?: null;
     }
 
     protected static ?string $model = Equipment::class;
-    protected static ?string $navigationIcon = 'heroicon-o-wrench'; // Icon: Wrench (Tools)
-    protected static ?string $navigationGroup = 'Gym Management';
+    protected static ?string $navigationIcon = 'heroicon-o-wrench'; // Ikon: Kunci Pas
+    protected static ?string $navigationGroup = 'Manajemen Gym';
+    protected static ?string $navigationLabel = 'Inventaris Alat';
+    protected static ?string $pluralModelLabel = 'Data Alat Gym';
     protected static ?int $navigationSort = 3;
 
-    // --- FORM CONFIGURATION ---
+    // --- KONFIGURASI FORM ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // SECTION 1: Main Information
-                Forms\Components\Section::make('Equipment Details')
+                // BAGIAN 1: Informasi Utama
+                Forms\Components\Section::make('Detail Alat')
                     ->description('Informasi utama alat dan tutorial penggunaannya.')
                     ->schema([
-                        // Relation to Gym Location
+                        // Relasi ke Lokasi Gym
                         Forms\Components\Select::make('gymkos_id')
                             ->relationship('gymkos', 'name')
-                            ->label('Lokasi Gym/Kost')
+                            ->label('Lokasi Gym / Kos')
                             ->required(),
 
                         Forms\Components\TextInput::make('name')
@@ -46,88 +48,117 @@ class EquipmentResource extends Resource
                             ->maxLength(255),
 
                         Forms\Components\Select::make('category')
+                            ->label('Kategori Alat')
                             ->options([
-                                'Cardio' => 'Cardio',
-                                'Strength' => 'Strength',
-                                'Furniture' => 'Furniture',
-                                'Electronics' => 'Electronics',
+                                'Cardio' => 'Kardio',
+                                'Strength' => 'Beban / Strength',
+                                'Furniture' => 'Furnitur',
+                                'Electronics' => 'Elektronik',
                             ])
                             ->required(),
 
                         Forms\Components\Select::make('status')
+                            ->label('Status Kondisi')
                             ->options([
-                                'active' => 'Active',
-                                'maintenance' => 'Under Maintenance',
-                                'broken' => 'Broken',
+                                'active' => 'Aktif',
+                                'maintenance' => 'Dalam Perbaikan',
+                                'broken' => 'Rusak',
                             ])
                             ->default('active')
                             ->required(),
 
-                        // Video Tutorial Input
+                        // Input Video Tutorial
                         Forms\Components\TextInput::make('video_url')
-                            ->label('Link Video Tutorial')
-                            ->placeholder('https://youtube.com/embed/...')
-                            ->url() // Validates input as URL
+                            ->label('Link Video Panduan')
+                            ->placeholder('Contoh: https://youtube.com/embed/...')
+                            ->url() // Validasi input sebagai URL
                             ->suffixIcon('heroicon-m-video-camera')
-                            ->columnSpanFull(), // Make it full width
+                            ->columnSpanFull(), // Lebar penuh
 
                         Forms\Components\Textarea::make('description')
                             ->label('Deskripsi Fisik')
                             ->rows(3)
                             ->columnSpanFull(),
-                    ])->columns(2), // Split section into 2 columns
+                    ])->columns(2), // Bagi bagian ini jadi 2 kolom
 
-                // SECTION 2: Photo Gallery (Using Repeater)
-                Forms\Components\Section::make('Photo Gallery')
+                // BAGIAN 2: Galeri Foto (Menggunakan Repeater)
+                Forms\Components\Section::make('Galeri Foto')
                     ->description('Upload foto-foto kondisi fisik alat.')
                     ->schema([
-                        // Repeater allows adding multiple photos dynamically
+                        // Repeater memungkinkan penambahan banyak foto secara dinamis
                         Forms\Components\Repeater::make('gallery')
-                            ->relationship() // Connects to 'gallery_equipments' table via relationship
+                            ->relationship() // Terhubung ke tabel 'gallery_equipments' via relasi
+                            ->label('Daftar Foto')
+                            ->addActionLabel('Tambah Foto') // Tombol bahasa Indonesia
                             ->schema([
                                 Forms\Components\FileUpload::make('file_path')
-                                    ->label('Foto')
+                                    ->label('Upload Foto')
                                     ->image()
-                                    ->directory('equipment-gallery') // Save to storage/app/public/equipment-gallery
+                                    ->directory('equipment-gallery') // Simpan ke storage/app/public/equipment-gallery
                                     ->required(),
 
                                 Forms\Components\TextInput::make('caption')
+                                    ->label('Keterangan Foto')
                                     ->placeholder('Contoh: Tampak Depan'),
 
                                 Forms\Components\TextInput::make('order_index')
-                                    ->label('Urutan')
+                                    ->label('Urutan Tampil')
                                     ->numeric()
                                     ->default(0),
                             ])
-                            ->grid(2) // Display uploaded items in a grid
+                            ->grid(2) // Tampilkan item yang diupload dalam bentuk grid
                             ->defaultItems(0)
-                            ->collapsible(), // Allow collapsing items to save space
+                            ->collapsible(), // Izinkan menutup/minimize item untuk menghemat ruang
                     ]),
             ]);
     }
 
-    // --- TABLE CONFIGURATION ---
+    // --- KONFIGURASI TABEL ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('category')->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Alat')
+                    ->searchable()
+                    ->sortable(),
 
-                // Status Badge with Colors
-                Tables\Columns\BadgeColumn::make('status')
-                    ->colors([
-                        'success' => 'active',
-                        'warning' => 'maintenance',
-                        'danger' => 'broken',
-                    ]),
+                Tables\Columns\TextColumn::make('category')
+                    ->label('Kategori')
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'Cardio' => 'Kardio',
+                        'Strength' => 'Beban',
+                        'Furniture' => 'Furnitur',
+                        'Electronics' => 'Elektronik',
+                        default => $state,
+                    })
+                    ->sortable(),
 
-                // Show count of related Maintenance Reports
+                // Badge Status Kondisi
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Kondisi')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'active' => 'success',
+                        'maintenance' => 'warning',
+                        'broken' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'active' => 'Aktif',
+                        'maintenance' => 'Perbaikan',
+                        'broken' => 'Rusak',
+                        default => $state,
+                    }),
+
+                // Menampilkan jumlah Laporan Perbaikan terkait
                 Tables\Columns\TextColumn::make('maintenance_reports_count')
                     ->counts('maintenanceReports') // Laravel relationship count
-                    ->label('Reports'),
+                    ->label('Laporan Kerusakan')
+                    ->badge()
+                    ->color('info'),
             ])
-            // --- TAMBAHKAN FILTERS DI SINI ---
+            // --- FILTER TABEL ---
             ->filters([
                 // 1. Filter Lokasi Gym
                 Tables\Filters\SelectFilter::make('gymkos_id')
@@ -140,24 +171,35 @@ class EquipmentResource extends Resource
                 Tables\Filters\SelectFilter::make('category')
                     ->label('Kategori')
                     ->options([
-                        'Cardio' => 'Cardio',
-                        'Strength' => 'Strength',
-                        'Furniture' => 'Furniture',
-                        'Electronics' => 'Electronics',
+                        'Cardio' => 'Kardio',
+                        'Strength' => 'Beban / Strength',
+                        'Furniture' => 'Furnitur',
+                        'Electronics' => 'Elektronik',
                     ]),
 
                 // 3. Filter Status Kondisi
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status Alat')
                     ->options([
-                        'active' => 'Active',
-                        'maintenance' => 'Under Maintenance',
-                        'broken' => 'Broken',
+                        'active' => 'Aktif',
+                        'maintenance' => 'Dalam Perbaikan',
+                        'broken' => 'Rusak',
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
+                ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [];
     }
 
     public static function getPages(): array

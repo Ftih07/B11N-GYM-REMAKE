@@ -13,14 +13,15 @@ use Filament\Tables\Actions\Action;
 
 class QrCodeResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'Tools';
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Tools'; 
+    protected static ?string $navigationLabel = 'Pembuat QR Code'; // Mengubah menu di navbar
+    protected static ?string $pluralModelLabel = 'Data QR Code'; // Judul di dalam halaman
     protected static ?int $navigationSort = 8;
     protected static ?string $model = QrCode::class;
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
-    protected static ?string $navigationLabel = 'QR Code Generator';
 
-    // --- FORM CONFIGURATION ---
+    // --- KONFIGURASI FORM ---
     public static function form(Form $form): Form
     {
         return $form
@@ -32,45 +33,49 @@ class QrCodeResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        // URL Input
+                        // Input URL
                         Forms\Components\TextInput::make('target_url')
-                            ->label('Target URL')
-                            ->url() // Validate URL format
+                            ->label('URL Tujuan')
+                            ->url() // Validasi format URL
                             ->required()
                             ->maxLength(65535)
                             ->columnSpanFull()
                             ->helperText('Masukkan URL lengkap, contoh: https://google.com'),
 
-                        // CUSTOM VIEW: Preview QR Code
-                        // This loads a Blade file to show the QR image dynamically
+                        // VIEW KUSTOM: Preview QR Code
+                        // Ini memuat file Blade untuk menampilkan gambar QR secara dinamis
                         Forms\Components\ViewField::make('preview_qr')
+                            ->label('Pratinjau QR Code')
                             ->view('filament.forms.components.qr-preview')
-                            ->hiddenOn('create') // Hide when creating new (since no data yet)
+                            ->hiddenOn('create') // Sembunyikan saat membuat baru (karena datanya belum ada)
                             ->columnSpanFull(),
                     ]),
             ]);
     }
 
-    // --- TABLE CONFIGURATION ---
+    // --- KONFIGURASI TABEL ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Display Generated QR Image
+                // Menampilkan Gambar QR yang Dihasilkan
                 Tables\Columns\ImageColumn::make('qr_path')
-                    ->label('QR Image')
+                    ->label('Gambar QR')
                     ->disk('public')
-                    ->square(), // Force square aspect ratio
+                    ->square(), // Memaksa rasio aspek kotak (1:1)
 
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('target_url')
+                    ->label('URL Tujuan')
                     ->limit(30)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y, H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -78,20 +83,21 @@ class QrCodeResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'), // Tambah tombol hapus
 
-                // --- CUSTOM ACTION: PRINT QR ---
+                // --- AKSI KUSTOM: CETAK QR ---
                 Action::make('print')
-                    ->label('Print')
+                    ->label('Cetak')
                     ->icon('heroicon-o-printer')
                     ->color('success')
-                    // Open a specific route/controller to handle printing
+                    // Membuka route/controller spesifik untuk menangani pencetakan
                     ->url(fn(QrCode $record): string => route('qr-code.print', $record))
-                    ->openUrlInNewTab(), // Open in new tab for printing
+                    ->openUrlInNewTab(), // Buka di tab baru untuk mencetak
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

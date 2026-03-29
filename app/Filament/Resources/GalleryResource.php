@@ -12,28 +12,30 @@ use Filament\Tables\Table;
 
 class GalleryResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'General Management Website'; // Sidebar Group
-    protected static ?int $navigationSort = 5; // Order Position
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Website'; // Grup Sidebar
+    protected static ?string $navigationLabel = 'Galeri Foto';
+    protected static ?string $pluralModelLabel = 'Data Galeri';
+    protected static ?int $navigationSort = 5; // Urutan Menu
 
     protected static ?string $model = Gallery::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-photo'; // Icon: Photo/Image
+    protected static ?string $navigationIcon = 'heroicon-o-photo'; // Ikon: Foto/Gambar
 
-    // --- FORM CONFIGURATION (Create/Edit) ---
+    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Title Input
+                // Input Judul
                 Forms\Components\TextInput::make('title')
-                    ->label('Title Image')
+                    ->label('Judul Foto')
                     ->required()
                     ->maxLength(255),
 
-                // Image Upload Configuration
+                // Konfigurasi Upload Gambar
                 Forms\Components\FileUpload::make('image')
-                    ->label('Image (1:1)')
+                    ->label('Gambar (Rasio 1:1)')
                     ->directory('gallery')
                     ->image()
                     ->required()
@@ -46,47 +48,47 @@ class GalleryResource extends Resource
                     ->imageResizeTargetWidth('1080')
                     ->imageResizeTargetHeight('1080'),
 
-                // RELATIONSHIP: Link this image to a specific Gym/Kost
+                // RELASI: Hubungkan gambar ini ke Cabang Gym/Kos tertentu
                 Forms\Components\Select::make('gymkos_id')
-                    ->label('Gymkos')
-                    ->relationship('gymkos', 'name') // Select gymkos, display its 'name'
+                    ->label('Cabang (Gym/Kos)')
+                    ->relationship('gymkos', 'name') // Pilih gymkos, tampilkan 'name'-nya
                     ->required(),
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Gambar'),
+
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Title Image')
+                    ->label('Judul Foto')
                     ->sortable()
                     ->searchable(),
 
-                // Thumbnail Preview
-                Tables\Columns\ImageColumn::make('image')
-                    ->label('Image'),
-
-                // Display Related Gym Name (Dot Notation)
+                // Tampilkan Nama Cabang Terkait
                 Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
+                    ->label('Nama Cabang')
                     ->sortable()
-                    ->searchable(), // Allow searching by Gym Name
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

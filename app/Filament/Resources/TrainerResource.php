@@ -13,23 +13,25 @@ use Filament\Tables\Table;
 
 class TrainerResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
+    // --- PENGATURAN NAVIGASI ---
     public static function getNavigationBadge(): ?string
     {
-        return Trainer::count();
+        return Trainer::count() ?: null;
     }
 
-    protected static ?string $navigationGroup = 'Managemen Karyawan';
+    protected static ?string $navigationGroup = 'Manajemen Karyawan'; // Typo diperbaiki jadi Manajemen
+    protected static ?string $navigationLabel = 'Data Trainer';
+    protected static ?string $pluralModelLabel = 'Data Trainer';
     protected static ?int $navigationSort = 4;
     protected static ?string $model = Trainer::class;
-    protected static ?string $navigationIcon = 'heroicon-o-user-group'; // Icon: User Group
+    protected static ?string $navigationIcon = 'heroicon-o-user-group'; // Ikon: Grup Pengguna
 
-    // --- FORM CONFIGURATION ---
+    // --- KONFIGURASI FORM ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Trainer Details')
+                Forms\Components\Section::make('Detail Trainer')
                     ->schema([
                         // --- TAMBAHAN: Select User Akun Karyawan ---
                         Forms\Components\Select::make('user_id')
@@ -49,45 +51,48 @@ class TrainerResource extends Resource
                             ->required(),
 
                         Forms\Components\Textarea::make('description')
+                            ->label('Deskripsi')
                             ->required()
                             ->maxLength(65535),
 
-                        // Social Media Links Group
-                        // Uses dot notation (e.g., urls.whatsapp) for JSON column mapping
+                        // Grup Tautan Media Sosial
                         Forms\Components\Group::make([
                             Forms\Components\TextInput::make('urls.whatsapp')
-                                ->label('WhatsApp URL')
+                                ->label('Tautan WhatsApp')
                                 ->url()
                                 ->required(),
                             Forms\Components\TextInput::make('urls.instagram')
-                                ->label('Instagram URL')
+                                ->label('Tautan Instagram')
                                 ->url()
                                 ->required(),
                             Forms\Components\TextInput::make('urls.facebook')
-                                ->label('Facebook URL')
+                                ->label('Tautan Facebook')
                                 ->url()
                                 ->required(),
                         ])->columns(3),
 
                         Forms\Components\FileUpload::make('image')
+                            ->label('Foto Trainer')
                             ->image()
                             ->required()
                             ->directory('trainer'),
 
                         Forms\Components\Select::make('gymkos_id')
-                            ->label('Gymkos (Cabang)')
+                            ->label('Cabang (Gym/Kos)')
                             ->relationship('gymkos', 'name')
                             ->required(),
                     ])
             ]);
     }
 
-    // --- TABLE CONFIGURATION ---
+    // --- KONFIGURASI TABEL ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')->label('Image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Foto')
+                    ->circular(), // Biar fotonya bulat (opsional)
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Trainer')
@@ -103,10 +108,10 @@ class TrainerResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
+                    ->label('Nama Cabang')
                     ->sortable(),
 
-                // Display Social URLs (Bisa di-toggle hidden biar tabel nggak kepanjangan)
+                // Tampilkan Tautan Sosial (Bisa di-toggle hidden biar tabel nggak kepanjangan)
                 Tables\Columns\TextColumn::make('urls.whatsapp')
                     ->label('WhatsApp')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -118,16 +123,17 @@ class TrainerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), // Tambahan Delete action biar lengkap
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'), // Tambahan Delete action biar lengkap
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

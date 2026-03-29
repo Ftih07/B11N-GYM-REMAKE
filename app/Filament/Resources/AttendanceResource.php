@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class AttendanceResource extends Resource
 {
@@ -179,15 +180,37 @@ class AttendanceResource extends Resource
     }
 
     // --- GLOBAL SEARCH CONFIG ---
-    // Allows searching attendance records from the top bar
+    // 1. Eager load relasi member biar cepat
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['member']);
     }
 
+    // 2. Kolom apa saja yang bisa dicari
     public static function getGloballySearchableAttributes(): array
     {
         return ['member.name', 'visitor_name', 'visitor_phone'];
+    }
+
+    // 3. Judul Utama di Hasil Pencarian (Nama Member atau Nama Tamu)
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->member_id ? $record->member->name : ($record->visitor_name ?? 'Tamu Tanpa Nama');
+    }
+
+    // 4. Detail Informatif di bawah Judul
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Status' => $record->member_id ? 'Member Tetap' : 'Tamu Non-Member',
+            'Tipe Kunjungan' => match ($record->visit_type) {
+                'membership' => 'Membership',
+                'daily' => 'Harian',
+                'weekly' => 'Mingguan',
+                default => $record->visit_type,
+            },
+            'Waktu Masuk' => $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('d M Y, H:i') : '-',
+        ];
     }
 
     public static function getPages(): array

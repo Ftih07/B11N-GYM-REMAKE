@@ -19,36 +19,37 @@ use Illuminate\Database\Eloquent\Builder;
 
 class FinanceResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
+    // --- PENGATURAN NAVIGASI ---
     protected static ?string $model = Finance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes'; // Icon: Banknotes
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes'; // Ikon: Uang Kertas
     protected static ?string $navigationLabel = 'Rekap Keuangan';
     protected static ?string $pluralModelLabel = 'Laporan Keuangan';
-    protected static ?string $navigationGroup = 'Laporan'; // Grouped under "Laporan"
+    protected static ?string $navigationGroup = 'Laporan'; // Dikelompokkan di bawah "Laporan"
     protected static ?int $navigationSort = 1;
 
-    // --- FORM CONFIGURATION (Input Income/Expense) ---
+    // --- KONFIGURASI FORM (Input Pemasukan/Pengeluaran) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Section::make('Input Keuangan')
                     ->schema([
-                        // Type Selection: Income vs Expense
+                        // Pilihan Tipe: Pemasukan vs Pengeluaran
                         Forms\Components\Select::make('type')
+                            ->label('Jenis Transaksi')
                             ->options([
-                                'income' => 'Pemasukan (Income)',
-                                'expense' => 'Pengeluaran (Expense)',
+                                'income' => 'Pemasukan',
+                                'expense' => 'Pengeluaran',
                             ])
                             ->required()
-                            ->default('expense'), // Default to expense
+                            ->default('expense'), // Bawaan ke pengeluaran
 
-                        // Relationship: Link finance record to a specific Gym Branch
+                        // Relasi: Menghubungkan catatan keuangan ke Cabang Gym tertentu
                         Forms\Components\Select::make('gymkos_id')
                             ->relationship('gymkos', 'name')
                             ->required()
-                            ->label('Cabang Gym'),
+                            ->label('Cabang Gym / Kos'),
 
                         Forms\Components\DatePicker::make('date')
                             ->required()
@@ -58,7 +59,7 @@ class FinanceResource extends Resource
                         Forms\Components\TextInput::make('amount')
                             ->required()
                             ->numeric()
-                            ->prefix('Rp') // Visual prefix
+                            ->prefix('Rp') // Prefiks visual
                             ->label('Nominal'),
 
                         Forms\Components\Textarea::make('description')
@@ -70,7 +71,7 @@ class FinanceResource extends Resource
             ]);
     }
 
-    // --- TABLE CONFIGURATION (Report View) ---
+    // --- KONFIGURASI TABEL (Tampilan Laporan) ---
     public static function table(Table $table): Table
     {
         return $table
@@ -85,29 +86,36 @@ class FinanceResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('description')
+                    ->label('Keterangan')
                     ->searchable()
                     ->limit(30),
 
-                // Type Badge: Green for Income, Red for Expense
+                // Badge Tipe: Hijau untuk Pemasukan, Merah untuk Pengeluaran
                 Tables\Columns\TextColumn::make('type')
+                    ->label('Jenis')
                     ->searchable()
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
-                        'income' => 'success', // Green
-                        'expense' => 'danger', // Red
+                        'income' => 'success', // Hijau
+                        'expense' => 'danger', // Merah
                     })
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'income' => 'Pemasukan',
+                        'expense' => 'Pengeluaran',
+                        default => $state,
+                    }),
 
-                // Amount Column: Formatted as IDR currency
+                // Kolom Nominal: Diformat sebagai mata uang Rupiah
                 Tables\Columns\TextColumn::make('amount')
+                    ->label('Nominal')
                     ->searchable()
-                    ->money('IDR')
+                    ->money('IDR', locale: 'id') // Format lokal Indonesia
                     ->sortable()
                     ->color(fn($record) => $record->type === 'expense' ? 'danger' : 'success'),
             ])
-            ->defaultSort('date', 'desc') // Sort by newest date
+            ->defaultSort('date', 'desc') // Urutkan dari tanggal terbaru
 
-            // --- HEADER ACTION: EXCEL EXPORT ---
+            // --- AKSI HEADER: EXPORT EXCEL ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Laporan')
@@ -121,7 +129,7 @@ class FinanceResource extends Resource
                             ->placeholder('Semua Cabang') // Memungkinkan opsi All (null)
                             ->default(null),
 
-                        // Modal Form: Select Month & Year
+                        // Form Modal: Pilih Bulan & Tahun
                         Select::make('month')
                             ->label('Bulan')
                             ->options([
@@ -157,10 +165,10 @@ class FinanceResource extends Resource
                         $gymkosId = $data['gymkos_id'] ?? null;
 
                         // Bikin nama file dinamis biar jelas laporannya
-                        $gymName = $gymkosId ? \App\Models\Gymkos::find($gymkosId)->name : 'All-Cabang';
+                        $gymName = $gymkosId ? \App\Models\Gymkos::find($gymkosId)->name : 'Semua-Cabang';
                         $fileName = "Laporan-Keuangan-{$gymName}-{$month}-{$year}.xlsx";
 
-                        // Trigger download using 'FinanceExport' class
+                        // Memicu download menggunakan class 'FinanceExport'
                         return Excel::download(
                             new FinanceExport($month, $year, $gymkosId), // Tambah parameter ke-3
                             $fileName
@@ -168,25 +176,27 @@ class FinanceResource extends Resource
                     }),
             ])
 
-            // --- GROUPING CONFIGURATION ---
+            // --- KONFIGURASI PENGELOMPOKAN (GROUPING) ---
             ->groups([
-                // Group rows by Gym Name (Collapsible)
+                // Kelompokkan baris berdasarkan Nama Cabang (Bisa di-collapse/tutup)
                 Tables\Grouping\Group::make('gymkos.name')
                     ->label('Cabang')
                     ->collapsible(),
             ])
-            ->defaultGroup('gymkos.name') // Enable grouping by default
+            ->defaultGroup('gymkos.name') // Aktifkan pengelompokan secara bawaan
 
             ->filters([
-                // Filter dropdown: Show only Income or Expense
+                // Filter dropdown: Tampilkan hanya Pemasukan atau Pengeluaran
                 Tables\Filters\SelectFilter::make('type')
+                    ->label('Jenis Transaksi')
                     ->options([
-                        'income' => 'Income',
-                        'expense' => 'Expense',
+                        'income' => 'Pemasukan',
+                        'expense' => 'Pengeluaran',
                     ]),
 
                 // --- TAMBAHAN: Filter Bulan dan Tahun ---
                 Filter::make('bulan_tahun')
+                    ->label('Filter Bulan & Tahun')
                     ->form([
                         Select::make('month')
                             ->label('Bulan')
@@ -216,11 +226,11 @@ class FinanceResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
-                                $data['month'] ?? null, // <-- Tambahkan "?? null" di sini
+                                $data['month'] ?? null,
                                 fn(Builder $query, $month): Builder => $query->whereMonth('date', $month),
                             )
                             ->when(
-                                $data['year'] ?? null, // <-- Tambahkan "?? null" di sini juga
+                                $data['year'] ?? null,
                                 fn(Builder $query, $year): Builder => $query->whereYear('date', $year),
                             );
                     })
@@ -235,6 +245,15 @@ class FinanceResource extends Resource
                         }
                         return $indicators;
                     }),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
+                ]),
             ]);
     }
 

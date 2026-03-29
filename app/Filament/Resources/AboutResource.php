@@ -12,94 +12,87 @@ use Filament\Tables\Table;
 
 class AboutResource extends Resource
 {
-    // --- NAVIGATION CONFIG ---
-    protected static ?string $navigationGroup = 'General Management Website'; // Grouping in sidebar
-    protected static ?int $navigationSort = 5; // Order in the menu
-    protected static ?string $model = About::class; // Connected Model
-    protected static ?string $navigationIcon = 'heroicon-o-information-circle'; // Sidebar Icon
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Website'; // Pengelompokan di sidebar
+    protected static ?string $navigationLabel = 'Tentang Kami';
+    protected static ?string $pluralModelLabel = 'Data Tentang Kami';
+    protected static ?int $navigationSort = 5; // Urutan di menu
+    protected static ?string $model = About::class; // Model Terhubung
+    protected static ?string $navigationIcon = 'heroicon-o-information-circle'; // Ikon Sidebar
 
-    // --- FORM SCHEMA (Create/Edit Page) ---
+    // --- KONFIGURASI FORM (Halaman Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Input: Title
                 Forms\Components\TextInput::make('title')
-                    ->label('About Title')
+                    ->label('Judul')
                     ->required()
                     ->maxLength(255),
 
-                // Input: Image Upload
                 Forms\Components\FileUpload::make('image')
-                    ->label('About Image')
-                    ->directory('about') // Saves to storage/app/public/about
+                    ->label('Gambar Utama')
+                    ->directory('about') // Disimpan ke storage/app/public/about
                     ->image()
                     ->required(),
 
-                // Input: Description (Long Text)
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
+                    ->label('Deskripsi')
                     ->nullable()
-                    ->maxLength(1000),
+                    ->maxLength(1000)
+                    ->columnSpanFull(), // Biar lebih lega saat ngetik
 
-                // Input: Relationship Dropdown (Select Gym/Kos)
                 Forms\Components\Select::make('gymkos_id')
-                    ->label('Gymkos')
-                    ->relationship('gymkos', 'name') // Connects to Gymkos model, shows 'name'
+                    ->label('Cabang (Gym/Kos)')
+                    ->relationship('gymkos', 'name') // Terhubung ke model Gymkos, tampilkan 'name'
                     ->required(),
             ]);
     }
 
-    // --- TABLE SCHEMA (List Page) ---
+    // --- KONFIGURASI TABEL (Halaman List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Column: Title
-                Tables\Columns\TextColumn::make('title')
-                    ->label('About Title')
-                    ->sortable()
-                    ->searchable(),
-
-                // Column: Image Preview
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('About Image'),
+                    ->label('Gambar'),
 
-                // Column: Description (Shortened)
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable()
-                    ->label('Description')
-                    ->limit(50), // Only show first 50 chars
-
-                // Column: Related Gym Name (Dot notation accesses relationship)
-                Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Judul')
                     ->sortable()
                     ->searchable(),
 
-                // Column: Created Date
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Deskripsi')
+                    ->searchable()
+                    ->limit(50), // Hanya tampilkan 50 karakter pertama
+
+                Tables\Columns\TextColumn::make('gymkos.name')
+                    ->label('Nama Cabang')
+                    ->sortable()
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // No filters defined yet
+                //
             ])
             ->actions([
-                // Action Buttons on each row
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()->label('Lihat'),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
-                // Actions for selecting multiple rows
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }
 
-    // --- PAGES ---
     public static function getRelations(): array
     {
         return [];

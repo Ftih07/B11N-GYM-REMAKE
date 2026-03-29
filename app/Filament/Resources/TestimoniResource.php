@@ -12,95 +12,107 @@ use Filament\Tables\Table;
 
 class TestimoniResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'General Management Website';
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Website';
+    protected static ?string $navigationLabel = 'Testimoni';
+    protected static ?string $pluralModelLabel = 'Data Testimoni';
     protected static ?int $navigationSort = 5;
     protected static ?string $model = Testimoni::class;
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left'; // Icon: Chat Bubble
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left'; // Ikon: Balon Obrolan
 
-    // --- FORM CONFIGURATION ---
+    // --- KONFIGURASI FORM ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Testimonial')
+                Forms\Components\Section::make('Detail Testimoni')
                     ->schema([
                         Forms\Components\TextInput::make('name')
+                            ->label('Nama Pelanggan')
                             ->required(),
 
                         Forms\Components\Textarea::make('description')
+                            ->label('Isi Ulasan')
                             ->required()
                             ->maxLength(65535),
 
-                        // Image Upload
+                        // Upload Gambar
                         Forms\Components\FileUpload::make('image')
+                            ->label('Foto Profil / Bukti')
                             ->image()
                             ->required()
-                            ->directory('testimoni'), // Save to 'testimoni' folder
+                            ->directory('testimoni'), // Simpan ke folder 'testimoni'
 
-                        // Rating Selection (1-5 Stars)
+                        // Pilihan Rating (1-5 Bintang)
                         Forms\Components\Select::make('rating')
-                            ->label('Rating')
+                            ->label('Penilaian (Rating)')
                             ->required()
                             ->options([
-                                1 => '1 Star',
-                                2 => '2 Stars',
-                                3 => '3 Stars',
-                                4 => '4 Stars',
-                                5 => '5 Stars',
+                                1 => '1 Bintang ⭐',
+                                2 => '2 Bintang ⭐⭐',
+                                3 => '3 Bintang ⭐⭐⭐',
+                                4 => '4 Bintang ⭐⭐⭐⭐',
+                                5 => '5 Bintang ⭐⭐⭐⭐⭐',
                             ])
-                            ->default(0),
+                            ->default(5), // Default ke 5 Bintang aja biar positif vibes hehe
 
-                        // Relationship to Gym Branch
+                        // Relasi ke Cabang Gym
                         Forms\Components\Select::make('gymkos_id')
-                            ->label('Gymkos')
+                            ->label('Cabang (Gym/Kos)')
                             ->relationship('gymkos', 'name')
                             ->required(),
                     ])
             ]);
     }
 
-    // --- TABLE CONFIGURATION ---
+    // --- KONFIGURASI TABEL ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('description')->limit(50),
-                Tables\Columns\ImageColumn::make('image')->label('Image'),
+                Tables\Columns\ImageColumn::make('image')->label('Foto'),
 
-                // Custom Formatting for Rating Column
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Pelanggan')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Ulasan')
+                    ->limit(50),
+
+                // Format Kustom untuk Kolom Rating
                 Tables\Columns\TextColumn::make('rating')
                     ->sortable()
                     ->label('Rating')
                     ->formatStateUsing(fn($record) => match ($record->rating) {
-                        1 => '1 Star',
-                        2 => '2 Stars',
-                        3 => '3 Stars',
-                        4 => '4 Stars',
-                        5 => '5 Stars',
+                        1 => '1 Bintang ⭐',
+                        2 => '2 Bintang ⭐⭐',
+                        3 => '3 Bintang ⭐⭐⭐',
+                        4 => '4 Bintang ⭐⭐⭐⭐',
+                        5 => '5 Bintang ⭐⭐⭐⭐⭐',
                         default => '-',
                     }),
 
                 Tables\Columns\TextColumn::make('gymkos.name')
-                    ->label('Nama Gym/Kos')
+                    ->label('Nama Cabang')
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y'),
             ])
             ->filters([
                 // 1. Filter Berdasarkan Rating (Bintang)
                 Tables\Filters\SelectFilter::make('rating')
                     ->label('Filter Rating')
                     ->options([
-                        5 => '⭐⭐⭐⭐⭐ (5 Stars)',
-                        4 => '⭐⭐⭐⭐ (4 Stars)',
-                        3 => '⭐⭐⭐ (3 Stars)',
-                        2 => '⭐⭐ (2 Stars)',
-                        1 => '⭐ (1 Star)',
+                        5 => '⭐⭐⭐⭐⭐ (5 Bintang)',
+                        4 => '⭐⭐⭐⭐ (4 Bintang)',
+                        3 => '⭐⭐⭐ (3 Bintang)',
+                        2 => '⭐⭐ (2 Bintang)',
+                        1 => '⭐ (1 Bintang)',
                     ]),
 
                 // 2. Filter Berdasarkan Lokasi Gym/Kos
@@ -112,6 +124,7 @@ class TestimoniResource extends Resource
 
                 // 3. Filter Rentang Waktu Ulasan Dibuat
                 Tables\Filters\Filter::make('created_at')
+                    ->label('Rentang Waktu')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')->label('Dari Tanggal'),
                         Forms\Components\DatePicker::make('created_until')->label('Sampai Tanggal'),
@@ -123,7 +136,13 @@ class TestimoniResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
+                ]),
             ]);
     }
 

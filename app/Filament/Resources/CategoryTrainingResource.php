@@ -12,53 +12,58 @@ use Filament\Tables\Table;
 
 class CategoryTrainingResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'Training Program'; // Sidebar Group
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Program Latihan'; // Grup Sidebar
+    protected static ?string $navigationLabel = 'Kategori Program';
+    protected static ?string $pluralModelLabel = 'Data Kategori Latihan';
     protected static ?string $model = CategoryTraining::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap'; // Icon for 'Training'
-    protected static ?int $navigationSort = 7; // Order position
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap'; // Ikon untuk 'Training'
+    protected static ?int $navigationSort = 7; // Urutan posisi
 
-    // --- FORM CONFIGURATION (Create/Edit) ---
+    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Input field for the Training Category name
+                // Input untuk nama Kategori Latihan
                 Forms\Components\TextInput::make('title')
-                    ->label('Title Category Training')
+                    ->label('Nama Kategori Latihan')
                     ->required()
                     ->maxLength(255),
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Display Record ID
-                Tables\Columns\TextColumn::make('id'),
+                // Menampilkan ID Record
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
 
-                // Display Category Title
+                // Menampilkan Judul Kategori
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Title Category Training')
+                    ->label('Nama Kategori')
                     ->sortable()
-                    ->searchable(), // Enable search
+                    ->searchable(), // Aktifkan pencarian
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y, H:i'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

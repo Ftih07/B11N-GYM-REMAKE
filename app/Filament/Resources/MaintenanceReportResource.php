@@ -27,7 +27,7 @@ class MaintenanceReportResource extends Resource
 
     protected static ?string $model = MaintenanceReport::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    protected static ?string $navigationGroup = 'Gym Management';
+    protected static ?string $navigationGroup = 'Manajemen Gym';
     protected static ?string $navigationLabel = 'Laporan Kerusakan';
     protected static ?int $navigationSort = 3;
 

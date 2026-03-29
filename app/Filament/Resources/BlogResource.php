@@ -12,94 +12,120 @@ use Filament\Tables\Table;
 
 class BlogResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
+    // --- PENGATURAN NAVIGASI ---
 
-    // Show total count of blogs next to the sidebar menu
+    // Menampilkan total jumlah blog di sebelah menu sidebar
     public static function getNavigationBadge(): ?string
     {
-        return Blog::count();
+        return Blog::count() ?: null;
     }
 
-    // Sidebar grouping and ordering
-    protected static ?string $navigationGroup = 'General Management Website';
+    protected static ?string $navigationGroup = 'Manajemen Website';
+    protected static ?string $navigationLabel = 'Artikel / Blog';
+    protected static ?string $pluralModelLabel = 'Data Artikel';
     protected static ?int $navigationSort = 5;
-
     protected static ?string $model = Blog::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    // --- FORM CONFIGURATION (Create/Edit) ---
+    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')->required()->maxLength(255),
+                Forms\Components\TextInput::make('title')
+                    ->label('Judul Artikel')
+                    ->required()
+                    ->maxLength(255),
 
-                // Slug Configuration
+                // Konfigurasi Slug
                 Forms\Components\TextInput::make('slug')
-                    ->unique(ignoreRecord: true) // Ensure unique slug but ignore current record during edit
-                    ->disabled() // Prevent manual editing by admin
-                    ->dehydrated(), // REQUIRED: Ensures value is saved to DB even if disabled
-
-                Forms\Components\RichEditor::make('content')->required(),
-
-                // Upload image to 'storage/app/public/blog'
-                Forms\Components\FileUpload::make('image')->required()->directory('blog'),
+                    ->label('Tautan (Slug)')
+                    ->unique(ignoreRecord: true) // Pastikan unik tapi abaikan record saat ini saat edit
+                    ->disabled() // Cegah edit manual oleh admin
+                    ->dehydrated(), // WAJIB: Memastikan nilai tersimpan ke DB meskipun disabled
 
                 Forms\Components\Select::make('status')
+                    ->label('Status Publikasi')
                     ->options([
-                        'unpublish' => 'Unpublish',
-                        'publish' => 'Publish',
+                        'unpublish' => 'Sembunyikan (Draft)',
+                        'publish' => 'Publikasikan',
                     ])
+                    ->default('publish')
                     ->required(),
+
+                Forms\Components\FileUpload::make('image')
+                    ->label('Gambar Sampul')
+                    ->required()
+                    ->directory('blog')
+                    ->columnSpanFull(),
+
+                Forms\Components\RichEditor::make('content')
+                    ->label('Isi Artikel')
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Gambar'),
 
-                // Show short description (max 50 chars)
-                Tables\Columns\TextColumn::make('content')
-                    ->label('Description')
-                    ->limit(50),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Judul')
+                    ->searchable()
+                    ->sortable(),
 
-                Tables\Columns\TextColumn::make('status')->sortable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'publish' => 'success',
+                        'unpublish' => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'publish' => 'Dipublikasi',
+                        'unpublish' => 'Draft',
+                        default => $state,
+                    })
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y')
+                    ->sortable(),
             ])
             ->filters([
-                // Filter dropdown for status
+                // Filter dropdown untuk status
                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Filter Status')
                     ->options([
-                        'unpublish' => 'Unpublish',
-                        'publish' => 'Publish',
+                        'unpublish' => 'Sembunyikan (Draft)',
+                        'publish' => 'Dipublikasi',
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc'); // Urutkan artikel terbaru
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
-    // --- PAGE ROUTES REGISTER ---
+    // --- PENDAFTARAN ROUTE HALAMAN ---
     public static function getPages(): array
     {
         return [

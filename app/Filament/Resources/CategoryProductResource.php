@@ -12,51 +12,54 @@ use Filament\Tables\Table;
 
 class CategoryProductResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'Store Management'; // Grouping in sidebar
-    protected static ?int $navigationSort = 6; // Order position (6th)
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Toko'; // Grup Sidebar
+    protected static ?string $navigationLabel = 'Kategori Produk';
+    protected static ?string $pluralModelLabel = 'Data Kategori Produk';
+    protected static ?int $navigationSort = 6; // Urutan posisi
 
     protected static ?string $model = CategoryProduct::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-folder';
+    protected static ?string $navigationIcon = 'heroicon-o-folder'; // Ikon: Folder
 
-    // --- FORM CONFIGURATION (Create/Edit) ---
+    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Simple text input for Category Name
+                // Input teks sederhana untuk Nama Kategori
                 Forms\Components\TextInput::make('name')
-                    ->label('Name Category')
+                    ->label('Nama Kategori')
                     ->required()
                     ->maxLength(255),
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                // Category Name Column
+                // Kolom Nama Kategori
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Title Category Training') // Custom label for table header
+                    ->label('Nama Kategori') // Label kustom untuk header tabel
                     ->sortable()
-                    ->searchable(), // Enable search bar for this column
+                    ->searchable(), // Aktifkan pencarian untuk kolom ini
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime(),
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y, H:i'),
             ])
             ->filters([
-                // No filters needed for now
+                // Belum ada filter yang dibutuhkan untuk saat ini
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'), // Tambah aksi hapus biar rapi
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

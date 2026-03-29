@@ -12,93 +12,95 @@ use Filament\Tables\Table;
 
 class StoreResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'Store Management';
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Toko';
+    protected static ?string $navigationLabel = 'Daftar Toko';
+    protected static ?string $pluralModelLabel = 'Data Toko';
     protected static ?int $navigationSort = 6;
     protected static ?string $model = Store::class;
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront'; // Icon: Storefront
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront'; // Ikon: Etalase Toko
 
-    // --- FORM CONFIGURATION ---
+    // --- KONFIGURASI FORM ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
-                    ->label('Store Title')
+                    ->label('Nama Toko')
                     ->required()
                     ->maxLength(255),
 
-                // Subheading (Optional)
+                // Subheading (Opsional)
                 Forms\Components\TextInput::make('subheading')
-                    ->label('Subheading / Slogan')
-                    ->placeholder('Contoh: Pusat Gym Terlengkap')
+                    ->label('Slogan / Subjudul')
+                    ->placeholder('Contoh: Pusat Suplemen Terlengkap')
                     ->maxLength(255),
 
-                // Image Upload (Optional / Nullable)
+                // Upload Gambar (Opsional)
                 Forms\Components\FileUpload::make('image')
-                    ->label('Store Image')
-                    ->directory('stores') // Save to 'stores' folder
+                    ->label('Foto Banner')
+                    ->directory('stores') // Simpan ke folder 'stores'
                     ->image(),
 
-                // Address / Location
+                // Lokasi / Alamat
                 Forms\Components\Textarea::make('location')
-                    ->label('Location / Alamat')
+                    ->label('Lokasi / Alamat Lengkap')
                     ->rows(2)
                     ->maxLength(500),
 
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
+                    ->label('Deskripsi Toko')
                     ->nullable()
                     ->maxLength(1000)
                     ->columnSpanFull(),
             ]);
     }
 
-    // --- TABLE CONFIGURATION ---
+    // --- KONFIGURASI TABEL ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Store Title')
+                    ->label('Nama Toko')
                     ->sortable()
                     ->searchable(),
 
-                // Toggleable Slogan Column (Hidden by default to save space)
+                // Kolom Slogan (Sembunyi secara default untuk menghemat ruang)
                 Tables\Columns\TextColumn::make('subheading')
                     ->label('Slogan')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('Store Image'),
+                    ->label('Foto Banner'),
 
                 Tables\Columns\TextColumn::make('location')
-                    ->label('Location')
+                    ->label('Lokasi / Alamat')
                     ->limit(30)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label('Deskripsi')
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime()
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // No filters needed
+                // Tidak ada filter yang dibutuhkan
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), // Hard Delete
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'), // Hapus Data
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

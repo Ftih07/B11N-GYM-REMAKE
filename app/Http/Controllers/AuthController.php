@@ -61,7 +61,7 @@ class AuthController extends Controller
             }
 
             // Log the user in
-            Auth::login($user);
+            Auth::login($user, true);
 
             return redirect()->intended('/dashboard');
         } catch (\Exception $e) {
@@ -117,7 +117,7 @@ class AuthController extends Controller
             }
 
             // Log the user in
-            Auth::login($user);
+            Auth::login($user, true);
 
             return redirect()->intended('/dashboard');
         } catch (\Exception $e) {

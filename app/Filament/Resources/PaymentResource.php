@@ -20,41 +20,50 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
+    // --- PENGATURAN NAVIGASI ---
 
-    // Badge: Alert admin about 'pending' payments count
+    // Badge: Memberi alert ke admin tentang jumlah pembayaran 'pending'
     public static function getNavigationBadge(): ?string
     {
-        return Payment::where('status', 'pending')->count();
+        return Payment::where('status', 'pending')->count() ?: null;
     }
 
     protected static ?string $model = Payment::class;
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card'; // Icon: Credit Card
-    protected static ?string $navigationLabel = 'Online Membership';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card'; // Ikon: Kartu Kredit
+    protected static ?string $navigationLabel = 'Membership Online'; // Label di Sidebar
+    protected static ?string $pluralModelLabel = 'Data Membership Online';
 
-    // --- FORM CONFIGURATION (View/Edit Payment) ---
+    // --- KONFIGURASI FORM (Lihat/Edit Pembayaran) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Member ID (Only visible if payment is linked to existing member)
+                // ID Member (Hanya muncul jika pembayaran tertaut ke member yang sudah ada)
                 TextInput::make('member_id')
-                    ->label('Member ID Linked')
-                    ->disabled() // Read-only
+                    ->label('ID Member Tertaut')
+                    ->disabled() // Hanya bisa dibaca (Read-only)
                     ->visible(fn($record) => $record?->member_id !== null),
 
-                TextInput::make('name')->required(),
-                TextInput::make('email')->required(),
-                TextInput::make('phone')->required(),
+                TextInput::make('name')
+                    ->label('Nama Lengkap')
+                    ->required(),
+                TextInput::make('email')
+                    ->label('Alamat Email')
+                    ->required(),
+                TextInput::make('phone')
+                    ->label('Nomor HP / WhatsApp')
+                    ->required(),
 
-                // Payment Proof Upload
+                // Upload Bukti Pembayaran
                 FileUpload::make('image')
+                    ->label('Bukti Pembayaran')
                     ->image()
                     ->directory('payment_receipts')
                     ->visibility('public')
                     ->required(),
 
                 Select::make('membership_type')
+                    ->label('Tipe Membership')
                     ->options([
                         'Member Harian' => 'Member Harian',
                         'Member Mingguan' => 'Member Mingguan',
@@ -62,55 +71,77 @@ class PaymentResource extends Resource
                     ])->required(),
 
                 Select::make('status')
+                    ->label('Status Pembayaran')
                     ->options([
-                        'pending' => 'Pending',
-                        'confirmed' => 'Confirmed',
-                        'rejected' => 'Rejected',
+                        'pending' => 'Menunggu Pembayaran',
+                        'confirmed' => 'Dikonfirmasi',
+                        'rejected' => 'Ditolak',
                     ])->required(),
 
-                Select::make('payment')->options([
-                    'qris' => 'QRIS',
-                    'transfer' => 'Transfer Bank',
-                ])->required(),
+                Select::make('payment')
+                    ->label('Metode Pembayaran')
+                    ->options([
+                        'qris' => 'QRIS',
+                        'transfer' => 'Transfer Bank',
+                    ])->required(),
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('order_id')->searchable()->copyable(),
+                TextColumn::make('order_id')
+                    ->label('ID Pesanan')
+                    ->searchable()
+                    ->copyable(),
 
-                // Linked Member Column
+                // Kolom Member Tertaut
                 TextColumn::make('member.name')
-                    ->label('Member Linked')
-                    // Logic: Show "ID" if linked, "New Register" if null
-                    ->description(fn(Payment $record) => $record->member_id ? "ID: " . $record->member_id : "New Register")
+                    ->label('Member Tertaut')
+                    // Logika: Tampilkan "ID" jika tertaut, "Pendaftar Baru" jika null
+                    ->description(fn(Payment $record) => $record->member_id ? "ID: " . $record->member_id : "Pendaftar Baru")
                     ->color('info')
                     ->searchable(),
 
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('payment')->searchable(),
-                TextColumn::make('membership_type')->searchable(),
+                TextColumn::make('name')
+                    ->label('Nama')
+                    ->searchable(),
+                TextColumn::make('payment')
+                    ->label('Metode Pembayaran')
+                    ->searchable(),
+                TextColumn::make('membership_type')
+                    ->label('Tipe Membership')
+                    ->searchable(),
 
-                // Status Badge
+                // Badge Status
                 TextColumn::make('status')
+                    ->label('Status')
                     ->badge()
                     ->searchable()
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'pending' => 'Menunggu',
+                        'confirmed' => 'Dikonfirmasi',
+                        'rejected' => 'Ditolak',
+                        default => $state,
+                    })
                     ->color(fn(string $state): string => match ($state) {
                         'pending' => 'warning',
                         'confirmed' => 'success',
                         'rejected' => 'danger',
+                        default => 'gray',
                     }),
 
-                TextColumn::make('created_at')->label('Date')->date(),
+                TextColumn::make('created_at')
+                    ->label('Tanggal')
+                    ->date('d M Y'),
             ])
 
-            // --- HEADER ACTION: EXCEL EXPORT ---
+            // --- AKSI HEADER: EXPORT EXCEL ---
             ->headerActions([
                 Action::make('export_excel')
-                    ->label('Export Data Transaksi')
+                    ->label('Export Data Membership Online')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
                     ->form([
@@ -150,76 +181,83 @@ class PaymentResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Filter Status')
                     ->options([
-                        'pending' => 'Pending',
-                        'confirmed' => 'Confirmed',
-                        'rejected' => 'Rejected',
+                        'pending' => 'Menunggu Pembayaran',
+                        'confirmed' => 'Dikonfirmasi',
+                        'rejected' => 'Ditolak',
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
 
-                // --- CUSTOM ACTION: APPROVE & EXTEND MEMBER ---
+                // --- AKSI KUSTOM: SETUJUI & PERPANJANG MEMBER ---
                 Action::make('approve')
-                    ->label('Approve')
+                    ->label('Setujui')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn(Payment $record) => $record->status === 'pending') // Only show if Pending
+                    ->modalHeading('Setujui Pembayaran')
+                    ->modalDescription('Apakah Anda yakin ingin menyetujui pembayaran ini? Masa aktif member akan otomatis ditambahkan.')
+                    ->modalSubmitActionLabel('Ya, Setujui')
+                    ->visible(fn(Payment $record) => $record->status === 'pending') // Hanya muncul jika masih Pending
                     ->action(function (Payment $record) {
 
-                        // 1. Update Payment Status
+                        // 1. Update Status Pembayaran
                         $record->update(['status' => 'confirmed']);
 
-                        // 2. LOGIC: Extend Membership (If linked to a member)
+                        // 2. LOGIKA: Perpanjang Membership (Jika tertaut ke member)
                         if ($record->member_id && $record->member) {
                             $member = $record->member;
 
-                            // Check current expiry date
+                            // Cek tanggal expired saat ini
                             $currentEnd = $member->membership_end_date ? Carbon::parse($member->membership_end_date) : now();
 
-                            // Logic: If expired -> Start from TODAY. If active -> Add to LAST EXPIRY date.
+                            // Logika: Jika sudah expired -> Mulai dari HARI INI. Jika masih aktif -> Tambahkan ke tanggal EXPIRED TERAKHIR.
                             if ($currentEnd->isPast()) {
                                 $newEndDate = now()->addDays(30);
                             } else {
                                 $newEndDate = $currentEnd->addDays(30);
                             }
 
-                            // Update Member Data
+                            // Update Data Member
                             $member->update([
                                 'membership_end_date' => $newEndDate,
                                 'status' => 'active'
                             ]);
 
-                            // Send Success Notification
+                            // Kirim Notifikasi Sukses
                             Notification::make()
-                                ->title('Success')
-                                ->body("Payment confirmed & Member diperpanjang sampai " . $newEndDate->format('d M Y'))
+                                ->title('Berhasil')
+                                ->body("Pembayaran dikonfirmasi & Member diperpanjang sampai " . $newEndDate->format('d M Y'))
                                 ->success()
                                 ->send();
                         } else {
-                            // If New Register / No Member Linked
+                            // Jika Pendaftar Baru / Tidak Tertaut Member
                             Notification::make()
-                                ->title('Success')
-                                ->body("Payment confirmed (User Baru / Non-Member)")
+                                ->title('Berhasil')
+                                ->body("Pembayaran dikonfirmasi (Pendaftar Baru / Non-Member)")
                                 ->success()
                                 ->send();
                         }
                     }),
 
-                // --- CUSTOM ACTION: REJECT ---
+                // --- AKSI KUSTOM: TOLAK ---
                 Action::make('reject')
-                    ->label('Reject')
+                    ->label('Tolak')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->requiresConfirmation()
+                    ->modalHeading('Tolak Pembayaran')
+                    ->modalDescription('Apakah Anda yakin ingin menolak pembayaran ini?')
+                    ->modalSubmitActionLabel('Ya, Tolak')
                     ->visible(fn(Payment $record) => $record->status === 'pending')
                     ->action(function (Payment $record) {
                         $record->update(['status' => 'rejected']);
 
                         Notification::make()
-                            ->title('Rejected')
-                            ->body('Payment has been rejected.')
+                            ->title('Ditolak')
+                            ->body('Pembayaran telah berhasil ditolak.')
                             ->danger()
                             ->send();
                     }),

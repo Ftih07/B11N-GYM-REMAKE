@@ -12,56 +12,59 @@ use Filament\Tables\Table;
 
 class GymkosResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
-    protected static ?string $navigationGroup = 'General Management Website';
+    // --- PENGATURAN NAVIGASI ---
+    protected static ?string $navigationGroup = 'Manajemen Website';
+    protected static ?string $navigationLabel = 'Cabang Gym/Kos';
+    protected static ?string $pluralModelLabel = 'Data Cabang';
     protected static ?int $navigationSort = 5;
 
     protected static ?string $model = Gymkos::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase'; // Icon: Briefcase
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase'; // Ikon: Tas Kerja
 
-    // --- FORM CONFIGURATION (Create/Edit) ---
+    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Branch Name')
+                    ->label('Nama Cabang')
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\Textarea::make('address')
-                    ->label('Address')
+                    ->label('Alamat Lengkap')
                     ->rows(3)
                     ->maxLength(500)
-                    ->columnSpanFull(), // Take full width of the form
+                    ->columnSpanFull(), // Ambil lebar penuh dari form
             ]);
     }
 
-    // --- TABLE CONFIGURATION (List View) ---
+    // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Branch Name')
+                    ->label('Nama Cabang')
                     ->sortable()
                     ->searchable(),
 
-                // Address Column: Wrapped and limited for better UI
+                // Kolom Alamat: Dibungkus dan dibatasi agar UI lebih rapi
                 Tables\Columns\TextColumn::make('address')
-                    ->label('Address')
-                    ->limit(40) // Show first 40 chars only
-                    ->wrap() // Wrap text if too long
+                    ->label('Alamat')
+                    ->limit(40) // Tampilkan 40 karakter pertama saja
+                    ->wrap() // Bungkus teks jika terlalu panjang
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->date('F d, Y') // Format: Month Day, Year
+                    ->label('Dibuat Pada')
+                    ->date('d M Y') // Format: Tanggal Bulan Tahun
                     ->sortable()
                     ->searchable(),
             ])
@@ -69,11 +72,12 @@ class GymkosResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Edit'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
                 ]),
             ]);
     }

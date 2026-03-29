@@ -17,66 +17,76 @@ use Carbon\Carbon;
 
 class SurveyResource extends Resource
 {
-    // --- NAVIGATION SETTINGS ---
+    // --- PENGATURAN NAVIGASI ---
     public static function getNavigationBadge(): ?string
     {
-        return Survey::count();
+        return Survey::count() ?: null;
     }
 
     protected static ?string $model = Survey::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    protected static ?string $navigationLabel = 'Data Survey';
-    protected static ?string $navigationGroup = 'Gym Management';
+    protected static ?string $navigationLabel = 'Data Survei';
+    protected static ?string $pluralModelLabel = 'Hasil Survei Pengunjung';
+    protected static ?string $navigationGroup = 'Manajemen Gym';
     protected static ?int $navigationSort = 3;
 
-    // Disable "Create New Survey" button (Data comes from public form only)
+    // Nonaktifkan tombol "Buat Survei Baru" (Data hanya masuk dari form publik)
     public static function canCreate(): bool
     {
         return false;
     }
 
-    // --- FORM CONFIGURATION (Read Only / Review) ---
+    // --- KONFIGURASI FORM (Hanya Baca / Review) ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Section 1: Identity
+                // Bagian 1: Identitas
                 Forms\Components\Section::make('Identitas Responden')
                     ->schema([
-                        Forms\Components\TextInput::make('name')->label('Nama'),
-                        Forms\Components\TextInput::make('phone')->label('WhatsApp'),
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nama Lengkap'),
+                        Forms\Components\TextInput::make('phone')
+                            ->label('Nomor WhatsApp'),
 
-                        // Toggle: Is Active Member?
+                        // Toggle: Apakah Member Aktif?
                         Forms\Components\Toggle::make('is_membership')
                             ->label('Member Aktif?')
                             ->inline(false),
                     ])->columns(3),
 
-                // Section 2: Membership Details (Conditional Visibility)
+                // Bagian 2: Detail Keanggotaan (Muncul jika kondisi terpenuhi)
                 Forms\Components\Section::make('Detail Keanggotaan')
                     ->schema([
-                        Forms\Components\TextInput::make('member_duration')->label('Lama Member'),
-                        Forms\Components\TextInput::make('renewal_chance')->label('Peluang Perpanjang (1-5)'),
+                        Forms\Components\TextInput::make('member_duration')
+                            ->label('Durasi Menjadi Member'),
+                        Forms\Components\TextInput::make('renewal_chance')
+                            ->label('Peluang Perpanjang (Skala 1-5)'),
                     ])
-                    // Only show this section if 'is_membership' is TRUE
+                    // Hanya tampilkan bagian ini jika 'is_membership' bernilai TRUE
                     ->visible(fn($record) => $record?->is_membership ?? false)
                     ->columns(2),
 
-                // Section 3: Survey Results
-                Forms\Components\Section::make('Hasil Survey')
+                // Bagian 3: Hasil Survei
+                Forms\Components\Section::make('Hasil Survei')
                     ->schema([
-                        Forms\Components\TextInput::make('fitness_goal')->label('Tujuan'),
-                        Forms\Components\TextInput::make('rating_equipment')->label('Rating Alat'),
-                        Forms\Components\TextInput::make('rating_cleanliness')->label('Kebersihan'),
+                        Forms\Components\TextInput::make('fitness_goal')
+                            ->label('Tujuan Fitness'),
+                        Forms\Components\TextInput::make('rating_equipment')
+                            ->label('Penilaian Alat (Rating)'),
+                        Forms\Components\TextInput::make('rating_cleanliness')
+                            ->label('Penilaian Kebersihan (Rating)'),
 
                         Forms\Components\TextInput::make('nps_score')
-                            ->label('NPS (1-10)')
+                            ->label('Skor NPS (1-10)')
                             ->numeric(),
 
-                        Forms\Components\Textarea::make('feedback')->columnSpanFull(),
+                        Forms\Components\Textarea::make('feedback')
+                            ->label('Ulasan & Saran')
+                            ->columnSpanFull(),
                     ])->columns(4),
 
-                // Section 4: Marketing / Promo
+                // Bagian 4: Marketing / Promo
                 Forms\Components\Section::make('Marketing')
                     ->schema([
                         Forms\Components\TextInput::make('promo_interest')
@@ -91,27 +101,35 @@ class SurveyResource extends Resource
             ]);
     }
 
-    // --- TABLE CONFIGURATION ---
+    // --- KONFIGURASI TABEL ---
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y H:i')
-                    ->label('Waktu')
+                    ->dateTime('d M Y, H:i')
+                    ->label('Waktu Masuk')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Responden')
                     ->searchable()
-                    ->description(fn(Survey $record): string => $record->phone),
+                    ->description(fn(Survey $record): string => $record->phone ?? '-'),
 
                 Tables\Columns\IconColumn::make('is_membership')
                     ->label('Member?')
                     ->boolean(),
 
-                // Badge for Promo Interest
+                // Badge untuk Minat Promo
                 Tables\Columns\TextColumn::make('promo_interest')
+                    ->label('Minat Promo')
                     ->badge()
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'paket_a' => 'Paket A',
+                        'paket_b' => 'Paket B',
+                        'paket_c' => 'Paket C',
+                        default => 'Tidak Minat',
+                    })
                     ->color(fn(string $state): string => match ($state) {
                         'paket_c' => 'success',
                         'paket_a', 'paket_b' => 'warning',
@@ -119,17 +137,19 @@ class SurveyResource extends Resource
                     }),
 
                 Tables\Columns\TextColumn::make('nps_score')
-                    ->label('NPS')
+                    ->label('Skor NPS')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('info'),
             ])
 
-            // --- HEADER ACTION: EXCEL EXPORT ---
+            // --- AKSI HEADER: EXPORT EXCEL ---
             ->headerActions([
                 Action::make('export_excel')
-                    ->label('Export Data Survey')
+                    ->label('Export Data Survei')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('primary')
+                    ->color('success') // Ubah ke success biar hijau senada dengan tombol export lain
                     ->form([
                         Select::make('month')
                             ->label('Bulan')
@@ -161,7 +181,7 @@ class SurveyResource extends Resource
                     ->action(function (array $data) {
                         return Excel::download(
                             new SurveyExport($data['month'], $data['year']),
-                            'Hasil-Survey-Gym-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            'Hasil-Survei-Gym-' . $data['month'] . '-' . $data['year'] . '.xlsx'
                         );
                     }),
             ])
@@ -175,11 +195,17 @@ class SurveyResource extends Resource
 
                 Tables\Filters\Filter::make('is_membership')
                     ->query(fn($query) => $query->where('is_membership', true))
-                    ->label('Hanya Member'),
+                    ->label('Hanya Tampilkan Member'),
             ])
             ->actions([
-                // Use ViewAction instead of EditAction (Read-only popup)
-                Tables\Actions\ViewAction::make(),
+                // Gunakan ViewAction untuk popup detail tanpa bisa diedit
+                Tables\Actions\ViewAction::make()->label('Lihat Detail'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'), // Tambah fitur hapus untuk bersih-bersih data
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
+                ]),
             ])
             ->defaultSort('created_at', 'desc');
     }
@@ -188,7 +214,7 @@ class SurveyResource extends Resource
     {
         return [
             'index' => Pages\ListSurveys::route('/'),
-            // Removed 'create' and 'edit' pages
+            // Halaman 'create' dan 'edit' dihapus karena read-only
         ];
     }
 }
