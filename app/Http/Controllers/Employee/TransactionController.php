@@ -85,26 +85,12 @@ class TransactionController extends Controller
         }
     }
 
-    // Tambahkan fungsi baru di bawah fungsi store()
-    public function print($code)
-    {
-        // Ambil transaksi beserta relasinya
-        $transaction = Transaction::where('code', $code)->with(['items.product', 'gymkos', 'trainer'])->firstOrFail();
-
-        // KEAMANAN EKSTRA: Pastikan kasir tidak iseng mencetak struk kasir lain
-        if ($transaction->trainer_id !== auth()->user()->trainer->id) {
-            abort(403, 'Akses Ditolak. Ini bukan transaksi Anda.');
-        }
-
-        return view('employee.dashboard.print', compact('transaction'));
-    }
-
     // --- Nampilin Halaman Full Edit Transaksi ---
     public function edit(Transaction $transaction)
     {
         // Pastikan hanya kasirnya sendiri yang bisa akses
-        if ($transaction->trainer_id !== auth()->user()->trainer->id) {
-            abort(403, 'Akses Ditolak.');
+        if ($transaction->trainer_id != auth()->user()->trainer->id) {
+            abort(403, 'Akses Ditolak. Ini bukan transaksi Anda.');
         }
 
         $products = \App\Models\Product::latest()->get();
@@ -117,8 +103,8 @@ class TransactionController extends Controller
     // --- Simpan Perubahan Full Transaksi ---
     public function update(Request $request, Transaction $transaction)
     {
-        if ($transaction->trainer_id !== auth()->user()->trainer->id) {
-            abort(403, 'Akses Ditolak.');
+        if ($transaction->trainer_id != auth()->user()->trainer->id) {
+            abort(403, 'Akses Ditolak. Ini bukan transaksi Anda.');
         }
 
         $request->validate([
@@ -181,8 +167,8 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         // Pastikan hanya kasir yang bersangkutan yang bisa hapus
-        if ($transaction->trainer_id !== auth()->user()->trainer->id) {
-            abort(403, 'Akses Ditolak.');
+        if ($transaction->trainer_id != auth()->user()->trainer->id) {
+            abort(403, 'Akses Ditolak. Ini bukan transaksi Anda.');
         }
 
         // Hapus file bukti pembayaran kalau ada
