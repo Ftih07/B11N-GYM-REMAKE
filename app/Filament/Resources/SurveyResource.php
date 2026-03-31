@@ -146,10 +146,24 @@ class SurveyResource extends Resource
 
             // --- AKSI HEADER: EXPORT EXCEL ---
             ->headerActions([
-                Action::make('export_excel')
-                    ->label('Export Data Survei')
+                // TOMBOL 1: EXPORT SEMUA DATA (Langsung download tanpa form)
+                Action::make('export_all')
+                    ->label('Export Semua Data')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->color('success') // Ubah ke success biar hijau senada dengan tombol export lain
+                    ->color('success')
+                    ->action(function () {
+                        // Langsung tembak 'all' dari sistem, bukan dari form user
+                        return Excel::download(
+                            new SurveyExport('all', 'all'),
+                            'Hasil-Survei-Gym-Semua-Data.xlsx'
+                        );
+                    }),
+
+                // TOMBOL 2: EXPORT FILTER BULAN & TAHUN (Pakai Form)
+                Action::make('export_filter')
+                    ->label('Export Per Bulan')
+                    ->icon('heroicon-o-calendar-days')
+                    ->color('warning') // Pakai warna beda biar gampang dibedakan
                     ->form([
                         Select::make('month')
                             ->label('Bulan')
@@ -173,7 +187,7 @@ class SurveyResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
-                                return array_combine($years, $years);
+                                return array_combine($years, $years); // Opsi 'all' dihapus
                             })
                             ->default(now()->year)
                             ->required(),

@@ -13,6 +13,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use App\Exports\ProductExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Tables\Actions\Action;
 
 class ProductResource extends Resource
 {
@@ -191,6 +194,19 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('category_products_id')
                     ->label('Kategori')
                     ->relationship('categoryproduct', 'name'),
+            ])
+            // --- AKSI HEADER: EXPORT SEMUA DATA ---
+            ->headerActions([
+                Action::make('export_excel')
+                    ->label('Export Semua Produk')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->action(function () {
+                        return Excel::download(
+                            new ProductExport(),
+                            'Katalog-Semua-Produk.xlsx'
+                        );
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Edit'),
