@@ -13,7 +13,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $member = $user->member;
+        $member = \App\Models\Member::where('email', $user->email)->first();
 
         // 1. Fetch Measurement History (For Charts)
         $history = $member ? $member->measurements()->latest()->get() : [];
@@ -36,7 +36,8 @@ class DashboardController extends Controller
             'progress_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Max 5MB
         ]);
 
-        $member = Auth::user()->member;
+        // UBAH DI SINI: Ambil langsung dari tabel members
+        $member = \App\Models\Member::where('email', Auth::user()->email)->first();
 
         if (!$member) {
             return back()->with('error', 'Akun kamu belum terhubung dengan Member Gym.');

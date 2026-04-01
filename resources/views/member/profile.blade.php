@@ -153,6 +153,23 @@
                 </a>
             </div>
 
+            {{-- Script Real-Time Auto-Refresh --}}
+            <script>
+                // Ngecek ke server setiap 3 detik (3000 ms)
+                const checkInterval = setInterval(() => {
+                    fetch('/api/check-membership-status')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Kalau respon server bilang status = true (admin udah input)
+                            if (data.status === true) {
+                                clearInterval(checkInterval); // Hentikan pengecekan
+                                window.location.reload(); // Refresh halaman otomatis!
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }, 3000);
+            </script>
+
             {{-- Tombol Logout dibiarkan utuh di bawah --}}
             <div class="mt-8 text-center">
                 <button form="logout-form" onclick="document.getElementById('logout-form').submit();" class="text-gray-500 hover:text-white text-sm font-bold uppercase tracking-wider transition">← Logout</button>

@@ -180,6 +180,23 @@
                 Hubungi Admin untuk Aktivasi
             </a>
         </div>
+
+        {{-- Script Real-Time Auto-Refresh --}}
+        <script>
+            // Ngecek ke server setiap 3 detik (3000 ms)
+            const checkInterval = setInterval(() => {
+                fetch('/api/check-membership-status')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Kalau respon server bilang status = true (admin udah input)
+                        if (data.status === true) {
+                            clearInterval(checkInterval); // Hentikan pengecekan
+                            window.location.reload(); // Refresh halaman otomatis!
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }, 3000);
+        </script>
         @endif
 
     </div>

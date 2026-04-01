@@ -252,6 +252,23 @@
                 Hubungi Admin untuk Aktivasi
             </a>
         </div>
+
+        {{-- Script Real-Time Auto-Refresh --}}
+        <script>
+            // Ngecek ke server setiap 3 detik (3000 ms)
+            const checkInterval = setInterval(() => {
+                fetch('/api/check-membership-status')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Kalau respon server bilang status = true (admin udah input)
+                        if (data.status === true) {
+                            clearInterval(checkInterval); // Hentikan pengecekan
+                            window.location.reload(); // Refresh halaman otomatis!
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }, 3000);
+        </script>
         @endif
 
         <div class="mt-12 mb-8">
@@ -350,7 +367,7 @@
                                 <p class="font-bold text-white mb-2">Transfer Manual:</p>
                                 <p>Bank BCA: <strong class="text-white text-lg select-all">0461701506</strong></p>
                                 <p>A.n: <strong class="text-white">Sobiin</strong></p>
-                                <p class="mt-2 text-xs text-gray-500">Total: Rp 85.000</p>
+                                <p class="mt-2 text-xs text-gray-500">Total: Rp 90.000</p>
                             </div>
                         </div>
 

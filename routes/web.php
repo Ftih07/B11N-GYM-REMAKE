@@ -117,6 +117,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/measurements', [DashboardController::class, 'storeMeasurement'])->name('measurements.store');
 });
 
+Route::get('/api/check-membership-status', function () {
+    if (!auth()->check()) {
+        return response()->json(['status' => false]);
+    }
+
+    $isMember = \App\Models\Member::where('email', auth()->user()->email)->exists();
+    return response()->json(['status' => $isMember]);
+});
+
 
 // -----------------------------------------------//
 //--------------- Employee Route -----------------//

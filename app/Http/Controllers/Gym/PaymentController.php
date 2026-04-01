@@ -34,10 +34,10 @@ class PaymentController extends Controller
                 $price = 10000;
                 break;
             case 'Member Mingguan':
-                $price = 30000;
+                $price = 35000;
                 break;
             case 'Member Bulanan':
-                $price = 85000;
+                $price = 90000;
                 break;
             default:
                 $price = 10000; // Fallback

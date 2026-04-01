@@ -62,7 +62,7 @@
 				"opens": "07:00",
 				"closes": "21:00"
 			}],
-			"priceRange": "Rp 10.000 - Rp 85.000"
+			"priceRange": "Rp 10.000 - Rp 90.000"
 		}
 	</script>
 
@@ -1187,7 +1187,7 @@
 							Masuk sebagai member dari B11N & K1NG Gym
 						</li>
 					</ul>
-					<h3><sup>Rp</sup>30.000<span>/minggu</span></h3>
+					<h3><sup>Rp</sup>35.000<span>/minggu</span></h3>
 					<button class="btn btn__primary" class="btn btn__primary" onclick="openPaymentModal('Mingguan')">
 						Beli Sekarang</button>
 				</div>
@@ -1219,7 +1219,7 @@
 							Masuk sebagai member dari B11N & K1NG Gym
 						</li>
 					</ul>
-					<h3><sup>Rp</sup>85.000<span>/Bulan</span></h3>
+					<h3><sup>Rp</sup>90.000<span>/Bulan</span></h3>
 					<button
 						class="btn btn__primary" onclick="openPaymentModal('Bulanan')">
 						Beli Sekarang
@@ -1415,8 +1415,8 @@
 										</label>
 										<select name="membership_type" class="w-full border p-2 rounded" required>
 											<option value="Member Harian">Member Harian (Rp 10.000)</option>
-											<option value="Member Mingguan">Member Mingguan (Rp 30.000)</option>
-											<option value="Member Bulanan">Member Bulanan (Rp 85.000)</option>
+											<option value="Member Mingguan">Member Mingguan (Rp 35.000)</option>
+											<option value="Member Bulanan">Member Bulanan (Rp 90.000)</option>
 										</select>
 									</div>
 

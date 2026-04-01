@@ -11,7 +11,10 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $member = $user->member;
+
+        // UBAH BAGIAN INI: Ambil langsung dari database, bukan dari relasi auth
+        $member = \App\Models\Member::where('email', $user->email)->first();
+
         return view('member.profile', compact('user', 'member'));
     }
 
@@ -23,7 +26,9 @@ class ProfileController extends Controller
         ]);
 
         $user = Auth::user();
-        $member = $user->member;
+
+        // UBAH BAGIAN INI JUGA
+        $member = \App\Models\Member::where('email', $user->email)->first();
 
         // Update Member Details
         if ($member) {
