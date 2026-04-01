@@ -176,14 +176,20 @@
                                     <td class="p-4 text-center">
                                         <div class="flex flex-col sm:flex-row gap-2 justify-center">
                                             @if($item->progress_photo)
-                                            <a href="{{ Storage::url($item->progress_photo) }}" target="_blank" class="text-blue-400 hover:text-blue-300 text-[10px] font-bold border border-blue-900 bg-blue-900/20 px-2 py-1.5 rounded uppercase text-center">Foto</a>
+                                            <a href="{{ Storage::url($item->progress_photo) }}" target="_blank" class="text-blue-400 hover:text-white text-[10px] font-bold border border-blue-900 bg-blue-900/20 px-2 py-1.5 rounded uppercase text-center">Foto</a>
                                             @endif
 
-                                            <button
-                                                onclick="showNotes('{{ \Carbon\Carbon::parse($item->measured_at)->format('d M Y') }}', {{ json_encode($item->notes) }})"
-                                                class="text-gray-400 hover:text-white text-[10px] font-bold border border-neutral-700 bg-neutral-800 px-2 py-1.5 rounded uppercase">
-                                                Notes
-                                            </button>
+                                            <button onclick="showNotes('{{ \Carbon\Carbon::parse($item->measured_at)->format('d M Y') }}', {{ json_encode($item->notes) }})" class="text-gray-400 hover:text-white text-[10px] font-bold border border-neutral-700 bg-neutral-800 px-2 py-1.5 rounded uppercase">Notes</button>
+
+
+                                            {{-- TOMBOL HAPUS (Langsung eksekusi pakai form) --}}
+                                            <form action="{{ route('measurements.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus progress ini? Data yang dihapus tidak bisa dikembalikan.');" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-400 hover:text-white text-[10px] font-bold border border-red-700 bg-red-900/20 px-2 py-1.5 rounded uppercase w-full sm:w-auto">
+                                                    Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -336,17 +342,27 @@
                 <div class="px-6 py-6">
                     <form action="/payment/upload" method="POST" enctype="multipart/form-data">
                         @csrf
+                        {{-- Data ID --}}
                         <input type="hidden" name="member_id" value="{{ $member->id }}">
                         <input type="hidden" name="gym_id" value="{{ $member->gymkos_id }}">
+
+                        {{-- TAMBAHAN: Data Email & Phone yang diminta Controller (disembunyikan) --}}
+                        <input type="hidden" name="email" value="{{ $user->email }}">
+                        <input type="hidden" name="phone" value="{{ $member->phone ?? '08000000000' }}">
+
+                        {{-- TAMBAHAN: Data Tipe Membership (harus sama persis dengan switch case di Controller) --}}
+                        <input type="hidden" name="membership_type" value="Member Bulanan">
 
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Nama</label>
-                                <input type="text" value="{{ $member->name }}" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-gray-400 text-sm" readonly>
+                                {{-- TAMBAHAN: Tambahkan atribut name="name" --}}
+                                <input type="text" name="name" value="{{ $member->name }}" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-gray-400 text-sm" readonly>
                             </div>
                             <div>
                                 <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Paket</label>
-                                <input type="text" value="Bulanan (85k)" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-primary font-bold text-sm" readonly>
+                                {{-- Ini dibiarkan tanpa atribut 'name' karena cuma buat tampilan visual --}}
+                                <input type="text" value="Bulanan (90k)" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-primary font-bold text-sm" readonly>
                             </div>
                         </div>
 

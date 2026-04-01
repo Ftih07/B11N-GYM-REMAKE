@@ -198,7 +198,13 @@ class PaymentResource extends Resource
                     ->color('success')
                     ->requiresConfirmation()
                     ->modalHeading('Setujui Pembayaran')
-                    ->modalDescription('Apakah Anda yakin ingin menyetujui pembayaran ini? Masa aktif member akan otomatis ditambahkan.')
+                    // UBAH BAGIAN INI: Menggunakan Closure (fn) untuk mengecek apakah punya member_id
+                    ->modalDescription(
+                        fn(Payment $record) =>
+                        $record->member_id
+                            ? 'Apakah Anda yakin ingin menyetujui pembayaran ini? Masa aktif member akan otomatis ditambahkan.'
+                            : 'Apakah Anda yakin ingin menyetujui pembayaran pendaftar baru ini?'
+                    )
                     ->modalSubmitActionLabel('Ya, Setujui')
                     ->visible(fn(Payment $record) => $record->status === 'pending') // Hanya muncul jika masih Pending
                     ->action(function (Payment $record) {

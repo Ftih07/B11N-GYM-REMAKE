@@ -115,6 +115,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::post('/measurements', [DashboardController::class, 'storeMeasurement'])->name('measurements.store');
+    Route::delete('/member/measurements/{id}', [DashboardController::class, 'destroyMeasurement'])->name('measurements.destroy');
 });
 
 Route::get('/api/check-membership-status', function () {

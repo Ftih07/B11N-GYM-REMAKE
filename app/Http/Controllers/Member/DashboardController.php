@@ -63,4 +63,24 @@ class DashboardController extends Controller
 
         return back()->with('success', 'Progress berhasil disimpan!');
     }
+
+    public function destroyMeasurement($id)
+    {
+        $member = \App\Models\Member::where('email', Auth::user()->email)->first();
+        $measurement = MemberMeasurement::findOrFail($id);
+
+        // Keamanan
+        if ($measurement->member_id !== $member->id) {
+            return back()->with('error', 'Anda tidak memiliki akses untuk menghapus data ini.');
+        }
+
+        // Hapus foto dari storage (jika ada) biar server gak penuh
+        if ($measurement->progress_photo) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($measurement->progress_photo);
+        }
+
+        $measurement->delete();
+
+        return back()->with('success', 'Data progress berhasil dihapus!');
+    }
 }
