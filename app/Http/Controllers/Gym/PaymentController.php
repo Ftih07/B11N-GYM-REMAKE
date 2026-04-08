@@ -76,6 +76,10 @@ class PaymentController extends Controller
         }
 
         // 7. Return JSON Response (for AJAX frontend)
-        return response()->json(['message' => 'Bukti pembayaran berhasil diupload!', 'order_id' => $orderID]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Bukti pembayaran berhasil dikirim! Silakan tunggu konfirmasi Admin.',
+            'order_id' => $orderID
+        ], 200);
     }
 }

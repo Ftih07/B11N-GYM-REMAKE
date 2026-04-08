@@ -87,26 +87,9 @@
         </div>
     </nav>
 
+    {{-- KOTAK NOTIFIKASI BAWAAN DIHAPUS (Agar UI lebih bersih) --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        @if(session('success'))
-        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded shadow-sm mb-4">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
-                <p class="text-green-700 font-semibold">{{ session('success') }}</p>
-            </div>
         </div>
-        @endif
-        @if($errors->any())
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-sm mb-4">
-            <div class="flex items-start">
-                <i class="fas fa-exclamation-triangle text-red-500 mr-3 text-xl mt-0.5"></i>
-                <ul class="text-red-700 font-medium text-sm list-disc list-inside">
-                    @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-                </ul>
-            </div>
-        </div>
-        @endif
-    </div>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 mb-10 w-full" x-data="posSystem({{ json_encode($products) }})">
         <form action="{{ route('employee.transaction.store') }}" method="POST" enctype="multipart/form-data">
@@ -419,6 +402,105 @@
     </script>
     @endif
 
+    {{-- SCRIPT MODERN TOAST NOTIFICATION --}}
+    <script>
+        // FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN (Durasi 10 Detik)
+        function showModernToast(message, type = 'success') {
+            const existingToast = document.getElementById('modern-toast');
+            if (existingToast) existingToast.remove();
+
+            const isSuccess = type === 'success';
+            const borderColor = isSuccess ? '#16a34a' : '#dc2626';
+            const iconColor = isSuccess ? '#22c55e' : '#ef4444';
+            const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+            const progressBg = isSuccess ? '#16a34a' : '#dc2626';
+
+            const svgIcon = isSuccess ?
+                `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
+                `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+
+            const toastHTML = `
+                <div id="modern-toast" style="position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 9999; transition: all 0.5s ease; pointer-events: none; width: max-content; max-width: 90vw; font-family: 'Poppins', sans-serif;">
+                    <div style="background-color: #171717; border: 1px solid ${borderColor}; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 8px; pointer-events: auto; overflow: hidden; position: relative; min-width: 300px;">
+                        
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: #262626;">
+                            <div id="toast-progress-bar" style="height: 100%; width: 100%; background-color: ${progressBg};"></div>
+                        </div>
+
+                        <div style="padding: 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background-color: ${iconBg}; padding: 8px; border-radius: 50%; flex-shrink: 0; display: flex;">
+                                ${svgIcon}
+                            </div>
+                            <div style="flex: 1; font-size: 14px; font-weight: 500; color: #ffffff; padding-right: 16px; line-height: 1.4;">
+                                ${message}
+                            </div>
+                            <button onclick="closeModernToast()" style="background: transparent; border: none; color: #737373; cursor: pointer; flex-shrink: 0; display: flex; padding: 0;">
+                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+
+            const toast = document.getElementById('modern-toast');
+            const progressBar = document.getElementById('toast-progress-bar');
+
+            setTimeout(() => {
+                toast.style.transform = 'translate(-50%, 0)';
+                toast.style.opacity = '1';
+            }, 50);
+
+            setTimeout(() => {
+                progressBar.style.transition = 'width 10s linear';
+                progressBar.style.width = '0%';
+            }, 100);
+
+            window.modernToastTimeout = setTimeout(() => {
+                closeModernToast();
+            }, 10000);
+        }
+
+        window.closeModernToast = function() {
+            const toast = document.getElementById('modern-toast');
+            if (!toast) return;
+
+            clearTimeout(window.modernToastTimeout);
+            toast.style.transform = 'translate(-50%, -20px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if (toast) toast.remove();
+            }, 500);
+        };
+    </script>
+
+    {{-- TRIGGER NOTIFIKASI SUCCESS --}}
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showModernToast('{{ session("success") }}', 'success');
+        });
+    </script>
+    @endif
+
+    {{-- TRIGGER NOTIFIKASI ERROR (Multiple Validasi) --}}
+    @if($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let errorMsg = "<strong>Terjadi Kesalahan:</strong><br>";
+            
+            /* PERBAIKAN: Spasi dihapus pada $errors->all() */
+            @foreach($errors->all() as $error)
+                errorMsg += "- {{ $error }}<br>";
+            @endforeach
+            
+            showModernToast(errorMsg, 'error');
+        });
+    </script>
+    @endif
+
+    {{-- SCRIPT ALPINE.JS BAWAAN POS & RIWAYAT --}}
     <script>
         document.addEventListener('alpine:init', () => {
 

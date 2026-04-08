@@ -1042,6 +1042,91 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN (Durasi 10 Detik)
+        function showModernToast(message, type = 'success') {
+            const existingToast = document.getElementById('modern-toast');
+            if (existingToast) existingToast.remove();
+
+            const isSuccess = type === 'success';
+            // Jika type bukan success, kita anggap error/warning (warna merah)
+            const borderColor = isSuccess ? '#16a34a' : '#dc2626';
+            const iconColor = isSuccess ? '#22c55e' : '#ef4444';
+            const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+            const progressBg = isSuccess ? '#16a34a' : '#dc2626';
+
+            // Ikon SVG: Centang hijau untuk sukses, Tanda Seru/Silang merah untuk error/warning
+            const svgIcon = isSuccess ?
+                `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
+                `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+
+            const toastHTML = `
+                <div id="modern-toast" style="position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 9999; transition: all 0.5s ease; pointer-events: none; width: max-content; max-width: 90vw; font-family: 'Poppins', sans-serif;">
+                    <div style="background-color: #171717; border: 1px solid ${borderColor}; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 8px; pointer-events: auto; overflow: hidden; position: relative; min-width: 300px;">
+                        
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: #262626;">
+                            <div id="toast-progress-bar" style="height: 100%; width: 100%; background-color: ${progressBg};"></div>
+                        </div>
+
+                        <div style="padding: 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background-color: ${iconBg}; padding: 8px; border-radius: 50%; flex-shrink: 0; display: flex;">
+                                ${svgIcon}
+                            </div>
+                            <div style="flex: 1; font-size: 14px; font-weight: 500; color: #ffffff; padding-right: 16px; line-height: 1.4;">
+                                ${message}
+                            </div>
+                            <button onclick="closeModernToast()" style="background: transparent; border: none; color: #737373; cursor: pointer; flex-shrink: 0; display: flex; padding: 0;">
+                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+
+            const toast = document.getElementById('modern-toast');
+            const progressBar = document.getElementById('toast-progress-bar');
+
+            setTimeout(() => {
+                toast.style.transform = 'translate(-50%, 0)';
+                toast.style.opacity = '1';
+            }, 50);
+
+            setTimeout(() => {
+                progressBar.style.transition = 'width 10s linear';
+                progressBar.style.width = '0%';
+            }, 100);
+
+            window.modernToastTimeout = setTimeout(() => {
+                closeModernToast();
+            }, 10000);
+        }
+
+        window.closeModernToast = function() {
+            const toast = document.getElementById('modern-toast');
+            if (!toast) return;
+
+            clearTimeout(window.modernToastTimeout);
+            toast.style.transform = 'translate(-50%, -20px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if (toast) toast.remove();
+            }, 500);
+        };
+
+        // --- MUNCULKAN NOTIFIKASI DARI SESSION LARAVEL SECARA OTOMATIS SAAT HALAMAN DILAST LOAD ---
+        @if(session('success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            showModernToast('{{ session("success") }}', 'success');
+        });
+        @endif
+
+        @if(session('error'))
+        document.addEventListener('DOMContentLoaded', function() {
+            showModernToast('{{ session("error") }}', 'error');
+        });
+        @endif
+
         document.addEventListener('DOMContentLoaded', function() {
             // Swiper init
             new Swiper('.testimonialSwiper', {
@@ -1082,7 +1167,7 @@
             // 2. Variabel Elemen
             const roomCells = document.querySelectorAll('.room-cell');
             const selectedRoomInput = document.getElementById('selectedRoom');
-            const roomTypeSelect = document.getElementById('roomType'); // Dropdown
+            const roomTypeSelect = document.getElementById('roomType');
             const roomInfoBox = document.getElementById('roomSelectionInfo');
             const infoRoomNumber = document.getElementById('infoRoomNumber');
 
@@ -1097,12 +1182,8 @@
             roomCells.forEach(cell => {
                 cell.addEventListener('click', function() {
                     if (this.classList.contains('booked')) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Kamar Terisi',
-                            text: 'Maaf, kamar ini sudah dibooking orang lain.',
-                            confirmButtonColor: '#d33'
-                        });
+                        // MENGGANTI SWAL DENGAN MODERN TOAST
+                        showModernToast('Maaf, kamar ini sudah dibooking orang lain.', 'error');
                         return;
                     }
 
@@ -1122,7 +1203,7 @@
                     // Isi ke Hidden Input
                     selectedRoomInput.value = roomNum;
 
-                    // Update text feedback (hanya nomor kamar, tipe kamar dipilih di dropdown)
+                    // Update text feedback
                     roomInfoBox.classList.remove('hidden');
                     infoRoomNumber.textContent = "Kamar " + roomNum.toString().padStart(2, '0');
                 });
@@ -1150,51 +1231,28 @@
                 const payMethod = document.querySelector('input[name="paymentMethod"]:checked');
                 const proofVal = paymentProofInput.files.length;
 
-                // Validasi Nomor Kamar
+                // MENGGANTI SEMUA VALIDASI SWAL DENGAN MODERN TOAST
                 if (!roomVal) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Pilih Kamar',
-                        text: 'Silakan klik nomor kamar pada denah.',
-                        confirmButtonColor: '#f6ac0f'
-                    });
+                    showModernToast('Silakan klik nomor kamar pada denah terlebih dahulu.', 'error');
                     return;
                 }
 
-                // Validasi Dropdown Tipe Kamar
                 if (!typeVal) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Pilih Jenis Kamar',
-                        text: 'Silakan pilih jenis kamar (AC / Non-AC) pada dropdown.',
-                        confirmButtonColor: '#f6ac0f'
-                    });
+                    showModernToast('Silakan pilih jenis kamar (AC / Non-AC) pada dropdown.', 'error');
                     return;
                 }
 
-                // Validasi Metode Bayar
                 if (!payMethod) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Metode Pembayaran',
-                        text: 'Silakan pilih metode pembayaran.',
-                        confirmButtonColor: '#f6ac0f'
-                    });
+                    showModernToast('Silakan pilih metode pembayaran.', 'error');
                     return;
                 }
 
-                // Validasi Bukti Transfer
                 if (proofVal === 0) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Upload Bukti',
-                        text: 'Mohon upload bukti pembayaran.',
-                        confirmButtonColor: '#f6ac0f'
-                    });
+                    showModernToast('Mohon upload bukti pembayaran.', 'error');
                     return;
                 }
 
@@ -1206,25 +1264,6 @@
                 btnText.classList.add('hidden');
                 btnLoading.classList.remove('hidden');
             });
-
-            // 6. SweetAlert Feedback dari Session Laravel
-            @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: "{{ session('success') }}",
-                confirmButtonColor: '#3085d6',
-            });
-            @endif
-
-            @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: "{{ session('error') }}",
-                confirmButtonColor: '#d33',
-            });
-            @endif
 
             // 7. Scroll Reveal Animation
             const observer = new IntersectionObserver((entries) => {
@@ -1249,30 +1288,8 @@
                     }
                 });
             });
-
         });
     </script>
-    @if(session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '{{ session("success") }}',
-            confirmButtonColor: '#f6ac0f',
-        });
-    </script>
-    @endif
-
-    @if(session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: '{{ session("error") }}',
-            confirmButtonColor: '#f6ac0f',
-        });
-    </script>
-    @endif
 
 </body>
 

@@ -1226,213 +1226,186 @@
 					</button>
 				</div>
 
-				<div
-					class="modal fade"
-					id="paymentModal"
-					tabindex="-1"
-					aria-labelledby="paymentModalLabel"
-					aria-hidden="true">
+				{{-- MODAL 1: PILIH METODE PEMBAYARAN --}}
+				<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="paymentModalLabel">
-									Pilih Metode Pembayaran untuk Member <span class="text-danger" id="membershipTitle"></span>
+						<div class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
+
+							<div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
+								<h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl" id="paymentModalLabel">
+									Metode Pembayaran <span class="text-[#DC2626] ml-1" id="membershipTitle"></span>
 								</h5>
-								<button
-									type="button"
-									class="btn-close"
-									data-bs-dismiss="modal"
-									aria-label="Close"></button>
+								<button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100 transition" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
-							<div class="modal-body">
+
+							<div class="modal-body p-6">
+
+								{{-- TAMPILAN PILIH METODE --}}
 								<div id="paymentOptions">
-									<div class="row">
-										<div class="col-md-6 text-center">
-											<img
-												src="/assets/img/pembayaran/qris.png"
-												alt="QRIS"
-												class="img-fluid mb-3"
-												style="max-height: 200px;" />
-											<button
-												class="btn btn-primary w-100"
-												onclick="selectPaymentMethod('qris')">
-												Bayar via QRIS
-											</button>
+									<p class="text-sm text-gray-400 mb-4 text-center">Silakan pilih metode pembayaran yang Anda inginkan:</p>
+									<div class="grid grid-cols-2 gap-4">
+										{{-- Card Pilihan QRIS --}}
+										<div onclick="selectPaymentMethod('qris')" class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
+											<img src="/assets/img/pembayaran/qris.png" alt="QRIS" class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
+											<span class="text-white font-bold text-sm uppercase tracking-wider block">Bayar via QRIS</span>
 										</div>
-										<div class="col-md-6 text-center">
-											<img
-												src="/assets/img/pembayaran/bca.png"
-												alt="Transfer Bank"
-												class="img-fluid mb-3"
-												style="max-height: 200px;" />
-											<button
-												class="btn btn-primary w-100"
-												onclick="selectPaymentMethod('transfer')">
-												Bayar via Transfer
-											</button>
+
+										{{-- Card Pilihan Transfer --}}
+										<div onclick="selectPaymentMethod('transfer')" class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
+											<img src="/assets/img/pembayaran/bca.png" alt="Transfer Bank" class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
+											<span class="text-white font-bold text-sm uppercase tracking-wider block">Transfer BCA</span>
 										</div>
 									</div>
 								</div>
 
+								{{-- TAMPILAN QRIS --}}
 								<div id="qrisPayment" class="d-none">
-									<h5 class="text-center mt-4">
-										Pembayaran via QRIS untuk Member <span class="text-danger" id="qrisMembershipTitle"></span>
+									<h5 class="text-center font-bold text-white mb-4">
+										Scan QRIS <span class="text-[#DC2626] block text-sm mt-1" id="qrisMembershipTitle"></span>
 									</h5>
-									<div class="text-center my-3">
-										<div class="place-items-center">
-											<img
-												src="/assets/img/pembayaran/qris-barcode.png"
-												alt="QRIS Barcode"
-												class="img-fluid w-full md:w-1/2" />
+
+									<div class="flex justify-center mb-4">
+										<div class="bg-white p-4 rounded-xl border-4 border-neutral-800 shadow-xl max-w-[250px] w-full">
+											<img src="/assets/img/pembayaran/qris-barcode.png" alt="QRIS Barcode" class="img-fluid w-full" />
 										</div>
 									</div>
-									<p class="text-center">
-										Scan kode QR di atas untuk melakukan pembayaran.
+
+									<p class="text-center text-sm text-gray-400 mb-6">
+										Scan kode QR di atas menggunakan aplikasi m-Banking atau e-Wallet (GoPay, OVO, Dana, dll).
 									</p>
-									<div class="flex flex-col sm:flex-row gap-4 justify-center">
-										<button class="btn btn-primary" onclick="showPaymentConfirmationModal()">
-											Upload Payment Confirmation
+
+									<div class="flex justify-center mb-6">
+										<button class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5" onclick="showPaymentConfirmationModal()">
+											KIRIM BUKTI PEMBAYARAN
 										</button>
 									</div>
-									<p class="text-danger text-center">
-										Catatan Penting: Setelah pembayaran, wajib kirim bukti pembayaran
-										dengan klik tombol di atas.
-									</p>
-									<p class="text-gray-800 text-center rounded-md bg-gray-200 text-sm border-t-[15px] border-b-[15px] mb-3 mt-2">
-										Jangan lupa absen saat berkunjung ke B11N Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
-									</p>
-									<div class="d-flex justify-content-between">
-										<button
-											class="btn btn-secondary"
-											onclick="goBackToOptions()">
-											Kembali
-										</button>
-										<button
-											class="btn btn-secondary"
-											data-bs-dismiss="modal">
-											Tutup
-										</button>
+
+									<div class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
+										<strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim bukti di atas agar akun diaktivasi.
+									</div>
+
+									<div class="flex justify-between items-center pt-4 border-t border-neutral-800">
+										<button class="text-gray-400 hover:text-white text-sm font-medium transition" onclick="goBackToOptions()">← Ganti Metode</button>
+										<button class="text-gray-500 hover:text-gray-300 text-sm transition" data-bs-dismiss="modal">Tutup</button>
 									</div>
 								</div>
 
+								{{-- TAMPILAN TRANSFER --}}
 								<div id="transferPayment" class="d-none">
-									<h5 class="text-center mt-4">
-										Pembayaran via Transfer untuk Member <span class="text-danger" id="transferMembershipTitle"></span>
+									<h5 class="text-center font-bold text-white mb-4">
+										Transfer Bank <span class="text-[#DC2626] block text-sm mt-1" id="transferMembershipTitle"></span>
 									</h5>
-									<div class="text-center my-3">
-										<p class="text-center">Nomor Rekening: <strong>0461701506</strong></p>
-										<p class="text-center">An: <strong>Sobiin</strong></p>
-										<div class="place-items-center">
-											<img
-												src="/assets/img/pembayaran/bca.png"
-												alt="Bank BCA"
-												class="img-fluid w-1/2" />
-										</div>
+
+									<div class="bg-neutral-900 border border-neutral-700 rounded-xl p-5 mb-4 text-center">
+										<img src="/assets/img/pembayaran/bca.png" alt="Bank BCA" class="h-12 mx-auto mb-3 object-contain" />
+										<p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Nomor Rekening</p>
+										<p class="text-white text-2xl font-header font-bold tracking-widest mb-1 select-all">0461701506</p>
+										<p class="text-gray-400 text-sm">a.n <strong class="text-white">Sobiin</strong></p>
 									</div>
-									<p class="text-center">
-										Lakukan transfer ke nomor rekening di atas.
+
+									<p class="text-center text-sm text-gray-400 mb-6">
+										Silakan lakukan transfer manual ke nomor rekening di atas sesuai nominal paket.
 									</p>
-									<div class="flex flex-col sm:flex-row gap-4 justify-center">
-										<button class="btn btn-primary" onclick="showPaymentConfirmationModal()">
-											Upload Payment Confirmation
+
+									<div class="flex justify-center mb-6">
+										<button class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5" onclick="showPaymentConfirmationModal()">
+											KIRIM BUKTI PEMBAYARAN
 										</button>
 									</div>
 
-									<p class="text-danger text-center">
-										Catatan Penting: Setelah pembayaran, wajib kirim bukti pembayaran
-										dengan klik tombol di atas.
-									</p>
-									<p class="text-gray-800 text-center rounded-md bg-gray-200 text-sm border-t-[15px] border-b-[15px] mb-3 mt-2">
-										Jangan lupa absen saat berkunjung ke B11N Gym. Jika kamu membeli atau memperpanjang Member Bulanan, minta kartu member baru atau serahkan kartu lamamu ke kasir.
-									</p>
-									<div class="d-flex justify-content-between">
-										<button
-											class="btn btn-secondary"
-											onclick="goBackToOptions()">
-											Kembali
-										</button>
-										<button
-											class="btn btn-secondary"
-											data-bs-dismiss="modal">
-											Tutup
-										</button>
+									<div class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
+										<strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim bukti di atas agar akun diaktivasi.
+									</div>
+
+									<div class="flex justify-between items-center pt-4 border-t border-neutral-800">
+										<button class="text-gray-400 hover:text-white text-sm font-medium transition" onclick="goBackToOptions()">← Ganti Metode</button>
+										<button class="text-gray-500 hover:text-gray-300 text-sm transition" data-bs-dismiss="modal">Tutup</button>
 									</div>
 								</div>
+
 							</div>
 						</div>
 					</div>
 				</div>
 
+
+				{{-- MODAL 2: FORM UPLOAD BUKTI --}}
 				<div class="modal fade" id="paymentConfirmationModal" tabindex="-1" aria-labelledby="paymentConfirmationModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h2 class="modal-title" id="paymentConfirmationModalLabel">Upload Payment Confirmation</h2>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<p class="text-xs text-gray-500 mb-3">
-									<span class="text-red-500">*</span> wajib diisi
-								</p>
-								<form id="paymentForm" enctype="multipart/form-data">
+						<div class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
 
+							<div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
+								<h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl" id="paymentConfirmationModalLabel">
+									Konfirmasi <span class="text-[#DC2626]">Pembayaran</span>
+								</h5>
+								<button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100 transition" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+
+							<div class="modal-body p-6">
+
+								<form id="paymentForm" enctype="multipart/form-data" class="space-y-4">
 									<input type="hidden" name="gym_id" value="1">
 
-									<div class="mb-3">
-										<label class="block font-medium">
-											Nama <span class="text-red-500">*</span>
-										</label>
-										<input type="text" name="name" placeholder="Masukkan nama lengkap" class="w-full border p-2 rounded" required>
+									{{-- Group Info Member --}}
+									<div class="bg-neutral-900/50 border border-neutral-800 p-4 rounded-lg space-y-4 mb-2">
+										<div>
+											<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+												Nama Lengkap <span class="text-red-500">*</span>
+											</label>
+											<input type="text" name="name" placeholder="Sesuai KTP / Panggilan" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm" required>
+										</div>
+
+										<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+											<div>
+												<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+													Email <span class="text-red-500">*</span>
+												</label>
+												<input type="email" name="email" placeholder="email@anda.com" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm" required>
+											</div>
+											<div>
+												<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+													No. WhatsApp <span class="text-red-500">*</span>
+												</label>
+												<input type="tel" name="phone" placeholder="08..." class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm" required>
+											</div>
+										</div>
 									</div>
 
-									<div class="mb-3">
-										<label class="block font-medium">
-											Email <span class="text-red-500">*</span>
-										</label>
-										<input type="email" name="email" placeholder="Masukkan email aktif" class="w-full border p-2 rounded" required>
+									{{-- Group Detail Pembayaran --}}
+									<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+										<div>
+											<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+												Paket Member <span class="text-red-500">*</span>
+											</label>
+											<select name="membership_type" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer" required>
+												<option value="" disabled selected>Pilih Paket</option>
+												<option value="Member Harian">Harian (Rp 10.000)</option>
+												<option value="Member Mingguan">Mingguan (Rp 35.000)</option>
+												<option value="Member Bulanan">Bulanan (Rp 90.000)</option>
+											</select>
+										</div>
+										<div>
+											<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+												Transfer Ke <span class="text-red-500">*</span>
+											</label>
+											<select name="payment" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer" required>
+												<option value="" disabled selected>Pilih Metode</option>
+												<option value="qris">QRIS (GoPay/Dana/OVO)</option>
+												<option value="transfer">Bank BCA</option>
+											</select>
+										</div>
 									</div>
 
-									<div class="mb-3">
-										<label class="block font-medium">
-											No. Telp <span class="text-red-500">*</span>
+									<div>
+										<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+											Upload Bukti Struk/Resi <span class="text-red-500">*</span>
 										</label>
-										<input type="tel" name="phone" placeholder="Masukkan no. telepon aktif" class="w-full border p-2 rounded" required>
+										<input type="file" name="image" accept="image/png,image/jpeg,image/jpg" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:bg-neutral-800 file:text-[#DC2626] hover:file:bg-neutral-700 cursor-pointer border border-neutral-700 rounded bg-neutral-900" required>
 									</div>
 
-									<div class="mb-3">
-										<label class="block font-medium">
-											Upload Bukti Pembayaran <span class="text-red-500">*</span>
-										</label>
-										<input type="file" name="image" accept="image/png,image/jpeg,image/jpg" class="w-full border p-2 rounded" required>
-										<p class="text-xs text-gray-400 mt-1">
-											Upload screenshot bukti transfer atau QRIS yang sudah dibayar.
-										</p>
-									</div>
-
-									<div class="mb-3">
-										<label class="block font-medium">
-											Pilih Membership <span class="text-red-500">*</span>
-										</label>
-										<select name="membership_type" class="w-full border p-2 rounded" required>
-											<option value="Member Harian">Member Harian (Rp 10.000)</option>
-											<option value="Member Mingguan">Member Mingguan (Rp 35.000)</option>
-											<option value="Member Bulanan">Member Bulanan (Rp 90.000)</option>
-										</select>
-									</div>
-
-									<div class="mb-3">
-										<label class="block font-medium">
-											Metode Pembayaran <span class="text-red-500">*</span>
-										</label>
-										<select name="payment" class="w-full border p-2 rounded" required>
-											<option value="qris">QRIS</option>
-											<option value="transfer">Transfer Bank</option>
-										</select>
-									</div>
-
-									<div class="flex justify-end">
-										<button type="button" class="btn btn-danger me-2" data-bs-dismiss="modal">Cancel</button>
-										<button type="submit" class="btn btn-success">Upload</button>
+									<div class="flex justify-end gap-3 pt-4 mt-2 border-t border-neutral-800">
+										<button type="button" class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-bold py-2 px-5 rounded transition text-sm" data-bs-dismiss="modal">Batal</button>
+										<button type="submit" class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition shadow-lg shadow-red-900/30 text-sm">Upload Bukti</button>
 									</div>
 								</form>
 
@@ -1813,80 +1786,146 @@
 	</script>
 
 	<script>
+		// 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN
+		function showModernToast(message, type = 'success') {
+			// Hapus toast lama jika masih ada di layar (mencegah numpuk)
+			const existingToast = document.getElementById('modern-toast');
+			if (existingToast) existingToast.remove();
+
+			// Tentukan warna berdasarkan tipe (success / error)
+			const isSuccess = type === 'success';
+			const borderColor = isSuccess ? '#16a34a' : '#dc2626'; // border-green-600 : border-red-600
+			const iconColor = isSuccess ? '#22c55e' : '#ef4444'; // text-green-500 : text-red-500
+			const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'; // bg opacity
+			const progressBg = isSuccess ? '#16a34a' : '#dc2626';
+
+			// Icon SVG (Checklist atau Silang)
+			const svgIcon = isSuccess ?
+				`<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
+				`<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+
+			// Template HTML Toast (Inline CSS agar aman tanpa Tailwind)
+			const toastHTML = `
+                <div id="modern-toast" style="position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 9999; transition: all 0.5s ease; pointer-events: none; width: max-content; max-width: 90vw; font-family: 'Poppins', sans-serif;">
+                    <div style="background-color: #171717; border: 1px solid ${borderColor}; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 8px; pointer-events: auto; overflow: hidden; position: relative; min-width: 300px;">
+                        
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: #262626;">
+                            <div id="toast-progress-bar" style="height: 100%; width: 100%; background-color: ${progressBg};"></div>
+                        </div>
+
+                        <div style="padding: 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background-color: ${iconBg}; padding: 8px; border-radius: 50%; flex-shrink: 0; display: flex;">
+                                ${svgIcon}
+                            </div>
+                            <div style="flex: 1; font-size: 14px; font-weight: 500; color: #ffffff; padding-right: 16px; line-height: 1.4;">
+                                ${message}
+                            </div>
+                            <button onclick="closeModernToast()" style="background: transparent; border: none; color: #737373; cursor: pointer; flex-shrink: 0; display: flex; padding: 0;">
+                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+			// Masukkan ke dalam body
+			document.body.insertAdjacentHTML('beforeend', toastHTML);
+
+			const toast = document.getElementById('modern-toast');
+			const progressBar = document.getElementById('toast-progress-bar');
+
+			// Trigger Animasi Masuk (Slide Down)
+			setTimeout(() => {
+				toast.style.transform = 'translate(-50%, 0)';
+				toast.style.opacity = '1';
+			}, 50);
+
+			// Trigger Animasi Progress Bar mundur (5 Detik)
+			setTimeout(() => {
+				progressBar.style.transition = 'width 5s linear';
+				progressBar.style.width = '0%';
+			}, 100);
+
+			// Auto Close setelah 5 detik
+			window.modernToastTimeout = setTimeout(() => {
+				closeModernToast();
+			}, 5000);
+		}
+
+		// Fungsi manual untuk menutup Toast
+		window.closeModernToast = function() {
+			const toast = document.getElementById('modern-toast');
+			if (!toast) return;
+
+			clearTimeout(window.modernToastTimeout);
+
+			// Animasi Slide Up
+			toast.style.transform = 'translate(-50%, -20px)';
+			toast.style.opacity = '0';
+
+			// Hapus dari layar setelah animasi selesai
+			setTimeout(() => {
+				if (toast) toast.remove();
+			}, 500);
+		};
+
+
+		// 2. LOGIC SUBMIT FORM PAYMENT
 		document.getElementById('paymentForm').addEventListener('submit', function(event) {
 			event.preventDefault();
 
-			// 1. Definisi Elemen
 			const form = this;
 			const submitBtn = form.querySelector('button[type="submit"]');
-			const originalBtnText = submitBtn.innerHTML; // Simpan teks asli tombol "Upload"
+			const originalBtnText = submitBtn.innerHTML;
 			const modalElement = document.getElementById('paymentConfirmationModal');
 			const modalInstance = bootstrap.Modal.getInstance(modalElement);
 
-			// 2. Aktifkan Loading State
 			submitBtn.disabled = true;
 			submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
 
-			// 3. Siapkan Data
 			let formData = new FormData(this);
 
-			// 4. Kirim Request
 			fetch('/payment/upload', {
 					method: 'POST',
 					body: formData,
 					headers: {
 						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-						// Jangan set 'Content-Type' secara manual saat pakai FormData, 
-						// browser akan otomatis mengaturnya termasuk boundary-nya.
 					}
 				})
 				.then(response => {
-					// Cek jika response sukses (200 OK)
 					if (response.ok) {
 						return response.json();
 					}
-					// Jika error validasi (422) atau server error (500)
 					return response.json().then(err => {
 						throw err;
 					});
 				})
 				.then(data => {
-					// --- SUKSES ---
-					console.log('Success:', data);
+					// --- UBAH DI SINI: Panggil Toast Success ---
+					showModernToast("Berhasil! " + data.message, 'success');
 
-					// Tampilkan pesan sukses (Bisa ganti SweetAlert biar lebih cantik)
-					alert("Berhasil! " + data.message + "\nOrder ID: " + data.order_id);
-
-					// Reset form agar bersih jika mau upload lagi
 					form.reset();
 
-					// Tutup Modal
 					if (modalInstance) {
 						modalInstance.hide();
 					}
 				})
 				.catch(error => {
-					// --- ERROR ---
-					console.error('Error:', error);
-
 					let errorMessage = "Terjadi kesalahan saat mengupload.";
 
-					// Cek apakah ini error validasi dari Laravel (Status 422)
 					if (error.errors) {
-						errorMessage = "Gagal Validasi:\n";
-						// Loop error message dari Laravel
+						errorMessage = "Gagal Validasi:<br>"; // Gunakan <br> karena innerHTML mendeteksi tag HTML
 						for (const [key, messages] of Object.entries(error.errors)) {
-							errorMessage += `- ${messages[0]}\n`;
+							errorMessage += `- ${messages[0]}<br>`;
 						}
 					} else if (error.message) {
 						errorMessage = error.message;
 					}
 
-					alert(errorMessage);
+					// --- UBAH DI SINI: Panggil Toast Error ---
+					showModernToast(errorMessage, 'error');
 				})
 				.finally(() => {
-					// --- FINALLY (Selalu dijalankan) ---
-					// 5. Matikan Loading State (Kembalikan tombol seperti semula)
 					submitBtn.disabled = false;
 					submitBtn.innerHTML = originalBtnText;
 				});
@@ -1896,10 +1935,10 @@
 			var paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
 			var paymentConfirmationModal = new bootstrap.Modal(document.getElementById('paymentConfirmationModal'));
 
-			paymentModal.hide(); // Tutup modal pertama
+			paymentModal.hide();
 			setTimeout(() => {
-				paymentConfirmationModal.show(); // Buka modal kedua setelah yang pertama tertutup
-			}, 500); // Delay sedikit biar animasi smooth
+				paymentConfirmationModal.show();
+			}, 500);
 		}
 	</script>
 

@@ -70,7 +70,7 @@ class DashboardController extends Controller
         $measurement = MemberMeasurement::findOrFail($id);
 
         // Keamanan
-        if ($measurement->member_id !== $member->id) {
+        if ($measurement->member_id != $member->id) {
             return back()->with('error', 'Anda tidak memiliki akses untuk menghapus data ini.');
         }
 

@@ -66,7 +66,7 @@
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- LINK SWEETALERT DIHAPUS DARI SINI --}}
 
     <style>
         /* Efek saat kartu dipilih */
@@ -110,12 +110,6 @@
     </style>
 </head>
 
-{{--
-   FIX 1: Struktur Body
-   Ubah 'items-center justify-center' jadi 'flex flex-col'. 
-   Ini kunci agar footer bisa didorong ke bawah.
---}}
-
 <body class="bg-white min-h-screen flex flex-col">
 
     @include('components.global-loader')
@@ -134,13 +128,9 @@
             </div>
 
             <div class="p-6">
-                @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-                @endif
+                {{-- KOTAK NOTIFIKASI HIJAU LAMA DIHAPUS DARI SINI --}}
 
-                <form action="{{ route('maintenance.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="maintenanceForm" action="{{ route('maintenance.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="equipment_id" id="selectedEquipmentId" required>
 
@@ -154,7 +144,7 @@
                         </div>
                         <div>
                             <label class="block text-primary text-sm font-semibold mb-2 font-heading uppercase tracking-wide">Lokasi Gym / Kost <span class="text-red-500">*</span></label>
-                            <select id="gymSelect"
+                            <select id="gymSelect" required
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary bg-extraLight font-body">
                                 <option value="" disabled selected>Pilih Lokasi</option>
                                 @foreach($gyms as $gym)
@@ -175,10 +165,8 @@
                                 Memuat data alat...
                             </div>
 
-                            {{-- UBAH DISINI: p-5 jadi p-2, dan bg-gray-50 --}}
                             <div class="border border-gray-200 rounded-xl p-2 bg-gray-50 overflow-visible">
 
-                                {{-- Grid tetap 2 kolom di HP, tapi gap kita kecilkan dikit biar muat gambar gede --}}
                                 <div id="equipmentGrid" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-[450px] overflow-y-auto overflow-x-visible p-1">
                                     <div class="col-span-full text-textLight text-sm italic text-center py-6 bg-white rounded-lg border border-dashed border-gray-300 font-body shadow-sm">
                                         Silahkan pilih lokasi gym terlebih dahulu.
@@ -193,19 +181,19 @@
                             <label class="block text-primary text-sm font-semibold mb-3 font-heading uppercase tracking-wide">Tingkat Keparahan <span class="text-red-500">*</span></label>
                             <div class="flex flex-col gap-2">
                                 <label class="severity-option border-2 border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-extraLight hover:border-primary transition">
-                                    <input type="radio" name="severity" value="low" class="w-4 h-4">
+                                    <input type="radio" name="severity" value="low" required class="w-4 h-4">
                                     <span class="text-sm text-textDark font-body">Low (Ringan)</span>
                                 </label>
                                 <label class="severity-option border-2 border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-extraLight hover:border-primary transition">
-                                    <input type="radio" name="severity" value="high" class="w-4 h-4">
+                                    <input type="radio" name="severity" value="high" required class="w-4 h-4">
                                     <span class="text-sm text-textDark font-body">High (Berat)</span>
                                 </label>
                                 <label class="severity-option border-2 border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-extraLight hover:border-primary transition">
-                                    <input type="radio" name="severity" value="medium" class="w-4 h-4">
+                                    <input type="radio" name="severity" value="medium" required class="w-4 h-4">
                                     <span class="text-sm text-textDark font-body">Medium</span>
                                 </label>
                                 <label class="severity-option border-2 border-gray-200 rounded-lg px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-extraLight hover:border-primary transition">
-                                    <input type="radio" name="severity" value="critical" class="w-4 h-4">
+                                    <input type="radio" name="severity" value="critical" required class="w-4 h-4">
                                     <span class="text-sm text-textDark font-body">Critical (Bahaya)</span>
                                 </label>
                             </div>
@@ -242,6 +230,91 @@
     </div>
 
     <script>
+        // 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN (Durasi 10 Detik)
+        function showModernToast(message, type = 'success') {
+            const existingToast = document.getElementById('modern-toast');
+            if (existingToast) existingToast.remove();
+
+            const isSuccess = type === 'success';
+            const borderColor = isSuccess ? '#16a34a' : '#dc030a';
+            const iconColor = isSuccess ? '#22c55e' : '#dc030a';
+            const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(220, 3, 10, 0.1)';
+            const progressBg = isSuccess ? '#16a34a' : '#dc030a';
+
+            const svgIcon = isSuccess ?
+                `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
+                `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+
+            const toastHTML = `
+                <div id="modern-toast" style="position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 9999; transition: all 0.5s ease; pointer-events: none; width: max-content; max-width: 90vw; font-family: 'Poppins', sans-serif;">
+                    <div style="background-color: #171717; border: 1px solid ${borderColor}; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 8px; pointer-events: auto; overflow: hidden; position: relative; min-width: 300px;">
+                        
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: #262626;">
+                            <div id="toast-progress-bar" style="height: 100%; width: 100%; background-color: ${progressBg};"></div>
+                        </div>
+
+                        <div style="padding: 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background-color: ${iconBg}; padding: 8px; border-radius: 50%; flex-shrink: 0; display: flex;">
+                                ${svgIcon}
+                            </div>
+                            <div style="flex: 1; font-size: 14px; font-weight: 500; color: #ffffff; padding-right: 16px; line-height: 1.4;">
+                                ${message}
+                            </div>
+                            <button onclick="closeModernToast()" style="background: transparent; border: none; color: #737373; cursor: pointer; flex-shrink: 0; display: flex; padding: 0;">
+                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+
+            const toast = document.getElementById('modern-toast');
+            const progressBar = document.getElementById('toast-progress-bar');
+
+            setTimeout(() => {
+                toast.style.transform = 'translate(-50%, 0)';
+                toast.style.opacity = '1';
+            }, 50);
+
+            setTimeout(() => {
+                progressBar.style.transition = 'width 10s linear';
+                progressBar.style.width = '0%';
+            }, 100);
+
+            window.modernToastTimeout = setTimeout(() => {
+                closeModernToast();
+            }, 10000);
+        }
+
+        window.closeModernToast = function() {
+            const toast = document.getElementById('modern-toast');
+            if (!toast) return;
+
+            clearTimeout(window.modernToastTimeout);
+            toast.style.transform = 'translate(-50%, -20px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if (toast) toast.remove();
+            }, 500);
+        };
+
+        // --- CHECK SESSION & TRIGGER TOAST KETIKA HALAMAN DIMUAT ---
+        @if(session('success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            showModernToast('{{ session("success") }}', 'success');
+        });
+        @endif
+
+        @if(session('error'))
+        document.addEventListener('DOMContentLoaded', function() {
+            showModernToast('{{ session("error") }}', 'error');
+        });
+        @endif
+
+
+        // 2. LOGIKA PILIH ALAT DAN AJAX FETCH
         const gymSelect = document.getElementById('gymSelect');
         const equipmentGrid = document.getElementById('equipmentGrid');
         const loadingMessage = document.getElementById('loadingMessage');
@@ -266,15 +339,9 @@
                     } else {
                         data.forEach(item => {
                             const card = document.createElement('div');
-
-                            // UBAH STYLE CARD: Padding lebih rapat (p-2), border lebih tegas
                             card.className = 'equipment-card border-2 border-gray-200 rounded-xl p-2 cursor-pointer hover:shadow-lg hover:border-primary bg-white flex flex-col items-center text-center transition-all duration-200 relative group';
                             card.onclick = () => selectEquipment(item.id, card);
 
-                            // UBAH UKURAN GAMBAR:
-                            // 1. h-32 (sebelumnya h-20) -> Gambar jadi jauh lebih besar
-                            // 2. object-contain -> Gambar tidak gepeng
-                            // 3. text-sm (sebelumnya text-xs) -> Tulisan lebih terbaca
                             card.innerHTML = `
                                 <div class="w-full h-32 bg-gray-50 rounded-lg mb-3 overflow-hidden flex items-center justify-center p-2 group-hover:bg-white transition-colors">
                                     <img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-contain drop-shadow-sm">
@@ -310,6 +377,23 @@
             element.classList.remove('border-gray-200');
             element.classList.add('selected');
         }
+
+        // 3. VALIDASI FORM SUBMIT (Cegah form terkirim jika alat belum dipilih)
+        document.getElementById('maintenanceForm').addEventListener('submit', function(e) {
+            if (!hiddenInput.value) {
+                e.preventDefault(); // Hentikan form agar tidak me-reload page
+
+                // Munculkan Modern Toast Error
+                showModernToast('Mohon pilih salah satu alat yang bermasalah pada grid yang tersedia.', 'error');
+
+                // Animasi kecil di teks "Mohon pilih salah satu alat diatas"
+                const errorText = document.getElementById('equipmentError');
+                errorText.classList.remove('hidden');
+                setTimeout(() => {
+                    errorText.classList.add('hidden');
+                }, 4000);
+            }
+        });
     </script>
 </body>
 

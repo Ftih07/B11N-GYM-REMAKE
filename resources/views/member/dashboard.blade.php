@@ -41,13 +41,92 @@
 
     <div class="container mx-auto p-6 max-w-7xl">
 
-        @if(session('success'))
-        <div class="bg-green-900/50 border border-green-600 text-green-200 p-4 rounded mb-6 flex items-center gap-3">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            {{ session('success') }}
+        {{-- MODERN TOAST NOTIFICATION (SUCCESS & ERROR) --}}
+        @if(session('success') || session('error'))
+        @php
+        $isSuccess = session()->has('success');
+        $message = $isSuccess ? session('success') : session('error');
+        $borderColor = $isSuccess ? 'border-green-600' : 'border-red-600';
+        $iconColor = $isSuccess ? 'text-green-500' : 'text-red-500';
+        $iconBg = $isSuccess ? 'bg-green-500/10' : 'bg-red-500/10';
+        $progressBg = $isSuccess ? 'bg-green-600' : 'bg-red-600';
+        @endphp
+
+        <div id="modern-toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 -translate-y-20 opacity-0 z-[100] transition-all duration-500 pointer-events-none w-max max-w-[90vw] sm:max-w-md">
+            <div class="bg-neutral-900 border {{ $borderColor }} shadow-2xl rounded-lg pointer-events-auto overflow-hidden relative">
+
+                {{-- Progress Bar --}}
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-neutral-800">
+                    <div id="toast-progress-bar" class="h-full w-full {{ $progressBg }}"></div>
+                </div>
+
+                <div class="p-4 flex items-center gap-4">
+                    {{-- Icon --}}
+                    <div class="{{ $iconBg }} p-2 rounded-full shrink-0">
+                        @if($isSuccess)
+                        <svg class="w-6 h-6 {{ $iconColor }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        @else
+                        <svg class="w-6 h-6 {{ $iconColor }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        @endif
+                    </div>
+
+                    {{-- Message --}}
+                    <div class="flex-1 text-sm font-medium text-white pr-4 leading-snug">
+                        {{ $message }}
+                    </div>
+
+                    {{-- Close Button --}}
+                    <button onclick="closeToast()" class="text-gray-500 hover:text-white transition shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toast = document.getElementById('modern-toast');
+                const progressBar = document.getElementById('toast-progress-bar');
+                let toastTimeout;
+
+                // 1. Trigger Animasi Masuk (Slide Down)
+                setTimeout(() => {
+                    toast.classList.remove('-translate-y-20', 'opacity-0');
+                    toast.classList.add('translate-y-0', 'opacity-100');
+                }, 50);
+
+                // 2. Mulai Animasi Progress Bar mundur (5 Detik)
+                setTimeout(() => {
+                    progressBar.style.transition = 'width 5s linear';
+                    progressBar.style.width = '0%';
+                }, 100);
+
+                // 3. Timer untuk hide otomatis setelah 5 detik
+                toastTimeout = setTimeout(() => {
+                    closeToast();
+                }, 5000);
+
+                // 4. Fungsi Close Manual (Bisa dipanggil klik tombol X atau dipanggil timer)
+                window.closeToast = function() {
+                    clearTimeout(toastTimeout);
+
+                    // Animasi Slide Up & Hilang
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('-translate-y-20', 'opacity-0');
+
+                    // Hapus dari DOM setelah animasi selesai
+                    setTimeout(() => {
+                        if (toast) toast.remove();
+                    }, 500);
+                }
+            });
+        </script>
         @endif
 
         {{-- LOGIC CEK MEMBER --}}
@@ -72,7 +151,7 @@
 
                         <div class="grid grid-cols-3 gap-3">
                             <div>
-                                <label class="block text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Pinggang</label>
+                                <label class="block text-gray-500 text-xs font-bold uppercase trackjing-wider mb-1">Pinggang</label>
                                 <input type="number" step="0.01" name="waist_size" class="w-full bg-neutral-900 border border-neutral-700 rounded p-3 text-white focus:border-primary transition text-sm" placeholder="cm">
                             </div>
                             <div>
@@ -182,14 +261,15 @@
                                             <button onclick="showNotes('{{ \Carbon\Carbon::parse($item->measured_at)->format('d M Y') }}', {{ json_encode($item->notes) }})" class="text-gray-400 hover:text-white text-[10px] font-bold border border-neutral-700 bg-neutral-800 px-2 py-1.5 rounded uppercase">Notes</button>
 
 
-                                            {{-- TOMBOL HAPUS (Langsung eksekusi pakai form) --}}
-                                            <form action="{{ route('measurements.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus progress ini? Data yang dihapus tidak bisa dikembalikan.');" class="inline">
+                                            {{-- TOMBOL HAPUS (DIPERBARUI MENGGUNAKAN CUSTOM MODAL) --}}
+                                            <form id="delete-form-{{ $item->id }}" action="{{ route('measurements.destroy', $item->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-400 hover:text-white text-[10px] font-bold border border-red-700 bg-red-900/20 px-2 py-1.5 rounded uppercase w-full sm:w-auto">
+                                                <button type="button" onclick="confirmDelete('delete-form-{{ $item->id }}')" class="text-red-400 hover:text-white text-[10px] font-bold border border-red-700 bg-red-900/20 px-2 py-1.5 rounded uppercase w-full sm:w-auto transition">
                                                     Hapus
                                                 </button>
                                             </form>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -203,7 +283,7 @@
                     </div>
                 </div>
 
-                <div id="notesModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                <div id="notesModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
                     <div class="bg-neutral-900 border border-neutral-800 p-6 rounded-lg max-w-sm w-full shadow-2xl">
                         <h4 id="notesDate" class="font-header text-primary font-bold uppercase tracking-widest text-sm mb-2"></h4>
                         <p id="notesContent" class="text-gray-300 text-sm leading-relaxed mb-6 italic"></p>
@@ -245,13 +325,10 @@
             </svg>
             <p class="text-yellow-500 font-bold mb-1">DATA MEMBER TIDAK DITEMUKAN</p>
 
-            {{-- Tambahin margin-bottom (mb-5) di teks ini biar ada jarak sama tombol --}}
             <p class="text-gray-400 text-sm mb-5">Email ini (<span class="text-white">{{ $user->email ?? 'Akun Anda' }}</span>) belum terdaftar di sistem gym kami. Hubungi resepsionis untuk aktivasi.</p>
 
-            {{-- Tombol Hubungi Admin --}}
             <a href="{{ $waLink }}" target="_blank" rel="noopener noreferrer"
                 class="inline-flex items-center justify-center px-5 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-white font-medium text-sm rounded-lg transition-colors duration-200 shadow-lg hover:shadow-yellow-500/20">
-                {{-- Ikon WhatsApp --}}
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
@@ -259,17 +336,14 @@
             </a>
         </div>
 
-        {{-- Script Real-Time Auto-Refresh --}}
         <script>
-            // Ngecek ke server setiap 3 detik (3000 ms)
             const checkInterval = setInterval(() => {
                 fetch('/api/check-membership-status')
                     .then(response => response.json())
                     .then(data => {
-                        // Kalau respon server bilang status = true (admin udah input)
                         if (data.status === true) {
-                            clearInterval(checkInterval); // Hentikan pengecekan
-                            window.location.reload(); // Refresh halaman otomatis!
+                            clearInterval(checkInterval);
+                            window.location.reload();
                         }
                     })
                     .catch(error => console.error('Error:', error));
@@ -342,26 +416,19 @@
                 <div class="px-6 py-6">
                     <form action="/payment/upload" method="POST" enctype="multipart/form-data">
                         @csrf
-                        {{-- Data ID --}}
                         <input type="hidden" name="member_id" value="{{ $member->id }}">
                         <input type="hidden" name="gym_id" value="{{ $member->gymkos_id }}">
-
-                        {{-- TAMBAHAN: Data Email & Phone yang diminta Controller (disembunyikan) --}}
                         <input type="hidden" name="email" value="{{ $user->email }}">
                         <input type="hidden" name="phone" value="{{ $member->phone ?? '08000000000' }}">
-
-                        {{-- TAMBAHAN: Data Tipe Membership (harus sama persis dengan switch case di Controller) --}}
                         <input type="hidden" name="membership_type" value="Member Bulanan">
 
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Nama</label>
-                                {{-- TAMBAHAN: Tambahkan atribut name="name" --}}
                                 <input type="text" name="name" value="{{ $member->name }}" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-gray-400 text-sm" readonly>
                             </div>
                             <div>
                                 <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Paket</label>
-                                {{-- Ini dibiarkan tanpa atribut 'name' karena cuma buat tampilan visual --}}
                                 <input type="text" value="Bulanan (90k)" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-primary font-bold text-sm" readonly>
                             </div>
                         </div>
@@ -407,7 +474,41 @@
     </div>
     @endif
 
+    <div id="custom-confirm-modal" class="fixed inset-0 z-[100] hidden flex items-start justify-center pt-14 pointer-events-none">
+        <div id="confirm-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-auto" onclick="closeConfirmModal()"></div>
+
+        <div id="confirm-box" class="bg-card border border-neutral-700 shadow-2xl rounded-lg w-full max-w-sm overflow-hidden transform -translate-y-10 opacity-0 transition-all duration-300 pointer-events-auto relative">
+            <div class="h-1 bg-neutral-800 w-full absolute top-0 left-0">
+                <div id="confirm-progress" class="h-full bg-red-600 w-full"></div>
+            </div>
+
+            <div class="p-5 mt-2">
+                <div class="flex items-start gap-4">
+                    <div class="text-red-500 bg-red-500/10 p-2 rounded-full shrink-0">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-header font-bold text-white">Konfirmasi Hapus</h3>
+                        <p class="text-sm text-gray-400 mt-1 leading-snug">Data yang dihapus tidak bisa dikembalikan. Lanjutkan?</p>
+                    </div>
+                    <button onclick="closeConfirmModal()" class="text-gray-500 hover:text-white transition shrink-0">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button onclick="closeConfirmModal()" class="px-4 py-2 text-xs uppercase font-bold text-gray-400 bg-neutral-800 hover:bg-neutral-700 rounded transition">Batal</button>
+                    <button id="confirm-btn" class="px-4 py-2 text-xs uppercase font-bold text-white bg-red-600 hover:bg-red-700 rounded transition shadow-lg shadow-red-900/50">Ya, Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // JS Untuk Modal Perpanjang Member
         function toggleModal(modalID) {
             const modal = document.getElementById(modalID);
             modal.classList.toggle('hidden');
@@ -433,6 +534,73 @@
                 transferDiv.classList.remove('hidden');
             }
         }
+
+        // JS Untuk Custom Confirmation Delete
+        let confirmTimeout;
+        let formToSubmitId = null;
+
+        function confirmDelete(formId) {
+            formToSubmitId = formId;
+            const modal = document.getElementById('custom-confirm-modal');
+            const backdrop = document.getElementById('confirm-backdrop');
+            const box = document.getElementById('confirm-box');
+            const progress = document.getElementById('confirm-progress');
+
+            // Tampilkan Modal
+            modal.classList.remove('hidden');
+
+            // Trigger Animasi Masuk
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                box.classList.remove('-translate-y-10', 'opacity-0');
+            }, 10);
+
+            // Reset Animasi Progress Bar
+            progress.style.transition = 'none';
+            progress.style.width = '100%';
+
+            // Mulai countdown bar (5 detik)
+            setTimeout(() => {
+                progress.style.transition = 'width 5s linear';
+                progress.style.width = '0%';
+            }, 50);
+
+            // Bersihkan timer lama (jika ada)
+            clearTimeout(confirmTimeout);
+
+            // Auto-close setelah 5 detik
+            confirmTimeout = setTimeout(() => {
+                closeConfirmModal();
+            }, 5000);
+        }
+
+        function closeConfirmModal() {
+            const backdrop = document.getElementById('confirm-backdrop');
+            const box = document.getElementById('confirm-box');
+            const progress = document.getElementById('confirm-progress');
+
+            // Trigger Animasi Keluar
+            backdrop.classList.add('opacity-0');
+            box.classList.add('-translate-y-10', 'opacity-0');
+
+            // Hentikan timer auto-close
+            clearTimeout(confirmTimeout);
+
+            // Sembunyikan div setelah animasi selesai (300ms)
+            setTimeout(() => {
+                document.getElementById('custom-confirm-modal').classList.add('hidden');
+                formToSubmitId = null;
+            }, 300);
+        }
+
+        // Jalankan eksekusi submit ketika tombol "Ya, Hapus" diklik
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('confirm-btn').addEventListener('click', () => {
+                if (formToSubmitId) {
+                    document.getElementById(formToSubmitId).submit();
+                }
+            });
+        });
     </script>
 
     @include('components.footer-compact')
