@@ -13,14 +13,8 @@ class Payment extends Model
 
     protected $fillable = ['order_id', 'member_id', 'name', 'image', 'membership_type', 'price', 'status', 'email', 'phone', 'payment'];
 
-    // --- TEMPORARY PROPERTY ---
-    // Used to pass Gym ID from Controller to the Model Event below.
-    // It is NOT stored in the 'payment_membership' table.
     public $gym_id_temporary = 1;
 
-    // --- RELATIONSHIPS ---
-
-    // Links to the main Transaction table (Polymorphic)
     public function transaction()
     {
         return $this->morphOne(Transaction::class, 'payable');
@@ -31,17 +25,11 @@ class Payment extends Model
         return $this->belongsTo(Member::class, 'member_id');
     }
 
-    // --- AUTO-LOGIC (THE MAGIC) ---
     protected static function booted()
     {
-        // Event: Triggered immediately after a Payment record is created
+        // ... Logika static::created(...) milikmu DIBIARKAN SAJA, JANGAN DIHAPUS ...
         static::created(function ($membership) {
-
-            // Retrieve the Gym ID passed from controller
             $gymId = $membership->gym_id_temporary ?? 1;
-
-            // 1. Create Financial Transaction Header
-            // This ensures the payment appears in the Finance Report/POS
             $transaction = $membership->transaction()->create([
                 'code'           => 'TRX-MEM-' . time(),
                 'total_amount'   => $membership->price,
@@ -51,8 +39,6 @@ class Payment extends Model
                 'customer_name'  => $membership->name,
             ]);
 
-            // 2. Find or Create Product (Virtual Product)
-            // Example name: "Membership Bulanan"
             $productName = 'Membership ' . ucfirst($membership->membership_type);
 
             $product = \App\Models\Product::firstOrCreate(
@@ -60,7 +46,7 @@ class Payment extends Model
                 [
                     'price'                => $membership->price,
                     'description'          => 'Auto generated from Online Membership',
-                    'stores_id'            => 3,       // Hardcoded for 'Gym Gabungan' Store
+                    'stores_id'            => 3,
                     'status'               => 'ready',
                     'image'                => null,
                     'serving_option'       => null,
@@ -68,7 +54,6 @@ class Payment extends Model
                 ]
             );
 
-            // 3. Link Product to Transaction Items
             \App\Models\TransactionItem::create([
                 'transaction_id' => $transaction->id,
                 'product_id'     => $product->id,
@@ -77,6 +62,15 @@ class Payment extends Model
                 'quantity'       => 1,
                 'subtotal'       => $membership->price,
             ]);
+        });
+
+        // --- TAMBAHAN BARU: EVENT SAAT PAYMENT DIHAPUS ---
+        static::deleting(function ($payment) {
+            // Hapus transaksi polymorphic yang terkait dengan payment ini.
+            // Karena relasi morphOne, kita bisa langsung memanggil ->delete()
+            if ($payment->transaction) {
+                $payment->transaction->delete();
+            }
         });
     }
 }

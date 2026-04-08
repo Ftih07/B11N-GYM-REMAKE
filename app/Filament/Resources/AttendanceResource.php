@@ -63,6 +63,14 @@ class AttendanceResource extends Resource
                             });
                     }),
 
+
+                TextColumn::make('member.gymkos.name')
+                    ->label('Lokasi Cabang')
+                    ->badge()
+                    ->color('primary')
+                    ->sortable()
+                    ->searchable(),
+
                 // 2. VISIT TYPE (Badges)
                 TextColumn::make('visit_type')
                     ->label('Tipe')
@@ -147,6 +155,13 @@ class AttendanceResource extends Resource
 
             // --- FILTERS ---
             ->filters([
+
+                SelectFilter::make('gymkos_id')
+                    ->relationship('member.gymkos', 'name') // Menggunakan dot notation
+                    ->label('Cabang Gym / Kos')
+                    ->searchable()
+                    ->preload(),
+
                 // Filter 1: By Visit Type
                 SelectFilter::make('visit_type')
                     ->label('Filter Tipe Kunjungan')

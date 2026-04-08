@@ -158,6 +158,14 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('join_date')
                     ->label('Tanggal Gabung')
                     ->date('d M Y'),
+
+                // TAMBAHAN: LOKASI CABANG (GYMKOS)
+                Tables\Columns\TextColumn::make('gymkos.name')
+                    ->label('Lokasi Cabang')
+                    ->badge()
+                    ->color('primary')
+                    ->sortable()
+                    ->searchable(),
             ])
 
             // --- AKSI HEADER: EXPORT EXCEL DINAMIS ---

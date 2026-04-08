@@ -23,12 +23,13 @@ class Booking extends Model
         return $this->morphOne(Transaction::class, 'payable');
     }
 
-    // --- AUTO-LOGIC ON CREATE ---
+    // --- AUTO-LOGIC ON CREATE & DELETE ---
     protected static function booted()
     {
+        // 1. EVENT SAAT BOOKING DIBUAT
         static::created(function ($booking) {
 
-            // 1. Create Transaction Header
+            // Create Transaction Header
             $transaction = $booking->transaction()->create([
                 'code'           => 'TRX-KOST-' . time(),
                 'total_amount'   => $booking->price,
@@ -38,7 +39,7 @@ class Booking extends Model
                 'customer_name'  => $booking->name,
             ]);
 
-            // 2. Find or Create Product (So it appears in reports)
+            // Find or Create Product (So it appears in reports)
             $product = \App\Models\Product::firstOrCreate(
                 ['name' => 'Sewa Kost - ' . $booking->room_type],
                 [
@@ -52,7 +53,7 @@ class Booking extends Model
                 ]
             );
 
-            // 3. Add Item Detail to Transaction
+            // Add Item Detail to Transaction
             \App\Models\TransactionItem::create([
                 'transaction_id' => $transaction->id,
                 'product_id'     => $product->id,
@@ -61,6 +62,14 @@ class Booking extends Model
                 'quantity'       => 1,
                 'subtotal'       => $booking->price,
             ]);
+        });
+
+        // --- TAMBAHAN BARU: EVENT SAAT BOOKING DIHAPUS ---
+        static::deleting(function ($booking) {
+            // Hapus transaksi polymorphic yang terkait dengan booking ini.
+            if ($booking->transaction) {
+                $booking->transaction->delete();
+            }
         });
     }
 }
