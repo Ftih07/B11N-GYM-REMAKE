@@ -2,40 +2,43 @@
 <html lang="id" class="scroll-smooth">
 
 <head>
-	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-	{{-- 1. TITLE --}}
-	<title>B11N Gym Purwokerto - Pusat Fitness & Gym Terlengkap & Murah</title>
+    {{-- 1. TITLE --}}
+    <title>B11N Gym Purwokerto - Pusat Fitness & Gym Terlengkap & Murah</title>
 
-	{{-- 2. META DESCRIPTION --}}
-	<meta name="description" content="Cari gym di Purwokerto? B11N Gym Arcawinangun menawarkan alat fitness lengkap, AC, Karaoke, dan Free Personal Trainer. Harian mulai Rp 10rb! Gabung sekarang.">
+    {{-- 2. META DESCRIPTION --}}
+    <meta name="description"
+        content="Cari gym di Purwokerto? B11N Gym Arcawinangun menawarkan alat fitness lengkap, AC, Karaoke, dan Free Personal Trainer. Harian mulai Rp 10rb! Gabung sekarang.">
 
-	{{-- 3. KEYWORDS --}}
-	<meta name="keywords" content="gym purwokerto, fitness center purwokerto, tempat gym murah purwokerto, gym arcawinangun, fitness muslimah purwokerto, member gym harian, B11N Gym">
+    {{-- 3. KEYWORDS --}}
+    <meta name="keywords"
+        content="gym purwokerto, fitness center purwokerto, tempat gym murah purwokerto, gym arcawinangun, fitness muslimah purwokerto, member gym harian, B11N Gym">
 
-	<meta name="author" content="B11N Gym Management">
-	<meta name="robots" content="index, follow">
-	<link rel="canonical" href="{{ url()->current() }}">
+    <meta name="author" content="B11N Gym Management">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
 
-	{{-- 4. GEO TAGS --}}
-	<meta name="geo.region" content="ID-JT" />
-	<meta name="geo.placename" content="Purwokerto" />
-	<meta name="geo.position" content="-7.4243;109.2391" />
-	<meta name="ICBM" content="-7.4243, 109.2391" />
+    {{-- 4. GEO TAGS --}}
+    <meta name="geo.region" content="ID-JT" />
+    <meta name="geo.placename" content="Purwokerto" />
+    <meta name="geo.position" content="-7.4243;109.2391" />
+    <meta name="ICBM" content="-7.4243, 109.2391" />
 
-	{{-- 5. OPEN GRAPH --}}
-	<meta property="og:type" content="business.business">
-	<meta property="og:title" content="B11N Gym Purwokerto - Give Up or Get Up">
-	<meta property="og:description" content="Gym premium harga rakyat. Fasilitas lengkap, nyaman, dan strategis di Arcawinangun.">
-	<meta property="og:url" content="{{ url()->current() }}">
-	<meta property="og:image" content="{{ asset('assets/home/biin-gym.jpg') }}">
-	<meta property="og:site_name" content="B11N Gym">
+    {{-- 5. OPEN GRAPH --}}
+    <meta property="og:type" content="business.business">
+    <meta property="og:title" content="B11N Gym Purwokerto - Give Up or Get Up">
+    <meta property="og:description"
+        content="Gym premium harga rakyat. Fasilitas lengkap, nyaman, dan strategis di Arcawinangun.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('assets/home/biin-gym.jpg') }}">
+    <meta property="og:site_name" content="B11N Gym">
 
-	{{-- 6. SCHEMA MARKUP --}}
-	<script type="application/ld+json">
+    {{-- 6. SCHEMA MARKUP --}}
+    <script type="application/ld+json">
 		{
 			"@context": "https://schema.org",
 			"@type": "ExerciseGym",
@@ -66,50 +69,52 @@
 		}
 	</script>
 
-	{{-- Favicon --}}
-	<link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/biin.png'))">
 
-	{{-- CSS Libraries (Bootstrap First to avoid override issues) --}}
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    {{-- CSS Libraries (Bootstrap First to avoid override issues) --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-	{{-- TAILWIND CDN & CONFIGURATION --}}
-	<script src="https://cdn.tailwindcss.com"></script>
-	<script>
-		tailwind.config = {
-			theme: {
-				extend: {
-					fontFamily: {
-						header: ['Oswald', 'sans-serif'],
-						body: ['Poppins', 'sans-serif'],
-						sans: ['Poppins', 'sans-serif'],
-						heading: ['Oswald', 'sans-serif'],
-					},
-					colors: {
-						primary: '#dc030a',
-						'primary-dark': 'rgb(135, 6, 12)',
-						'text-dark': '#0a0a0a',
-						'text-light': '#737373',
-						'brand-red': '#dc030a',
-						'brand-orange': '#f97316',
-						'brand-black': '#0a0a0a',
-						'brand-gray': '#171717',
-					}
-				}
-			},
-			// Penting agar tidak merusak komponen Bootstrap tertentu (opsional, bisa dihapus jika tampilan aman)
-			corePlugins: {
-				// preflight: false, // Uncomment jika tombol/input Bootstrap jadi aneh
-			}
-		}
-	</script>
+    {{-- TAILWIND CDN & CONFIGURATION --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        header: ['Oswald', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif'],
+                        heading: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#dc030a',
+                        'primary-dark': 'rgb(135, 6, 12)',
+                        'text-dark': '#0a0a0a',
+                        'text-light': '#737373',
+                        'brand-red': '#dc030a',
+                        'brand-orange': '#f97316',
+                        'brand-black': '#0a0a0a',
+                        'brand-gray': '#171717',
+                    }
+                }
+            },
+            // Penting agar tidak merusak komponen Bootstrap tertentu (opsional, bisa dihapus jika tampilan aman)
+            corePlugins: {
+                // preflight: false, // Uncomment jika tombol/input Bootstrap jadi aneh
+            }
+        }
+    </script>
 
-	{{-- CUSTOM CSS (Converted for CDN) --}}
-	<style type="text/tailwindcss">
-		/* Global & Variables */
+    {{-- CUSTOM CSS (Converted for CDN) --}}
+    <style type="text/tailwindcss">
+        /* Global & Variables */
         :root {
             --primary-color: #dc030a;
             --primary-color-dark: rgb(135, 6, 12);
@@ -126,12 +131,13 @@
             --light-color: #f7f7f7;
             --light-icon-color: #ffde59;
         }
-		
+
         /* Gallery */
         .gallery-thumbnail {
             cursor: pointer;
             transition: transform 0.2s ease;
         }
+
         .gallery-thumbnail:hover {
             transform: scale(1.05);
         }
@@ -141,10 +147,12 @@
             max-height: 70vh;
             object-fit: contain;
         }
+
         .modal-body {
             font-size: 1rem;
             line-height: 1.5;
         }
+
         .modal-title {
             font-weight: bold;
             font-size: 1.25rem;
@@ -207,18 +215,22 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Darkmode Overrides */
         .darkmode .btn {
             box-shadow: inset 0 8px 60px rgba(0, 0, 0, 0.3), inset 8px 0 8px rgba(0, 0, 0, 0.3), inset 0 -4px 4px rgba(0, 0, 0, 0.3);
         }
+
         .darkmode .btn__indicator {
             transform: translateX(2em);
             background-color: var(--white);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
         }
+
         .darkmode .btn__icon {
             color: var(--light-icon-color);
         }
@@ -229,10 +241,12 @@
             margin: auto;
             padding: 5rem 1rem;
         }
+
         .section__header {
             font-family: var(--header-font);
             color: var(--text-dark);
         }
+
         .section__description {
             color: var(--text-light);
         }
@@ -247,16 +261,20 @@
             transition: 0.3s;
             cursor: pointer;
         }
+
         .btn__primary {
             background-color: var(--primary-color);
         }
+
         .btn__primary:hover {
             background-color: var(--primary-color-dark);
         }
+
         .btn__secondary {
             background-color: transparent;
             border: 1px solid var(--white);
         }
+
         .btn__secondary:hover {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
@@ -268,10 +286,12 @@
             display: flex;
             width: 100%;
         }
+
         a {
             text-decoration: none;
             transition: 0.3s;
         }
+
         body {
             font-family: "Poppins", sans-serif;
         }
@@ -283,11 +303,13 @@
             width: 100%;
             z-index: 9;
         }
+
         .nav__bar {
             width: 100%;
             max-width: var(--max-width);
             margin-inline: auto;
         }
+
         .nav__header {
             padding: 1rem;
             display: flex;
@@ -295,17 +317,21 @@
             justify-content: space-between;
             background-color: var(--text-dark);
         }
+
         .nav__logo img {
             max-width: 90px;
         }
+
         .nav__menu__btn {
             font-size: 1.5rem;
             color: gray;
             cursor: pointer;
         }
+
         .darkmode.nav__menu__btn {
             color: var(--white);
         }
+
         .nav__links {
             position: absolute;
             top: 68px;
@@ -323,9 +349,11 @@
             z-index: -1;
             transform: translateY(-100%);
         }
+
         .nav__links.open {
             transform: translateY(0);
         }
+
         .nav__links a {
             font-size: 1.1rem;
             font-family: var(--header-font);
@@ -333,12 +361,15 @@
             color: rgb(131, 131, 131);
             transition: 0.3s;
         }
+
         .darkmode.nav__links a {
             color: rgb(188, 188, 188);
         }
+
         .nav__links a.active {
             color: red;
         }
+
         .nav__links a:hover {
             color: var(--primary-color);
         }
@@ -350,18 +381,22 @@
             background-position: center center;
             background-repeat: no-repeat;
         }
+
         .header__container {
             padding-block: 10rem;
             display: grid;
         }
+
         .header__content {
             margin-top: 5%;
         }
+
         .header__content_hero h1 {
             font-weight: 700;
             font-family: var(--header-font);
             line-height: 5rem;
         }
+
         .header__content h1 {
             font-size: 4.5rem;
             font-weight: 700;
@@ -369,6 +404,7 @@
             line-height: 5rem;
             color: var(--primary-color);
         }
+
         .header__content h2 {
             margin-bottom: 1rem;
             font-size: 2.5rem;
@@ -376,522 +412,977 @@
             font-family: var(--header-font);
             line-height: 3rem;
         }
+
         .header__content p {
             margin-bottom: 2rem;
         }
 
         /* About Section */
-        .about__header { text-align: center; }
-        .about__header .section__description { max-width: 650px; }
-        .about__grid { margin-top: 4rem; display: grid; gap: 4rem; }
+        .about__header {
+            text-align: center;
+        }
+
+        .about__header .section__description {
+            max-width: 650px;
+        }
+
+        .about__grid {
+            margin-top: 4rem;
+            display: grid;
+            gap: 4rem;
+        }
+
         .about__card h4 {
-            position: relative; isolation: isolate; margin-bottom: 1rem; padding-top: 4rem;
-            font-size: 1.5rem; font-weight: 600; font-family: var(--header-font);
+            position: relative;
+            isolation: isolate;
+            margin-bottom: 1rem;
+            padding-top: 4rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: var(--header-font);
         }
+
         .about__card h4::before {
-            position: absolute; bottom: 0; left: 0; font-size: 6rem; line-height: 6rem;
-            color: var(--text-dark); opacity: 0.1; z-index: -1;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            font-size: 6rem;
+            line-height: 6rem;
+            color: var(--text-dark);
+            opacity: 0.1;
+            z-index: -1;
         }
-        .about__card:nth-child(1) h4::before { content: "01"; }
-        .about__card:nth-child(2) h4::before { content: "02"; }
-        .about__card:nth-child(3) h4::before { content: "03"; }
-        .about__card:nth-child(4) h4::before { content: "04"; }
-        .about__card:nth-child(5) h4::before { content: "05"; }
-        .about__card:nth-child(6) h4::before { content: "06"; }
-        .about__card:nth-child(7) h4::before { content: "07"; }
-        .about__card:nth-child(8) h4::before { content: "08"; }
-        .about__card:nth-child(9) h4::before { content: "09"; }
-        .about__card p { color: var(--text-light); }
+
+        .about__card:nth-child(1) h4::before {
+            content: "01";
+        }
+
+        .about__card:nth-child(2) h4::before {
+            content: "02";
+        }
+
+        .about__card:nth-child(3) h4::before {
+            content: "03";
+        }
+
+        .about__card:nth-child(4) h4::before {
+            content: "04";
+        }
+
+        .about__card:nth-child(5) h4::before {
+            content: "05";
+        }
+
+        .about__card:nth-child(6) h4::before {
+            content: "06";
+        }
+
+        .about__card:nth-child(7) h4::before {
+            content: "07";
+        }
+
+        .about__card:nth-child(8) h4::before {
+            content: "08";
+        }
+
+        .about__card:nth-child(9) h4::before {
+            content: "09";
+        }
+
+        .about__card p {
+            color: var(--text-light);
+        }
 
         /* Session */
-        .session { display: grid; }
+        .session {
+            display: grid;
+        }
+
         .session__card {
-            padding: 5rem 2rem; text-align: center; background-size: cover; background-position: center center; background-repeat: no-repeat;
+            padding: 5rem 2rem;
+            text-align: center;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
         }
-        .session__card:nth-child(1) { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-1.jpg"); }
-        .session__card:nth-child(2) { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-2.jpg"); }
-        .session__card:nth-child(3) { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-3.jpg"); }
-        .session__card:nth-child(4) { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-4.jpg"); }
+
+        .session__card:nth-child(1) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-1.jpg");
+        }
+
+        .session__card:nth-child(2) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-2.jpg");
+        }
+
+        .session__card:nth-child(3) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-3.jpg");
+        }
+
+        .session__card:nth-child(4) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("assets/session-4.jpg");
+        }
+
         .session__card h4 {
-            position: relative; isolation: isolate; max-width: fit-content; margin-inline: auto; margin-bottom: 1rem;
-            font-size: 2rem; font-weight: 500; font-family: var(--header-font); color: var(--white);
+            position: relative;
+            isolation: isolate;
+            max-width: fit-content;
+            margin-inline: auto;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: 500;
+            font-family: var(--header-font);
+            color: var(--white);
         }
+
         .session__card h4::before {
-            position: absolute; content: ""; top: 0; left: -5px; height: 25px; aspect-ratio: 1; background-color: var(--primary-color); z-index: -1;
+            position: absolute;
+            content: "";
+            top: 0;
+            left: -5px;
+            height: 25px;
+            aspect-ratio: 1;
+            background-color: var(--primary-color);
+            z-index: -1;
         }
-        .session__card p { max-width: 350px; margin-inline: auto; margin-bottom: 2rem; color: var(--extra-light); }
+
+        .session__card p {
+            max-width: 350px;
+            margin-inline: auto;
+            margin-bottom: 2rem;
+            color: var(--extra-light);
+        }
 
         /* Trainer */
         .trainer__grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            justify-content: center;
         }
-        .trainer__card img { margin-bottom: 1rem; }
+
+        .trainer__card img {
+            margin-bottom: 1rem;
+        }
+
         .trainer__card h4 {
-            font-size: 1.5rem; font-weight: 500; font-family: var(--header-font); color: var(--text-dark); text-align: center;
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: var(--header-font);
+            color: var(--text-dark);
+            text-align: center;
         }
-        .trainer__card p { margin-bottom: 1rem; color: var(--text-light); text-align: center; }
-        .trainer__socials { display: flex; align-items: center; justify-content: center; gap: 1rem; }
-        .trainer__socials a { font-size: 1.25rem; color: var(--text-light); }
-        .trainer__socials a:hover { color: var(--primary-color); }
+
+        .trainer__card p {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .trainer__socials {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .trainer__socials a {
+            font-size: 1.25rem;
+            color: var(--text-light);
+        }
+
+        .trainer__socials a:hover {
+            color: var(--primary-color);
+        }
 
         /* Membership */
         .membership {
             background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("public/assets/membership.jpg");
-            background-size: cover; background-position: center center; background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
         }
-        .membership__container .section__header { color: var(--white); }
-        .membership__grid { margin-top: 4rem; display: grid; gap: 1rem; }
-        .membership__card { padding: 1rem; background-color: rgba(0, 0, 0, 0.6); transition: 0.3s; }
-        .membership__card:hover { background-color: #dc030a; }
+
+        .membership__container .section__header {
+            color: var(--white);
+        }
+
+        .membership__grid {
+            margin-top: 4rem;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .membership__card {
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            transition: 0.3s;
+        }
+
+        .membership__card:hover {
+            background-color: #dc030a;
+        }
+
         .membership__card h4 {
-            margin-bottom: 2rem; font-size: 1.75rem; font-weight: 500; font-family: var(--header-font); color: var(--white);
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+            font-weight: 500;
+            font-family: var(--header-font);
+            color: var(--white);
         }
-        .membership__card ul { margin-bottom: 1rem; list-style: none; display: grid; gap: 1rem; }
-        .membership__card li { display: flex; gap: 10px; color: var(--white); }
-        .membership__card li span { font-size: 1.2rem; font-weight: 600; color: var(--primary-color); transition: 0.3s; }
-        .membership__card:hover li span { color: var(--white); }
+
+        .membership__card ul {
+            margin-bottom: 1rem;
+            list-style: none;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .membership__card li {
+            display: flex;
+            gap: 10px;
+            color: var(--white);
+        }
+
+        .membership__card li span {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: 0.3s;
+        }
+
+        .membership__card:hover li span {
+            color: var(--white);
+        }
+
         .membership__card h3 {
-            margin-bottom: 1rem; font-size: 3rem; font-weight: 400; font-family: var(--header-font); color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            font-weight: 400;
+            font-family: var(--header-font);
+            color: var(--white);
         }
-        .membership__card h3 :is(sup, span) { font-size: 1.5rem; font-weight: 400; }
-        .membership__card:hover .btn { background-color: var(--text-dark); color: white; }
+
+        .membership__card h3 :is(sup, span) {
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+
+        .membership__card:hover .btn {
+            background-color: var(--text-dark);
+            color: white;
+        }
 
         /* Swiper/Testimonial */
-        .swiper { margin-top: 2rem; padding-bottom: 3rem; width: 100%; }
-        .client__card { max-width: 600px; margin-inline: auto; text-align: center; }
-        .client__card img {
-            max-width: 100px; margin-inline: auto; margin-bottom: 1rem; border: 2px solid var(--primary-color); border-radius: 100%;
+        .swiper {
+            margin-top: 2rem;
+            padding-bottom: 3rem;
+            width: 100%;
         }
-        .client__card > div { font-size: 2rem; line-height: 2rem; color: var(--text-light); opacity: 0.5; }
-        .client__card p { margin-bottom: 1rem; color: var(--text-light); }
-        .client__card h4 { font-size: 1.2rem; font-weight: 600; color: var(--text-dark); }
-        .swiper-pagination-bullet { height: 12px; width: 12px; }
-        .swiper-pagination-bullet-active { background-color: var(--primary-color); }
+
+        .client__card {
+            max-width: 600px;
+            margin-inline: auto;
+            text-align: center;
+        }
+
+        .client__card img {
+            max-width: 100px;
+            margin-inline: auto;
+            margin-bottom: 1rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 100%;
+        }
+
+        .client__card>div {
+            font-size: 2rem;
+            line-height: 2rem;
+            color: var(--text-light);
+            opacity: 0.5;
+        }
+
+        .client__card p {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .client__card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .swiper-pagination-bullet {
+            height: 12px;
+            width: 12px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background-color: var(--primary-color);
+        }
 
         /* Blog */
-        .blog { background-color: var(--text-dark); }
-        .blog__container .section__header { color: var(--white); }
-        .blog__grid { margin-top: 4rem; display: grid; gap: 1rem; }
-        .blog__card img { margin-bottom: 10px; }
+        .blog {
+            background-color: var(--text-dark);
+        }
+
+        .blog__container .section__header {
+            color: var(--white);
+        }
+
+        .blog__grid {
+            margin-top: 4rem;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .blog__card img {
+            margin-bottom: 10px;
+        }
+
         .blog__card h4 {
-            max-width: calc(100% - 1rem); font-size: 1.2rem; font-weight: 400; font-family: var(--header-font); color: var(--dark-color); transition: 0.3s;
+            max-width: calc(100% - 1rem);
+            font-size: 1.2rem;
+            font-weight: 400;
+            font-family: var(--header-font);
+            color: var(--dark-color);
+            transition: 0.3s;
         }
-        .darkmode.blog__card h4 { color: var(--white); }
-        .blog__card:hover h4 { color: var(--primary-color); }
+
+        .darkmode.blog__card h4 {
+            color: var(--white);
+        }
+
+        .blog__card:hover h4 {
+            color: var(--primary-color);
+        }
+
         .blog__card h5 {
-            max-width: calc(100% - 1rem); font-size: 1.2rem; font-weight: 400; font-family: var(--header-font); color: var(--white); transition: 0.3s;
+            max-width: calc(100% - 1rem);
+            font-size: 1.2rem;
+            font-weight: 400;
+            font-family: var(--header-font);
+            color: var(--white);
+            transition: 0.3s;
         }
-        .darkmode.blog__card h5 { color: var(--white); }
-        .blog__card:hover h5 { color: var(--primary-color); }
-        .blog__btn { margin-top: 4rem; text-align: center; }
+
+        .darkmode.blog__card h5 {
+            color: var(--white);
+        }
+
+        .blog__card:hover h5 {
+            color: var(--primary-color);
+        }
+
+        .blog__btn {
+            margin-top: 4rem;
+            text-align: center;
+        }
 
         /* Footer */
-        .footer { background-color: var(--text-dark); }
-        .darkmode .footer { background-color: var(--text-dark); }
-        .footer__container { display: grid; gap: 4rem 2rem; }
-        .footer__logo img { margin-bottom: 1rem; max-width: 120px; }
-        .footer_contact { color: white; }
+        .footer {
+            background-color: var(--text-dark);
+        }
+
+        .darkmode .footer {
+            background-color: var(--text-dark);
+        }
+
+        .footer__container {
+            display: grid;
+            gap: 4rem 2rem;
+        }
+
+        .footer__logo img {
+            margin-bottom: 1rem;
+            max-width: 120px;
+        }
+
+        .footer_contact {
+            color: white;
+        }
+
         .footer_contact h4 {
-            margin-bottom: 1rem; font-size: 1.5rem; font-weight: 500; font-family: var(--header-font); color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: var(--header-font);
+            color: var(--white);
         }
-        .footer_contact .border-b { border-bottom: 1px dotted #6b7280; padding-bottom: 12px; margin-bottom: 16px; }
-        .footer_contact p { color: #9ca3af; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .footer_contact i { font-size: 1.25rem; }
-        .footer__col p { margin-bottom: 2rem; color: var(--text-light); }
-        .footer__links { list-style: none; display: grid; gap: 1rem; }
-        .footer__links a { color: var(--text-light); }
-        .footer__links a:hover { color: var(--white); }
-        .footer__links a span { margin-right: 10px; font-size: 1.2rem; color: var(--primary-color); }
+
+        .footer_contact .border-b {
+            border-bottom: 1px dotted #6b7280;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .footer_contact p {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer_contact i {
+            font-size: 1.25rem;
+        }
+
+        .footer__col p {
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .footer__links {
+            list-style: none;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .footer__links a {
+            color: var(--text-light);
+        }
+
+        .footer__links a:hover {
+            color: var(--white);
+        }
+
+        .footer__links a span {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
         .footer__col h4 {
-            margin-bottom: 1rem; font-size: 1.5rem; font-weight: 500; font-family: var(--header-font); color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: var(--header-font);
+            color: var(--white);
         }
-        .gallery__grid { max-width: 350px; gap: 10px; }
+
+        .gallery__grid {
+            max-width: 350px;
+            gap: 10px;
+        }
+
         .footer__col form {
-            margin-bottom: 2rem; width: 100%; max-width: 400px; display: flex; align-items: center; justify-content: center; background-color: var(--white); border-radius: 2px;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            border-radius: 2px;
         }
-        .footer__col input { width: 100%; padding-inline: 1rem; outline: none; border: none; color: var(--text-dark); }
-        .footer__socials { display: flex; align-items: center; gap: 1rem; }
+
+        .footer__col input {
+            width: 100%;
+            padding-inline: 1rem;
+            outline: none;
+            border: none;
+            color: var(--text-dark);
+        }
+
+        .footer__socials {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .footer__socials a {
-            padding: 5px 10px; font-size: 1.25rem; color: var(--primary-color); background-color: var(--white); border-radius: 100%;
+            padding: 5px 10px;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            background-color: var(--white);
+            border-radius: 100%;
         }
-        .footer__socials a:hover { color: var(--white); background-color: var(--primary-color); }
-        .footer__bar { padding: 2rem; font-size: 0.9rem; color: var(--text-light); text-align: center; }
+
+        .footer__socials a:hover {
+            color: var(--white);
+            background-color: var(--primary-color);
+        }
+
+        .footer__bar {
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+        }
 
         /* Media Queries */
         @media (max-width: 768px) {
-            .header { background-position: right center; }
-            .header__content h1 { font-size: 2.5rem; line-height: 3.5rem; }
+            .header {
+                background-position: right center;
+            }
+
+            .header__content h1 {
+                font-size: 2.5rem;
+                line-height: 3.5rem;
+            }
         }
 
         @media (width > 540px) {
-            .about__grid { grid-template-columns: repeat(2, 1fr); }
-            .session__card { padding: 7rem 2rem; }
-            .trainer__grid { grid-template-columns: repeat(2, 1fr); }
-            .membership__grid { grid-template-columns: repeat(2, 1fr); }
-            .blog__grid { grid-template-columns: repeat(2, 1fr); }
-            .footer__container { grid-template-columns: repeat(1, 1fr); }
+            .about__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .session__card {
+                padding: 7rem 2rem;
+            }
+
+            .trainer__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .membership__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .blog__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer__container {
+                grid-template-columns: repeat(1, 1fr);
+            }
         }
 
         @media (width > 768px) {
-            .header__container { padding-block: 12rem; grid-template-columns: repeat(2, 1fr); }
-            .header__content { grid-column: 2/3; }
-            .about__header { grid-template-columns: repeat(2, 1fr); gap: 2rem; align-items: center; }
-            .about__grid { grid-template-columns: repeat(3, 1fr); }
-            .session { grid-template-columns: repeat(2, 1fr); }
-            .session__card { padding: 10rem 2rem; }
-            .trainer__grid { grid-template-columns: repeat(4, 1fr); }
-            .membership__grid { grid-template-columns: repeat(3, 1fr); }
-            .blog__grid { grid-template-columns: repeat(4, 1fr); }
-            .logo__banner { grid-template-columns: repeat(4, 1fr); }
-            .footer__container { grid-template-columns: repeat(3, 1fr); }
+            .header__container {
+                padding-block: 12rem;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header__content {
+                grid-column: 2/3;
+            }
+
+            .about__header {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+                align-items: center;
+            }
+
+            .about__grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .session {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .session__card {
+                padding: 10rem 2rem;
+            }
+
+            .trainer__grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .membership__grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .blog__grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .logo__banner {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .footer__container {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @media (width > 1024px) {
-            nav { position: static; padding: 1.5rem 1rem; }
-            .nav__bar { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
-            .nav__header { padding: 0; background-color: transparent; }
-            .nav__logo img { max-width: 120px; }
-            .nav__menu__btn { display: none; }
-            .nav__links {
-                position: static; padding: 0; flex-direction: row; justify-content: flex-end; background-color: transparent; transform: none; z-index: 1;
+            nav {
+                position: static;
+                padding: 1.5rem 1rem;
             }
-            .trainer__grid, .membership__grid { gap: 2rem; }
-            .membership__card { padding: 2rem; }
+
+            .nav__bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 2rem;
+            }
+
+            .nav__header {
+                padding: 0;
+                background-color: transparent;
+            }
+
+            .nav__logo img {
+                max-width: 120px;
+            }
+
+            .nav__menu__btn {
+                display: none;
+            }
+
+            .nav__links {
+                position: static;
+                padding: 0;
+                flex-direction: row;
+                justify-content: flex-end;
+                background-color: transparent;
+                transform: none;
+                z-index: 1;
+            }
+
+            .trainer__grid,
+            .membership__grid {
+                gap: 2rem;
+            }
+
+            .membership__card {
+                padding: 2rem;
+            }
         }
     </style>
 
-	<style>
-		/* 1. Paksa Muncul Pas Hover (Desktop) */
-		@media (min-width: 768px) {
-			.dropdown:hover .dropdown-menu {
-				display: block;
-				animation: slideUp 0.2s ease-out forwards;
-			}
-		}
+    <style>
+        /* 1. Paksa Muncul Pas Hover (Desktop) */
+        @media (min-width: 768px) {
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                animation: slideUp 0.2s ease-out forwards;
+            }
+        }
 
-		@keyframes slideUp {
-			from {
-				opacity: 0;
-				transform: translateY(10px);
-			}
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
-			to {
-				opacity: 1;
-				transform: translateY(0);
-			}
-		}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-		/* 2. Styling Container Dropdown (BIAR DARK & RAPI) */
-		.custom-dropdown-menu {
-			border: none;
-			border-top: 4px solid #dc030a;
-			/* Merah di atas */
-			background-color: #0a0a0a;
-			/* HITAM (Brand Black) biar nyatu sama navbar */
-			border-radius: 0 0 8px 8px;
-			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-			/* Shadow lebih gelap */
-			padding: 8px 0;
-			min-width: 220px;
-			/* Sedikit lebih lebar */
+        /* 2. Styling Container Dropdown (BIAR DARK & RAPI) */
+        .custom-dropdown-menu {
+            border: none;
+            border-top: 4px solid #dc030a;
+            /* Merah di atas */
+            background-color: #0a0a0a;
+            /* HITAM (Brand Black) biar nyatu sama navbar */
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            /* Shadow lebih gelap */
+            padding: 8px 0;
+            min-width: 220px;
+            /* Sedikit lebih lebar */
 
-			display: none;
-			position: absolute;
-			/* KUNCI POSISI: */
-			top: 100%;
-			/* Muncul pas di bawah container parent */
-			left: 0;
-			margin-top: 0;
-			z-index: 9999;
-		}
+            display: none;
+            position: absolute;
+            /* KUNCI POSISI: */
+            top: 100%;
+            /* Muncul pas di bawah container parent */
+            left: 0;
+            margin-top: 0;
+            z-index: 9999;
+        }
 
-		/* 3. Styling Item (Link) */
-		.custom-dropdown-item {
-			display: block;
-			padding: 12px 20px;
-			font-family: "Poppins", sans-serif;
-			font-size: 0.9rem;
-			color: #d1d5db;
-			/* Abu-abu terang (Gray-300) */
-			border-bottom: 1px solid #1f2937;
-			/* Garis pemisah tipis gelap */
-			transition: all 0.2s;
-			background-color: transparent;
-			/* Pastikan transparan */
-		}
+        /* 3. Styling Item (Link) */
+        .custom-dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            font-family: "Poppins", sans-serif;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            /* Abu-abu terang (Gray-300) */
+            border-bottom: 1px solid #1f2937;
+            /* Garis pemisah tipis gelap */
+            transition: all 0.2s;
+            background-color: transparent;
+            /* Pastikan transparan */
+        }
 
-		/* Hover Effect per Item */
-		.custom-dropdown-item:hover {
-			background-color: #171717;
-			/* Sedikit lebih terang pas dihover */
-			color: #dc030a;
-			/* Teks jadi merah */
-			text-decoration: none;
-			padding-left: 24px;
-			/* Geser dikit biar dinamis */
-		}
+        /* Hover Effect per Item */
+        .custom-dropdown-item:hover {
+            background-color: #171717;
+            /* Sedikit lebih terang pas dihover */
+            color: #dc030a;
+            /* Teks jadi merah */
+            text-decoration: none;
+            padding-left: 24px;
+            /* Geser dikit biar dinamis */
+        }
 
-		.custom-dropdown-item:last-child {
-			border-bottom: none;
-		}
+        .custom-dropdown-item:last-child {
+            border-bottom: none;
+        }
 
-		/* Hilangkan panah bawaan Bootstrap */
-		.dropdown-toggle::after {
-			display: none !important;
-		}
-	</style>
+        /* Hilangkan panah bawaan Bootstrap */
+        .dropdown-toggle::after {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body>
-	@include('components.global-loader')
+    @include('components.global-loader')
 
-	{{-- CUSTOM NAVBAR --}}
-	<nav class="fixed top-0 left-0 w-full z-50 bg-white/95 text-gray-800 dark:text-white dark:bg-brand-black/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 h-20">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-			<div class="flex items-center justify-between h-full">
+    {{-- CUSTOM NAVBAR --}}
+    <nav
+        class="fixed top-0 left-0 w-full z-50 bg-white/95 text-gray-800 dark:text-white dark:bg-brand-black/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 h-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex items-center justify-between h-full">
 
-				{{-- LOGO --}}
-				<div class="flex-shrink-0 flex items-center">
-					<a href="{{ route('home') }}" class="flex items-center gap-3">
-						<img class="h-10 w-auto object-contain" src="{{ asset('assets/Logo/empire.png') }}" alt="B1NG Empire Logo">
-						<span class="font-heading font-bold text-xl uppercase tracking-wider sm:block text-gray-900 dark:text-white">B1NG Empire</span>
-					</a>
-				</div>
+                {{-- LOGO (Tidak di-lazy load karena di atas) --}}
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="{{ route('home') }}" class="flex items-center gap-3">
+                        <img class="h-10 w-auto object-contain" src="{{ asset('assets/Logo/empire.png') }}"
+                            alt="B1NG Empire Logo">
+                        <span
+                            class="font-heading font-bold text-xl uppercase tracking-wider sm:block text-gray-900 dark:text-white">B1NG
+                            Empire</span>
+                    </a>
+                </div>
 
-				{{-- DESKTOP MENU (TENGAH) --}}
-				<div class="hidden md:flex flex-1 justify-center ml-10">
-					<div class="flex items-center space-x-6">
-						@foreach($navMenus as $menu)
-						{{-- WRAPPER DROPDOWN ASLI KAMU --}}
-						<div class="dropdown relative h-20 flex items-center group">
-							<a href="{{ route($menu['route']) }}"
-								class="dropdown-toggle font-heading uppercase text-sm tracking-widest hover:text-brand-red transition-colors py-2 flex items-center gap-1
+                {{-- DESKTOP MENU (TENGAH) --}}
+                <div class="hidden md:flex flex-1 justify-center ml-10">
+                    <div class="flex items-center space-x-6">
+                        @foreach ($navMenus as $menu)
+                            {{-- WRAPPER DROPDOWN ASLI KAMU --}}
+                            <div class="dropdown relative h-20 flex items-center group">
+                                <a href="{{ route($menu['route']) }}"
+                                    class="dropdown-toggle font-heading uppercase text-sm tracking-widest hover:text-brand-red transition-colors py-2 flex items-center gap-1
                             {{ Route::currentRouteName() === $menu['route'] ? 'text-brand-red font-bold' : 'text-gray-800 dark:text-white' }}"
-								@if(!empty($menu['submenu'])) role="button" @endif>
-								{{ $menu['label'] }}
-								@if(!empty($menu['submenu']))
-								<i class="fas fa-chevron-down text-[10px] opacity-50 group-hover:opacity-100 transition-opacity ml-1"></i>
-								@endif
-							</a>
+                                    @if (!empty($menu['submenu'])) role="button" @endif>
+                                    {{ $menu['label'] }}
+                                    @if (!empty($menu['submenu']))
+                                        <i
+                                            class="fas fa-chevron-down text-[10px] opacity-50 group-hover:opacity-100 transition-opacity ml-1"></i>
+                                    @endif
+                                </a>
 
-							@if(!empty($menu['submenu']))
-							{{-- CLASS ASLI KAMU: custom-dropdown-menu --}}
-							<ul class="dropdown-menu custom-dropdown-menu">
-								@foreach($menu['submenu'] as $sub)
-								<li>
-									<a class="custom-dropdown-item" href="{{ $sub['url'] }}">
-										{{ $sub['label'] }}
-									</a>
-								</li>
-								@endforeach
-							</ul>
-							@endif
-						</div>
-						@endforeach
-					</div>
-				</div>
+                                @if (!empty($menu['submenu']))
+                                    {{-- CLASS ASLI KAMU: custom-dropdown-menu --}}
+                                    <ul class="dropdown-menu custom-dropdown-menu">
+                                        @foreach ($menu['submenu'] as $sub)
+                                            <li>
+                                                <a class="custom-dropdown-item" href="{{ $sub['url'] }}">
+                                                    {{ $sub['label'] }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
 
-				{{-- BAGIAN KANAN: LOGIN / PROFILE (PAKAI STRUKTUR DROPDOWN YG SAMA) --}}
-				<div class="hidden md:flex items-center gap-4 ml-4">
-					@guest
-					{{-- Tombol Login Biasa --}}
-					<a href="{{ route('login') }}" class="px-5 py-2 border border-brand-red text-brand-red hover:bg-brand-red hover:text-white rounded font-heading font-bold uppercase tracking-widest text-xs transition">
-						Login
-					</a>
-					@else
-					{{-- DROPDOWN PROFILE (Di-copy dari struktur menu kamu biar jalannya sama) --}}
-					<div class="dropdown relative h-20 flex items-center group">
+                {{-- BAGIAN KANAN: LOGIN / PROFILE --}}
+                <div class="hidden md:flex items-center gap-4 ml-4">
+                    @guest
+                        <a href="{{ route('login') }}"
+                            class="px-5 py-2 border border-brand-red text-brand-red hover:bg-brand-red hover:text-white rounded font-heading font-bold uppercase tracking-widest text-xs transition">
+                            Login
+                        </a>
+                    @else
+                        <div class="dropdown relative h-20 flex items-center group">
+                            <a href="#" class="dropdown-toggle flex items-center gap-3 focus:outline-none py-2"
+                                role="button">
+                                <div class="text-right hidden xl:block">
+                                    <p class="text-sm font-bold font-heading uppercase text-gray-800 dark:text-white">
+                                        {{ Auth::user()->name }}</p>
+                                </div>
+                                <img class="h-9 w-9 rounded border border-gray-300 dark:border-gray-600 object-cover"
+                                    src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=DC2626&color=fff' }}">
+                                <i
+                                    class="fas fa-chevron-down text-[10px] opacity-50 group-hover:opacity-100 transition-opacity ml-1 text-gray-500"></i>
+                            </a>
 
-						{{-- Trigger: Foto & Nama --}}
-						<a href="#" class="dropdown-toggle flex items-center gap-3 focus:outline-none py-2" role="button">
-							<div class="text-right hidden xl:block">
-								<p class="text-sm font-bold font-heading uppercase text-gray-800 dark:text-white">{{ Auth::user()->name }}</p>
-							</div>
-							<img class="h-9 w-9 rounded border border-gray-300 dark:border-gray-600 object-cover"
-								src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=DC2626&color=fff' }}">
-							<i class="fas fa-chevron-down text-[10px] opacity-50 group-hover:opacity-100 transition-opacity ml-1 text-gray-500"></i>
-						</a>
+                            <ul class="dropdown-menu custom-dropdown-menu custom-dropdown-menu-right">
+                                <li>
+                                    <a class="custom-dropdown-item" href="{{ route('dashboard') }}">
+                                        <i class="fas fa-chart-line mr-2"></i> Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="custom-dropdown-item" href="{{ route('attendance') }}">
+                                        <i class="fas fa-qrcode mr-2"></i> Riwayat Absensi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="custom-dropdown-item" href="{{ route('profile') }}">
+                                        <i class="fas fa-user-cog mr-2"></i> Edit Profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider border-t border-gray-200 dark:border-gray-700 my-1">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="custom-dropdown-item w-full text-left text-red-500 font-bold">
+                                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    @endguest
+                </div>
 
-						{{-- Menu: Pakai class 'dropdown-menu custom-dropdown-menu' punya kamu --}}
-						<ul class="dropdown-menu custom-dropdown-menu custom-dropdown-menu-right"> {{-- Tambahkan class 'custom-dropdown-menu-right' di CSS kalau mau rata kanan --}}
-							<li>
-								<a class="custom-dropdown-item" href="{{ route('dashboard') }}">
-									<i class="fas fa-chart-line mr-2"></i> Dashboard
-								</a>
-							</li>
-							<li>
-								<a class="custom-dropdown-item" href="{{ route('attendance') }}">
-									<i class="fas fa-qrcode mr-2"></i> Riwayat Absensi
-								</a>
-							</li>
-							<li>
-								<a class="custom-dropdown-item" href="{{ route('profile') }}">
-									<i class="fas fa-user-cog mr-2"></i> Edit Profil
-								</a>
-							</li>
-							<li>
-								<hr class="dropdown-divider border-t border-gray-200 dark:border-gray-700 my-1">
-							</li>
-							<li>
-								<form method="POST" action="{{ route('logout') }}">
-									@csrf
-									<button type="submit" class="custom-dropdown-item w-full text-left text-red-500 font-bold">
-										<i class="fas fa-sign-out-alt mr-2"></i> Logout
-									</button>
-								</form>
-							</li>
-						</ul>
-					</div>
-					@endguest
-				</div>
+                {{-- MOBILE MENU BUTTON --}}
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn"
+                        class="relative w-10 h-10 flex items-center justify-center text-gray-800 dark:text-white hover:text-brand-red focus:outline-none">
+                        <i id="nav-icon-bars"
+                            class="fas fa-bars text-2xl transition-all duration-300 transform scale-100 opacity-100 absolute"></i>
+                        <i id="nav-icon-times"
+                            class="fas fa-times text-2xl transition-all duration-300 transform scale-0 opacity-0 absolute"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-				{{-- MOBILE MENU BUTTON (ASLI) --}}
-				<div class="md:hidden flex items-center">
-					<button id="mobile-menu-btn" class="relative w-10 h-10 flex items-center justify-center text-gray-800 dark:text-white hover:text-brand-red focus:outline-none">
-						<i id="nav-icon-bars" class="fas fa-bars text-2xl transition-all duration-300 transform scale-100 opacity-100 absolute"></i>
-						<i id="nav-icon-times" class="fas fa-times text-2xl transition-all duration-300 transform scale-0 opacity-0 absolute"></i>
-					</button>
-				</div>
-			</div>
-		</div>
+        {{-- MOBILE MENU --}}
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-black dark:bg-brand-gray border-t border-gray-200 dark:border-gray-700 absolute w-full left-0 shadow-lg h-[calc(100vh-80px)] overflow-y-auto pb-20">
+            <div class="px-4 pt-6 pb-2">
+                @guest
+                    <a href="{{ route('login') }}"
+                        class="block w-full text-center bg-brand-red text-white font-heading font-bold py-3 rounded mb-4 uppercase tracking-widest shadow-md">
+                        Login Member
+                    </a>
+                @else
+                    <div
+                        class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-black/30 rounded-lg mb-4 border border-gray-200 dark:border-gray-600">
+                        <img class="h-12 w-12 rounded object-cover"
+                            src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=DC2626&color=fff' }}">
+                        <div>
+                            <div class="text-sm font-bold font-heading uppercase text-gray-800 dark:text-white">
+                                {{ Auth::user()->name }}</div>
+                            <div class="text-xs text-brand-red font-bold uppercase tracking-wide">Member Area</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <a href="{{ route('dashboard') }}"
+                            class="text-center py-3 bg-black dark:bg-brand-black text-gray-600 dark:text-gray-300 rounded border border-gray-200 dark:border-gray-600 text-xs font-bold uppercase shadow-sm hover:border-brand-red hover:text-brand-red transition">
+                            Dashboard
+                        </a>
+                        <a href="{{ route('attendance') }}"
+                            class="text-center py-3 bg-black dark:bg-brand-black text-gray-600 dark:text-gray-300 rounded border border-gray-200 dark:border-gray-600 text-xs font-bold uppercase shadow-sm hover:border-brand-red hover:text-brand-red transition">
+                            Riwayat Absensi
+                        </a>
+                    </div>
+                    <div class="border-b border-gray-100 dark:border-gray-700 mb-2"></div>
+                @endguest
+            </div>
 
-		{{-- MOBILE MENU (ASLI + LOGIC MEMBER) --}}
-		<div id="mobile-menu" class="hidden md:hidden bg-black dark:bg-brand-gray border-t border-gray-200 dark:border-gray-700 absolute w-full left-0 shadow-lg h-[calc(100vh-80px)] overflow-y-auto pb-20">
+            <div class="px-4 space-y-1">
+                @foreach ($navMenus as $index => $menu)
+                    <div class="border-b border-gray-100 dark:border-gray-700 last:border-0">
+                        @if (empty($menu['submenu']))
+                            <a href="{{ route($menu['route']) }}"
+                                class="block px-3 py-4 text-base font-heading uppercase tracking-widest {{ Route::currentRouteName() === $menu['route'] ? 'text-brand-red font-bold' : 'text-gray-800 dark:text-white' }}">
+                                {{ $menu['label'] }}
+                            </a>
+                        @else
+                            <button onclick="toggleMobileSubmenu('submenu-{{ $index }}')"
+                                class="w-full flex justify-between items-center px-3 py-4 text-base font-heading uppercase tracking-widest text-gray-800 dark:text-white hover:text-brand-red focus:outline-none">
+                                <span>{{ $menu['label'] }}</span>
+                                <i id="icon-submenu-{{ $index }}"
+                                    class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                            </button>
+                            <div id="submenu-{{ $index }}"
+                                class="hidden bg-gray-50 dark:bg-black/20 pl-6 pr-3 py-2 space-y-2 mb-2">
+                                @foreach ($menu['submenu'] as $sub)
+                                    <a href="{{ $sub['url'] }}"
+                                        class="block py-2 text-sm font-sans text-gray-600 dark:text-gray-300 hover:text-brand-red">
+                                        <i class="fas fa-angle-right mr-2 text-brand-red text-xs"></i>
+                                        {{ $sub['label'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
 
-			{{-- SHORTCUT MEMBER (PALING ATAS) --}}
-			<div class="px-4 pt-6 pb-2">
-				@guest
-				<a href="{{ route('login') }}" class="block w-full text-center bg-brand-red text-white font-heading font-bold py-3 rounded mb-4 uppercase tracking-widest shadow-md">
-					Login Member
-				</a>
-				@else
-				<div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-black/30 rounded-lg mb-4 border border-gray-200 dark:border-gray-600">
-					<img class="h-12 w-12 rounded object-cover" src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=DC2626&color=fff' }}">
-					<div>
-						<div class="text-sm font-bold font-heading uppercase text-gray-800 dark:text-white">{{ Auth::user()->name }}</div>
-						<div class="text-xs text-brand-red font-bold uppercase tracking-wide">Member Area</div>
-					</div>
-				</div>
-				<div class="grid grid-cols-2 gap-3 mb-6">
-					<a href="{{ route('dashboard') }}" class="text-center py-3 bg-black dark:bg-brand-black text-gray-600 dark:text-gray-300 rounded border border-gray-200 dark:border-gray-600 text-xs font-bold uppercase shadow-sm hover:border-brand-red hover:text-brand-red transition">
-						Dashboard
-					</a>
-					<a href="{{ route('attendance') }}" class="text-center py-3 bg-black dark:bg-brand-black text-gray-600 dark:text-gray-300 rounded border border-gray-200 dark:border-gray-600 text-xs font-bold uppercase shadow-sm hover:border-brand-red hover:text-brand-red transition">
-						Riwayat Absensi
-					</a>
-				</div>
-				<div class="border-b border-gray-100 dark:border-gray-700 mb-2"></div>
-				@endguest
-			</div>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" class="pt-6 pb-4">
+                        @csrf
+                        <button type="submit"
+                            class="block w-full text-center px-3 py-3 rounded border border-red-200 dark:border-red-900/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold uppercase text-sm transition">
+                            Logout
+                        </button>
+                    </form>
+                @endauth
+            </div>
+        </div>
+    </nav>
 
-			{{-- LOOPING MENU BAWAAN --}}
-			<div class="px-4 space-y-1">
-				@foreach($navMenus as $index => $menu)
-				<div class="border-b border-gray-100 dark:border-gray-700 last:border-0">
-					@if(empty($menu['submenu']))
-					<a href="{{ route($menu['route']) }}" class="block px-3 py-4 text-base font-heading uppercase tracking-widest {{ Route::currentRouteName() === $menu['route'] ? 'text-brand-red font-bold' : 'text-gray-800 dark:text-white' }}">
-						{{ $menu['label'] }}
-					</a>
-					@else
-					<button onclick="toggleMobileSubmenu('submenu-{{ $index }}')" class="w-full flex justify-between items-center px-3 py-4 text-base font-heading uppercase tracking-widest text-gray-800 dark:text-white hover:text-brand-red focus:outline-none">
-						<span>{{ $menu['label'] }}</span>
-						<i id="icon-submenu-{{ $index }}" class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
-					</button>
-					<div id="submenu-{{ $index }}" class="hidden bg-gray-50 dark:bg-black/20 pl-6 pr-3 py-2 space-y-2 mb-2">
-						@foreach($menu['submenu'] as $sub)
-						<a href="{{ $sub['url'] }}" class="block py-2 text-sm font-sans text-gray-600 dark:text-gray-300 hover:text-brand-red">
-							<i class="fas fa-angle-right mr-2 text-brand-red text-xs"></i> {{ $sub['label'] }}
-						</a>
-						@endforeach
-					</div>
-					@endif
-				</div>
-				@endforeach
+    {{-- NAVBAR JAVASCRIPT --}}
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const iconBars = document.getElementById('nav-icon-bars');
+        const iconTimes = document.getElementById('nav-icon-times');
 
-				@auth
-				<form method="POST" action="{{ route('logout') }}" class="pt-6 pb-4">
-					@csrf
-					<button type="submit" class="block w-full text-center px-3 py-3 rounded border border-red-200 dark:border-red-900/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 font-bold uppercase text-sm transition">
-						Logout
-					</button>
-				</form>
-				@endauth
-			</div>
-		</div>
-	</nav>
+        if (btn && menu) {
+            btn.addEventListener('click', () => {
+                const isHidden = menu.classList.toggle('hidden');
 
-	{{-- NAVBAR JAVASCRIPT --}}
-	<script>
-		// --- Navbar Mobile Toggle (UPDATED) ---
-		const btn = document.getElementById('mobile-menu-btn');
-		const menu = document.getElementById('mobile-menu');
-		const iconBars = document.getElementById('nav-icon-bars');
-		const iconTimes = document.getElementById('nav-icon-times');
+                if (isHidden) {
+                    iconBars.classList.remove('scale-0', 'opacity-0');
+                    iconBars.classList.add('scale-100', 'opacity-100');
 
-		if (btn && menu) {
-			btn.addEventListener('click', () => {
-				const isHidden = menu.classList.toggle('hidden');
+                    iconTimes.classList.remove('scale-100', 'opacity-100');
+                    iconTimes.classList.add('scale-0', 'opacity-0');
+                } else {
+                    iconBars.classList.remove('scale-100', 'opacity-100');
+                    iconBars.classList.add('scale-0', 'opacity-0');
 
-				if (isHidden) {
-					// MENU TUTUP → tampilkan BARS
-					iconBars.classList.remove('scale-0', 'opacity-0');
-					iconBars.classList.add('scale-100', 'opacity-100');
+                    iconTimes.classList.remove('scale-0', 'opacity-0');
+                    iconTimes.classList.add('scale-100', 'opacity-100');
+                }
+            });
+        }
 
-					iconTimes.classList.remove('scale-100', 'opacity-100');
-					iconTimes.classList.add('scale-0', 'opacity-0');
-				} else {
-					// MENU BUKA → tampilkan TIMES
-					iconBars.classList.remove('scale-100', 'opacity-100');
-					iconBars.classList.add('scale-0', 'opacity-0');
+        const mobileLinks = document.querySelectorAll('#mobile-menu a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
+                    iconBars.classList.remove('scale-0', 'opacity-0');
+                    iconBars.classList.add('scale-100', 'opacity-100');
+                    iconTimes.classList.remove('scale-100', 'opacity-100');
+                    iconTimes.classList.add('scale-0', 'opacity-0');
+                }
+            });
+        });
 
-					iconTimes.classList.remove('scale-0', 'opacity-0');
-					iconTimes.classList.add('scale-100', 'opacity-100');
-				}
-			});
-		}
+        function toggleMobileSubmenu(id) {
+            const submenu = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
 
-		// --- FITUR BARU: Auto Close Saat Klik Link ---
-		const mobileLinks = document.querySelectorAll('#mobile-menu a');
+            if (submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                submenu.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
 
-		mobileLinks.forEach(link => {
-			link.addEventListener('click', () => {
-				// Cek jika menu sedang terbuka (tidak hidden), baru kita tutup
-				if (!menu.classList.contains('hidden')) {
-					menu.classList.add('hidden');
-
-					// Reset Icon ke Bars
-					iconBars.classList.remove('scale-0', 'opacity-0');
-					iconBars.classList.add('scale-100', 'opacity-100');
-
-					// Sembunyikan Icon Times
-					iconTimes.classList.remove('scale-100', 'opacity-100');
-					iconTimes.classList.add('scale-0', 'opacity-0');
-				}
-			});
-		});
-
-		// --- Mobile Submenu Accordion ---
-		function toggleMobileSubmenu(id) {
-			const submenu = document.getElementById(id);
-			const icon = document.getElementById('icon-' + id);
-
-			if (submenu.classList.contains('hidden')) {
-				submenu.classList.remove('hidden');
-				icon.classList.add('rotate-180');
-			} else {
-				submenu.classList.add('hidden');
-				icon.classList.remove('rotate-180');
-			}
-		}
-	</script>
-
-	{{-- HERO --}}
-	<section id="header">
-		<header class="header">
-			<div class="relative flex items-center justify-center h-screen bg-black text-white"
-				style="
+    {{-- HERO --}}
+    <section id="header">
+        <header class="header">
+            <div class="relative flex items-center justify-center h-screen bg-black text-white"
+                style="
         background-image: linear-gradient(
-            rgba(0, 0, 0, 0.5),  /* Lapisan gelap di atas */
+            rgba(0, 0, 0, 0.5), 
             rgba(0, 0, 0, 0.5)
         ),
         linear-gradient(
@@ -905,215 +1396,226 @@
         background-position: center center;
         background-repeat: no-repeat;
         ">
+                <div class="header__content_hero relative text-center px-4 sm:px-8 md:px-12 lg:px-16">
+                    <h1 class="text-4xl sm:text-6xl md:text-6xl lg:text-7xl font-extrabold">
+                        <span class="text-red-600">B11N GYM</span><br>
+                        PURWOKERTO
+                    </h1>
+                    <p class="mt-2 text-lg md:text-xl font-base">Premium Fitness Studio | GIVE UP OR GET UP</p>
+                    <div class="header__btn">
+                        <a href="#membership">
+                            <button class="btn btn__primary mt-3">GET STARTED</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </section>
 
-				<div class="header__content_hero relative text-center px-4 sm:px-8 md:px-12 lg:px-16">
-					<h1 class="text-4xl sm:text-6xl md:text-6xl lg:text-7xl font-extrabold">
-						<span class="text-red-600">B11N GYM</span><br>
-						PURWOKERTO
-					</h1>
-					<p class="mt-2 text-lg md:text-xl font-base">Premium Fitness Studio | GIVE UP OR GET UP</p>
-					<div class="header__btn">
-						<a href="#membership">
-							<button class="btn btn__primary mt-3">GET STARTED</button>
-						</a>
-					</div>
-				</div>
-			</div>
-		</header>
-	</section>
+    {{-- ABOUT US --}}
+    <section class="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="about">
+        <div class="about__header text-center">
+            <h2
+                class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">
+                Tentang Kami</h2>
+            <p class="section__description mx-auto text-center text-base sm:text-base md:text-base">
+                Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur. Kami
+                menawarkan keanggotaan harian, mingguan, dan bulanan dengan harga terjangkau. Fasilitas kami meliputi
+                peralatan gym lengkap, ruang istirahat ber-AC, ruang karaoke, dan loker yang aman. B11N Gym bukan hanya
+                tempat berolahraga, tapi juga ruang untuk membangun komunitas hidup sehat yang menyenangkan.
+            </p>
+        </div>
+        <div class="about__grid">
+            @foreach ($about as $about)
+                <div class="about__card">
+                    <h4 class="uppercase">{{ $about->title }}</h4>
+                    <p>
+                        {{ $about->description }}
+                    </p>
+                </div>
+            @endforeach
+        </div>
+    </section>
 
-	{{-- ABOUT US --}}
-	<section class="max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="about">
-		<div class="about__header text-center">
-			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">Tentang Kami</h2>
-			<p class="section__description mx-auto text-center text-base sm:text-base md:text-base">
-				Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur. Kami menawarkan keanggotaan harian, mingguan, dan bulanan dengan harga terjangkau. Fasilitas kami meliputi peralatan gym lengkap, ruang istirahat ber-AC, ruang karaoke, dan loker yang aman. B11N Gym bukan hanya tempat berolahraga, tapi juga ruang untuk membangun komunitas hidup sehat yang menyenangkan.
-			</p>
-		</div>
-		<div class="about__grid">
-			@foreach ($about as $about)
-			<div class="about__card">
-				<h4 class="uppercase">{{ $about->title }}</h4>
-				<p>
-					{{ $about->description }}
-				</p>
-			</div>
-			@endforeach
-		</div>
-	</section>
+    {{-- FACILITY --}}
+    <section class="max-w-[1200px] mx-auto px-4 py-20" id="facility">
+        <div class="about__header text-center">
+            <h2
+                class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">
+                Fasilitas Kami
+            </h2>
+        </div>
+        <div class="container mx-auto px-0 md:px-4 py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                @foreach ($facilities as $facility)
+                    <div
+                        class="about__card bg-white border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center justify-center text-white rounded-full mx-auto -mb-16">
+                            {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                            <img src="{{ asset('storage/' . $facility->image) }}" alt="{{ $facility->title }}"
+                                loading="lazy" class="object-cover w-28 h-28" />
+                        </div>
+                        <h4 class="text-center text-red-600 mb-2 uppercase">{{ $facility->title }}</h4>
+                        <p class="text-gray-600 text-sm text-center">
+                            {{ $facility->description }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 
-	{{-- FACILITY --}}
-	<section class="max-w-[1200px] mx-auto px-4 py-20" id="facility">
-		<div class="about__header text-center">
-			<h2 class="section__header text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-header text-text-dark font-semibold mb-8">
-				Fasilitas Kami
-			</h2>
-		</div>
-		<div class="container mx-auto px-0 md:px-4 py-12">
-			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-				@foreach ($facilities as $facility)
-				<div class="about__card bg-white border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-					<div class="flex items-center justify-center text-white rounded-full mx-auto -mb-16">
-						<img
-							src="{{ asset('storage/' . $facility->image) }}"
-							alt="{{ $facility->title }}"
-							class="object-cover w-28 h-28" />
-					</div>
-					<h4 class="text-center text-red-600 mb-2 uppercase">{{ $facility->title }}</h4>
-					<p class="text-gray-600 text-sm text-center">
-						{{ $facility->description }}
-					</p>
-				</div>
-				@endforeach
-			</div>
-		</div>
-	</section>
+    {{-- TRAINING PROGRAM --}}
+    <section class="py-8" id="training">
+        @foreach ($groupedTrainingPrograms as $categoryId => $trainingPrograms)
+            @php
+                $categoryTitle = $categories[$categoryId]->title ?? 'Unknown Category';
+            @endphp
+            <div class="category-group">
+                <div class="text-center">
+                    <h3 class="text-2xl font-semibold text-white bg-black pt-8 pb-8">{{ $categoryTitle }}</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-0">
+                    @foreach ($trainingPrograms as $trainingprogram)
+                        <div class="session__card bg-cover bg-center p-6 relative h-[30rem]"
+                            style="background-image:  linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),url('{{ asset('storage/' . $trainingprogram->image) }}');">
+                            <h4 class="text-xl font-bold text-white uppercase">{{ $trainingprogram->title }}</h4>
+                            <p class="text-white mt-4">
+                                {{ \Illuminate\Support\Str::words(strip_tags($trainingprogram->description), 15, '...') }}
+                            </p>
+                            <button class="btn btn__secondary" data-bs-toggle="modal"
+                                data-bs-target="#modal-{{ $trainingprogram->id }}">
+                                READ MORE <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
 
-	{{-- TRAINING PROGRAM --}}
-	<section class="py-8" id="training">
-		@foreach ($groupedTrainingPrograms as $categoryId => $trainingPrograms)
-		@php
-		$categoryTitle = $categories[$categoryId]->title ?? 'Unknown Category'; // Judul kategori
-		@endphp
-		<div class="category-group">
-			<div class="text-center">
-				<h3 class="text-2xl font-semibold text-white bg-black pt-8 pb-8">{{ $categoryTitle }}</h3>
-			</div>
-			<div class="grid grid-cols-1 sm:grid-cols-2 gap-0">
-				@foreach ($trainingPrograms as $trainingprogram)
-				<div class="session__card bg-cover bg-center p-6 relative h-[30rem]"
-					style="background-image:  linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),url('{{ asset('storage/' . $trainingprogram->image) }}');">
-					<h4 class="text-xl font-bold text-white uppercase">{{ $trainingprogram->title }}</h4>
-					<p class="text-white mt-4">
-						{{ \Illuminate\Support\Str::words(strip_tags($trainingprogram->description), 15, '...') }}
-					</p>
-					<button class="btn btn__secondary" data-bs-toggle="modal" data-bs-target="#modal-{{ $trainingprogram->id }}">
-						READ MORE <i class="ri-arrow-right-line"></i>
-					</button>
-				</div>
+                        <div class="modal fade" id="modal-{{ $trainingprogram->id }}" tabindex="-1"
+                            aria-labelledby="modalLabel-{{ $trainingprogram->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content rounded-lg shadow-lg">
+                                    <div class="modal-header bg-gray-100 p-4 rounded-t-lg">
+                                        <h5 class="modal-title text-xl font-semibold"
+                                            id="modalLabel-{{ $trainingprogram->id }}">{{ $trainingprogram->title }}
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-6">
+                                        {!! $trainingprogram->description !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+    </section>
 
-				<div class="modal fade" id="modal-{{ $trainingprogram->id }}" tabindex="-1" aria-labelledby="modalLabel-{{ $trainingprogram->id }}" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content rounded-lg shadow-lg">
-							<div class="modal-header bg-gray-100 p-4 rounded-t-lg">
-								<h5 class="modal-title text-xl font-semibold" id="modalLabel-{{ $trainingprogram->id }}">{{ $trainingprogram->title }}</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-							<div class="modal-body p-6">
-								{!! $trainingprogram->description !!}
-							</div>
-						</div>
-					</div>
-				</div>
-				@endforeach
-			</div>
-		</div>
-		@endforeach
-	</section>
+    {{-- GYM EQUIPMENT --}}
+    <section class="py-20 bg-white text-gray-900" id="equipments">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-2 font-['Oswald']">
+                    Gym Equipments
+                    <span class="text-red-600">& Tutorials</span>
+                </h2>
+                <div class="w-24 h-1.5 bg-red-600 mx-auto mt-4"></div>
+                <p class="text-gray-600 mt-6 max-w-2xl mx-auto font-light text-lg">
+                    Kenali alat-alat kami dan pelajari cara penggunaannya yang benar demi hasil maksimal.
+                </p>
+            </div>
 
-	{{-- GYM EQUIPMENT --}}
-	<section class="py-20 bg-white text-gray-900" id="equipments">
-		<div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                @foreach ($featuredEquipments as $item)
+                    @php
+                        $thumbnail = $item->gallery->first()
+                            ? asset('storage/' . $item->gallery->first()->file_path)
+                            : 'https://placehold.co/600x400?text=No+Image';
+                    @endphp
 
-			{{-- HEADER --}}
-			<div class="text-center mb-16">
-				<h2 class="text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-2 font-['Oswald']">
-					Gym Equipments
-					<span class="text-red-600">& Tutorials</span>
-				</h2>
+                    <div
+                        class="group bg-white border border-gray-200 hover:border-gray-400 transition-all duration-300 relative shadow-sm hover:shadow-xl">
+                        <div class="relative h-64 overflow-hidden bg-gray-100">
+                            {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                            <img src="{{ $thumbnail }}" alt="{{ $item->name }}" loading="lazy"
+                                class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 grayscale group-hover:grayscale-0">
 
-				<div class="w-24 h-1.5 bg-red-600 mx-auto mt-4"></div>
+                            <div
+                                class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-widest font-['Oswald']">
+                                {{ $item->category }}
+                            </div>
 
-				<p class="text-gray-600 mt-6 max-w-2xl mx-auto font-light text-lg">
-					Kenali alat-alat kami dan pelajari cara penggunaannya yang benar demi hasil maksimal.
-				</p>
-			</div>
+                            <div
+                                class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                                <a href="{{ route('gym.equipments.show', $item->slug) }}"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 font-bold uppercase tracking-wide
+                                      transform translate-y-4 group-hover:translate-y-0 transition duration-300 shadow-lg
+                                      flex items-center gap-2 rounded-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                                    </svg>
+                                    Watch Tutorial
+                                </a>
+                            </div>
+                        </div>
 
-			{{-- GRID --}}
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-				@foreach($featuredEquipments as $item)
-				@php
-				$thumbnail = $item->gallery->first()
-				? asset('storage/' . $item->gallery->first()->file_path)
-				: 'https://placehold.co/600x400?text=No+Image';
-				@endphp
+                        <div class="p-6">
+                            <h3
+                                class="text-2xl font-bold text-gray-900 mb-2 uppercase font-['Oswald'] group-hover:text-red-600 transition-colors">
+                                {{ $item->name }}
+                            </h3>
+                            <div class="w-10 h-1 bg-gray-200 mb-3 group-hover:bg-red-600 transition-colors"></div>
+                            <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                                {{ $item->description }}
+                            </p>
+                        </div>
+                        <div
+                            class="h-1 w-0 group-hover:w-full bg-red-600 transition-all duration-500 absolute bottom-0 left-0">
+                        </div>
+                    </div>
+                @endforeach
+            </div>
 
-				<div class="group bg-white border border-gray-200 hover:border-gray-400 transition-all duration-300 relative shadow-sm hover:shadow-xl">
+            <div class="text-center">
+                <a href="{{ route('gym.equipments.index') }}"
+                    class="inline-block border-2 border-black text-black px-10 py-3 font-bold uppercase tracking-widest font-['Oswald'] text-lg hover:bg-black hover:!text-white transition duration-300">
+                    View All Equipments
+                </a>
+            </div>
+        </div>
+    </section>
 
-					<div class="relative h-64 overflow-hidden bg-gray-100">
-						<img src="{{ $thumbnail }}" alt="{{ $item->name }}"
-							class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 grayscale group-hover:grayscale-0">
+    {{-- TRAINER --}}
+    <section class="trainer__container max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="trainer">
+        <h2
+            class="section__header text-2xl sm:text-3xl md:text-3xl lg:text-3xl font-semibold font-header text-text-dark text-center">
+            MEET OUR TRAINERS</h2>
+        <div class="trainer__grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+            @foreach ($trainer as $trainer)
+                <div
+                    class="trainer__card text-center border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
+                    {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                    <img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" loading="lazy"
+                        class="h-50 w-full object-cover mb-4 rounded-md" />
+                    <h4 class="text-lg sm:text-xl md:text-2xl font-semibold">{{ $trainer->name }}</h4>
+                    <p class="text-sm sm:text-base md:text-lg text-gray-600">{{ $trainer->description }}</p>
+                    <div class="trainer__socials flex justify-center mt-4 gap-4">
+                        <a href="{{ $trainer->urls['facebook'] ?? '#' }}" target="_blank"><i
+                                class="ri-facebook-fill"></i></a>
+                        <a href="{{ $trainer->urls['whatsapp'] ?? '#' }}"><i class="ri-whatsapp-fill"></i></a>
+                        <a href="{{ $trainer->urls['instagram'] ?? '#' }}"><i class="ri-instagram-fill"></i></a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
 
-						<div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-widest font-['Oswald']">
-							{{ $item->category }}
-						</div>
-
-						<div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-[2px]">
-							<a href="{{ route('gym.equipments.show', $item->slug) }}"
-								class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 font-bold uppercase tracking-wide
-									  transform translate-y-4 group-hover:translate-y-0 transition duration-300 shadow-lg
-									  flex items-center gap-2 rounded-sm">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-									stroke="currentColor" stroke-width="2">
-									<path stroke-linecap="round" stroke-linejoin="round"
-										d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-								</svg>
-								Watch Tutorial
-							</a>
-						</div>
-					</div>
-
-					<div class="p-6">
-						<h3 class="text-2xl font-bold text-gray-900 mb-2 uppercase font-['Oswald']
-								   group-hover:text-red-600 transition-colors">
-							{{ $item->name }}
-						</h3>
-
-						<div class="w-10 h-1 bg-gray-200 mb-3 group-hover:bg-red-600 transition-colors"></div>
-
-						<p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
-							{{ $item->description }}
-						</p>
-					</div>
-
-					<div class="h-1 w-0 group-hover:w-full bg-red-600 transition-all duration-500 absolute bottom-0 left-0"></div>
-				</div>
-				@endforeach
-			</div>
-
-			{{-- CTA --}}
-			<div class="text-center">
-				<a href="{{ route('gym.equipments.index') }}"
-					class="inline-block border-2 border-black text-black px-10 py-3 font-bold uppercase tracking-widest font-['Oswald'] text-lg hover:bg-black hover:!text-white transition duration-300">
-					View All Equipments
-				</a>
-			</div>
-
-		</div>
-	</section>
-
-	{{-- TRAINER --}}
-	<section class="trainer__container max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="trainer">
-		<h2 class="section__header text-2xl sm:text-3xl md:text-3xl lg:text-3xl font-semibold font-header text-text-dark text-center">MEET OUR TRAINERS</h2>
-		<div class="trainer__grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
-			@foreach ($trainer as $trainer)
-			<div class="trainer__card text-center border border-gray-200 rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
-				<img src="{{ asset('storage/' . $trainer->image) }}" alt="{{ $trainer->name }}" class="h-50 w-full object-cover mb-4 rounded-md" />
-				<h4 class="text-lg sm:text-xl md:text-2xl font-semibold">{{ $trainer->name }}</h4>
-				<p class="text-sm sm:text-base md:text-lg text-gray-600">{{ $trainer->description }}</p>
-				<div class="trainer__socials flex justify-center mt-4 gap-4">
-					<a href="{{ $trainer->urls['facebook'] ?? '#' }}" target="_blank"><i class="ri-facebook-fill"></i></a>
-					<a href="{{ $trainer->urls['whatsapp'] ?? '#' }}"><i class="ri-whatsapp-fill"></i></a>
-					<a href="{{ $trainer->urls['instagram'] ?? '#' }}"><i class="ri-instagram-fill"></i></a>
-				</div>
-			</div>
-			@endforeach
-		</div>
-	</section>
-
-	{{-- MEMEBRSHIP --}}
-	<section class="membership"
-		style="
+    {{-- MEMBERSHIP --}}
+    <section class="membership"
+        style="
         background-image: linear-gradient(
              to top,
              rgba(0, 0, 0, 0.2),
@@ -1123,689 +1625,557 @@
          background-size: cover;
         background-position: center center;
          background-repeat: no-repeat;
-     " id="membership">
-		<div class="membership__container max-w-[1200px] mx-auto px-4 py-20">
-			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEMBERSHIP</h2>
-			<div class="membership__grid grid grid-cols-1 md:grid-cols-3 gap-6">
-				<div class="membership__card">
-					<h4>Harian</h4>
-					<ul>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Satu hari akses penuh di B11N & K1NG Gym Purwokerto
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Akses bebas untuk semua peralatan gym.
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Free personal trainer.
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Akses bebas untuk semua peralatan
-						</li>
-						<li>
-							<span><i class="ri-close-line"></i></span>
-							Free biaya pendaftaran
-						</li>
-						<li>
-							<span><i class="ri-close-line"></i></span>
-							Masuk sebagai member dari B11N & K1NG Gym
-						</li>
-					</ul>
-					<h3><sup>Rp</sup>10.000<span>/hari</span></h3>
-					<button class="btn btn__primary" class="btn btn__primary" onclick="openPaymentModal('Harian')">
-						Beli Sekarang</button>
-				</div>
-				<div class="membership__card">
-					<h4>Mingguan</h4>
-					<ul>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Satu hari akses penuh di B11N & K1NG Gym Purwokerto
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Akses bebas untuk semua peralatan gym.
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Free personal trainer.
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Akses bebas untuk semua peralatan
-						</li>
-						<li>
-							<span><i class="ri-close-line"></i></span>
-							Free biaya pendaftaran
-						</li>
-						<li>
-							<span><i class="ri-close-line"></i></span>
-							Masuk sebagai member dari B11N & K1NG Gym
-						</li>
-					</ul>
-					<h3><sup>Rp</sup>35.000<span>/minggu</span></h3>
-					<button class="btn btn__primary" class="btn btn__primary" onclick="openPaymentModal('Mingguan')">
-						Beli Sekarang</button>
-				</div>
-				<div class="membership__card">
-					<h4>Bulanan</h4>
-					<ul>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Satu hari akses penuh di B11N & K1NG Gym Purwokerto
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Akses bebas untuk semua peralatan gym.
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Free personal trainer.
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Akses bebas untuk semua peralatan
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Free biaya pendaftaran
-						</li>
-						<li>
-							<span><i class="ri-check-line"></i></span>
-							Masuk sebagai member dari B11N & K1NG Gym
-						</li>
-					</ul>
-					<h3><sup>Rp</sup>90.000<span>/Bulan</span></h3>
-					<button
-						class="btn btn__primary" onclick="openPaymentModal('Bulanan')">
-						Beli Sekarang
-					</button>
-				</div>
-
-				{{-- MODAL 1: PILIH METODE PEMBAYARAN --}}
-				<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-lg">
-						<div class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
-
-							<div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
-								<h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl" id="paymentModalLabel">
-									Metode Pembayaran <span class="text-[#DC2626] ml-1" id="membershipTitle"></span>
-								</h5>
-								<button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100 transition" data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-
-							<div class="modal-body p-6">
-
-								{{-- TAMPILAN PILIH METODE --}}
-								<div id="paymentOptions">
-									<p class="text-sm text-gray-400 mb-4 text-center">Silakan pilih metode pembayaran yang Anda inginkan:</p>
-									<div class="grid grid-cols-2 gap-4">
-										{{-- Card Pilihan QRIS --}}
-										<div onclick="selectPaymentMethod('qris')" class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
-											<img src="/assets/img/pembayaran/qris.png" alt="QRIS" class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
-											<span class="text-white font-bold text-sm uppercase tracking-wider block">Bayar via QRIS</span>
-										</div>
-
-										{{-- Card Pilihan Transfer --}}
-										<div onclick="selectPaymentMethod('transfer')" class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
-											<img src="/assets/img/pembayaran/bca.png" alt="Transfer Bank" class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
-											<span class="text-white font-bold text-sm uppercase tracking-wider block">Transfer BCA</span>
-										</div>
-									</div>
-								</div>
-
-								{{-- TAMPILAN QRIS --}}
-								<div id="qrisPayment" class="d-none">
-									<h5 class="text-center font-bold text-white mb-4">
-										Scan QRIS <span class="text-[#DC2626] block text-sm mt-1" id="qrisMembershipTitle"></span>
-									</h5>
-
-									<div class="flex justify-center mb-4">
-										<div class="bg-white p-4 rounded-xl border-4 border-neutral-800 shadow-xl max-w-[250px] w-full">
-											<img src="/assets/img/pembayaran/qris-barcode.png" alt="QRIS Barcode" class="img-fluid w-full" />
-										</div>
-									</div>
-
-									<p class="text-center text-sm text-gray-400 mb-6">
-										Scan kode QR di atas menggunakan aplikasi m-Banking atau e-Wallet (GoPay, OVO, Dana, dll).
-									</p>
-
-									<div class="flex justify-center mb-6">
-										<button class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5" onclick="showPaymentConfirmationModal()">
-											KIRIM BUKTI PEMBAYARAN
-										</button>
-									</div>
-
-									<div class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
-										<strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim bukti di atas agar akun diaktivasi.
-									</div>
-
-									<div class="flex justify-between items-center pt-4 border-t border-neutral-800">
-										<button class="text-gray-400 hover:text-white text-sm font-medium transition" onclick="goBackToOptions()">← Ganti Metode</button>
-										<button class="text-gray-500 hover:text-gray-300 text-sm transition" data-bs-dismiss="modal">Tutup</button>
-									</div>
-								</div>
-
-								{{-- TAMPILAN TRANSFER --}}
-								<div id="transferPayment" class="d-none">
-									<h5 class="text-center font-bold text-white mb-4">
-										Transfer Bank <span class="text-[#DC2626] block text-sm mt-1" id="transferMembershipTitle"></span>
-									</h5>
-
-									<div class="bg-neutral-900 border border-neutral-700 rounded-xl p-5 mb-4 text-center">
-										<img src="/assets/img/pembayaran/bca.png" alt="Bank BCA" class="h-12 mx-auto mb-3 object-contain" />
-										<p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Nomor Rekening</p>
-										<p class="text-white text-2xl font-header font-bold tracking-widest mb-1 select-all">0461701506</p>
-										<p class="text-gray-400 text-sm">a.n <strong class="text-white">Sobiin</strong></p>
-									</div>
-
-									<p class="text-center text-sm text-gray-400 mb-6">
-										Silakan lakukan transfer manual ke nomor rekening di atas sesuai nominal paket.
-									</p>
-
-									<div class="flex justify-center mb-6">
-										<button class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5" onclick="showPaymentConfirmationModal()">
-											KIRIM BUKTI PEMBAYARAN
-										</button>
-									</div>
-
-									<div class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
-										<strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim bukti di atas agar akun diaktivasi.
-									</div>
-
-									<div class="flex justify-between items-center pt-4 border-t border-neutral-800">
-										<button class="text-gray-400 hover:text-white text-sm font-medium transition" onclick="goBackToOptions()">← Ganti Metode</button>
-										<button class="text-gray-500 hover:text-gray-300 text-sm transition" data-bs-dismiss="modal">Tutup</button>
-									</div>
-								</div>
-
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-				{{-- MODAL 2: FORM UPLOAD BUKTI --}}
-				<div class="modal fade" id="paymentConfirmationModal" tabindex="-1" aria-labelledby="paymentConfirmationModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
-
-							<div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
-								<h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl" id="paymentConfirmationModalLabel">
-									Konfirmasi <span class="text-[#DC2626]">Pembayaran</span>
-								</h5>
-								<button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100 transition" data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-
-							<div class="modal-body p-6">
-
-								<form id="paymentForm" enctype="multipart/form-data" class="space-y-4">
-									<input type="hidden" name="gym_id" value="1">
-
-									{{-- Group Info Member --}}
-									<div class="bg-neutral-900/50 border border-neutral-800 p-4 rounded-lg space-y-4 mb-2">
-										<div>
-											<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
-												Nama Lengkap <span class="text-red-500">*</span>
-											</label>
-											<input type="text" name="name" placeholder="Sesuai KTP / Panggilan" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm" required>
-										</div>
-
-										<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-											<div>
-												<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
-													Email <span class="text-red-500">*</span>
-												</label>
-												<input type="email" name="email" placeholder="email@anda.com" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm" required>
-											</div>
-											<div>
-												<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
-													No. WhatsApp <span class="text-red-500">*</span>
-												</label>
-												<input type="tel" name="phone" placeholder="08..." class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm" required>
-											</div>
-										</div>
-									</div>
-
-									{{-- Group Detail Pembayaran --}}
-									<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-										<div>
-											<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
-												Paket Member <span class="text-red-500">*</span>
-											</label>
-											<select name="membership_type" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer" required>
-												<option value="" disabled selected>Pilih Paket</option>
-												<option value="Member Harian">Harian (Rp 10.000)</option>
-												<option value="Member Mingguan">Mingguan (Rp 35.000)</option>
-												<option value="Member Bulanan">Bulanan (Rp 90.000)</option>
-											</select>
-										</div>
-										<div>
-											<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
-												Transfer Ke <span class="text-red-500">*</span>
-											</label>
-											<select name="payment" class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer" required>
-												<option value="" disabled selected>Pilih Metode</option>
-												<option value="qris">QRIS (GoPay/Dana/OVO)</option>
-												<option value="transfer">Bank BCA</option>
-											</select>
-										</div>
-									</div>
-
-									<div>
-										<label class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
-											Upload Bukti Struk/Resi <span class="text-red-500">*</span>
-										</label>
-										<input type="file" name="image" accept="image/png,image/jpeg,image/jpg" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:bg-neutral-800 file:text-[#DC2626] hover:file:bg-neutral-700 cursor-pointer border border-neutral-700 rounded bg-neutral-900" required>
-									</div>
-
-									<div class="flex justify-end gap-3 pt-4 mt-2 border-t border-neutral-800">
-										<button type="button" class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-bold py-2 px-5 rounded transition text-sm" data-bs-dismiss="modal">Batal</button>
-										<button type="submit" class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition shadow-lg shadow-red-900/30 text-sm">Upload Bukti</button>
-									</div>
-								</form>
-
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</section>
-
-	{{-- STORE --}}
-	@if ($store)
-	<section
-		style="background-image: url('{{ asset('storage/' . $store->image) }}'); background-size: cover; background-position: center;"
-		class="header mx-auto px-4 py-15 bg-black "
-		id="store">
-		<div class="header__container max-w-[1200px] mx-auto px-4 py-20">
-			<div class="header__content">
-				<h1 class="text-[#dc030a]">{{ $store->title }}</h1>
-
-				<h2 class="text-white">{{ $store->subheading }}</h2>
-
-				<p class="text-white">{{ $store->description }}</p>
-				<div class="header__btn">
-					<a href="{{ route('store.biin-king') }}" class="btn btn__primary">VISIT STORE</a>
-				</div>
-			</div>
-		</div>
-	</section>
-	@endif
-
-	{{-- TESTIMONIAL --}}
-	<section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="testimonial">
-		<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
-		<div class="swiper">
-			<div class="swiper-wrapper">
-				@foreach ($testimonis as $testimoni)
-				<div class="swiper-slide">
-					<div class="client__card">
-						<img src="{{ filter_var($testimoni->image, FILTER_VALIDATE_URL) ? $testimoni->image : asset('storage/' . $testimoni->image) }}"
-							alt="{{ $testimoni->name }}" />
-						<div><i class="ri-double-quotes-r"></i></div>
-						<p>{{ $testimoni->description }}</p>
-						<h4>{{ $testimoni->name }}</h4>
-						<div class="rating">
-							@php
-							$rating = $testimoni->rating ?? 1; // Default minimal 1
-							@endphp
-							@for ($i = 1; $i <= 5; $i++)
-								<i class="{{ $i <= $rating ? 'fas' : 'far' }} fa-star text-yellow-500 text-base"></i>
-								@endfor
-						</div>
-					</div>
-				</div>
-				@endforeach
-			</div>
-			<div class="swiper-pagination"></div>
-		</div>
-	</section>
-
-	{{-- BLOG --}}
-	@section('content')
-	<section class="blog" id="blog">
-		<div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
-			<h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>
-			<div class="blog__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-				@foreach ($blog as $blog)
-				<div class="blog__card mt-4 md:mt-0">
-					<a href="{{ route('blogs.show', $blog->slug) }}">
-						<img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}" class="h-[300px] object-cover" />
-						<p class="uppercase text-[10px] tracking-[3px] mb-1 text-white mt-3">{{ $blog->created_at->format('F d, Y') }}</p>
-						<h5 class="text-lg font-medium uppercase">{{ $blog->title }}</h5>
-					</a>
-				</div>
-				@endforeach
-			</div>
-
-			@if($blog->count() > 3)
-			<div class="blog__btn mt-8 text-center">
-				<a href="{{ route('blogs.index') }}" class="btn btn__primary">VIEW ALL</a>
-			</div>
-			@endif
-		</div>
-	</section>
-
-	{{-- MAPS EMBED --}}
-	<section class="w-full mx-auto" id="contact">
-		<div class="flex-dir-row" style="width: 100%; height: 300px;">
-			<div class="" style="width: 100%; height: 100%;">
-				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.4855691732196!2d109.25932187454826!3d-7.411386672987716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0039f00903%3A0xf9273b4e5db80ee9!2sB11N%20GYM!5e0!3m2!1sid!2sid!4v1735117847259!5m2!1sid!2sid" style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-			</div>
-		</div>
-	</section>
-
-	{{-- CUSTOM FOOTER --}}
-	<footer class="footer">
-		<div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
-			<div class="footer__col">
-				<div class="footer__logo">
-					<a href="#">
-						<img src="{{ asset('assets/Logo/biin.png') }}" alt="logo" />
-					</a>
-				</div>
-				<p>
-					Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur.
-				</p>
-				<ul class="footer__links">
-					<li>
-						<a href="https://maps.app.goo.gl/CEQqy1nCNUYKasrU9" target="_blank">
-							<span><i class="ri-map-pin-2-fill"></i></span>
-							Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto Timur, Kab. Banyumas </a>
-					</li>
-					<li>
-						<a href="https://wa.me/6283194288423" target="_blank">
-							<span><i class="ri-phone-fill"></i></span>
-							+62 831 9428 8423
-						</a>
-					</li>
-					<li>
-						<a href="mailto:sobiin77@gmail.com" target="_blank">
-							<span><i class="ri-mail-fill"></i></span>
-							sobiin77@gmail.com
-						</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="footer__col">
-				<h4 class="">GALLERY</h4>
-				<div class="gallery__grid mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-					@foreach ($gallery as $item)
-					<img
-						src="{{ asset('storage/' . $item->image) }}"
-						alt="{{ $item->title }}"
-						class="gallery-thumbnail"
-						data-bs-toggle="modal"
-						data-bs-target="#galleryModal"
-						data-title="{{ $item->title }}"
-						data-src="{{ asset('storage/' . $item->image) }}" />
-					@endforeach
-				</div>
-			</div>
-
-			<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">
-								<span class="text-danger">B11N GYM </span>GALLERY
-							</h5>
-							<button
-								type="button"
-								class="btn-close"
-								data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body text-center">
-							<img id="modalImage" src="" alt="" class="img-fluid mb-3" />
-							<h5 id="modalTitle" class="text-center font-bold text-lg"></h5>
-						</div>
-						<div class="modal-footer justify-content-between">
-							<button type="button" class="btn btn-secondary prev-image">Previous</button>
-							<button type="button" class="btn btn-secondary next-image">Next</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="footer_contact text-white">
-				<h4 class="text-red-600 text-lg font-bold mb-4">HUBUNGI KAMI</h4>
-
-				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
-						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-threads group-hover:text-red-600" viewBox="0 0 16 16">
-							<path d="M6.321 6.016c-.27-.18-1.166-.802-1.166-.802.756-1.081 1.753-1.502 3.132-1.502.975 0 1.803.327 2.394.948s.928 1.509 1.005 2.644q.492.207.905.484c1.109.745 1.719 1.86 1.719 3.137 0 2.716-2.226 5.075-6.256 5.075C4.594 16 1 13.987 1 7.994 1 2.034 4.482 0 8.044 0 9.69 0 13.55.243 15 5.036l-1.36.353C12.516 1.974 10.163 1.43 8.006 1.43c-3.565 0-5.582 2.171-5.582 6.79 0 4.143 2.254 6.343 5.63 6.343 2.777 0 4.847-1.443 4.847-3.556 0-1.438-1.208-2.127-1.27-2.127-.236 1.234-.868 3.31-3.644 3.31-1.618 0-3.013-1.118-3.013-2.582 0-2.09 1.984-2.847 3.55-2.847.586 0 1.294.04 1.663.114 0-.637-.54-1.728-1.9-1.728-1.25 0-1.566.405-1.967.868ZM8.716 8.19c-2.04 0-2.304.87-2.304 1.416 0 .878 1.043 1.168 1.6 1.168 1.02 0 2.067-.282 2.232-2.423a6.2 6.2 0 0 0-1.528-.161" />
-						</svg>
-						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Threads</h5>
-					</a>
-					<p class="text-gray-400 text-sm tracking-wide uppercase mt-2">B11N_GYM</p>
-				</div>
-
-				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://www.instagram.com/biin_gym/" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
-						<i class="fab fa-instagram text-xl group-hover:text-red-600"></i>
-						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Instagram</h5>
-					</a>
-					<p class="text-gray-400 text-sm tracking-wide uppercase mt-2">BIIN_GYM</p>
-				</div>
-
-				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="https://wa.me/6283194288423" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
-						<i class="fab fa-whatsapp text-xl group-hover:text-red-600"></i>
-						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Whatsapp</h5>
-					</a>
-					<p class="text-gray-400 text-sm tracking-wide mt-2">0831 9428 8423</p>
-				</div>
-
-				<div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-					<a href="mailto:sobiin77@gmail.com" class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all" target="_blank">
-						<i class="fas fa-envelope text-xl group-hover:text-red-600"></i>
-						<h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Email</h5>
-					</a>
-					<p class="text-gray-400 text-sm tracking-wide mt-2">SOBIIN77@GMAIL.COM</p>
-				</div>
-			</div>
-
-
-		</div>
-		<hr class="border-t border-white">
-
-		<div class="footer__bar">
-			&copy; {{ date('Y') }} B11N Gym. All rights reserved. Part of
-			<a href="{{ route('home') }}" class="text-secondary hover:text-white transition-colors duration-300 font-semibold">B1NG Empire</a>.
-		</div>
-	</footer>
-
-	<script src="https://unpkg.com/scrollreveal"></script>
-	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="assets/js/script.js"></script>
-	<script>
-		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-			anchor.addEventListener('click', function(e) {
-				e.preventDefault();
-				const targetId = this.getAttribute('href');
-				const targetElement = document.querySelector(targetId);
-
-				if (targetElement) {
-					window.scrollTo({
-						top: targetElement.offsetTop - 70, // Offset untuk menghindari overlap dengan header
-						behavior: 'smooth',
-					});
-				}
-			});
-		});
-
-		const sections = document.querySelectorAll('section'); // Pastikan setiap bagian diberi tag <section>
-		const navItems = document.querySelectorAll('.nav-item');
-
-		function handleScroll() {
-			let activeFound = false;
-			sections.forEach(section => {
-				const rect = section.getBoundingClientRect();
-				if (rect.top <= 100 && rect.bottom >= 100 && !activeFound) {
-					activeFound = true;
-					const id = section.getAttribute('id');
-					navItems.forEach(item => {
-						item.classList.toggle(
-							'active',
-							item.querySelector('a').getAttribute('href') === `#${id}`
-						);
-					});
-				}
-			});
-
-			if (!activeFound) {
-				navItems.forEach(item => item.classList.remove('active'));
-			}
-		}
-
-		window.addEventListener('scroll', handleScroll);
-		handleScroll(); // Jalankan sekali untuk memastikan efek langsung terjadi
-
-		let selectedMembershipTitle = "";
-		let selectedPaymentMethod = ""; // Tambahkan variabel ini untuk menyimpan metode pembayaran
-
-		function openPaymentModal(title) {
-			selectedMembershipTitle = title;
-			document.getElementById("membershipTitle").textContent = title;
-			document.getElementById("paymentOptions").classList.remove("d-none");
-			document.getElementById("qrisPayment").classList.add("d-none");
-			document.getElementById("transferPayment").classList.add("d-none");
-			new bootstrap.Modal(document.getElementById("paymentModal")).show();
-		}
-
-		function selectPaymentMethod(method) {
-			selectedPaymentMethod = method; // Simpan metode pembayaran yang dipilih
-			document.getElementById("paymentOptions").classList.add("d-none");
-			if (method === "qris") {
-				document.getElementById("qrisPayment").classList.remove("d-none");
-				document.getElementById("qrisMembershipTitle").textContent = selectedMembershipTitle;
-			} else if (method === "transfer") {
-				document.getElementById("transferPayment").classList.remove("d-none");
-				document.getElementById("transferMembershipTitle").textContent = selectedMembershipTitle;
-			}
-		}
-
-		function sendPaymentConfirmation(method) {
-			const email = "naufalfathi37@gmail.com"; // Ganti dengan email Anda
-			const whatsappNumber = "6283194288423"; // Ganti dengan nomor WhatsApp Anda
-
-			const messageBase = `Halo, saya ingin mengonfirmasi pembayaran untuk membership ${selectedMembershipTitle} via (${selectedPaymentMethod.toUpperCase()}).\n`;
-			const messageFooter = `Tolong lampirkan bukti pembayaran Anda disini. \n\nTerima kasih.`;
-
-			if (method === "email") {
-				const subject = `Konfirmasi Pembayaran via ${selectedPaymentMethod.toUpperCase()} untuk member ${selectedMembershipTitle}`;
-				const body = `${messageBase}${messageFooter}`;
-				window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-			} else if (method === "whatsapp") {
-				const message = `${messageBase}${messageFooter}`;
-				window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-			}
-		}
-
-
-		function goBackToOptions() {
-			document.getElementById("paymentOptions").classList.remove("d-none");
-			document.getElementById("qrisPayment").classList.add("d-none");
-			document.getElementById("transferPayment").classList.add("d-none");
-		}
-
-		document.addEventListener('DOMContentLoaded', function() {
-			const swiper = new Swiper('.swiper', {
-				loop: true,
-				autoplay: {
-					delay: 3000,
-					disableOnInteraction: false,
-				},
-				pagination: {
-					el: '.swiper-pagination',
-					clickable: true,
-					dynamicBullets: true, // Pagination berubah saat swipe
-					dynamicMainBullets: 5, // Hanya tampilkan 5 bullet, sisanya bisa digeser
-				},
-			});
-		});
-
-
-		document.addEventListener('DOMContentLoaded', function() {
-			const thumbnails = document.querySelectorAll('.gallery-thumbnail');
-			const modalImage = document.getElementById('modalImage');
-			const modalTitle = document.getElementById('modalTitle');
-			let currentIndex = 0;
-
-			// Array untuk menyimpan data gambar
-			const galleryData = Array.from(thumbnails).map((thumbnail, index) => ({
-				src: thumbnail.getAttribute('data-src'),
-				title: thumbnail.getAttribute('data-title'),
-				index: index,
-			}));
-
-			// Klik pada gambar untuk membuka modal
-			thumbnails.forEach((thumbnail, index) => {
-				thumbnail.addEventListener('click', () => {
-					currentIndex = index;
-					updateModal();
-				});
-			});
-
-			// Fungsi untuk memperbarui modal
-			function updateModal() {
-				const {
-					src,
-					title
-				} = galleryData[currentIndex];
-				modalImage.src = src;
-				modalTitle.textContent = title;
-			}
-
-			// Navigasi gambar
-			document.querySelector('.prev-image').addEventListener('click', () => {
-				currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
-				updateModal();
-			});
-
-			document.querySelector('.next-image').addEventListener('click', () => {
-				currentIndex = (currentIndex + 1) % galleryData.length;
-				updateModal();
-			});
-		});
-
-		const trigger = document.querySelector("menu > .trigger");
-		trigger.addEventListener('click', (e) => {
-			e.currentTarget.parentElement.classList.toggle("open");
-		});
-	</script>
-
-	<script>
-		// 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN
-		function showModernToast(message, type = 'success') {
-			// Hapus toast lama jika masih ada di layar (mencegah numpuk)
-			const existingToast = document.getElementById('modern-toast');
-			if (existingToast) existingToast.remove();
-
-			// Tentukan warna berdasarkan tipe (success / error)
-			const isSuccess = type === 'success';
-			const borderColor = isSuccess ? '#16a34a' : '#dc2626'; // border-green-600 : border-red-600
-			const iconColor = isSuccess ? '#22c55e' : '#ef4444'; // text-green-500 : text-red-500
-			const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'; // bg opacity
-			const progressBg = isSuccess ? '#16a34a' : '#dc2626';
-
-			// Icon SVG (Checklist atau Silang)
-			const svgIcon = isSuccess ?
-				`<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
-				`<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
-
-			// Template HTML Toast (Inline CSS agar aman tanpa Tailwind)
-			const toastHTML = `
+     "
+        id="membership">
+        <div class="membership__container max-w-[1200px] mx-auto px-4 py-20">
+            <h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEMBERSHIP</h2>
+            <div class="membership__grid grid grid-cols-1 md:grid-cols-3 gap-6">
+                {{-- Membership Cards (Konten tetap sama) --}}
+                <div class="membership__card">
+                    <h4>Harian</h4>
+                    <ul>
+                        <li><span><i class="ri-check-line"></i></span> Satu hari akses penuh di B11N & K1NG Gym
+                            Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan gym.</li>
+                        <li><span><i class="ri-check-line"></i></span> Free personal trainer.</li>
+                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan</li>
+                        <li><span><i class="ri-close-line"></i></span> Free biaya pendaftaran</li>
+                        <li><span><i class="ri-close-line"></i></span> Masuk sebagai member dari B11N & K1NG Gym</li>
+                    </ul>
+                    <h3><sup>Rp</sup>10.000<span>/hari</span></h3>
+                    <button class="btn btn__primary" onclick="openPaymentModal('Harian')">Beli Sekarang</button>
+                </div>
+                <div class="membership__card">
+                    <h4>Mingguan</h4>
+                    <ul>
+                        <li><span><i class="ri-check-line"></i></span> Satu hari akses penuh di B11N & K1NG Gym
+                            Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan gym.</li>
+                        <li><span><i class="ri-check-line"></i></span> Free personal trainer.</li>
+                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan</li>
+                        <li><span><i class="ri-close-line"></i></span> Free biaya pendaftaran</li>
+                        <li><span><i class="ri-close-line"></i></span> Masuk sebagai member dari B11N & K1NG Gym</li>
+                    </ul>
+                    <h3><sup>Rp</sup>35.000<span>/minggu</span></h3>
+                    <button class="btn btn__primary" onclick="openPaymentModal('Mingguan')">Beli Sekarang</button>
+                </div>
+                <div class="membership__card">
+                    <h4>Bulanan</h4>
+                    <ul>
+                        <li><span><i class="ri-check-line"></i></span> Satu hari akses penuh di B11N & K1NG Gym
+                            Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan gym.</li>
+                        <li><span><i class="ri-check-line"></i></span> Free personal trainer.</li>
+                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan</li>
+                        <li><span><i class="ri-check-line"></i></span> Free biaya pendaftaran</li>
+                        <li><span><i class="ri-check-line"></i></span> Masuk sebagai member dari B11N & K1NG Gym</li>
+                    </ul>
+                    <h3><sup>Rp</sup>90.000<span>/Bulan</span></h3>
+                    <button class="btn btn__primary" onclick="openPaymentModal('Bulanan')">Beli Sekarang</button>
+                </div>
+
+                {{-- MODAL 1: PILIH METODE PEMBAYARAN --}}
+                <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div
+                            class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
+                            <div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
+                                <h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl"
+                                    id="paymentModalLabel">
+                                    Metode Pembayaran <span class="text-[#DC2626] ml-1" id="membershipTitle"></span>
+                                </h5>
+                                <button type="button"
+                                    class="btn-close btn-close-white opacity-50 hover:opacity-100 transition"
+                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-6">
+                                <div id="paymentOptions">
+                                    <p class="text-sm text-gray-400 mb-4 text-center">Silakan pilih metode pembayaran
+                                        yang Anda inginkan:</p>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div onclick="selectPaymentMethod('qris')"
+                                            class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
+                                            {{-- DITAMBAHKAN LAZY LOADING --}}
+                                            <img src="/assets/img/pembayaran/qris.png" alt="QRIS" loading="lazy"
+                                                class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
+                                            <span
+                                                class="text-white font-bold text-sm uppercase tracking-wider block">Bayar
+                                                via QRIS</span>
+                                        </div>
+                                        <div onclick="selectPaymentMethod('transfer')"
+                                            class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
+                                            {{-- DITAMBAHKAN LAZY LOADING --}}
+                                            <img src="/assets/img/pembayaran/bca.png" alt="Transfer Bank"
+                                                loading="lazy"
+                                                class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
+                                            <span
+                                                class="text-white font-bold text-sm uppercase tracking-wider block">Transfer
+                                                BCA</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- TAMPILAN QRIS --}}
+                                <div id="qrisPayment" class="d-none">
+                                    <h5 class="text-center font-bold text-white mb-4">
+                                        Scan QRIS <span class="text-[#DC2626] block text-sm mt-1"
+                                            id="qrisMembershipTitle"></span>
+                                    </h5>
+                                    <div class="flex justify-center mb-4">
+                                        <div
+                                            class="bg-white p-4 rounded-xl border-4 border-neutral-800 shadow-xl max-w-[250px] w-full">
+                                            {{-- DITAMBAHKAN LAZY LOADING --}}
+                                            <img src="/assets/img/pembayaran/qris-barcode.png" alt="QRIS Barcode"
+                                                loading="lazy" class="img-fluid w-full" />
+                                        </div>
+                                    </div>
+                                    <p class="text-center text-sm text-gray-400 mb-6">Scan kode QR di atas menggunakan
+                                        aplikasi m-Banking atau e-Wallet (GoPay, OVO, Dana, dll).</p>
+                                    <div class="flex justify-center mb-6">
+                                        <button
+                                            class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5"
+                                            onclick="showPaymentConfirmationModal()">
+                                            KIRIM BUKTI PEMBAYARAN
+                                        </button>
+                                    </div>
+                                    <div
+                                        class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
+                                        <strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim
+                                        bukti di atas agar akun diaktivasi.
+                                    </div>
+                                    <div class="flex justify-between items-center pt-4 border-t border-neutral-800">
+                                        <button class="text-gray-400 hover:text-white text-sm font-medium transition"
+                                            onclick="goBackToOptions()">← Ganti Metode</button>
+                                        <button class="text-gray-500 hover:text-gray-300 text-sm transition"
+                                            data-bs-dismiss="modal">Tutup</button>
+                                    </div>
+                                </div>
+
+                                {{-- TAMPILAN TRANSFER --}}
+                                <div id="transferPayment" class="d-none">
+                                    <h5 class="text-center font-bold text-white mb-4">
+                                        Transfer Bank <span class="text-[#DC2626] block text-sm mt-1"
+                                            id="transferMembershipTitle"></span>
+                                    </h5>
+                                    <div
+                                        class="bg-neutral-900 border border-neutral-700 rounded-xl p-5 mb-4 text-center">
+                                        {{-- DITAMBAHKAN LAZY LOADING --}}
+                                        <img src="/assets/img/pembayaran/bca.png" alt="Bank BCA" loading="lazy"
+                                            class="h-12 mx-auto mb-3 object-contain" />
+                                        <p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Nomor Rekening
+                                        </p>
+                                        <p
+                                            class="text-white text-2xl font-header font-bold tracking-widest mb-1 select-all">
+                                            0461701506</p>
+                                        <p class="text-gray-400 text-sm">a.n <strong
+                                                class="text-white">Sobiin</strong></p>
+                                    </div>
+                                    <p class="text-center text-sm text-gray-400 mb-6">Silakan lakukan transfer manual
+                                        ke nomor rekening di atas sesuai nominal paket.</p>
+                                    <div class="flex justify-center mb-6">
+                                        <button
+                                            class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5"
+                                            onclick="showPaymentConfirmationModal()">
+                                            KIRIM BUKTI PEMBAYARAN
+                                        </button>
+                                    </div>
+                                    <div
+                                        class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
+                                        <strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim
+                                        bukti di atas agar akun diaktivasi.
+                                    </div>
+                                    <div class="flex justify-between items-center pt-4 border-t border-neutral-800">
+                                        <button class="text-gray-400 hover:text-white text-sm font-medium transition"
+                                            onclick="goBackToOptions()">← Ganti Metode</button>
+                                        <button class="text-gray-500 hover:text-gray-300 text-sm transition"
+                                            data-bs-dismiss="modal">Tutup</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- MODAL 2: FORM UPLOAD BUKTI (Tetap Sama) --}}
+                <div class="modal fade" id="paymentConfirmationModal" tabindex="-1"
+                    aria-labelledby="paymentConfirmationModalLabel" aria-hidden="true">
+                    {{-- ... Konten Modal 2 ... --}}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- STORE --}}
+    @if ($store)
+        <section
+            style="background-image: url('{{ asset('storage/' . $store->image) }}'); background-size: cover; background-position: center;"
+            class="header mx-auto px-4 py-15 bg-black " id="store">
+            <div class="header__container max-w-[1200px] mx-auto px-4 py-20">
+                <div class="header__content">
+                    <h1 class="text-[#dc030a]">{{ $store->title }}</h1>
+                    <h2 class="text-white">{{ $store->subheading }}</h2>
+                    <p class="text-white">{{ $store->description }}</p>
+                    <div class="header__btn">
+                        <a href="{{ route('store.biin-king') }}" class="btn btn__primary">VISIT STORE</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- TESTIMONIAL --}}
+    <section class="client__container max-w-[1200px] mx-auto px-4 py-20" id="testimonial">
+        <h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">OUR TESTIMONIALS</h2>
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                @foreach ($testimonis as $testimoni)
+                    <div class="swiper-slide">
+                        <div class="client__card">
+                            {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                            <img src="{{ filter_var($testimoni->image, FILTER_VALIDATE_URL) ? $testimoni->image : asset('storage/' . $testimoni->image) }}"
+                                alt="{{ $testimoni->name }}" loading="lazy" />
+                            <div><i class="ri-double-quotes-r"></i></div>
+                            <p>{{ $testimoni->description }}</p>
+                            <h4>{{ $testimoni->name }}</h4>
+                            <div class="rating">
+                                @php
+                                    $rating = $testimoni->rating ?? 1;
+                                @endphp
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i
+                                        class="{{ $i <= $rating ? 'fas' : 'far' }} fa-star text-yellow-500 text-base"></i>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    {{-- BLOG --}}
+    @section('content')
+        <section class="blog" id="blog">
+            <div class="blog__container max-w-[1200px] mx-auto px-4 py-20">
+                <h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">BLOGS</h2>
+                <div class="blog__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach ($blog as $blog)
+                        <div class="blog__card mt-4 md:mt-0">
+                            <a href="{{ route('blogs.show', $blog->slug) }}">
+                                {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                                <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
+                                    loading="lazy" class="h-[300px] object-cover" />
+                                <p class="uppercase text-[10px] tracking-[3px] mb-1 text-white mt-3">
+                                    {{ $blog->created_at->format('F d, Y') }}</p>
+                                <h5 class="text-lg font-medium uppercase">{{ $blog->title }}</h5>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if ($blog->count() > 3)
+                    <div class="blog__btn mt-8 text-center">
+                        <a href="{{ route('blogs.index') }}" class="btn btn__primary">VIEW ALL</a>
+                    </div>
+                @endif
+            </div>
+        </section>
+
+        {{-- MAPS EMBED --}}
+        <section class="w-full mx-auto" id="contact">
+            <div class="flex-dir-row" style="width: 100%; height: 300px;">
+                <div class="" style="width: 100%; height: 100%;">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.4855691732196!2d109.25932187454826!3d-7.411386672987716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f0039f00903%3A0xf9273b4e5db80ee9!2sB11N%20GYM!5e0!3m2!1sid!2sid!4v1735117847259!5m2!1sid!2sid"
+                        style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </section>
+
+        {{-- CUSTOM FOOTER --}}
+        <footer class="footer">
+            <div class="footer__container max-w-[1200px] mx-auto px-4 py-20">
+                <div class="footer__col">
+                    <div class="footer__logo">
+                        <a href="#">
+                            {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                            <img src="{{ asset('assets/Logo/biin.png') }}" alt="logo" loading="lazy" />
+                        </a>
+                    </div>
+                    <p>
+                        Selamat datang di B11N Gym Purwokerto, pusat kebugaran populer di Arcawinangun, Purwokerto Timur.
+                    </p>
+                    <ul class="footer__links">
+                        <li><a href="https://maps.app.goo.gl/CEQqy1nCNUYKasrU9" target="_blank"><span><i
+                                        class="ri-map-pin-2-fill"></i></span> Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto
+                                Timur, Kab. Banyumas </a></li>
+                        <li><a href="https://wa.me/6283194288423" target="_blank"><span><i
+                                        class="ri-phone-fill"></i></span> +62 831 9428 8423</a></li>
+                        <li><a href="mailto:sobiin77@gmail.com" target="_blank"><span><i class="ri-mail-fill"></i></span>
+                                sobiin77@gmail.com</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer__col">
+                    <h4 class="">GALLERY</h4>
+                    <div class="gallery__grid mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        @foreach ($gallery as $item)
+                            {{-- SANGAT PENTING DI GALLERY: DITAMBAHKAN LAZY LOADING DI SINI --}}
+                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}" loading="lazy"
+                                class="gallery-thumbnail" data-bs-toggle="modal" data-bs-target="#galleryModal"
+                                data-title="{{ $item->title }}" data-src="{{ asset('storage/' . $item->image) }}" />
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- GALLERY MODAL --}}
+                <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel"
+                    aria-hidden="true">
+                    {{-- ... Konten Modal Gallery ... --}}
+                </div>
+
+                <div class="footer_contact text-white">
+                    <h4 class="text-red-600 text-lg font-bold mb-4">HUBUNGI KAMI</h4>
+                    {{-- Social Media Links --}}
+                    <div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+                        <a href="https://www.threads.net/@biin_gym?xmt=AQGzKh5EYkbE4G7JIjSwlirbjIADsXrxWWU6UuUKi1XKhFU"
+                            class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all"
+                            target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                class="bi bi-threads group-hover:text-red-600" viewBox="0 0 16 16">
+                                <path
+                                    d="M6.321 6.016c-.27-.18-1.166-.802-1.166-.802.756-1.081 1.753-1.502 3.132-1.502.975 0 1.803.327 2.394.948s.928 1.509 1.005 2.644q.492.207.905.484c1.109.745 1.719 1.86 1.719 3.137 0 2.716-2.226 5.075-6.256 5.075C4.594 16 1 13.987 1 7.994 1 2.034 4.482 0 8.044 0 9.69 0 13.55.243 15 5.036l-1.36.353C12.516 1.974 10.163 1.43 8.006 1.43c-3.565 0-5.582 2.171-5.582 6.79 0 4.143 2.254 6.343 5.63 6.343 2.777 0 4.847-1.443 4.847-3.556 0-1.438-1.208-2.127-1.27-2.127-.236 1.234-.868 3.31-3.644 3.31-1.618 0-3.013-1.118-3.013-2.582 0-2.09 1.984-2.847 3.55-2.847.586 0 1.294.04 1.663.114 0-.637-.54-1.728-1.9-1.728-1.25 0-1.566.405-1.967.868ZM8.716 8.19c-2.04 0-2.304.87-2.304 1.416 0 .878 1.043 1.168 1.6 1.168 1.02 0 2.067-.282 2.232-2.423a6.2 6.2 0 0 0-1.528-.161" />
+                            </svg>
+                            <h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Threads</h5>
+                        </a>
+                        <p class="text-gray-400 text-sm tracking-wide uppercase mt-2">B11N_GYM</p>
+                    </div>
+                    <div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+                        <a href="https://www.instagram.com/biin_gym/"
+                            class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all"
+                            target="_blank">
+                            <i class="fab fa-instagram text-xl group-hover:text-red-600"></i>
+                            <h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Instagram</h5>
+                        </a>
+                        <p class="text-gray-400 text-sm tracking-wide uppercase mt-2">BIIN_GYM</p>
+                    </div>
+                    <div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+                        <a href="https://wa.me/6283194288423"
+                            class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all"
+                            target="_blank">
+                            <i class="fab fa-whatsapp text-xl group-hover:text-red-600"></i>
+                            <h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Whatsapp</h5>
+                        </a>
+                        <p class="text-gray-400 text-sm tracking-wide mt-2">0831 9428 8423</p>
+                    </div>
+                    <div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
+                        <a href="mailto:sobiin77@gmail.com"
+                            class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all"
+                            target="_blank">
+                            <i class="fas fa-envelope text-xl group-hover:text-red-600"></i>
+                            <h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Email</h5>
+                        </a>
+                        <p class="text-gray-400 text-sm tracking-wide mt-2">SOBIIN77@GMAIL.COM</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-t border-white">
+            <div class="footer__bar">
+                &copy; {{ date('Y') }} B11N Gym. All rights reserved. Part of
+                <a href="{{ route('home') }}"
+                    class="text-secondary hover:text-white transition-colors duration-300 font-semibold">B1NG Empire</a>.
+            </div>
+        </footer>
+
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/script.js"></script>
+        <script>
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop -
+                                70, // Offset untuk menghindari overlap dengan header
+                            behavior: 'smooth',
+                        });
+                    }
+                });
+            });
+
+            const sections = document.querySelectorAll('section'); // Pastikan setiap bagian diberi tag <section>
+            const navItems = document.querySelectorAll('.nav-item');
+
+            function handleScroll() {
+                let activeFound = false;
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 100 && rect.bottom >= 100 && !activeFound) {
+                        activeFound = true;
+                        const id = section.getAttribute('id');
+                        navItems.forEach(item => {
+                            item.classList.toggle(
+                                'active',
+                                item.querySelector('a').getAttribute('href') === `#${id}`
+                            );
+                        });
+                    }
+                });
+
+                if (!activeFound) {
+                    navItems.forEach(item => item.classList.remove('active'));
+                }
+            }
+
+            window.addEventListener('scroll', handleScroll);
+            handleScroll(); // Jalankan sekali untuk memastikan efek langsung terjadi
+
+            let selectedMembershipTitle = "";
+            let selectedPaymentMethod = ""; // Tambahkan variabel ini untuk menyimpan metode pembayaran
+
+            function openPaymentModal(title) {
+                selectedMembershipTitle = title;
+                document.getElementById("membershipTitle").textContent = title;
+                document.getElementById("paymentOptions").classList.remove("d-none");
+                document.getElementById("qrisPayment").classList.add("d-none");
+                document.getElementById("transferPayment").classList.add("d-none");
+                new bootstrap.Modal(document.getElementById("paymentModal")).show();
+            }
+
+            function selectPaymentMethod(method) {
+                selectedPaymentMethod = method; // Simpan metode pembayaran yang dipilih
+                document.getElementById("paymentOptions").classList.add("d-none");
+                if (method === "qris") {
+                    document.getElementById("qrisPayment").classList.remove("d-none");
+                    document.getElementById("qrisMembershipTitle").textContent = selectedMembershipTitle;
+                } else if (method === "transfer") {
+                    document.getElementById("transferPayment").classList.remove("d-none");
+                    document.getElementById("transferMembershipTitle").textContent = selectedMembershipTitle;
+                }
+            }
+
+            function sendPaymentConfirmation(method) {
+                const email = "naufalfathi37@gmail.com"; // Ganti dengan email Anda
+                const whatsappNumber = "6283194288423"; // Ganti dengan nomor WhatsApp Anda
+
+                const messageBase =
+                    `Halo, saya ingin mengonfirmasi pembayaran untuk membership ${selectedMembershipTitle} via (${selectedPaymentMethod.toUpperCase()}).\n`;
+                const messageFooter = `Tolong lampirkan bukti pembayaran Anda disini. \n\nTerima kasih.`;
+
+                if (method === "email") {
+                    const subject =
+                        `Konfirmasi Pembayaran via ${selectedPaymentMethod.toUpperCase()} untuk member ${selectedMembershipTitle}`;
+                    const body = `${messageBase}${messageFooter}`;
+                    window.location.href =
+                        `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                } else if (method === "whatsapp") {
+                    const message = `${messageBase}${messageFooter}`;
+                    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+                }
+            }
+
+
+            function goBackToOptions() {
+                document.getElementById("paymentOptions").classList.remove("d-none");
+                document.getElementById("qrisPayment").classList.add("d-none");
+                document.getElementById("transferPayment").classList.add("d-none");
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const swiper = new Swiper('.swiper', {
+                    loop: true,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                        dynamicBullets: true, // Pagination berubah saat swipe
+                        dynamicMainBullets: 5, // Hanya tampilkan 5 bullet, sisanya bisa digeser
+                    },
+                });
+            });
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+                const modalImage = document.getElementById('modalImage');
+                const modalTitle = document.getElementById('modalTitle');
+                let currentIndex = 0;
+
+                // Array untuk menyimpan data gambar
+                const galleryData = Array.from(thumbnails).map((thumbnail, index) => ({
+                    src: thumbnail.getAttribute('data-src'),
+                    title: thumbnail.getAttribute('data-title'),
+                    index: index,
+                }));
+
+                // Klik pada gambar untuk membuka modal
+                thumbnails.forEach((thumbnail, index) => {
+                    thumbnail.addEventListener('click', () => {
+                        currentIndex = index;
+                        updateModal();
+                    });
+                });
+
+                // Fungsi untuk memperbarui modal
+                function updateModal() {
+                    const {
+                        src,
+                        title
+                    } = galleryData[currentIndex];
+                    modalImage.src = src;
+                    modalTitle.textContent = title;
+                }
+
+                // Navigasi gambar
+                document.querySelector('.prev-image').addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+                    updateModal();
+                });
+
+                document.querySelector('.next-image').addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % galleryData.length;
+                    updateModal();
+                });
+            });
+
+            const trigger = document.querySelector("menu > .trigger");
+            trigger.addEventListener('click', (e) => {
+                e.currentTarget.parentElement.classList.toggle("open");
+            });
+        </script>
+
+        <script>
+            // 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN
+            function showModernToast(message, type = 'success') {
+                // Hapus toast lama jika masih ada di layar (mencegah numpuk)
+                const existingToast = document.getElementById('modern-toast');
+                if (existingToast) existingToast.remove();
+
+                // Tentukan warna berdasarkan tipe (success / error)
+                const isSuccess = type === 'success';
+                const borderColor = isSuccess ? '#16a34a' : '#dc2626'; // border-green-600 : border-red-600
+                const iconColor = isSuccess ? '#22c55e' : '#ef4444'; // text-green-500 : text-red-500
+                const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'; // bg opacity
+                const progressBg = isSuccess ? '#16a34a' : '#dc2626';
+
+                // Icon SVG (Checklist atau Silang)
+                const svgIcon = isSuccess ?
+                    `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
+                    `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+
+                // Template HTML Toast (Inline CSS agar aman tanpa Tailwind)
+                const toastHTML = `
                 <div id="modern-toast" style="position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 9999; transition: all 0.5s ease; pointer-events: none; width: max-content; max-width: 90vw; font-family: 'Poppins', sans-serif;">
                     <div style="background-color: #171717; border: 1px solid ${borderColor}; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 8px; pointer-events: auto; overflow: hidden; position: relative; min-width: 300px;">
                         
@@ -1828,120 +2198,122 @@
                 </div>
             `;
 
-			// Masukkan ke dalam body
-			document.body.insertAdjacentHTML('beforeend', toastHTML);
+                // Masukkan ke dalam body
+                document.body.insertAdjacentHTML('beforeend', toastHTML);
 
-			const toast = document.getElementById('modern-toast');
-			const progressBar = document.getElementById('toast-progress-bar');
+                const toast = document.getElementById('modern-toast');
+                const progressBar = document.getElementById('toast-progress-bar');
 
-			// Trigger Animasi Masuk (Slide Down)
-			setTimeout(() => {
-				toast.style.transform = 'translate(-50%, 0)';
-				toast.style.opacity = '1';
-			}, 50);
+                // Trigger Animasi Masuk (Slide Down)
+                setTimeout(() => {
+                    toast.style.transform = 'translate(-50%, 0)';
+                    toast.style.opacity = '1';
+                }, 50);
 
-			// Trigger Animasi Progress Bar mundur (5 Detik)
-			setTimeout(() => {
-				progressBar.style.transition = 'width 5s linear';
-				progressBar.style.width = '0%';
-			}, 100);
+                // Trigger Animasi Progress Bar mundur (5 Detik)
+                setTimeout(() => {
+                    progressBar.style.transition = 'width 5s linear';
+                    progressBar.style.width = '0%';
+                }, 100);
 
-			// Auto Close setelah 5 detik
-			window.modernToastTimeout = setTimeout(() => {
-				closeModernToast();
-			}, 5000);
-		}
+                // Auto Close setelah 5 detik
+                window.modernToastTimeout = setTimeout(() => {
+                    closeModernToast();
+                }, 5000);
+            }
 
-		// Fungsi manual untuk menutup Toast
-		window.closeModernToast = function() {
-			const toast = document.getElementById('modern-toast');
-			if (!toast) return;
+            // Fungsi manual untuk menutup Toast
+            window.closeModernToast = function() {
+                const toast = document.getElementById('modern-toast');
+                if (!toast) return;
 
-			clearTimeout(window.modernToastTimeout);
+                clearTimeout(window.modernToastTimeout);
 
-			// Animasi Slide Up
-			toast.style.transform = 'translate(-50%, -20px)';
-			toast.style.opacity = '0';
+                // Animasi Slide Up
+                toast.style.transform = 'translate(-50%, -20px)';
+                toast.style.opacity = '0';
 
-			// Hapus dari layar setelah animasi selesai
-			setTimeout(() => {
-				if (toast) toast.remove();
-			}, 500);
-		};
+                // Hapus dari layar setelah animasi selesai
+                setTimeout(() => {
+                    if (toast) toast.remove();
+                }, 500);
+            };
 
 
-		// 2. LOGIC SUBMIT FORM PAYMENT
-		document.getElementById('paymentForm').addEventListener('submit', function(event) {
-			event.preventDefault();
+            // 2. LOGIC SUBMIT FORM PAYMENT
+            document.getElementById('paymentForm').addEventListener('submit', function(event) {
+                event.preventDefault();
 
-			const form = this;
-			const submitBtn = form.querySelector('button[type="submit"]');
-			const originalBtnText = submitBtn.innerHTML;
-			const modalElement = document.getElementById('paymentConfirmationModal');
-			const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                const form = this;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                const modalElement = document.getElementById('paymentConfirmationModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
 
-			submitBtn.disabled = true;
-			submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
 
-			let formData = new FormData(this);
+                let formData = new FormData(this);
 
-			fetch('/payment/upload', {
-					method: 'POST',
-					body: formData,
-					headers: {
-						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-					}
-				})
-				.then(response => {
-					if (response.ok) {
-						return response.json();
-					}
-					return response.json().then(err => {
-						throw err;
-					});
-				})
-				.then(data => {
-					// --- UBAH DI SINI: Panggil Toast Success ---
-					showModernToast("Berhasil! " + data.message, 'success');
+                fetch('/payment/upload', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        return response.json().then(err => {
+                            throw err;
+                        });
+                    })
+                    .then(data => {
+                        // --- UBAH DI SINI: Panggil Toast Success ---
+                        showModernToast("Berhasil! " + data.message, 'success');
 
-					form.reset();
+                        form.reset();
 
-					if (modalInstance) {
-						modalInstance.hide();
-					}
-				})
-				.catch(error => {
-					let errorMessage = "Terjadi kesalahan saat mengupload.";
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                    })
+                    .catch(error => {
+                        let errorMessage = "Terjadi kesalahan saat mengupload.";
 
-					if (error.errors) {
-						errorMessage = "Gagal Validasi:<br>"; // Gunakan <br> karena innerHTML mendeteksi tag HTML
-						for (const [key, messages] of Object.entries(error.errors)) {
-							errorMessage += `- ${messages[0]}<br>`;
-						}
-					} else if (error.message) {
-						errorMessage = error.message;
-					}
+                        if (error.errors) {
+                            errorMessage =
+                                "Gagal Validasi:<br>"; // Gunakan <br> karena innerHTML mendeteksi tag HTML
+                            for (const [key, messages] of Object.entries(error.errors)) {
+                                errorMessage += `- ${messages[0]}<br>`;
+                            }
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
 
-					// --- UBAH DI SINI: Panggil Toast Error ---
-					showModernToast(errorMessage, 'error');
-				})
-				.finally(() => {
-					submitBtn.disabled = false;
-					submitBtn.innerHTML = originalBtnText;
-				});
-		});
+                        // --- UBAH DI SINI: Panggil Toast Error ---
+                        showModernToast(errorMessage, 'error');
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    });
+            });
 
-		function showPaymentConfirmationModal() {
-			var paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-			var paymentConfirmationModal = new bootstrap.Modal(document.getElementById('paymentConfirmationModal'));
+            function showPaymentConfirmationModal() {
+                var paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+                var paymentConfirmationModal = new bootstrap.Modal(document.getElementById('paymentConfirmationModal'));
 
-			paymentModal.hide();
-			setTimeout(() => {
-				paymentConfirmationModal.show();
-			}, 500);
-		}
-	</script>
+                paymentModal.hide();
+                setTimeout(() => {
+                    paymentConfirmationModal.show();
+                }, 500);
+            }
+        </script>
 
-</body>
+    </body>
 
-</html>
+    </html>

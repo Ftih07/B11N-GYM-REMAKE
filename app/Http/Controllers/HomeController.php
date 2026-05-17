@@ -9,8 +9,11 @@ class HomeController extends Controller
     // Goal: Show landing page with latest blog posts
     public function index()
     {
-        // Logic: Get 3 latest published blogs
-        $blog = Blog::published()->take(3)->get();
+        // Get 3 latest published blogs (based on created_at)
+        $blog = Blog::published()
+            ->latest()
+            ->take(3)
+            ->get();
 
         return view('index', compact('blog'));
     }

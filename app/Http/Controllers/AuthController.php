@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
 use App\Models\Member;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -29,7 +29,7 @@ class AuthController extends Controller
                 ->orWhere('email', $googleUser->email)
                 ->first();
 
-            if (!$user) {
+            if (! $user) {
                 // Scenario A: User doesn't exist -> Create New User
                 $user = User::create([
                     'name' => $googleUser->name,
@@ -42,7 +42,7 @@ class AuthController extends Controller
                 ]);
             } else {
                 // Scenario B: User exists -> Update Google ID/Avatar if missing
-                if (!$user->google_id) {
+                if (! $user->google_id) {
                     $user->update([
                         'google_id' => $googleUser->id,
                         'profile_picture' => $googleUser->avatar,
@@ -65,7 +65,7 @@ class AuthController extends Controller
 
             return redirect()->intended('/dashboard');
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Login Gagal: ' . $e->getMessage());
+            return redirect('/login')->with('error', 'Login Gagal: '.$e->getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ class AuthController extends Controller
                 ->orWhere('email', $facebookUser->email)
                 ->first();
 
-            if (!$user) {
+            if (! $user) {
                 // Scenario A: User doesn't exist -> Create New User
                 $user = User::create([
                     'name' => $facebookUser->name,
@@ -100,7 +100,7 @@ class AuthController extends Controller
                 ]);
             } else {
                 // Scenario B: User exists -> Update Facebook ID/Avatar if missing
-                if (!$user->facebook_id) {
+                if (! $user->facebook_id) {
                     $user->update([
                         'facebook_id' => $facebookUser->id,
                         // Boleh di-update avatarnya atau nggak, opsional
@@ -121,7 +121,7 @@ class AuthController extends Controller
 
             return redirect()->intended('/dashboard');
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Login Facebook Gagal: ' . $e->getMessage());
+            return redirect('/login')->with('error', 'Login Facebook Gagal: '.$e->getMessage());
         }
     }
 
@@ -130,6 +130,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Models\Transaction;
-use App\Observers\TransactionObserver;
 use App\Models\QrCode;
+use App\Models\Transaction;
 use App\Observers\QrCodeObserver;
+use App\Observers\TransactionObserver;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,17 +39,19 @@ class AppServiceProvider extends ServiceProvider
                         ['label' => 'B11N Gym', 'url' => route('gym.biin')],
                         ['label' => 'K1NG Gym', 'url' => route('gym.king')],
                         ['label' => 'Kost Istana Merdeka 03', 'url' => route('kost')],
-                    ]
+                        ['label' => 'Digitify', 'url' => 'https://digitify.my.id/'],
+
+                    ],
                 ],
                 [
                     'label' => 'Store',
                     'route' => 'store.biin-king',
-                    'submenu' => []
+                    'submenu' => [],
                 ],
                 [
                     'label' => 'Blog',
                     'route' => 'blogs.index',
-                    'submenu' => []
+                    'submenu' => [],
                 ],
                 [
                     'label' => 'Support',
@@ -57,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
                     'submenu' => [
                         ['label' => 'Laporan Kerusakan', 'url' => route('maintenance.create')],
                         ['label' => 'Survey Pengunjung', 'url' => route('survey.index')],
-                    ]
+                    ],
                 ],
             ];
 
