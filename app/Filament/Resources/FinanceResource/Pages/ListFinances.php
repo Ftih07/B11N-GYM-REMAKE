@@ -4,8 +4,8 @@ namespace App\Filament\Resources\FinanceResource\Pages;
 
 use App\Filament\Resources\FinanceResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
-use Filament\Pages\Concerns\ExposesTableToWidgets; // 1. Tambahkan use ini
+use Filament\Pages\Concerns\ExposesTableToWidgets;
+use Filament\Resources\Pages\ListRecords; // 1. Tambahkan use ini
 
 class ListFinances extends ListRecords
 {
@@ -24,7 +24,8 @@ class ListFinances extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            FinanceResource\Widgets\FinanceStats::class, 
+            FinanceResource\Widgets\FinanceStats::class,
+            FinanceResource\Widgets\FinanceChart::class,
         ];
     }
 }

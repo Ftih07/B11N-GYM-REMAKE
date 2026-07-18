@@ -2,20 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\FinanceExport;
 use App\Filament\Resources\FinanceResource\Pages;
 use App\Models\Finance;
+use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use App\Exports\FinanceExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
-use Carbon\Carbon;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FinanceResource extends Resource
 {
@@ -23,9 +23,13 @@ class FinanceResource extends Resource
     protected static ?string $model = Finance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes'; // Ikon: Uang Kertas
+
     protected static ?string $navigationLabel = 'Rekap Keuangan';
+
     protected static ?string $pluralModelLabel = 'Laporan Keuangan';
+
     protected static ?string $navigationGroup = 'Laporan'; // Dikelompokkan di bawah "Laporan"
+
     protected static ?int $navigationSort = 1;
 
     // --- KONFIGURASI FORM (Input Pemasukan/Pengeluaran) ---
@@ -67,7 +71,7 @@ class FinanceResource extends Resource
                             ->maxLength(255)
                             ->label('Keterangan')
                             ->placeholder('Contoh: Bayar Listrik Bulan Juni'),
-                    ])
+                    ]),
             ]);
     }
 
@@ -95,11 +99,11 @@ class FinanceResource extends Resource
                     ->label('Jenis')
                     ->searchable()
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'income' => 'success', // Hijau
                         'expense' => 'danger', // Merah
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'income' => 'Pemasukan',
                         'expense' => 'Pengeluaran',
                         default => $state,
@@ -111,7 +115,7 @@ class FinanceResource extends Resource
                     ->searchable()
                     ->money('IDR', locale: 'id') // Format lokal Indonesia
                     ->sortable()
-                    ->color(fn($record) => $record->type === 'expense' ? 'danger' : 'success'),
+                    ->color(fn ($record) => $record->type === 'expense' ? 'danger' : 'success'),
             ])
             ->defaultSort('date', 'desc') // Urutkan dari tanggal terbaru
 
@@ -153,6 +157,7 @@ class FinanceResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(\Carbon\Carbon::now()->year - 5, \Carbon\Carbon::now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
@@ -186,6 +191,12 @@ class FinanceResource extends Resource
             ->defaultGroup('gymkos.name') // Aktifkan pengelompokan secara bawaan
 
             ->filters([
+                // --- 1. FILTER CABANG (GYMKOS) ---
+                Tables\Filters\SelectFilter::make('gymkos_id')
+                    ->label('Filter Cabang (Gym/Tempat)')
+                    ->relationship('gymkos', 'name')
+                    ->searchable()
+                    ->preload(),
                 // Filter dropdown: Tampilkan hanya Pemasukan atau Pengeluaran
                 Tables\Filters\SelectFilter::make('type')
                     ->label('Jenis Transaksi')
@@ -219,6 +230,7 @@ class FinanceResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->placeholder('Semua Tahun'),
@@ -227,22 +239,23 @@ class FinanceResource extends Resource
                         return $query
                             ->when(
                                 $data['month'] ?? null,
-                                fn(Builder $query, $month): Builder => $query->whereMonth('date', $month),
+                                fn (Builder $query, $month): Builder => $query->whereMonth('date', $month),
                             )
                             ->when(
                                 $data['year'] ?? null,
-                                fn(Builder $query, $year): Builder => $query->whereYear('date', $year),
+                                fn (Builder $query, $year): Builder => $query->whereYear('date', $year),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['month'] ?? null) {
                             $monthName = Carbon::createFromFormat('m', $data['month'])->translatedFormat('F');
-                            $indicators[] = 'Bulan: ' . $monthName;
+                            $indicators[] = 'Bulan: '.$monthName;
                         }
                         if ($data['year'] ?? null) {
-                            $indicators[] = 'Tahun: ' . $data['year'];
+                            $indicators[] = 'Tahun: '.$data['year'];
                         }
+
                         return $indicators;
                     }),
             ])
