@@ -27,7 +27,7 @@ class User extends Authenticatable implements FilamentUser // <--- 3. Tambahkan 
         'google_id',
         'facebook_id',
         'profile_picture',
-        'email_verified_at'
+        'email_verified_at',
     ];
 
     // Relasi: User mungkin adalah seorang Member
@@ -64,9 +64,9 @@ class User extends Authenticatable implements FilamentUser // <--- 3. Tambahkan 
         ];
     }
 
-    // Fungsi Dashboard Filament hanya bisa diakses user role admin
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === 'admin';
+        // Mengizinkan admin ATAU super_admin untuk masuk ke dashboard Filament
+        return in_array($this->role, ['admin', 'super_admin']);
     }
 }

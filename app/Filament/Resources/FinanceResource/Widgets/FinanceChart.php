@@ -16,6 +16,17 @@ class FinanceChart extends ChartWidget
 
     protected static ?int $sort = 1;
 
+    // --- 1. BUAT GRAFIK FULL WIDTH ---
+    protected int|string|array $columnSpan = 'full';
+
+    // --- 2. HAK AKSES SUPER ADMIN ---
+    public static function canView(): bool
+    {
+        // Ganti 'role' dengan nama kolom yang ada di database Anda
+        // dan 'super_admin' dengan nilai role yang tepat.
+        return auth()->user()->role === 'super_admin';
+    }
+
     protected function getTablePage(): string
     {
         return ListFinances::class;

@@ -206,10 +206,10 @@ class FinanceResource extends Resource
                     ]),
 
                 // --- TAMBAHAN: Filter Bulan dan Tahun ---
-                Filter::make('bulan_tahun')
+                Tables\Filters\Filter::make('bulan_tahun')
                     ->label('Filter Bulan & Tahun')
                     ->form([
-                        Select::make('month')
+                        Forms\Components\Select::make('month')
                             ->label('Bulan')
                             ->options([
                                 '01' => 'Januari',
@@ -225,14 +225,19 @@ class FinanceResource extends Resource
                                 '11' => 'November',
                                 '12' => 'Desember',
                             ])
+                            // BIKIN DEFAULT KE BULAN INI
+                            ->default(now()->format('m'))
                             ->placeholder('Semua Bulan'),
-                        Select::make('year')
+
+                        Forms\Components\Select::make('year')
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 5, Carbon::now()->year + 1);
 
                                 return array_combine($years, $years);
                             })
+                            // BIKIN DEFAULT KE TAHUN INI
+                            ->default(now()->year)
                             ->placeholder('Semua Tahun'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
@@ -246,6 +251,7 @@ class FinanceResource extends Resource
                                 fn (Builder $query, $year): Builder => $query->whereYear('date', $year),
                             );
                     })
+                    // ... (bagian indicateUsing biarkan sama persis seperti kode Anda)
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['month'] ?? null) {
