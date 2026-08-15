@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\FinanceResource\Widgets;
 
 use App\Filament\Resources\FinanceResource\Pages\ListFinances;
+use App\Models\Finance;
 use App\Models\Gymkos;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
@@ -24,39 +25,60 @@ class FinanceStats extends BaseWidget
         $baseQuery = $this->getPageTableQuery();
         $now = Carbon::now();
 
-        // 1. Buat array kosong terlebih dahulu
         $stats = [];
 
-        // 2. Cek apakah user yang login memiliki role 'super_admin'
-        // (Sesuaikan nilai string 'super_admin' jika di database Anda pakainya 'admin')
         $isSuperAdmin = auth()->user()->role === 'super_admin';
 
-        // --- 1. GLOBAL CALCULATION (Hanya untuk Super Admin) ---
         if ($isSuperAdmin) {
-            $totalIncome = (clone $baseQuery)->where('type', 'income')->sum('amount');
-            $totalExpense = (clone $baseQuery)->where('type', 'expense')->sum('amount');
-            $grandTotal = $totalIncome - $totalExpense;
+            // =========================================================================
+            // 1. GLOBAL ALL-TIME (Semua Data dari Awal, Tidak Terpengaruh Filter Tabel)
+            // =========================================================================
+            $allTimeIncome = Finance::where('type', 'income')->sum('amount');
+            $allTimeExpense = Finance::where('type', 'expense')->sum('amount');
+            $allTimeBalance = $allTimeIncome - $allTimeExpense;
 
-            // Masukkan 3 card global ke dalam array $stats
-            $stats[] = Stat::make('Total Pemasukan (Global)', Number::currency($totalIncome, 'IDR'))
-                ->description('Semua uang masuk')
+            $stats[] = Stat::make('Total Pemasukan (All-Time)', Number::currency($allTimeIncome, 'IDR'))
+                ->description('Total semua uang masuk dari awal')
+                ->descriptionIcon('heroicon-m-banknotes')
+                ->color('success');
+
+            $stats[] = Stat::make('Total Pengeluaran (All-Time)', Number::currency($allTimeExpense, 'IDR'))
+                ->description('Total semua uang keluar dari awal')
+                ->descriptionIcon('heroicon-m-banknotes')
+                ->color('danger');
+
+            $stats[] = Stat::make('Sisa Saldo Tabungan Pusat', Number::currency($allTimeBalance, 'IDR'))
+                ->description('Total uang bersih tersisa saat ini')
+                ->descriptionIcon('heroicon-m-wallet')
+                ->color($allTimeBalance >= 0 ? 'success' : 'danger')
+                ->chart([7, 2, 10, 3, 15, 4, 17]);
+
+            // =========================================================================
+            // 2. GLOBAL GABUNGAN SESUAI FILTER (Default Bulan Ini)
+            // =========================================================================
+            $filteredIncome = (clone $baseQuery)->where('type', 'income')->sum('amount');
+            $filteredExpense = (clone $baseQuery)->where('type', 'expense')->sum('amount');
+            $filteredBalance = $filteredIncome - $filteredExpense;
+
+            $stats[] = Stat::make('Pemasukan Gabungan', Number::currency($filteredIncome, 'IDR'))
+                ->description('Total pemasukan '.$now->format('F Y'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success');
 
-            $stats[] = Stat::make('Total Pengeluaran (Global)', Number::currency($totalExpense, 'IDR'))
-                ->description('Semua uang keluar')
+            $stats[] = Stat::make('Pengeluaran Gabungan', Number::currency($filteredExpense, 'IDR'))
+                ->description('Total pengeluaran '.$now->format('F Y'))
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger');
 
-            $stats[] = Stat::make('Sisa Saldo Tabungan', Number::currency($grandTotal, 'IDR'))
-                ->description('Total bersih saat ini')
-                ->descriptionIcon('heroicon-m-wallet')
-                ->color($grandTotal >= 0 ? 'success' : 'danger')
-                ->chart([7, 2, 10, 3, 15, 4, 17]);
+            $stats[] = Stat::make('Saldo Gabungan Cabang', Number::currency($filteredBalance, 'IDR'))
+                ->description('Saldo bersih '.$now->format('F Y'))
+                ->descriptionIcon('heroicon-m-scale')
+                ->color($filteredBalance >= 0 ? 'success' : 'danger');
         }
 
-        // --- 2. PER-BRANCH CALCULATION (Bisa dilihat Semua Role) ---
-        // Karena diletakkan di luar 'if ($isSuperAdmin)', semua user akan mengeksekusi ini
+        // =========================================================================
+        // 3. PER-BRANCH CALCULATION (Bisa dilihat Semua Role, Mengikuti Filter)
+        // =========================================================================
         $gyms = Gymkos::whereNotIn('id', [3, 4, 5])->get();
 
         foreach ($gyms as $gym) {
@@ -64,8 +86,8 @@ class FinanceStats extends BaseWidget
             $gymExpense = (clone $baseQuery)->where('gymkos_id', $gym->id)->where('type', 'expense')->sum('amount');
             $gymBalance = $gymIncome - $gymExpense;
 
-            $incomeIcon = 'heroicon-m-arrow-trending-up'; // Default
-            $incomeColor = 'success'; // Default
+            $incomeIcon = 'heroicon-m-arrow-trending-up';
+            $incomeColor = 'success';
 
             if ($gym->name === 'B11N Gym') {
                 $incomeIcon = 'heroicon-m-user-group';
@@ -75,19 +97,16 @@ class FinanceStats extends BaseWidget
                 $incomeColor = 'info';
             }
 
-            // Card Pendapatan Gym
             $stats[] = Stat::make("Pendapatan {$gym->name}", Number::currency($gymIncome, 'IDR'))
                 ->description('Pemasukan '.$now->format('F Y'))
                 ->descriptionIcon($incomeIcon)
                 ->color($incomeColor);
 
-            // Card Pengeluaran Gym
             $stats[] = Stat::make("Pengeluaran {$gym->name}", Number::currency($gymExpense, 'IDR'))
                 ->description('Pengeluaran '.$now->format('F Y'))
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger');
 
-            // Card Saldo Gym
             $stats[] = Stat::make("Saldo: {$gym->name}", Number::currency($gymBalance, 'IDR'))
                 ->description($gymBalance >= 0 ? 'Aman' : 'Defisit')
                 ->color($gymBalance >= 0 ? 'success' : 'danger');

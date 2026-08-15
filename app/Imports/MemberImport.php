@@ -4,17 +4,16 @@ namespace App\Imports;
 
 use App\Models\Member;
 use Carbon\Carbon;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class MemberImport implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading
+class MemberImport implements ToModel, WithBatchInserts, WithChunkReading, WithStartRow
 {
     protected $gymkosId;
 
-    // Kita bikin constructor buat nerima ID cabang gym-nya (misal B11N Gym = 1)
     public function __construct($gymkosId = 2)
     {
         $this->gymkosId = $gymkosId;
@@ -22,114 +21,101 @@ class MemberImport implements ToModel, WithStartRow, WithBatchInserts, WithChunk
 
     public function startRow(): int
     {
-        return 5; // Melewati 4 baris header yang ada di file URUT.csv
+        return 2; // Data dimulai dari baris ke-2
     }
 
     public function model(array $row)
     {
-        // 1. Skip kalau kolom nama (Index 1) kosong
-        if (empty($row[1])) {
+        // 1. Skip jika NAMA (Index 2) kosong
+        if (empty($row[2])) {
             return null;
         }
 
-        // 2. Format join_date (Wajib ada karena di DB Not Null)
-        $joinDate = $this->parseDate($row[3]);
-        if (!$joinDate) {
-            // Kalau di excel kosong, kita kasih default hari ini biar ngga error database
+        // 2. Format TGL JOIN (Index 4)
+        $joinDate = $this->parseDate($row[4]);
+        if (! $joinDate) {
             $joinDate = Carbon::now()->format('Y-m-d');
         }
 
-        // 3. Logika mencari membership_end_date dari Kanan ke Kiri
-        $kolomMulaiBulan = 4; // Index 4 = Desember 2023 di excel kamu
-        $totalKolom = count($row);
-        $lastActiveIndex = null;
+        // 3. Logika Menentukan Membership End Date
+        $membershipEndDate = null;
 
-        for ($i = $totalKolom - 1; $i >= $kolomMulaiBulan; $i--) {
-            if (!empty($row[$i]) && trim($row[$i]) !== '') {
-                $lastActiveIndex = $i;
-                break;
+        // A. Cek dulu kolom END DATE (Index 1) di Excel
+        if (! empty($row[1])) {
+            $membershipEndDate = $this->parseDate($row[1]);
+        }
+
+        // B. Jika END DATE kosong, lakukan fallback cek kolom bulan dari Kanan ke Kiri
+        if (! $membershipEndDate) {
+            $kolomMulaiBulan = 5; // Index 5 = DESEMBER 2023
+            $totalKolom = count($row);
+            $lastActiveIndex = null;
+
+            for ($i = $totalKolom - 1; $i >= $kolomMulaiBulan; $i--) {
+                if (isset($row[$i]) && ! empty(trim($row[$i]))) {
+                    $lastActiveIndex = $i;
+                    break;
+                }
+            }
+
+            if ($lastActiveIndex !== null) {
+                $selisihBulan = $lastActiveIndex - $kolomMulaiBulan;
+
+                // --- PENYESUAIAN TANGGAL JOIN ---
+                // Ambil tanggal (day) dari join_date (misal: 15, 22, dll)
+                $dayOfJoin = Carbon::parse($joinDate)->day;
+
+                // Mulai dari Desember 2023 dengan tanggal sesuai TGL JOIN
+                // Ditambah selisih bulan + 1 bulan aktif
+                $membershipEndDate = Carbon::create(2023, 12, $dayOfJoin)
+                    ->addMonths($selisihBulan + 1)
+                    ->format('Y-m-d');
             }
         }
 
-        $membershipEndDate = null;
-        if ($lastActiveIndex !== null) {
-            $selisihBulan = $lastActiveIndex - $kolomMulaiBulan;
-            $tanggalBayar = Carbon::parse($joinDate)->format('d');
-
-            // Hitung membership_end_date: Mulai dari Desember 2023 ditambah selisih kolomnya
-            // Ditambah 1 bulan karena diasumsikan bulan yang diceklis adalah bulan dia aktif, 
-            // jadi inactive-nya di bulan berikutnya.
-            $membershipEndDate = Carbon::create(2024, 11, $tanggalBayar)
-                ->addMonths($selisihBulan + 1)
-                ->format('Y-m-d');
-        }
-
-        // 4. Update status otomatis kalau end_date-nya sudah lewat
+        // 4. Set Status (active/inactive) berdasarkan end_date
         $status = 'active';
-        if ($membershipEndDate && Carbon::parse($membershipEndDate)->isPast()) {
-            $status = 'inactive'; // atau 'non-active', sesuaikan dgn enum kamu
+        if ($membershipEndDate && Carbon::parse($membershipEndDate)->endOfDay()->isPast()) {
+            $status = 'inactive';
         }
 
-        // 5. Insert ke tabel sesuai kolom database
+        // 5. Simpan ke Database
         return new Member([
-            'gymkos_id'           => $this->gymkosId,
-            'name'                => $row[1],
-            'phone'               => !empty(trim($row[2] ?? '')) ? trim($row[2]) : null,
-            'join_date'           => $joinDate,
+            'gymkos_id' => $this->gymkosId,
+            'member_code' => trim($row[0] ?? ''),
+            'name' => trim($row[2]),
+            'phone' => ! empty(trim($row[3] ?? '')) ? trim($row[3]) : null,
+            'join_date' => $joinDate,
             'membership_end_date' => $membershipEndDate,
-            'status'              => $status,
+            'status' => $status,
         ]);
     }
 
     private function parseDate($value)
     {
-        if (!$value) return null;
+        if (! $value) {
+            return null;
+        }
         $value = trim($value);
 
         try {
-            // 1. Cek kalau Excel ngirim format Angka Serial (misal: 45330)
             if (is_numeric($value)) {
                 return Date::excelToDateTimeObject($value)->format('Y-m-d');
             }
 
-            // 2. Pecah string tanggal berdasarkan garis miring (/) atau strip (-)
-            $parts = preg_split('/[\/\-]/', $value);
-
-            if (count($parts) === 3) {
-                $day = $parts[0];
-                $month = $parts[1];
-                $year = $parts[2];
-
-                // Cek kalau posisinya Y-m-d (misal: 2024-12-26), berarti angka pertama (day) itu 4 digit
-                if (strlen($day) === 4) {
-                    $year = $parts[0]; // Tahun aslinya di depan
-                    $day = $parts[2];  // Tanggal aslinya di belakang
-                }
-
-                // Cek kalau tahunnya cuma 2 digit (misal: 23), kita sulap jadi 2023
-                if (strlen($year) === 2) {
-                    $year = "20" . $year;
-                }
-
-                // Gabungkan pakai Carbon biar divalidasi dan formatnya pasti Y-m-d
-                return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
-            }
-
-            // 3. Fallback (cadangan) kalau ada teks format bahasa inggris dsb
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
-            // Kalau admin salah ketik parah di Excel (misal ngetik bulan 34), 
-            // biarin aja jadi null biar proses import nggak berhenti / crash
             return null;
         }
     }
 
     public function batchSize(): int
     {
-        return 100;
+        return 500;
     }
+
     public function chunkSize(): int
     {
-        return 100;
+        return 500;
     }
 }

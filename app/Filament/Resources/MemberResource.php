@@ -2,40 +2,42 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\MemberExport;
 use App\Filament\Resources\MemberResource\Pages;
 use App\Models\Member;
 use Filament\Forms;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Forms\Components\ViewField;
-use App\Exports\MemberExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Get;
 use Filament\Tables\Actions\Action;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MemberResource extends Resource
 {
-    // --- PENGATURAN NAVIGASI ---
     public static function getNavigationBadge(): ?string
     {
         return Member::count();
     }
 
     protected static ?string $model = Member::class;
-    protected static ?string $navigationIcon = 'heroicon-o-users'; // Ikon: Pengguna
+
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationGroup = 'Membership & Absensi';
+
     protected static ?string $navigationLabel = 'Manajemen Membership';
+
     protected static ?string $pluralModelLabel = 'Data Membership';
+
     protected static ?int $navigationSort = 2;
 
-    // --- KONFIGURASI FORM (Tambah/Edit) ---
     public static function form(Form $form): Form
     {
         return $form
@@ -43,52 +45,87 @@ class MemberResource extends Resource
                 Forms\Components\Section::make('Data Member')
                     ->columns(2)
                     ->schema([
-                        // Relasi ke Cabang Gym
+                        // 1. CABANG (GYM/KOS)
                         Forms\Components\Select::make('gymkos_id')
-                            ->relationship('gymkos', 'name')
-                            ->label('Cabang (Gym/Kos)')
-                            ->required(),
+                            ->relationship('gymkos', 'name', fn (Builder $query) => $query->whereIn('id', [1, 2]))
+                            ->label('Cabang Gym')
+                            ->required()
+                            ->live()
+                            ->disabled(fn (string $operation): bool => $operation === 'edit')
+                            ->dehydrated()
+                            ->afterStateUpdated(function ($state, Forms\Set $set, string $operation) {
+                                if ($operation === 'create' && $state) {
+                                    $gymkosId = (int) $state;
+                                    $prefix = ($gymkosId === 1) ? 'B-' : 'K-';
 
+                                    $lastMember = Member::where('gymkos_id', $gymkosId)
+                                        ->where('member_code', 'like', "{$prefix}%")
+                                        ->orderByRaw('CAST(SUBSTRING(member_code, 3) AS UNSIGNED) DESC')
+                                        ->first();
+
+                                    $nextNumber = 1;
+                                    if ($lastMember && ! empty($lastMember->member_code)) {
+                                        $lastNumber = (int) substr($lastMember->member_code, 2);
+                                        $nextNumber = $lastNumber + 1;
+                                    }
+
+                                    $set('member_code', $prefix.str_pad($nextNumber, 5, '0', STR_PAD_LEFT));
+                                }
+                            }),
+
+                        // 2. ID MEMBER
+                        Forms\Components\TextInput::make('member_code')
+                            ->label('ID Member')
+                            ->placeholder('Pilih cabang untuk generate otomatis')
+                            ->maxLength(50)
+                            ->readOnly() // Dibuat read-only agar urutan selalu konsisten
+                            ->dehydrated()
+                            ->helperText('Dibuat otomatis oleh sistem berdasarkan cabang.'),
+
+                        // 3. NAMA LENGKAP
                         Forms\Components\TextInput::make('name')
                             ->label('Nama Lengkap')
                             ->required()
                             ->maxLength(255),
 
+                        // 4. ALAMAT EMAIL
                         Forms\Components\TextInput::make('email')
                             ->label('Alamat Email')
                             ->helperText('Opsional')
                             ->email(),
 
+                        // 5. NOMOR HP / WA
                         Forms\Components\TextInput::make('phone')
                             ->label('Nomor HP / WhatsApp')
                             ->helperText('Opsional')
                             ->tel(),
 
+                        // 6. ALAMAT
                         Forms\Components\Textarea::make('address')
                             ->label('Alamat Lengkap')
                             ->rows(2)
                             ->helperText('Opsional')
                             ->columnSpanFull(),
 
+                        // 7. TGL BERGABUNG
                         Forms\Components\DatePicker::make('join_date')
                             ->label('Tanggal Bergabung')
                             ->default(now())
                             ->required(),
 
-                        // --- LOGIKA STATUS REAL-TIME ---
+                        // 8. MASA BERLAKU
                         Forms\Components\DatePicker::make('membership_end_date')
                             ->label('Berlaku Sampai')
                             ->required()
-                            ->live() // Memantau perubahan
+                            ->live()
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
-                                // Logika: Jika tanggal adalah hari ini atau masa depan -> Aktif, jika tidak -> Tidak Aktif
                                 if ($state) {
                                     $isActive = \Carbon\Carbon::parse($state)->endOfDay()->isFuture() || \Carbon\Carbon::parse($state)->isToday();
                                     $set('status', $isActive ? 'active' : 'inactive');
                                 }
                             }),
 
-                        // Status diatur otomatis oleh logika tanggal di atas
+                        // 9. STATUS
                         Forms\Components\Select::make('status')
                             ->label('Status Membership')
                             ->options([
@@ -97,92 +134,122 @@ class MemberResource extends Resource
                             ])
                             ->default('active')
                             ->required()
-                            ->dehydrated(), // Memastikan nilai tetap tersimpan meskipun disabled
+                            ->dehydrated(),
 
-                        // --- INPUT WEBCAM & DETEKSI WAJAH ---
-
-                        // 1. Tampilan Webcam Kustom
+                        // 10. WEBCAM & FACE DESCRIPTOR
                         ViewField::make('picture')
-                            ->view('filament.forms.components.webcam-input') // Memuat view Blade kustom
+                            ->view('filament.forms.components.webcam-input')
                             ->viewData([
-                                'descriptorField' => 'face_descriptor' // Meneruskan nama field target untuk data AI
+                                'descriptorField' => 'face_descriptor',
                             ])
                             ->label('Foto Wajah')
                             ->columnSpanFull(),
 
-                        // 2. Deskriptor Wajah (Data AI Tersembunyi)
                         Forms\Components\Textarea::make('face_descriptor')
                             ->label('Deskriptor Wajah (Dibuat Otomatis)')
                             ->rows(3)
-                            ->readOnly() // Mencegah edit manual
+                            ->readOnly()
                             ->helperText('Otomatis terisi saat wajah terdeteksi di kamera.')
                             ->columnSpanFull(),
                     ]),
             ]);
     }
 
-    // --- KONFIGURASI TABEL (Tampilan List) ---
+    // --- KONFIGURASI TABEL (List View) ---
     public static function table(Table $table): Table
     {
         return $table
-            // Default Sort berdasarkan yang terakhir diupdate
             ->defaultSort('updated_at', 'desc')
             ->columns([
+                // 1. ID MEMBER
+                Tables\Columns\TextColumn::make('member_code')
+                    ->label('ID Member')
+                    ->badge()
+                    ->color('gray')
+                    ->placeholder('-')
+                    ->sortable(),
+
+                // 2. FOTO
                 Tables\Columns\ImageColumn::make('picture')
                     ->label('Foto')
-                    ->circular(),
+                    ->circular()
+                    ->defaultImageUrl('https://ui-avatars.com/api/?name=Member&background=0D8ABC&color=fff'),
 
+                // 3. NAMA MEMBER (KITA PASANG SEARCH MULTI-KATA DI SINI)
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Member')
-                    ->searchable(['name', 'email']),
+                    ->sortable()
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        // Pecah kata kunci berdasarkan spasi (misal: "rizki 6559" / "B-02243 rizki")
+                        $words = array_filter(explode(' ', trim($search)));
 
-                // Masa Berlaku & Selisih Waktu
-                Tables\Columns\TextColumn::make('membership_end_date')
-                    ->label('Masa Berlaku')
+                        return $query->where(function (Builder $subQuery) use ($words) {
+                            foreach ($words as $word) {
+                                $subQuery->where(function (Builder $wordQuery) use ($word) {
+                                    $wordQuery->where('member_code', 'like', "%{$word}%")
+                                        ->orWhere('name', 'like', "%{$word}%")
+                                        ->orWhere('phone', 'like', "%{$word}%");
+                                });
+                            }
+                        });
+                    }),
+
+                // 4. NO. HP / TELP
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('No. HP / WA')
+                    ->placeholder('-')
+                    ->copyable()
+                    ->copyMessage('Nomor HP berhasil disalin'),
+
+                // 5. TANGGAL JOIN
+                Tables\Columns\TextColumn::make('join_date')
+                    ->label('Tgl Join')
                     ->date('d M Y')
-                    ->description(fn(Member $record) => $record->membership_end_date?->diffForHumans()),
+                    ->sortable(),
 
-                // Badge Status
+                // 6. END DATE / MASA BERLAKU
+                Tables\Columns\TextColumn::make('membership_end_date')
+                    ->label('End Date')
+                    ->date('d M Y')
+                    ->description(fn (Member $record) => $record->membership_end_date?->diffForHumans())
+                    ->sortable(),
+
+                // 7. STATUS
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'inactive' => 'danger',
+                        default => 'secondary'
                     })
-                    ->formatStateUsing(fn(string $state) => match ($state) {
+                    ->formatStateUsing(fn (string $state) => match ($state) {
                         'active' => 'Aktif',
                         'inactive' => 'Expired',
+                        default => $state
                     }),
 
-                Tables\Columns\TextColumn::make('join_date')
-                    ->label('Tanggal Gabung')
-                    ->date('d M Y'),
-
-                // TAMBAHAN: LOKASI CABANG (GYMKOS)
+                // 8. LOKASI CABANG
                 Tables\Columns\TextColumn::make('gymkos.name')
                     ->label('Lokasi Cabang')
                     ->badge()
                     ->color('primary')
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
             ])
 
-            // --- AKSI HEADER: EXPORT EXCEL DINAMIS ---
+            // --- HEADER ACTIONS (Export Excel) ---
             ->headerActions([
                 Action::make('export_excel')
                     ->label('Export Data Member')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
                     ->form([
-                        // Filter Cabang (Gymkos)
                         Select::make('gymkos_id')
-                            ->label('Cabang (Gym/Kos)')
-                            ->options(\App\Models\Gymkos::all()->pluck('name', 'id'))
-                            ->placeholder('Semua Cabang') // Kosong berarti 'All'
+                            ->label('Cabang Gym')
+                            ->options(\App\Models\Gymkos::whereIn('id', [1, 2])->pluck('name', 'id'))
+                            ->placeholder('Semua Cabang (B11N & K1NG)')
                             ->default(null),
 
-                        // 1. Pilihan Mode Export
                         Radio::make('mode')
                             ->label('Pilih Tipe Export')
                             ->options([
@@ -190,73 +257,59 @@ class MemberResource extends Resource
                                 'period' => 'Filter Berdasarkan Bulan Bergabung',
                             ])
                             ->default('all')
-                            ->live(), // Mengubah visibilitas input di bawahnya
+                            ->live(),
 
-                        // 2. Pemilih Bulan (Muncul hanya jika mode == period)
                         Select::make('month')
                             ->label('Bulan Bergabung')
                             ->options([
-                                '01' => 'Januari',
-                                '02' => 'Februari',
-                                '03' => 'Maret',
-                                '04' => 'April',
-                                '05' => 'Mei',
-                                '06' => 'Juni',
-                                '07' => 'Juli',
-                                '08' => 'Agustus',
-                                '09' => 'September',
-                                '10' => 'Oktober',
-                                '11' => 'November',
-                                '12' => 'Desember',
+                                '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
+                                '04' => 'April',   '05' => 'Mei',      '06' => 'Juni',
+                                '07' => 'Juli',    '08' => 'Agustus',  '09' => 'September',
+                                '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
                             ])
                             ->default(now()->format('m'))
-                            ->visible(fn(Get $get) => $get('mode') === 'period')
-                            ->required(fn(Get $get) => $get('mode') === 'period'),
+                            ->visible(fn (Get $get) => $get('mode') === 'period')
+                            ->required(fn (Get $get) => $get('mode') === 'period'),
 
-                        // 3. Pemilih Tahun (Muncul hanya jika mode == period)
                         Select::make('year')
                             ->label('Tahun Bergabung')
                             ->options(function () {
                                 $years = range(\Carbon\Carbon::now()->year - 5, \Carbon\Carbon::now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
-                            ->visible(fn(Get $get) => $get('mode') === 'period')
-                            ->required(fn(Get $get) => $get('mode') === 'period'),
+                            ->visible(fn (Get $get) => $get('mode') === 'period')
+                            ->required(fn (Get $get) => $get('mode') === 'period'),
                     ])
                     ->action(function (array $data) {
-                        // Ambil variabel Gymkos
                         $gymkosId = $data['gymkos_id'] ?? null;
                         $gymName = $gymkosId ? \App\Models\Gymkos::find($gymkosId)->name : 'Semua-Cabang';
 
-                        // Tentukan Nama File & Parameter
                         if ($data['mode'] === 'all') {
-                            $filename = "Semua-Data-Member-{$gymName}-" . date('d-m-Y') . ".xlsx";
+                            $filename = "Semua-Data-Member-{$gymName}-".date('d-m-Y').'.xlsx';
                             $month = null;
                             $year = null;
                         } else {
-                            $filename = "Data-Member-Join-{$gymName}-" . $data['month'] . "-" . $data['year'] . ".xlsx";
+                            $filename = "Data-Member-Join-{$gymName}-".$data['month'].'-'.$data['year'].'.xlsx';
                             $month = $data['month'];
                             $year = $data['year'];
                         }
 
-                        // Memicu Download
                         return Excel::download(
                             new MemberExport($data['mode'], $month, $year, $gymkosId),
                             $filename
                         );
                     }),
             ])
-            // --- FILTER TABEL ---
+
             ->filters([
-                // Filter berdasarkan relasi Gymkos
                 Tables\Filters\SelectFilter::make('gymkos_id')
-                    ->relationship('gymkos', 'name')
-                    ->label('Cabang Gym / Kos')
+                    ->relationship('gymkos', 'name', fn (Builder $query) => $query->whereIn('id', [1, 2]))
+                    ->label('Cabang Gym')
                     ->searchable()
                     ->preload(),
 
-                // Filter tambahan: berdasarkan Status
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'active' => 'Aktif',
@@ -266,7 +319,7 @@ class MemberResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Edit'),
-                Tables\Actions\DeleteAction::make()->label('Hapus'), // Sekalian saya tambahkan tombol Hapus
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -280,29 +333,24 @@ class MemberResource extends Resource
         return [];
     }
 
-    // --- PENGATURAN PENCARIAN GLOBAL ---
-    // 1. Kolom utama pencarian
+    // --- GLOBAL SEARCH (Header Atas Filament) ---
     protected static ?string $recordTitleAttribute = 'name';
 
-    // 2. Kolom yang bisa dicari dari global search
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'email', 'phone'];
+        return ['member_code', 'name', 'phone'];
     }
 
-    // 3. Eager load relasi gymkos biar query nggak bengkak (N+1)
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['gymkos']);
     }
 
-    // 4. Judul Utama Pencarian
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        return $record->name;
+        return ($record->member_code ? "[{$record->member_code}] " : '').$record->name;
     }
 
-    // 5. Detail Informatif di bawah Judul
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [

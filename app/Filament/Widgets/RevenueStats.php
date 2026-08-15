@@ -5,9 +5,9 @@ namespace App\Filament\Widgets;
 use App\Models\Finance;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Number;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Number;
 
 class RevenueStats extends BaseWidget
 {
@@ -33,13 +33,13 @@ class RevenueStats extends BaseWidget
         return [
             // Stats Card 1: B11N Gym
             Stat::make('Pendapatan B11N Gym', Number::currency($getIncome('B11N Gym'), 'IDR'))
-                ->description('Pemasukan ' . $now->format('F Y'))
+                ->description('Pemasukan '.$now->format('F Y'))
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('warning'), // Yellow
 
             // Stats Card 2: K1NG Gym
             Stat::make('Pendapatan K1NG Gym', Number::currency($getIncome('K1NG Gym'), 'IDR'))
-                ->description('Pemasukan ' . $now->format('F Y'))
+                ->description('Pemasukan '.$now->format('F Y'))
                 ->descriptionIcon('heroicon-m-trophy')
                 ->color('info'), // Blue
         ];

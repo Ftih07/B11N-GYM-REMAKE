@@ -3,14 +3,15 @@
 namespace App\Filament\Resources\MemberResource\Pages;
 
 use App\Filament\Resources\MemberResource;
-use App\Imports\MemberImport; // Tambahan untuk memanggil class import
+use App\Imports\MemberImport;
 use Filament\Actions;
-use Filament\Actions\Action; // Tambahan untuk bikin custom action
-use Filament\Forms\Components\FileUpload; // Tambahan untuk form upload
-use Filament\Notifications\Notification; // Tambahan untuk notifikasi sukses/gagal
+use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Maatwebsite\Excel\Facades\Excel; // Tambahan package Laravel Excel
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListMembers extends ListRecords
 {
@@ -19,51 +20,59 @@ class ListMembers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL IMPORT KITA TAMBAHKAN DI SINI
             Action::make('importExcel')
                 ->label('Import Excel')
                 ->color('success')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->form([
+                    // Pilihan Cabang Gym (Opsional tapi recommended biar fleksibel)
+                    Select::make('gymkos_id')
+                        ->label('Pilih Cabang (Gym/Kos)')
+                        ->options(\App\Models\Gymkos::all()->pluck('name', 'id'))
+                        ->default(2)
+                        ->required(),
+
                     FileUpload::make('file_excel')
-                        ->label('Upload File URUT.csv')
+                        ->label('Upload File Excel / MASTER.xlsx / CSV')
                         ->disk('local')
-                        ->directory('imports') // File akan masuk ke storage/app/imports
+                        ->directory('imports')
                         ->acceptedFileTypes([
                             'text/csv',
                             'application/vnd.ms-excel',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         ])
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    // Minta Laravel nyariin path aslinya yang paling akurat
+                    // --- 1. MENCEGAH TIMEOUT & RAM OVERFLOW ---
+                    set_time_limit(0);
+                    ini_set('memory_limit', '512M');
+
                     $filePath = Storage::disk('local')->path($data['file_excel']);
 
                     try {
-                        // Panggil MemberImport di sini (Angka 1 = ID B11N Gym)
-                        Excel::import(new MemberImport(2), $filePath);
+                        // --- 2. JALANKAN IMPORT ---
+                        Excel::import(new MemberImport($data['gymkos_id']), $filePath);
 
                         Notification::make()
                             ->title('Berhasil!')
-                            ->body('Ribuan data member berhasil masuk database.')
+                            ->body('Seluruh data member berhasil diimport ke database.')
                             ->success()
                             ->send();
                     } catch (\Exception $e) {
                         Notification::make()
                             ->title('Gagal Import')
-                            ->body('Ada masalah: ' . $e->getMessage())
+                            ->body('Ada masalah: '.$e->getMessage())
                             ->danger()
                             ->send();
-                    }
-
-                    // Hapus file excel setelah selesai dibaca
-                    if (Storage::disk('local')->exists($data['file_excel'])) {
-                        Storage::disk('local')->delete($data['file_excel']);
+                    } finally {
+                        // --- 3. BERSIHKAN FILE SETELAH PROSES ---
+                        if (Storage::disk('local')->exists($data['file_excel'])) {
+                            Storage::disk('local')->delete($data['file_excel']);
+                        }
                     }
                 }),
 
-            // INI TOMBOL BAWAAN FILAMENT (Biarkan saja biar tetap bisa nambah manual)
             Actions\CreateAction::make(),
         ];
     }

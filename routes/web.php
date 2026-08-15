@@ -1,23 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
-
 use App\Http\Controllers\Gym\BiinGymController;
 use App\Http\Controllers\Gym\KingGymController;
 use App\Http\Controllers\Gym\PaymentController;
-
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Kost\KostController;
-use App\Http\Controllers\Store\StoreController;
+use App\Http\Controllers\QrCodePrintController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Store\PrintController;
 use App\Http\Controllers\Store\ProductController;
+use App\Http\Controllers\Store\StoreController;
 use App\Http\Controllers\SurveyController;
-use App\Http\Controllers\QrCodePrintController;
-
-use App\Http\Controllers\SitemapController;
-
+use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
@@ -78,15 +73,14 @@ Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store')
 
 Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 
-
 // -----------------------------------------------//
 //--------------- Membership Route ---------------//
 // -----------------------------------------------//
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Member\AttendanceController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\ProfileController;
-use App\Http\Controllers\AuthController;
 
 // Halaman Login (Tamu only)
 Route::middleware('guest')->group(function () {
@@ -119,24 +113,23 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/api/check-membership-status', function () {
-    if (!auth()->check()) {
+    if (! auth()->check()) {
         return response()->json(['status' => false]);
     }
 
     $isMember = \App\Models\Member::where('email', auth()->user()->email)->exists();
+
     return response()->json(['status' => $isMember]);
 });
-
 
 // -----------------------------------------------//
 //--------------- Employee Route -----------------//
 // -----------------------------------------------//
 
 use App\Http\Controllers\Employee\AuthController as EmployeeAuthController;
-use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;;
-
-use App\Http\Controllers\Employee\TransactionController as EmployeeTransactionController;
+use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;
 use App\Http\Controllers\Employee\ProductController as EmployeeProductController;
+use App\Http\Controllers\Employee\TransactionController as EmployeeTransactionController;
 
 // --- RUTE KHUSUS KARYAWAN (EMPLOYEE) ---
 Route::prefix('employee')->name('employee.')->group(function () {
@@ -163,4 +156,19 @@ Route::prefix('employee')->name('employee.')->group(function () {
         // <--- CRUD Produk Manajemen --->
         Route::resource('products', EmployeeProductController::class);
     });
+});
+
+use App\Http\Controllers\EmployeeMemberController;
+
+// 1. Halaman Tampil QR Code Global
+Route::get('/frontdesk-qr', [EmployeeMemberController::class, 'generateQr'])->name('employee.qr');
+
+// 2. Portal Employee Terproteksi
+Route::middleware(['qr.auth'])->prefix('employee')->name('employee.')->group(function () {
+    Route::get('/members', [EmployeeMemberController::class, 'index'])->name('members.index');
+    Route::get('/members/create', [EmployeeMemberController::class, 'create'])->name('members.create');
+    Route::post('/members', [EmployeeMemberController::class, 'store'])->name('members.store');
+    Route::get('/members/{member}/edit', [EmployeeMemberController::class, 'edit'])->name('members.edit');
+    Route::put('/members/{member}', [EmployeeMemberController::class, 'update'])->name('members.update');
+    Route::post('/members/{member}/extend', [EmployeeMemberController::class, 'extend'])->name('members.extend');
 });
