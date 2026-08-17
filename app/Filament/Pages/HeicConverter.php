@@ -2,32 +2,38 @@
 
 namespace App\Filament\Pages;
 
+use App\Traits\SuperAdminOnly;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
-use Filament\Pages\Page;
 use Filament\Notifications\Notification;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Grid;
+use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\Encoders\JpegEncoder;
-use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\Encoders\PngEncoder;
+use Intervention\Image\Encoders\WebpEncoder;
+use Intervention\Image\ImageManager;
 use ZipArchive;
 
 class HeicConverter extends Page implements HasForms
 {
     use InteractsWithForms;
+    use SuperAdminOnly;
 
     protected static ?string $navigationGroup = 'Tools';
+
     protected static ?int $navigationSort = 8;
+
     protected static ?string $navigationIcon = 'heroicon-o-photo'; // Ganti icon biar lebih umum
+
     protected static ?string $navigationLabel = 'Image Tool'; // Ganti Label
+
     protected static ?string $title = 'Compress & Convert Gambar'; // Ganti Title
 
     protected static string $view = 'filament.pages.heic-converter';
@@ -87,9 +93,9 @@ class HeicConverter extends Page implements HasForms
                                     ->default(80)
                                     ->minValue(10)
                                     ->maxValue(100)
-                                    ->hidden(fn($get) => $get('format') === 'png'),
+                                    ->hidden(fn ($get) => $get('format') === 'png'),
                             ]),
-                    ])
+                    ]),
             ])
             ->statePath('data');
     }
@@ -101,10 +107,10 @@ class HeicConverter extends Page implements HasForms
 
         try {
 
-            $manager = new ImageManager(new Driver());
+            $manager = new ImageManager(new Driver);
 
-            $zipName = 'compressed-images-' . time() . '.zip';
-            $zipPath = storage_path('app/' . $zipName);
+            $zipName = 'compressed-images-'.time().'.zip';
+            $zipPath = storage_path('app/'.$zipName);
 
             $zip = new ZipArchive;
             $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
@@ -115,7 +121,7 @@ class HeicConverter extends Page implements HasForms
                 $image = $manager->read($path);
 
                 // Resize
-                if (!empty($state['width'])) {
+                if (! empty($state['width'])) {
                     $image->scaleDown(width: $state['width']);
                 }
 
@@ -130,11 +136,11 @@ class HeicConverter extends Page implements HasForms
                     $encoded = $image->encode(new WebpEncoder(quality: $quality));
                     $ext = '.webp';
                 } else {
-                    $encoded = $image->encode(new PngEncoder());
+                    $encoded = $image->encode(new PngEncoder);
                     $ext = '.png';
                 }
 
-                $zip->addFromString($filename . $ext, $encoded);
+                $zip->addFromString($filename.$ext, $encoded);
 
                 Storage::disk('local')->delete($file);
             }

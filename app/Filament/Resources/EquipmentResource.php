@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EquipmentResource\Pages;
 use App\Models\Equipment;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,8 @@ use Filament\Tables\Table;
 
 class EquipmentResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
 
     // Menampilkan jumlah total alat di badge sidebar
@@ -21,10 +24,15 @@ class EquipmentResource extends Resource
     }
 
     protected static ?string $model = Equipment::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-wrench'; // Ikon: Kunci Pas
+
     protected static ?string $navigationGroup = 'Manajemen Gym';
+
     protected static ?string $navigationLabel = 'Inventaris Alat';
+
     protected static ?string $pluralModelLabel = 'Data Alat Gym';
+
     protected static ?int $navigationSort = 3;
 
     // --- KONFIGURASI FORM ---
@@ -125,7 +133,7 @@ class EquipmentResource extends Resource
 
                 Tables\Columns\TextColumn::make('category')
                     ->label('Kategori')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'Cardio' => 'Kardio',
                         'Strength' => 'Beban',
                         'Furniture' => 'Furnitur',
@@ -138,13 +146,13 @@ class EquipmentResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Kondisi')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'maintenance' => 'warning',
                         'broken' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'active' => 'Aktif',
                         'maintenance' => 'Perbaikan',
                         'broken' => 'Rusak',

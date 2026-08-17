@@ -4,20 +4,25 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
-use Filament\Forms\Components\Section;
 
 class UserResource extends Resource
 {
+    use SuperAdminOnly;
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationGroup = 'User Directory';
+
     protected static ?int $navigationSort = 10;
 
     // --- TAMBAHAN: FORM CREATE/EDIT ---
@@ -46,15 +51,15 @@ class UserResource extends Resource
                             ->password()
                             ->revealable()
                             // Wajib diisi saat create, opsional saat edit
-                            ->required(fn(string $context): bool => $context === 'create')
-                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                            ->dehydrated(fn($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->dehydrated(fn ($state) => filled($state))
                             ->maxLength(255),
 
                         // KUNCI ROLE: Disembunyikan dari form tapi nilainya dikirim ke database
                         Forms\Components\Hidden::make('role')
                             ->default('employee'),
-                    ])
+                    ]),
             ]);
     }
 
@@ -77,13 +82,13 @@ class UserResource extends Resource
 
                 Tables\Columns\TextColumn::make('role')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'admin' => 'danger', // Merah buat Admin biar match tema B1NG Empire
                         'employee' => 'warning', // Kuning/Warning untuk karyawan
                         'user' => 'gray',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
 
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
@@ -124,7 +129,7 @@ class UserResource extends Resource
     // 1. HAPUS FUNGSI canCreate() AGAR DEFAULTNYA JADI TRUE
     // public static function canCreate(): bool
     // {
-    //     return false; 
+    //     return false;
     // }
 
     public static function getPages(): array

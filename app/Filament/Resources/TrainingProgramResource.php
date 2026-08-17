@@ -3,24 +3,32 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TrainingProgramResource\Pages;
-use App\Models\TrainingProgram;
 use App\Models\Gymkos;
+use App\Models\TrainingProgram;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
+use Filament\Tables\Actions\ReplicateAction;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Actions\ReplicateAction; // Import Replicate Action
+use Filament\Tables\Table; // Import Replicate Action
 
 class TrainingProgramResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Program Latihan';
+
     protected static ?string $navigationLabel = 'Daftar Program';
+
     protected static ?string $pluralModelLabel = 'Data Program Latihan';
+
     protected static ?string $model = TrainingProgram::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-fire'; // Ikon: Api/Energi
+
     protected static ?int $navigationSort = 7;
 
     // --- KONFIGURASI FORM ---

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestimoniResource\Pages;
 use App\Models\Testimoni;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,12 +13,19 @@ use Filament\Tables\Table;
 
 class TestimoniResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Website';
+
     protected static ?string $navigationLabel = 'Testimoni';
+
     protected static ?string $pluralModelLabel = 'Data Testimoni';
+
     protected static ?int $navigationSort = 5;
+
     protected static ?string $model = Testimoni::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left'; // Ikon: Balon Obrolan
 
     // --- KONFIGURASI FORM ---
@@ -61,7 +69,7 @@ class TestimoniResource extends Resource
                             ->label('Cabang (Gym/Kos)')
                             ->relationship('gymkos', 'name')
                             ->required(),
-                    ])
+                    ]),
             ]);
     }
 
@@ -85,7 +93,7 @@ class TestimoniResource extends Resource
                 Tables\Columns\TextColumn::make('rating')
                     ->sortable()
                     ->label('Rating')
-                    ->formatStateUsing(fn($record) => match ($record->rating) {
+                    ->formatStateUsing(fn ($record) => match ($record->rating) {
                         1 => '1 Bintang ⭐',
                         2 => '2 Bintang ⭐⭐',
                         3 => '3 Bintang ⭐⭐⭐',
@@ -131,8 +139,8 @@ class TestimoniResource extends Resource
                     ])
                     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
                         return $query
-                            ->when($data['created_from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
-                            ->when($data['created_until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
+                            ->when($data['created_from'], fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn ($q, $date) => $q->whereDate('created_at', '<=', $date));
                     }),
             ])
             ->actions([

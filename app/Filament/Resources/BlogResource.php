@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BlogResource\Pages;
 use App\Models\Blog;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,7 @@ use Filament\Tables\Table;
 
 class BlogResource extends Resource
 {
+    use SuperAdminOnly;
     // --- PENGATURAN NAVIGASI ---
 
     // Menampilkan total jumlah blog di sebelah menu sidebar
@@ -21,10 +23,15 @@ class BlogResource extends Resource
     }
 
     protected static ?string $navigationGroup = 'Manajemen Website';
+
     protected static ?string $navigationLabel = 'Artikel / Blog';
+
     protected static ?string $pluralModelLabel = 'Data Artikel';
+
     protected static ?int $navigationSort = 5;
+
     protected static ?string $model = Blog::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     // --- KONFIGURASI FORM (Tambah/Edit) ---
@@ -82,12 +89,12 @@ class BlogResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'publish' => 'success',
                         'unpublish' => 'warning',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'publish' => 'Dipublikasi',
                         'unpublish' => 'Draft',
                         default => $state,

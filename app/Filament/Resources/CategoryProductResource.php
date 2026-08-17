@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryProductResource\Pages;
 use App\Models\CategoryProduct;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +13,15 @@ use Filament\Tables\Table;
 
 class CategoryProductResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Toko'; // Grup Sidebar
+
     protected static ?string $navigationLabel = 'Kategori Produk';
+
     protected static ?string $pluralModelLabel = 'Data Kategori Produk';
+
     protected static ?int $navigationSort = 6; // Urutan posisi
 
     protected static ?string $model = CategoryProduct::class;

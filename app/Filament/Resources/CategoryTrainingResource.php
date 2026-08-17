@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryTrainingResource\Pages;
 use App\Models\CategoryTraining;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,13 +13,19 @@ use Filament\Tables\Table;
 
 class CategoryTrainingResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Program Latihan'; // Grup Sidebar
+
     protected static ?string $navigationLabel = 'Kategori Program';
+
     protected static ?string $pluralModelLabel = 'Data Kategori Latihan';
+
     protected static ?string $model = CategoryTraining::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap'; // Ikon untuk 'Training'
+
     protected static ?int $navigationSort = 7; // Urutan posisi
 
     // --- KONFIGURASI FORM (Tambah/Edit) ---

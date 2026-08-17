@@ -4,21 +4,29 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\QrCodeResource\Pages;
 use App\Models\QrCode;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Table;
 
 class QrCodeResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
-    protected static ?string $navigationGroup = 'Tools'; 
+    protected static ?string $navigationGroup = 'Tools';
+
     protected static ?string $navigationLabel = 'Pembuat QR Code'; // Mengubah menu di navbar
+
     protected static ?string $pluralModelLabel = 'Data QR Code'; // Judul di dalam halaman
+
     protected static ?int $navigationSort = 8;
+
     protected static ?string $model = QrCode::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
 
     // --- KONFIGURASI FORM ---
@@ -92,7 +100,7 @@ class QrCodeResource extends Resource
                     ->icon('heroicon-o-printer')
                     ->color('success')
                     // Membuka route/controller spesifik untuk menangani pencetakan
-                    ->url(fn(QrCode $record): string => route('qr-code.print', $record))
+                    ->url(fn (QrCode $record): string => route('qr-code.print', $record))
                     ->openUrlInNewTab(), // Buka di tab baru untuk mencetak
             ])
             ->bulkActions([

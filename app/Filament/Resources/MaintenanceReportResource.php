@@ -2,21 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\MaintenanceExport;
 use App\Filament\Resources\MaintenanceReportResource\Pages;
 use App\Models\MaintenanceReport;
+use App\Traits\SuperAdminOnly;
+use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use App\Exports\MaintenanceExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
-use Carbon\Carbon;
+use Filament\Tables\Table;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MaintenanceReportResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- NAVIGATION SETTINGS ---
 
     // Badge: Shows total count of reports in the sidebar
@@ -26,9 +29,13 @@ class MaintenanceReportResource extends Resource
     }
 
     protected static ?string $model = MaintenanceReport::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
     protected static ?string $navigationGroup = 'Manajemen Gym';
+
     protected static ?string $navigationLabel = 'Laporan Kerusakan';
+
     protected static ?int $navigationSort = 3;
 
     // --- FORM CONFIGURATION ---
@@ -119,7 +126,7 @@ class MaintenanceReportResource extends Resource
                     ->label('Alat')
                     ->searchable()
                     // Limit description length in table view
-                    ->description(fn(MaintenanceReport $record): string => \Illuminate\Support\Str::limit($record->description, 30)),
+                    ->description(fn (MaintenanceReport $record): string => \Illuminate\Support\Str::limit($record->description, 30)),
 
                 Tables\Columns\ImageColumn::make('evidence_photo')
                     ->label('Foto')
@@ -133,7 +140,7 @@ class MaintenanceReportResource extends Resource
                         'warning' => 'medium',
                         'danger' => ['high', 'critical'],
                     ])
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
 
                 // Status Badge
                 Tables\Columns\BadgeColumn::make('status')
@@ -175,6 +182,7 @@ class MaintenanceReportResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
@@ -184,7 +192,7 @@ class MaintenanceReportResource extends Resource
                         // Download Excel
                         return Excel::download(
                             new MaintenanceExport($data['month'], $data['year']),
-                            'Laporan-Maintenance-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            'Laporan-Maintenance-'.$data['month'].'-'.$data['year'].'.xlsx'
                         );
                     }),
             ])
@@ -210,12 +218,12 @@ class MaintenanceReportResource extends Resource
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->action(fn(MaintenanceReport $record) => $record->update([
+                    ->action(fn (MaintenanceReport $record) => $record->update([
                         'status' => 'resolved',
                         'fixed_at' => now(), // Set finish time to now
                     ]))
                     // Only show this button if status is NOT resolved
-                    ->visible(fn(MaintenanceReport $record) => $record->status !== 'resolved'),
+                    ->visible(fn (MaintenanceReport $record) => $record->status !== 'resolved'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

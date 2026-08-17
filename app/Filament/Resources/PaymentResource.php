@@ -2,24 +2,27 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\PaymentExport;
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Models\Payment;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
+use App\Traits\SuperAdminOnly;
+use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Carbon\Carbon;
-use App\Exports\PaymentExport;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PaymentResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
 
     // Badge: Memberi alert ke admin tentang jumlah pembayaran 'pending'
@@ -29,8 +32,11 @@ class PaymentResource extends Resource
     }
 
     protected static ?string $model = Payment::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-credit-card'; // Ikon: Kartu Kredit
+
     protected static ?string $navigationLabel = 'Membership Online'; // Label di Sidebar
+
     protected static ?string $pluralModelLabel = 'Data Membership Online';
 
     // --- KONFIGURASI FORM (Lihat/Edit Pembayaran) ---
@@ -42,7 +48,7 @@ class PaymentResource extends Resource
                 TextInput::make('member_id')
                     ->label('ID Member Tertaut')
                     ->disabled() // Hanya bisa dibaca (Read-only)
-                    ->visible(fn($record) => $record?->member_id !== null),
+                    ->visible(fn ($record) => $record?->member_id !== null),
 
                 TextInput::make('name')
                     ->label('Nama Lengkap')
@@ -101,7 +107,7 @@ class PaymentResource extends Resource
                 TextColumn::make('member.name')
                     ->label('Member Tertaut')
                     // Logika: Tampilkan "ID" jika tertaut, "Pendaftar Baru" jika null
-                    ->description(fn(Payment $record) => $record->member_id ? "ID: " . $record->member_id : "Pendaftar Baru")
+                    ->description(fn (Payment $record) => $record->member_id ? 'ID: '.$record->member_id : 'Pendaftar Baru')
                     ->color('info')
                     ->searchable(),
 
@@ -120,13 +126,13 @@ class PaymentResource extends Resource
                     ->label('Status')
                     ->badge()
                     ->searchable()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'pending' => 'Menunggu',
                         'confirmed' => 'Dikonfirmasi',
                         'rejected' => 'Ditolak',
                         default => $state,
                     })
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'confirmed' => 'success',
                         'rejected' => 'danger',
@@ -167,6 +173,7 @@ class PaymentResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
@@ -175,7 +182,7 @@ class PaymentResource extends Resource
                     ->action(function (array $data) {
                         return Excel::download(
                             new PaymentExport($data['month'], $data['year']),
-                            'Rekap-Online-Membership-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            'Rekap-Online-Membership-'.$data['month'].'-'.$data['year'].'.xlsx'
                         );
                     }),
             ])
@@ -200,13 +207,12 @@ class PaymentResource extends Resource
                     ->modalHeading('Setujui Pembayaran')
                     // UBAH BAGIAN INI: Menggunakan Closure (fn) untuk mengecek apakah punya member_id
                     ->modalDescription(
-                        fn(Payment $record) =>
-                        $record->member_id
+                        fn (Payment $record) => $record->member_id
                             ? 'Apakah Anda yakin ingin menyetujui pembayaran ini? Masa aktif member akan otomatis ditambahkan.'
                             : 'Apakah Anda yakin ingin menyetujui pembayaran pendaftar baru ini?'
                     )
                     ->modalSubmitActionLabel('Ya, Setujui')
-                    ->visible(fn(Payment $record) => $record->status === 'pending') // Hanya muncul jika masih Pending
+                    ->visible(fn (Payment $record) => $record->status === 'pending') // Hanya muncul jika masih Pending
                     ->action(function (Payment $record) {
 
                         // 1. Update Status Pembayaran
@@ -229,20 +235,20 @@ class PaymentResource extends Resource
                             // Update Data Member
                             $member->update([
                                 'membership_end_date' => $newEndDate,
-                                'status' => 'active'
+                                'status' => 'active',
                             ]);
 
                             // Kirim Notifikasi Sukses
                             Notification::make()
                                 ->title('Berhasil')
-                                ->body("Pembayaran dikonfirmasi & Member diperpanjang sampai " . $newEndDate->format('d M Y'))
+                                ->body('Pembayaran dikonfirmasi & Member diperpanjang sampai '.$newEndDate->format('d M Y'))
                                 ->success()
                                 ->send();
                         } else {
                             // Jika Pendaftar Baru / Tidak Tertaut Member
                             Notification::make()
                                 ->title('Berhasil')
-                                ->body("Pembayaran dikonfirmasi (Pendaftar Baru / Non-Member)")
+                                ->body('Pembayaran dikonfirmasi (Pendaftar Baru / Non-Member)')
                                 ->success()
                                 ->send();
                         }
@@ -257,7 +263,7 @@ class PaymentResource extends Resource
                     ->modalHeading('Tolak Pembayaran')
                     ->modalDescription('Apakah Anda yakin ingin menolak pembayaran ini?')
                     ->modalSubmitActionLabel('Ya, Tolak')
-                    ->visible(fn(Payment $record) => $record->status === 'pending')
+                    ->visible(fn (Payment $record) => $record->status === 'pending')
                     ->action(function (Payment $record) {
                         $record->update(['status' => 'rejected']);
 

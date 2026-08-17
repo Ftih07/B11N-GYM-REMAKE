@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FacilitiesResource\Pages;
 use App\Models\Facilities;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,12 +13,19 @@ use Filament\Tables\Table;
 
 class FacilitiesResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Website';
+
     protected static ?string $navigationLabel = 'Fasilitas';
+
     protected static ?string $pluralModelLabel = 'Data Fasilitas';
+
     protected static ?int $navigationSort = 5;
+
     protected static ?string $model = Facilities::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-home-modern'; // Ikon untuk gedung/fasilitas
 
     // --- KONFIGURASI FORM (Tambah/Edit) ---

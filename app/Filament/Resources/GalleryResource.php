@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GalleryResource\Pages;
 use App\Models\Gallery;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +13,15 @@ use Filament\Tables\Table;
 
 class GalleryResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Website'; // Grup Sidebar
+
     protected static ?string $navigationLabel = 'Galeri Foto';
+
     protected static ?string $pluralModelLabel = 'Data Galeri';
+
     protected static ?int $navigationSort = 5; // Urutan Menu
 
     protected static ?string $model = Gallery::class;

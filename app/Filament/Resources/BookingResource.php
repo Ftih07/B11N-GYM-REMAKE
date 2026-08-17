@@ -2,21 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\BookingExport;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Models\Booking;
+use App\Traits\SuperAdminOnly;
+use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
-use App\Exports\BookingExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
+use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BookingResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
 
     // Badge Notifikasi: Menampilkan jumlah booking 'pending' di sidebar
@@ -28,6 +31,7 @@ class BookingResource extends Resource
     protected static ?string $model = Booking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users'; // Ikon Manajemen User
+
     protected static ?string $navigationLabel = 'Manajemen Penghuni'; // Label Sidebar
 
     // Mengubah label standar tombol "New Booking" menjadi "Penghuni Kost"
@@ -78,7 +82,7 @@ class BookingResource extends Resource
                     ->label('Tipe Kamar')
                     ->options([
                         '750rb - AC' => '750rb - AC',
-                        '500rb - Non AC' => '500rb - Non AC'
+                        '500rb - Non AC' => '500rb - Non AC',
                     ])
                     ->required()
                     ->live()
@@ -110,7 +114,7 @@ class BookingResource extends Resource
                             ->toArray();
 
                         // 2. Buat daftar 1-10, lalu hapus kamar yang sudah terisi
-                        return collect(range(1, 10))->mapWithKeys(fn($num) => ["$num" => "Kamar $num"])
+                        return collect(range(1, 10))->mapWithKeys(fn ($num) => ["$num" => "Kamar $num"])
                             ->except($occupiedRooms);
                     }),
 
@@ -151,7 +155,7 @@ class BookingResource extends Resource
                 Tables\Columns\TextColumn::make('room_number')
                     ->label('Kamar')
                     ->sortable()
-                    ->formatStateUsing(fn(string $state): string => "Kamar $state"),
+                    ->formatStateUsing(fn (string $state): string => "Kamar $state"),
 
                 Tables\Columns\TextColumn::make('date')
                     ->label('Mulai')
@@ -178,6 +182,7 @@ class BookingResource extends Resource
                                 return 'Habis Masa Sewa'; // Sewa Habis
                             }
                         }
+
                         return 'Belum Lunas'; // Menunggu Pembayaran
                     })
                     ->colors([
@@ -190,13 +195,13 @@ class BookingResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Pembayaran')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'paid' => 'Lunas',
                         'pending' => 'Menunggu',
                         'cancelled' => 'Batal',
                         default => $state,
                     })
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         'cancelled' => 'danger',
@@ -236,6 +241,7 @@ class BookingResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
@@ -245,7 +251,7 @@ class BookingResource extends Resource
                         // Memicu Download Excel menggunakan Maatwebsite
                         return Excel::download(
                             new BookingExport($data['month'], $data['year']),
-                            'Data-Penghuni-Kost-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            'Data-Penghuni-Kost-'.$data['month'].'-'.$data['year'].'.xlsx'
                         );
                     }),
             ])
@@ -254,14 +260,14 @@ class BookingResource extends Resource
                     ->label('Status Pembayaran')
                     ->options([
                         'pending' => 'Menunggu Pembayaran',
-                        'paid' => 'Lunas'
+                        'paid' => 'Lunas',
                     ]),
 
                 // FILTER KUSTOM: Hanya Penghuni Aktif
                 Tables\Filters\Filter::make('active_tenants')
                     ->label('Penghuni Aktif Saja')
                     ->query(
-                        fn(Builder $query) => $query
+                        fn (Builder $query) => $query
                             ->where('status', 'paid')
                             ->where('end_date', '>=', now())
                     )
@@ -273,7 +279,7 @@ class BookingResource extends Resource
                     ->label('Perpanjang')
                     ->icon('heroicon-m-arrow-path')
                     ->color('info')
-                    ->visible(fn(Booking $record) => $record->status === 'paid') // Hanya muncul jika sudah lunas
+                    ->visible(fn (Booking $record) => $record->status === 'paid') // Hanya muncul jika sudah lunas
                     ->requiresConfirmation()
                     ->modalHeading('Perpanjang Sewa Penghuni')
                     ->modalDescription('Sistem akan membuat tagihan baru untuk bulan berikutnya. Lanjutkan?')
@@ -301,7 +307,7 @@ class BookingResource extends Resource
                         // 5. Kirim Notifikasi
                         \Filament\Notifications\Notification::make()
                             ->title('Tagihan Perpanjangan Berhasil Dibuat')
-                            ->body('Masa sewa penghuni diperpanjang s/d ' . $newEndDate->format('d M Y'))
+                            ->body('Masa sewa penghuni diperpanjang s/d '.$newEndDate->format('d M Y'))
                             ->success()
                             ->send();
                     }),

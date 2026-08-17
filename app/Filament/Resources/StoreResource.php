@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StoreResource\Pages;
 use App\Models\Store;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,12 +13,19 @@ use Filament\Tables\Table;
 
 class StoreResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Toko';
+
     protected static ?string $navigationLabel = 'Daftar Toko';
+
     protected static ?string $pluralModelLabel = 'Data Toko';
+
     protected static ?int $navigationSort = 6;
+
     protected static ?string $model = Store::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront'; // Ikon: Etalase Toko
 
     // --- KONFIGURASI FORM ---

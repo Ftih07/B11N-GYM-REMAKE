@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AboutResource\Pages;
 use App\Models\About;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,12 +13,19 @@ use Filament\Tables\Table;
 
 class AboutResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Website'; // Pengelompokan di sidebar
+
     protected static ?string $navigationLabel = 'Tentang Kami';
+
     protected static ?string $pluralModelLabel = 'Data Tentang Kami';
+
     protected static ?int $navigationSort = 5; // Urutan di menu
+
     protected static ?string $model = About::class; // Model Terhubung
+
     protected static ?string $navigationIcon = 'heroicon-o-information-circle'; // Ikon Sidebar
 
     // --- KONFIGURASI FORM (Halaman Tambah/Edit) ---

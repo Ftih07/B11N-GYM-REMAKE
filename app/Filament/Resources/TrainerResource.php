@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TrainerResource\Pages;
 use App\Models\Trainer;
 use App\Models\User; // <-- Pastikan Model User di-import
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +14,8 @@ use Filament\Tables\Table;
 
 class TrainerResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     public static function getNavigationBadge(): ?string
     {
@@ -20,10 +23,15 @@ class TrainerResource extends Resource
     }
 
     protected static ?string $navigationGroup = 'Manajemen Karyawan'; // Typo diperbaiki jadi Manajemen
+
     protected static ?string $navigationLabel = 'Data Trainer';
+
     protected static ?string $pluralModelLabel = 'Data Trainer';
+
     protected static ?int $navigationSort = 4;
+
     protected static ?string $model = Trainer::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group'; // Ikon: Grup Pengguna
 
     // --- KONFIGURASI FORM ---
@@ -37,7 +45,7 @@ class TrainerResource extends Resource
                         Forms\Components\Select::make('user_id')
                             ->label('Tautkan ke Akun Login (Opsional)')
                             ->relationship('user', 'name', function ($query) {
-                                // Filter hanya tampilkan user yang role-nya 'employee' 
+                                // Filter hanya tampilkan user yang role-nya 'employee'
                                 // dan belum ditautkan ke trainer lain (kecuali yang sedang diedit)
                                 return $query->where('role', 'employee');
                             })
@@ -81,7 +89,7 @@ class TrainerResource extends Resource
                             ->label('Cabang (Gym/Kos)')
                             ->relationship('gymkos', 'name')
                             ->required(),
-                    ])
+                    ]),
             ]);
     }
 

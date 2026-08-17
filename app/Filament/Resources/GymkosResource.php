@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GymkosResource\Pages;
 use App\Models\Gymkos;
+use App\Traits\SuperAdminOnly;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +13,15 @@ use Filament\Tables\Table;
 
 class GymkosResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $navigationGroup = 'Manajemen Website';
+
     protected static ?string $navigationLabel = 'Cabang Gym/Kos';
+
     protected static ?string $pluralModelLabel = 'Data Cabang';
+
     protected static ?int $navigationSort = 5;
 
     protected static ?string $model = Gymkos::class;

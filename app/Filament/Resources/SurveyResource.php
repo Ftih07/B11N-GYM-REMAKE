@@ -2,21 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\SurveyExport;
 use App\Filament\Resources\SurveyResource\Pages;
 use App\Models\Survey;
+use App\Traits\SuperAdminOnly;
+use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use App\Exports\SurveyExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
-use Carbon\Carbon;
+use Filament\Tables\Table;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SurveyResource extends Resource
 {
+    use SuperAdminOnly;
+
     // --- PENGATURAN NAVIGASI ---
     public static function getNavigationBadge(): ?string
     {
@@ -24,10 +27,15 @@ class SurveyResource extends Resource
     }
 
     protected static ?string $model = Survey::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
     protected static ?string $navigationLabel = 'Data Survei';
+
     protected static ?string $pluralModelLabel = 'Hasil Survei Pengunjung';
+
     protected static ?string $navigationGroup = 'Manajemen Gym';
+
     protected static ?int $navigationSort = 3;
 
     // Nonaktifkan tombol "Buat Survei Baru" (Data hanya masuk dari form publik)
@@ -64,7 +72,7 @@ class SurveyResource extends Resource
                             ->label('Peluang Perpanjang (Skala 1-5)'),
                     ])
                     // Hanya tampilkan bagian ini jika 'is_membership' bernilai TRUE
-                    ->visible(fn($record) => $record?->is_membership ?? false)
+                    ->visible(fn ($record) => $record?->is_membership ?? false)
                     ->columns(2),
 
                 // Bagian 3: Hasil Survei
@@ -91,7 +99,7 @@ class SurveyResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('promo_interest')
                             ->label('Minat Promo')
-                            ->formatStateUsing(fn(string $state): string => match ($state) {
+                            ->formatStateUsing(fn (string $state): string => match ($state) {
                                 'paket_a' => 'Paket A (6+2)',
                                 'paket_b' => 'Paket B (9+3)',
                                 'paket_c' => 'Paket C (12+4)',
@@ -114,7 +122,7 @@ class SurveyResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Responden')
                     ->searchable()
-                    ->description(fn(Survey $record): string => $record->phone ?? '-'),
+                    ->description(fn (Survey $record): string => $record->phone ?? '-'),
 
                 Tables\Columns\IconColumn::make('is_membership')
                     ->label('Member?')
@@ -124,13 +132,13 @@ class SurveyResource extends Resource
                 Tables\Columns\TextColumn::make('promo_interest')
                     ->label('Minat Promo')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'paket_a' => 'Paket A',
                         'paket_b' => 'Paket B',
                         'paket_c' => 'Paket C',
                         default => 'Tidak Minat',
                     })
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'paket_c' => 'success',
                         'paket_a', 'paket_b' => 'warning',
                         default => 'gray',
@@ -187,6 +195,7 @@ class SurveyResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(Carbon::now()->year - 2, Carbon::now()->year + 1);
+
                                 return array_combine($years, $years); // Opsi 'all' dihapus
                             })
                             ->default(now()->year)
@@ -195,7 +204,7 @@ class SurveyResource extends Resource
                     ->action(function (array $data) {
                         return Excel::download(
                             new SurveyExport($data['month'], $data['year']),
-                            'Hasil-Survei-Gym-' . $data['month'] . '-' . $data['year'] . '.xlsx'
+                            'Hasil-Survei-Gym-'.$data['month'].'-'.$data['year'].'.xlsx'
                         );
                     }),
             ])
@@ -208,7 +217,7 @@ class SurveyResource extends Resource
                     ])->label('Filter Minat Promo'),
 
                 Tables\Filters\Filter::make('is_membership')
-                    ->query(fn($query) => $query->where('is_membership', true))
+                    ->query(fn ($query) => $query->where('is_membership', true))
                     ->label('Hanya Tampilkan Member'),
             ])
             ->actions([
