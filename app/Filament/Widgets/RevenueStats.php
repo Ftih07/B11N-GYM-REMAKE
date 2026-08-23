@@ -18,12 +18,15 @@ class RevenueStats extends BaseWidget
     {
         $now = Carbon::now();
 
+        // Ganti 'date' dengan nama kolom tanggal transaksi sebenarnya di tabel finances
+        $dateColumn = 'date';
+
         // Helper function to calculate Monthly Income per Branch
-        $getIncome = function ($gymName) use ($now) {
+        $getIncome = function ($gymName) use ($now, $dateColumn) {
             return Finance::query()
                 ->where('type', 'income') // Only Income
-                ->whereMonth('created_at', $now->month)
-                ->whereYear('created_at', $now->year)
+                ->whereMonth($dateColumn, $now->month)
+                ->whereYear($dateColumn, $now->year)
                 ->whereHas('gymkos', function (Builder $query) use ($gymName) {
                     $query->where('name', $gymName); // Filter by Branch Name
                 })
@@ -33,13 +36,13 @@ class RevenueStats extends BaseWidget
         return [
             // Stats Card 1: B11N Gym
             Stat::make('Pendapatan B11N Gym', Number::currency($getIncome('B11N Gym'), 'IDR'))
-                ->description('Pemasukan '.$now->format('F Y'))
+                ->description('Pemasukan '.$now->translatedFormat('F Y'))
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('warning'), // Yellow
 
             // Stats Card 2: K1NG Gym
             Stat::make('Pendapatan K1NG Gym', Number::currency($getIncome('K1NG Gym'), 'IDR'))
-                ->description('Pemasukan '.$now->format('F Y'))
+                ->description('Pemasukan '.$now->translatedFormat('F Y'))
                 ->descriptionIcon('heroicon-m-trophy')
                 ->color('info'), // Blue
         ];

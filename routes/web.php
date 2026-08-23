@@ -161,7 +161,7 @@ Route::prefix('employee')->name('employee.')->group(function () {
 use App\Http\Controllers\EmployeeMemberController;
 
 // 1. Halaman Tampil QR Code Global
-Route::get('/frontdesk-qr', [EmployeeMemberController::class, 'generateQr'])->name('employee.qr');
+// Route::get('/frontdesk-qr', [EmployeeMemberController::class, 'generateQr'])->name('employee.qr');
 
 // 2. Portal Employee Terproteksi
 Route::middleware(['qr.auth'])->prefix('employee')->name('employee.')->group(function () {

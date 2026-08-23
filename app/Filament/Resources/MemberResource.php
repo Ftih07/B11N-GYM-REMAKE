@@ -167,6 +167,8 @@ class MemberResource extends Resource
                     ->badge()
                     ->color('gray')
                     ->placeholder('-')
+                    ->copyable()
+                    ->copyMessage('Nomor ID Member berhasil disalin')
                     ->sortable(),
 
                 // 2. FOTO
