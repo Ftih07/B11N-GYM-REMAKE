@@ -11,7 +11,7 @@ class Transaction extends Model
     protected static function booted()
     {
         static::creating(function ($transaction) {
-            $transaction->code = 'TRX-' . time();
+            $transaction->code = 'TRX-'.time();
         });
 
         // --- TAMBAHAN BARU: EVENT SAAT TRANSAKSI DIHAPUS ---
@@ -27,7 +27,7 @@ class Transaction extends Model
                 // Set null dulu di database untuk memutus rantai sementara
                 $transaction->update([
                     'payable_id' => null,
-                    'payable_type' => null
+                    'payable_type' => null,
                 ]);
 
                 // Baru hapus parent-nya
@@ -43,7 +43,7 @@ class Transaction extends Model
 
     public function trainer()
     {
-        return $this->belongsTo(Trainer::class);
+        return $this->belongsTo(Trainer::class)->withTrashed();
     }
 
     public function gymkos()

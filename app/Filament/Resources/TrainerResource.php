@@ -11,6 +11,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TrainerResource extends Resource
 {
@@ -33,6 +35,14 @@ class TrainerResource extends Resource
     protected static ?string $model = Trainer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group'; // Ikon: Grup Pengguna
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
 
     // --- KONFIGURASI FORM ---
     public static function form(Form $form): Form
@@ -135,13 +145,18 @@ class TrainerResource extends Resource
                     ->dateTime('d M Y')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->filters([
+                Tables\Filters\TrashedFilter::make(), // Tambahan agar bisa filter data yang terhapus
+            ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Edit'),
-                Tables\Actions\DeleteAction::make()->label('Hapus'), // Tambahan Delete action biar lengkap
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
+                Tables\Actions\RestoreAction::make()->label('Pulihkan'), // Tombol untuk mengembalikan data
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()->label('Hapus Pilihan'),
+                    Tables\Actions\RestoreBulkAction::make()->label('Pulihkan Pilihan'),
                 ]),
             ]);
     }

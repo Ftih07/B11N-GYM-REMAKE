@@ -17,6 +17,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MemberResource extends Resource
@@ -125,7 +126,17 @@ class MemberResource extends Resource
                                 }
                             }),
 
-                        // 9. STATUS
+                        // 9. METODE PEMBAYARAN
+                        Forms\Components\Select::make('payment_method')
+                            ->label('Metode Pembayaran (Perpanjangan)')
+                            ->options([
+                                'cash' => 'Tunai (Cash)',
+                                'qr' => 'QRIS / Transfer',
+                                'cash_qr' => 'Tunai + QRIS (Split)', // <--- Tambahan opsi ke 3
+                            ])
+                            ->helperText('Opsional. Metode pembayaran saat daftar/perpanjang.'),
+
+                        // 10. STATUS
                         Forms\Components\Select::make('status')
                             ->label('Status Membership')
                             ->options([
@@ -136,7 +147,7 @@ class MemberResource extends Resource
                             ->required()
                             ->dehydrated(),
 
-                        // 10. WEBCAM & FACE DESCRIPTOR
+                        // 11. WEBCAM & FACE DESCRIPTOR
                         ViewField::make('picture')
                             ->view('filament.forms.components.webcam-input')
                             ->viewData([
@@ -177,12 +188,11 @@ class MemberResource extends Resource
                     ->circular()
                     ->defaultImageUrl('https://ui-avatars.com/api/?name=Member&background=0D8ABC&color=fff'),
 
-                // 3. NAMA MEMBER (KITA PASANG SEARCH MULTI-KATA DI SINI)
+                // 3. NAMA MEMBER
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Member')
                     ->sortable()
                     ->searchable(query: function (Builder $query, string $search): Builder {
-                        // Pecah kata kunci berdasarkan spasi (misal: "rizki 6559" / "B-02243 rizki")
                         $words = array_filter(explode(' ', trim($search)));
 
                         return $query->where(function (Builder $subQuery) use ($words) {
@@ -213,7 +223,33 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('membership_end_date')
                     ->label('End Date')
                     ->date('d M Y')
-                    ->description(fn (Member $record) => $record->membership_end_date?->diffForHumans())
+                    ->description(function (Member $record) {
+                        $timeDiff = $record->membership_end_date?->diffForHumans();
+
+                        if (! $record->payment_method) {
+                            return $timeDiff;
+                        }
+
+                        // Mapping label biar lebih cantik di badge
+                        $paymentLabels = [
+                            'cash' => 'CASH',
+                            'qr' => 'QR',
+                            'cash_qr' => 'CASH + QR',
+                        ];
+
+                        $payment = $paymentLabels[$record->payment_method] ?? strtoupper($record->payment_method);
+
+                        // Membuat elemen HTML untuk highlight
+                        $badgeHtml = '
+                            <div class="mt-1">
+                                <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-md bg-success-50 text-success-700 ring-1 ring-inset ring-success-600/20 dark:bg-success-900/30 dark:text-success-400">
+                                    Via: '.$payment.'
+                                </span>
+                            </div>
+                        ';
+
+                        return new HtmlString($timeDiff.$badgeHtml);
+                    })
                     ->sortable(),
 
                 // 7. STATUS
@@ -237,6 +273,13 @@ class MemberResource extends Resource
                     ->badge()
                     ->color('primary')
                     ->sortable(),
+
+                // 9. UPDATED AT (Hidden by default, muncul di opsi Columns)
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Terakhir Update')
+                    ->dateTime('d M Y, H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true), // Ini kuncinya!
             ])
 
             // --- HEADER ACTIONS (Export Excel) ---
@@ -304,7 +347,6 @@ class MemberResource extends Resource
                         );
                     }),
             ])
-
             ->filters([
                 Tables\Filters\SelectFilter::make('gymkos_id')
                     ->relationship('gymkos', 'name', fn (Builder $query) => $query->whereIn('id', [1, 2]))
