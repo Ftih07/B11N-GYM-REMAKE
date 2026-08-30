@@ -2,37 +2,41 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\TransactionExport;
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Models\Transaction;
 use App\Models\Product;
+use App\Models\Transaction;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
-use App\Exports\TransactionExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Carbon\Carbon;
-use Filament\Forms\Components\FileUpload;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionResource extends Resource
 {
     // --- PENGATURAN NAVIGASI ---
     protected static ?string $model = Transaction::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-receipt-refund'; // Ikon: Struk Kasir
+
     protected static ?string $navigationLabel = 'Rekap Transaksi';
+
     protected static ?string $pluralModelLabel = 'Laporan Transaksi';
+
     protected static ?string $navigationGroup = 'Laporan';
+
     protected static ?int $navigationSort = 1;
 
     // --- KONFIGURASI FORM (Input POS/Kasir) ---
@@ -46,14 +50,24 @@ class TransactionResource extends Resource
                     ->schema([
                         // Pilihan Kasir
                         Select::make('trainer_id')
-                            ->relationship('trainer', 'name')
+                            ->relationship('trainer', 'name', function (Builder $query, ?Model $record) {
+                                $query->where(function ($q) use ($record) {
+                                    // 1. Tampilkan hanya data trainer yang belum dihapus (aktif)
+                                    $q->whereNull('trainers.deleted_at');
+
+                                    // 2. Mencegah form blank saat mengedit transaksi lama (yang kasirnya sudah dihapus)
+                                    if ($record && $record->trainer_id) {
+                                        $q->orWhere('trainers.id', $record->trainer_id);
+                                    }
+                                });
+                            })
                             ->required()
                             ->label('Kasir Bertugas'),
 
                         // Pilihan Cabang Gym
                         Select::make('gymkos_id')
-                            ->relationship('gymkos', 'name')
-                            ->label('Cabang (Gym/Kos)')
+                            ->relationship('gymkos', 'name', fn (Builder $query) => $query->whereIn('id', [1, 2]))
+                            ->label('Cabang Gym')
                             ->required(),
 
                         TextInput::make('customer_name')
@@ -90,7 +104,7 @@ class TransactionResource extends Resource
                                         Product::all()->mapWithKeys(function ($product) {
                                             // Format tampilannya: "Nama Produk (Rp 13.000)"
                                             return [
-                                                $product->id => "{$product->name} (Rp " . number_format($product->price, 0, ',', '.') . ")"
+                                                $product->id => "{$product->name} (Rp ".number_format($product->price, 0, ',', '.').')',
                                             ];
                                         })
                                     )
@@ -124,7 +138,7 @@ class TransactionResource extends Resource
 
                                         // 2. Hitung Total Keseluruhan
                                         $items = $get('../../items');
-                                        $total = collect($items)->sum(fn($item) => $item['subtotal'] ?? 0);
+                                        $total = collect($items)->sum(fn ($item) => $item['subtotal'] ?? 0);
                                         $set('../../total_amount', $total);
                                     }),
 
@@ -147,7 +161,7 @@ class TransactionResource extends Resource
                             // Hitung ulang Total jika barang dihapus/ditambah
                             ->afterStateUpdated(function (Get $get, Set $set) {
                                 $items = $get('items');
-                                $sum = collect($items)->sum(fn($item) => $item['subtotal'] ?? 0);
+                                $sum = collect($items)->sum(fn ($item) => $item['subtotal'] ?? 0);
                                 $set('total_amount', $sum);
 
                                 // Auto-isi Uang Diterima jika Cashless
@@ -244,16 +258,20 @@ class TransactionResource extends Resource
                     ->label('Asal')
                     ->badge()
                     ->getStateUsing(function ($record) {
-                        if ($record->payable_type === 'App\Models\Booking') return 'Booking Kost';
-                        elseif ($record->payable_type === 'App\Models\Payment') return 'Member Online';
-                        else return 'Kasir / POS';
+                        if ($record->payable_type === 'App\Models\Booking') {
+                            return 'Booking Kost';
+                        } elseif ($record->payable_type === 'App\Models\Payment') {
+                            return 'Member Online';
+                        } else {
+                            return 'Kasir / POS';
+                        }
                     })
                     ->colors([
-                        'info'    => 'Booking Kost',
+                        'info' => 'Booking Kost',
                         'success' => 'Member Online',
-                        'gray'    => 'Kasir / POS',
+                        'gray' => 'Kasir / POS',
                     ])
-                    ->icon(fn($state) => match ($state) {
+                    ->icon(fn ($state) => match ($state) {
                         'Booking Kost' => 'heroicon-m-home',
                         'Member Online' => 'heroicon-m-identification',
                         default => 'heroicon-m-computer-desktop',
@@ -281,8 +299,8 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('payment_method')
                     ->label('Metode Bayar')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => strtoupper($state))
-                    ->color(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => strtoupper($state))
+                    ->color(fn (string $state): string => match ($state) {
                         'cash' => 'success',
                         'qris' => 'info',
                         'transfer' => 'warning',
@@ -292,13 +310,13 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'paid' => 'Lunas',
                         'pending' => 'Menunggu',
                         'cancelled' => 'Batal',
                         default => $state,
                     })
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         'cancelled' => 'danger',
@@ -347,6 +365,7 @@ class TransactionResource extends Resource
                             ->label('Tahun')
                             ->options(function () {
                                 $years = range(now()->year - 2, now()->year + 1);
+
                                 return array_combine($years, $years);
                             })
                             ->default(now()->year)
@@ -394,7 +413,7 @@ class TransactionResource extends Resource
                                 $q->whereNull('payable_type')
                                     ->orWhereNotIn('payable_type', [
                                         'App\Models\Booking',
-                                        'App\Models\Payment'
+                                        'App\Models\Payment',
                                     ]);
                             });
                         }
@@ -419,16 +438,16 @@ class TransactionResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['created_from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
-                            ->when($data['created_until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
-                    })
+                            ->when($data['created_from'], fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
+                            ->when($data['created_until'], fn ($q, $date) => $q->whereDate('created_at', '<=', $date));
+                    }),
             ])
             ->actions([
                 Tables\Actions\Action::make('view_proof')
                     ->label('Lihat Bukti')
                     ->icon('heroicon-o-photo')
                     ->color('success')
-                    ->visible(fn(Transaction $record) => $record->proof_of_payment !== null)
+                    ->visible(fn (Transaction $record) => $record->proof_of_payment !== null)
                     ->modalHeading('Bukti Pembayaran')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Tutup')
@@ -446,8 +465,8 @@ class TransactionResource extends Resource
                     ->label('Cetak Struk')
                     ->icon('heroicon-o-printer')
                     ->color('info')
-                    ->visible(fn(Transaction $record) => $record->status === 'paid') // Hanya muncul jika lunas
-                    ->url(fn(Transaction $record) => route('print.struk', $record->code)) // Buka route cetak
+                    ->visible(fn (Transaction $record) => $record->status === 'paid') // Hanya muncul jika lunas
+                    ->url(fn (Transaction $record) => route('print.struk', $record->code)) // Buka route cetak
                     ->openUrlInNewTab(),
 
                 Tables\Actions\ViewAction::make()->label('Detail'),
@@ -475,9 +494,9 @@ class TransactionResource extends Resource
                                     Infolists\Components\TextEntry::make('created_at')->label('Tanggal')->dateTime('d M Y, H:i'),
                                     Infolists\Components\TextEntry::make('trainer.name')->label('Kasir'),
                                     Infolists\Components\TextEntry::make('payment_method')->label('Metode Pembayaran')->badge()
-                                        ->formatStateUsing(fn(string $state): string => strtoupper($state)),
+                                        ->formatStateUsing(fn (string $state): string => strtoupper($state)),
                                 ]),
-                        ])
+                        ]),
                     ]),
 
                 // Daftar Barang Belanjaan
@@ -494,7 +513,7 @@ class TransactionResource extends Resource
                                         Infolists\Components\TextEntry::make('subtotal')->label('Subtotal')->money('IDR', locale: 'id')->weight('bold'),
                                     ]),
                             ])
-                            ->columns(2)
+                            ->columns(2),
                     ]),
 
                 // Ringkasan Total
@@ -506,7 +525,7 @@ class TransactionResource extends Resource
                                 Infolists\Components\TextEntry::make('paid_amount')->label('Uang Diterima')->money('IDR', locale: 'id'),
                                 Infolists\Components\TextEntry::make('change_amount')->label('Kembalian')->money('IDR', locale: 'id'),
                             ]),
-                    ])
+                    ]),
             ]);
     }
 
@@ -523,7 +542,8 @@ class TransactionResource extends Resource
     // 3. Format judul yang muncul di hasil pencarian dropdown
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        $customerName = $record->customer_name ? " - {$record->customer_name}" : "";
+        $customerName = $record->customer_name ? " - {$record->customer_name}" : '';
+
         return "{$record->code}{$customerName}";
     }
 
@@ -532,7 +552,7 @@ class TransactionResource extends Resource
     {
         return [
             'Pelanggan' => $record->customer_name ?? '-',
-            'Total Belanja' => 'Rp ' . number_format($record->total_amount, 0, ',', '.'),
+            'Total Belanja' => 'Rp '.number_format($record->total_amount, 0, ',', '.'),
             'Status' => match ($record->status) {
                 'paid' => 'LUNAS',
                 'pending' => 'MENUNGGU PEMBAYARAN',

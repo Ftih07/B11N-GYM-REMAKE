@@ -1538,13 +1538,12 @@
                 <div class="membership__card">
                     <h4>Harian</h4>
                     <ul>
-                        <li><span><i class="ri-check-line"></i></span>Satu hari akses penuh di B11N & K1NG Gym
-                            Purwokerto</li>
-                        <li><span><i class="ri-check-line"></i></span>Akses bebas untuk semua peralatan gym.</li>
-                        <li><span><i class="ri-check-line"></i></span>Free personal trainer.</li>
-                        <li><span><i class="ri-check-line"></i></span>Akses bebas untuk semua peralatan</li>
-                        <li><span><i class="ri-close-line"></i></span>Free biaya pendaftaran</li>
-                        <li><span><i class="ri-close-line"></i></span>Masuk sebagai member dari B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Akses 1 hari penuh di K1NG Gym Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span>Bebas pakai semua alat gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Free konsultasi personal trainer</li>
+                        <li><span><i class="ri-close-line"></i></span>Bebas biaya pendaftaran</li>
+                        <li><span><i class="ri-close-line"></i></span>Status member resmi B11N & K1NG</li>
+                        <li><span><i class="ri-close-line"></i></span>Bonus jadwal kelas gym rutin</li>
                     </ul>
                     <h3><sup>Rp</sup>10.000<span>/hari</span></h3>
                     <button class="btn btn__primary" onclick="openPaymentModal('Harian')">Beli Sekarang</button>
@@ -1554,12 +1553,12 @@
                 <div class="membership__card">
                     <h4>Mingguan</h4>
                     <ul>
-                        <li><span><i class="ri-check-line"></i></span>Satu minggu akses penuh di B11N & K1NG Gym</li>
-                        <li><span><i class="ri-check-line"></i></span>Akses bebas untuk semua peralatan gym.</li>
-                        <li><span><i class="ri-check-line"></i></span>Free personal trainer.</li>
-                        <li><span><i class="ri-check-line"></i></span>Akses bebas untuk semua peralatan</li>
-                        <li><span><i class="ri-close-line"></i></span>Free biaya pendaftaran</li>
-                        <li><span><i class="ri-close-line"></i></span>Masuk sebagai member dari B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Akses 7 hari penuh di K1NG Gym Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span>Bebas pakai semua alat gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Free konsultasi personal trainer</li>
+                        <li><span><i class="ri-close-line"></i></span>Bisa gonta-ganti cabang B11N/K1NG</li>
+                        <li><span><i class="ri-close-line"></i></span>Bebas biaya pendaftaran</li>
+                        <li><span><i class="ri-close-line"></i></span>Status member resmi B11N & K1NG</li>
                     </ul>
                     <h3><sup>Rp</sup>35.000<span>/minggu</span></h3>
                     <button class="btn btn__primary" onclick="openPaymentModal('Mingguan')">Beli Sekarang</button>
@@ -1569,12 +1568,12 @@
                 <div class="membership__card">
                     <h4>Bulanan</h4>
                     <ul>
-                        <li><span><i class="ri-check-line"></i></span>Satu bulan akses penuh di B11N & K1NG Gym</li>
-                        <li><span><i class="ri-check-line"></i></span>Akses bebas untuk semua peralatan gym.</li>
-                        <li><span><i class="ri-check-line"></i></span>Free personal trainer.</li>
-                        <li><span><i class="ri-check-line"></i></span>Akses bebas untuk semua peralatan</li>
-                        <li><span><i class="ri-check-line"></i></span>Free biaya pendaftaran</li>
-                        <li><span><i class="ri-check-line"></i></span>Masuk sebagai member dari B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Akses 30 hari penuh di B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Bebas pakai semua alat gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Free konsultasi personal trainer</li>
+                        <li><span><i class="ri-check-line"></i></span>Bisa gonta-ganti cabang B11N/K1NG</li>
+                        <li><span><i class="ri-check-line"></i></span>Gratis biaya pendaftaran</li>
+                        <li><span><i class="ri-check-line"></i></span>Status member resmi B11N & K1NG</li>
                     </ul>
                     <h3><sup>Rp</sup>90.000<span>/Bulan</span></h3>
                     <button class="btn btn__primary" onclick="openPaymentModal('Bulanan')">Beli Sekarang</button>

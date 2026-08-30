@@ -284,32 +284,44 @@
         {{-- PAGINATION --}}
         @if ($products->hasPages())
             <div class="mt-12 px-4 flex justify-center">
-                <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center gap-2">
+                <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center gap-1.5 md:gap-2">
 
                     {{-- Tombol Previous --}}
                     @if ($products->onFirstPage())
                         <span
-                            class="px-4 py-2 text-sm text-gray-400 border border-gray-200 rounded-lg cursor-not-allowed dark:border-gray-700">
+                            class="px-3.5 py-2 text-sm text-gray-400 border border-gray-200 rounded-lg cursor-not-allowed dark:border-gray-700">
                             Previous
                         </span>
                     @else
                         <a href="{{ $products->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}#product-display"
-                            class="px-4 py-2 text-sm text-brand-black bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-brand-red transition-colors dark:bg-brand-gray dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
+                            class="px-3.5 py-2 text-sm text-brand-black bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-brand-red transition-colors dark:bg-brand-gray dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
                             Previous
                         </a>
                     @endif
 
-                    {{-- Loop Nomor Halaman --}}
-                    @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                        @if ($page == $products->currentPage())
-                            <span
-                                class="px-4 py-2 text-sm font-bold text-white bg-brand-black border border-brand-black rounded-lg dark:bg-white dark:text-brand-black dark:border-white">
-                                {{ $page }}
+                    {{-- Dynamic Elements (Angka & Dots ...) --}}
+                    @foreach ($products->linkCollection() as $link)
+                        {{-- Abaikan tombol Prev/Next bawaan Laravel karena kita buat custom di atas & bawah --}}
+                        @if ($loop->first || $loop->last)
+                            @continue
+                        @endif
+
+                        {{-- Jika elemen adalah pemisah (...) --}}
+                        @if ($link['url'] === null)
+                            <span class="px-2.5 py-2 text-sm text-gray-400 font-bold select-none">
+                                {{ $link['label'] }}
                             </span>
+                            {{-- Jika elemen adalah halaman aktif saat ini --}}
+                        @elseif ($link['active'])
+                            <span
+                                class="px-3.5 py-2 text-sm font-bold text-white bg-brand-black border border-brand-black rounded-lg dark:bg-white dark:text-brand-black dark:border-white">
+                                {{ $link['label'] }}
+                            </span>
+                            {{-- Jika elemen adalah link halaman biasa --}}
                         @else
-                            <a href="{{ $url . '&' . http_build_query(request()->except('page')) }}#product-display"
-                                class="px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-brand-red hover:text-brand-red transition-all dark:bg-brand-gray dark:text-gray-400 dark:border-gray-700 dark:hover:text-white">
-                                {{ $page }}
+                            <a href="{{ $link['url'] . '&' . http_build_query(request()->except('page')) }}#product-display"
+                                class="px-3.5 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-brand-red hover:text-brand-red transition-all dark:bg-brand-gray dark:text-gray-400 dark:border-gray-700 dark:hover:text-white">
+                                {{ $link['label'] }}
                             </a>
                         @endif
                     @endforeach
@@ -317,15 +329,16 @@
                     {{-- Tombol Next --}}
                     @if ($products->hasMorePages())
                         <a href="{{ $products->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}#product-display"
-                            class="px-4 py-2 text-sm text-brand-black bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-brand-red transition-colors dark:bg-brand-gray dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
+                            class="px-3.5 py-2 text-sm text-brand-black bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-brand-red transition-colors dark:bg-brand-gray dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
                             Next
                         </a>
                     @else
                         <span
-                            class="px-4 py-2 text-sm text-gray-400 border border-gray-200 rounded-lg cursor-not-allowed dark:border-gray-700">
+                            class="px-3.5 py-2 text-sm text-gray-400 border border-gray-200 rounded-lg cursor-not-allowed dark:border-gray-700">
                             Next
                         </span>
                     @endif
+
                 </nav>
             </div>
         @endif

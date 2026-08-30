@@ -298,6 +298,69 @@
         </div>
     </header>
 
+    <!-- LOGO ECOSYSTEM / UNIT USAHA -->
+    <section class="relative z-30 bg-[#0c0c0c] border-y border-neutral-800/80 py-12 md:py-16">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+
+            {{-- Header dengan logo B1NG EMPIRE sebagai identitas induk, bukan card --}}
+            <div class="flex flex-col items-center text-center mb-10 md:mb-12">
+                <img src="{{ asset('assets/Logo/empire.png') }}" alt="B1NG Empire"
+                    class="h-10 sm:h-12 w-auto object-contain mb-4 opacity-90">
+                <p class="font-heading text-secondary font-semibold text-xs sm:text-sm tracking-[0.3em] uppercase">
+                    EKOSISTEM & UNIT USAHA
+                </p>
+                <h3 class="font-heading text-white font-bold text-xl sm:text-2xl tracking-wide uppercase mt-1">
+                    B1NG EMPIRE GROUP
+                </h3>
+            </div>
+
+            {{-- Grid hanya berisi 4 unit usaha, sejajar, tanpa induk ikut nimbrung --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-5 md:gap-6">
+
+                <a href="{{ route('gym.biin') }}" target="_blank" title="B11N Gym Purwokerto"
+                    class="group relative bg-[#171717]/90 hover:bg-neutral-800/90 border border-neutral-800 hover:border-secondary/60 rounded-2xl p-5 sm:p-7 flex flex-col items-center justify-center min-h-[120px] sm:min-h-[145px] transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-secondary/10 hover:-translate-y-1">
+                    <img src="{{ asset('assets/Logo/biin.png') }}" alt="B11N Gym"
+                        class="h-10 sm:h-14 md:h-16 w-auto max-w-[85%] object-contain opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 drop-shadow-md">
+                    <span
+                        class="mt-3 text-[11px] sm:text-xs font-heading font-medium text-gray-400 group-hover:text-white uppercase tracking-wider text-center">
+                        B11N Gym
+                    </span>
+                </a>
+
+                <a href="{{ route('gym.king') }}" target="_blank" title="K1NG Gym Purwokerto"
+                    class="group relative bg-[#171717]/90 hover:bg-neutral-800/90 border border-neutral-800 hover:border-secondary/60 rounded-2xl p-5 sm:p-7 flex flex-col items-center justify-center min-h-[120px] sm:min-h-[145px] transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-secondary/10 hover:-translate-y-1">
+                    <img src="{{ asset('assets/Logo/last.png') }}" alt="K1NG Gym"
+                        class="h-10 sm:h-14 md:h-16 w-auto max-w-[85%] object-contain opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 drop-shadow-md">
+                    <span
+                        class="mt-3 text-[11px] sm:text-xs font-heading font-medium text-gray-400 group-hover:text-white uppercase tracking-wider text-center">
+                        K1NG Gym
+                    </span>
+                </a>
+
+                <a href="{{ route('kost') }}" target="_blank" title="Kost Istana Merdeka 03"
+                    class="group relative bg-[#171717]/90 hover:bg-neutral-800/90 border border-neutral-800 hover:border-secondary/60 rounded-2xl p-5 sm:p-7 flex flex-col items-center justify-center min-h-[120px] sm:min-h-[145px] transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-secondary/10 hover:-translate-y-1">
+                    <img src="{{ asset('assets/Logo/kost.png') }}" alt="Kost Istana Merdeka"
+                        class="h-10 sm:h-14 md:h-16 w-auto max-w-[85%] object-contain opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 drop-shadow-md">
+                    <span
+                        class="mt-3 text-[11px] sm:text-xs font-heading font-medium text-gray-400 group-hover:text-white uppercase tracking-wider text-center">
+                        Kost IM 03
+                    </span>
+                </a>
+
+                <a href="https://digitify.my.id/" target="_blank" title="Digitify Web Development"
+                    class="group relative bg-[#171717]/90 hover:bg-neutral-800/90 border border-neutral-800 hover:border-secondary/60 rounded-2xl p-5 sm:p-7 flex flex-col items-center justify-center min-h-[120px] sm:min-h-[145px] transition-all duration-300 shadow-md hover:shadow-xl hover:shadow-secondary/10 hover:-translate-y-1">
+                    <img src="{{ asset('assets/Logo/digitify.png') }}" alt="Digitify"
+                        class="h-10 sm:h-14 md:h-16 w-auto max-w-[85%] object-contain opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 drop-shadow-md">
+                    <span
+                        class="mt-3 text-[11px] sm:text-xs font-heading font-medium text-gray-400 group-hover:text-white uppercase tracking-wider text-center">
+                        Digitify
+                    </span>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
     <!-- ABOUT SECTION -->
     <section id="about" class="relative py-20 sm:py-24 lg:py-32 bg-white">
         <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -364,17 +427,19 @@
 
                         <!-- Badge -->
                         <div class="absolute top-4 right-4 bg-secondary px-4 py-2 rounded shadow-md">
-                            <span
-                                class="font-heading text-white font-semibold text-xs tracking-wider uppercase">GYM</span>
+                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">GYM &
+                                FITNESS</span>
                         </div>
                     </div>
 
                     <!-- Content -->
                     <div class="p-8 flex flex-col flex-grow">
-                        <h3 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">B11N Gym
-                            Purwokerto</h3>
+                        <h3 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">
+                            B11N Gym Purwokerto
+                        </h3>
                         <p class="font-body text-textLight leading-relaxed text-base flex-grow">
-                            Tempat gym yang saat ini menyandang status sebagai tempat gym termurah di Purwokerto
+                            Pusat gym favorit berbiaya paling terjangkau di Purwokerto dengan peralatan beban lengkap
+                            dan suasana latihan yang solid.
                         </p>
 
                         <!-- Button -->
@@ -396,18 +461,19 @@
 
                         <!-- Badge -->
                         <div class="absolute top-4 right-4 bg-secondary px-4 py-2 rounded shadow-md">
-                            <span
-                                class="font-heading text-white font-semibold text-xs tracking-wider uppercase">GYM</span>
+                            <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">CABANG
+                                RESMI</span>
                         </div>
                     </div>
 
                     <!-- Content -->
                     <div class="p-8 flex flex-col flex-grow">
-                        <h4 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">K1NG
-                            Gym Purwokerto</h4>
+                        <h4 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">
+                            K1NG Gym Purwokerto
+                        </h4>
                         <p class="font-body text-textLight leading-relaxed text-base flex-grow">
-                            Cabang dari B11N Gym yang baru buka beberapa bulan yang juga menyandang status sebagai
-                            tempat gym termurah di Purwokerto
+                            Cabang resmi B11N Gym dengan fasilitas lengkap, atmosfer workout energik, serta
+                            fleksibilitas akses antar-cabang.
                         </p>
 
                         <!-- Button -->
@@ -430,16 +496,18 @@
                         <!-- Badge -->
                         <div class="absolute top-4 right-4 bg-secondary px-4 py-2 rounded shadow-md">
                             <span class="font-heading text-white font-semibold text-xs tracking-wider uppercase">KOST
-                                KHUSUS PUTRA</span>
+                                PUTRA</span>
                         </div>
                     </div>
 
                     <!-- Content -->
                     <div class="p-8 flex flex-col flex-grow">
-                        <h4 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">Kost
-                            Istana Merdeka 3</h4>
+                        <h4 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">
+                            Kost Istana Merdeka 3
+                        </h4>
                         <p class="font-body text-textLight leading-relaxed text-base flex-grow">
-                            Kost khusus putra yang letaknya berada di lantai 2 B11N Gym Purwokerto
+                            Hunian kost putra strategis dan nyaman di lantai 2 B11N Gym. Praktis bangun tidur langsung
+                            bisa latihan di lantai bawah.
                         </p>
 
                         <!-- Button -->
@@ -467,10 +535,11 @@
 
                     <div class="p-8 flex flex-col flex-grow">
                         <h4 class="font-heading text-textDark font-bold text-2xl mb-3 tracking-tight uppercase">
-                            Digitify</h4>
+                            Digitify Web Agency
+                        </h4>
                         <p class="font-body text-textLight leading-relaxed text-base flex-grow">
-                            Layanan penyedia pembuatan website, aplikasi, dan solusi digital kreatif untuk kebutuhan
-                            bisnismu.
+                            Solusi pembuatan website, sistem aplikasi, dan branding digital modern untuk akselerasi
+                            bisnis serta UMKM.
                         </p>
 
                         <a href="https://digitify.my.id/" target="_blank"

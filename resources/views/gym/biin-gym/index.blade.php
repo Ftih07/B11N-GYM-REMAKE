@@ -1513,80 +1513,82 @@
     </section>
 
     {{-- GYM EQUIPMENT --}}
-    <section class="py-20 bg-white text-gray-900" id="equipments">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-2 font-['Oswald']">
-                    Gym Equipments
-                    <span class="text-red-600">& Tutorials</span>
-                </h2>
-                <div class="w-24 h-1.5 bg-red-600 mx-auto mt-4"></div>
-                <p class="text-gray-600 mt-6 max-w-2xl mx-auto font-light text-lg">
-                    Kenali alat-alat kami dan pelajari cara penggunaannya yang benar demi hasil maksimal.
-                </p>
-            </div>
+    @if ($featuredEquipments->isNotEmpty())
+        <section class="py-20 bg-white text-gray-900" id="equipments">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-2 font-['Oswald']">
+                        Gym Equipments
+                        <span class="text-red-600">& Tutorials</span>
+                    </h2>
+                    <div class="w-24 h-1.5 bg-red-600 mx-auto mt-4"></div>
+                    <p class="text-gray-600 mt-6 max-w-2xl mx-auto font-light text-lg">
+                        Kenali alat-alat kami dan pelajari cara penggunaannya yang benar demi hasil maksimal.
+                    </p>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                @foreach ($featuredEquipments as $item)
-                    @php
-                        $thumbnail = $item->gallery->first()
-                            ? asset('storage/' . $item->gallery->first()->file_path)
-                            : 'https://placehold.co/600x400?text=No+Image';
-                    @endphp
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    @foreach ($featuredEquipments as $item)
+                        @php
+                            $thumbnail = $item->gallery->first()
+                                ? asset('storage/' . $item->gallery->first()->file_path)
+                                : 'https://placehold.co/600x400?text=No+Image';
+                        @endphp
 
-                    <div
-                        class="group bg-white border border-gray-200 hover:border-gray-400 transition-all duration-300 relative shadow-sm hover:shadow-xl">
-                        <div class="relative h-64 overflow-hidden bg-gray-100">
-                            {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
-                            <img src="{{ $thumbnail }}" alt="{{ $item->name }}" loading="lazy"
-                                class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 grayscale group-hover:grayscale-0">
+                        <div
+                            class="group bg-white border border-gray-200 hover:border-gray-400 transition-all duration-300 relative shadow-sm hover:shadow-xl">
+                            <div class="relative h-64 overflow-hidden bg-gray-100">
+                                {{-- DITAMBAHKAN LAZY LOADING DI SINI --}}
+                                <img src="{{ $thumbnail }}" alt="{{ $item->name }}" loading="lazy"
+                                    class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500 grayscale group-hover:grayscale-0">
 
-                            <div
-                                class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-widest font-['Oswald']">
-                                {{ $item->category }}
-                            </div>
+                                <div
+                                    class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-widest font-['Oswald']">
+                                    {{ $item->category }}
+                                </div>
 
-                            <div
-                                class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                                <a href="{{ route('gym.equipments.show', $item->slug) }}"
-                                    class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 font-bold uppercase tracking-wide
+                                <div
+                                    class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                                    <a href="{{ route('gym.equipments.show', $item->slug) }}"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 font-bold uppercase tracking-wide
                                       transform translate-y-4 group-hover:translate-y-0 transition duration-300 shadow-lg
                                       flex items-center gap-2 rounded-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-                                    </svg>
-                                    Watch Tutorial
-                                </a>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                                        </svg>
+                                        Watch Tutorial
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <h3
+                                    class="text-2xl font-bold text-gray-900 mb-2 uppercase font-['Oswald'] group-hover:text-red-600 transition-colors">
+                                    {{ $item->name }}
+                                </h3>
+                                <div class="w-10 h-1 bg-gray-200 mb-3 group-hover:bg-red-600 transition-colors"></div>
+                                <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                                    {{ $item->description }}
+                                </p>
+                            </div>
+                            <div
+                                class="h-1 w-0 group-hover:w-full bg-red-600 transition-all duration-500 absolute bottom-0 left-0">
                             </div>
                         </div>
+                    @endforeach
+                </div>
 
-                        <div class="p-6">
-                            <h3
-                                class="text-2xl font-bold text-gray-900 mb-2 uppercase font-['Oswald'] group-hover:text-red-600 transition-colors">
-                                {{ $item->name }}
-                            </h3>
-                            <div class="w-10 h-1 bg-gray-200 mb-3 group-hover:bg-red-600 transition-colors"></div>
-                            <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
-                                {{ $item->description }}
-                            </p>
-                        </div>
-                        <div
-                            class="h-1 w-0 group-hover:w-full bg-red-600 transition-all duration-500 absolute bottom-0 left-0">
-                        </div>
-                    </div>
-                @endforeach
+                <div class="text-center">
+                    <a href="{{ route('gym.equipments.index') }}"
+                        class="inline-block border-2 border-black text-black px-10 py-3 font-bold uppercase tracking-widest font-['Oswald'] text-lg hover:bg-black hover:!text-white transition duration-300">
+                        View All Equipments
+                    </a>
+                </div>
             </div>
-
-            <div class="text-center">
-                <a href="{{ route('gym.equipments.index') }}"
-                    class="inline-block border-2 border-black text-black px-10 py-3 font-bold uppercase tracking-widest font-['Oswald'] text-lg hover:bg-black hover:!text-white transition duration-300">
-                    View All Equipments
-                </a>
-            </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     {{-- TRAINER --}}
     <section class="trainer__container max-w-[1200px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-20" id="trainer">
@@ -1630,45 +1632,46 @@
         <div class="membership__container max-w-[1200px] mx-auto px-4 py-20">
             <h2 class="section__header text-2xl font-semibold font-header text-text-dark text-center">MEMBERSHIP</h2>
             <div class="membership__grid grid grid-cols-1 md:grid-cols-3 gap-6">
-                {{-- Membership Cards (Konten tetap sama) --}}
+                {{-- HARIAN --}}
                 <div class="membership__card">
                     <h4>Harian</h4>
                     <ul>
-                        <li><span><i class="ri-check-line"></i></span> Satu hari akses penuh di B11N & K1NG Gym
-                            Purwokerto</li>
-                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan gym.</li>
-                        <li><span><i class="ri-check-line"></i></span> Free personal trainer.</li>
-                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan</li>
-                        <li><span><i class="ri-close-line"></i></span> Free biaya pendaftaran</li>
-                        <li><span><i class="ri-close-line"></i></span> Masuk sebagai member dari B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Akses 1 hari penuh di B11N Gym Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span>Bebas pakai semua alat gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Free konsultasi personal trainer</li>
+                        <li><span><i class="ri-close-line"></i></span>Bebas biaya pendaftaran</li>
+                        <li><span><i class="ri-close-line"></i></span>Status member resmi B11N & K1NG</li>
+                        <li><span><i class="ri-close-line"></i></span>Bonus jadwal kelas gym rutin</li>
                     </ul>
                     <h3><sup>Rp</sup>10.000<span>/hari</span></h3>
                     <button class="btn btn__primary" onclick="openPaymentModal('Harian')">Beli Sekarang</button>
                 </div>
+
+                {{-- MINGGUAN --}}
                 <div class="membership__card">
                     <h4>Mingguan</h4>
                     <ul>
-                        <li><span><i class="ri-check-line"></i></span> Satu hari akses penuh di B11N & K1NG Gym
-                            Purwokerto</li>
-                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan gym.</li>
-                        <li><span><i class="ri-check-line"></i></span> Free personal trainer.</li>
-                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan</li>
-                        <li><span><i class="ri-close-line"></i></span> Free biaya pendaftaran</li>
-                        <li><span><i class="ri-close-line"></i></span> Masuk sebagai member dari B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Akses 7 hari penuh di B11N Gym Purwokerto</li>
+                        <li><span><i class="ri-check-line"></i></span>Bebas pakai semua alat gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Free konsultasi personal trainer</li>
+                        <li><span><i class="ri-close-line"></i></span>Bisa gonta-ganti cabang B11N/K1NG</li>
+                        <li><span><i class="ri-close-line"></i></span>Bebas biaya pendaftaran</li>
+                        <li><span><i class="ri-close-line"></i></span>Status member resmi B11N & K1NG</li>
                     </ul>
                     <h3><sup>Rp</sup>35.000<span>/minggu</span></h3>
                     <button class="btn btn__primary" onclick="openPaymentModal('Mingguan')">Beli Sekarang</button>
                 </div>
+
+                {{-- BULANAN --}}
                 <div class="membership__card">
                     <h4>Bulanan</h4>
                     <ul>
-                        <li><span><i class="ri-check-line"></i></span> Satu hari akses penuh di B11N & K1NG Gym
-                            Purwokerto</li>
-                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan gym.</li>
-                        <li><span><i class="ri-check-line"></i></span> Free personal trainer.</li>
-                        <li><span><i class="ri-check-line"></i></span> Akses bebas untuk semua peralatan</li>
-                        <li><span><i class="ri-check-line"></i></span> Free biaya pendaftaran</li>
-                        <li><span><i class="ri-check-line"></i></span> Masuk sebagai member dari B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Akses 30 hari penuh di B11N & K1NG Gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Bebas pakai semua alat gym</li>
+                        <li><span><i class="ri-check-line"></i></span>Free konsultasi personal trainer</li>
+                        <li><span><i class="ri-check-line"></i></span>Bisa gonta-ganti cabang B11N/K1NG</li>
+                        <li><span><i class="ri-check-line"></i></span>Gratis biaya pendaftaran</li>
+                        <li><span><i class="ri-check-line"></i></span>Status member resmi B11N & K1NG</li>
                     </ul>
                     <h3><sup>Rp</sup>90.000<span>/Bulan</span></h3>
                     <button class="btn btn__primary" onclick="openPaymentModal('Bulanan')">Beli Sekarang</button>
@@ -1797,10 +1800,100 @@
                     </div>
                 </div>
 
-                {{-- MODAL 2: FORM UPLOAD BUKTI (Tetap Sama) --}}
+                {{-- MODAL 2: FORM UPLOAD BUKTI --}}
                 <div class="modal fade" id="paymentConfirmationModal" tabindex="-1"
                     aria-labelledby="paymentConfirmationModalLabel" aria-hidden="true">
-                    {{-- ... Konten Modal 2 ... --}}
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div
+                            class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
+                            <div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
+                                <h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl"
+                                    id="paymentConfirmationModalLabel">
+                                    Konfirmasi <span class="text-[#DC2626]">Pembayaran</span>
+                                </h5>
+                                <button type="button"
+                                    class="btn-close btn-close-white opacity-50 hover:opacity-100 transition"
+                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-6">
+                                <form id="paymentForm" enctype="multipart/form-data" class="space-y-4">
+                                    <input type="hidden" name="gym_id" value="2">
+                                    <div
+                                        class="bg-neutral-900/50 border border-neutral-800 p-4 rounded-lg space-y-4 mb-2">
+                                        <div>
+                                            <label
+                                                class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Nama
+                                                Lengkap <span class="text-red-500">*</span></label>
+                                            <input type="text" name="name" placeholder="Sesuai KTP / Panggilan"
+                                                class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm"
+                                                required>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label
+                                                    class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Email
+                                                    <span class="text-red-500">*</span></label>
+                                                <input type="email" name="email" placeholder="email@anda.com"
+                                                    class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm"
+                                                    required>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">No.
+                                                    WhatsApp <span class="text-red-500">*</span></label>
+                                                <input type="tel" name="phone" placeholder="08..."
+                                                    class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Paket
+                                                Member <span class="text-red-500">*</span></label>
+                                            <select name="membership_type"
+                                                class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer"
+                                                required>
+                                                <option value="" disabled selected>Pilih Paket</option>
+                                                <option value="Member Harian">Harian (Rp 10.000)</option>
+                                                <option value="Member Mingguan">Mingguan (Rp 35.000)</option>
+                                                <option value="Member Bulanan">Bulanan (Rp 90.000)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Transfer
+                                                Ke <span class="text-red-500">*</span></label>
+                                            <select name="payment"
+                                                class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer"
+                                                required>
+                                                <option value="" disabled selected>Pilih Metode</option>
+                                                <option value="qris">QRIS (GoPay/Dana/OVO)</option>
+                                                <option value="transfer">Bank BCA</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Upload
+                                            Bukti Struk/Resi <span class="text-red-500">*</span></label>
+                                        <input type="file" name="image" accept="image/png,image/jpeg,image/jpg"
+                                            class="block w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:bg-neutral-800 file:text-[#DC2626] hover:file:bg-neutral-700 cursor-pointer border border-neutral-700 rounded bg-neutral-900"
+                                            required>
+                                    </div>
+                                    <div class="flex justify-end gap-3 pt-4 mt-2 border-t border-neutral-800">
+                                        <button type="button"
+                                            class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-bold py-2 px-5 rounded transition text-sm"
+                                            data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit"
+                                            class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition shadow-lg shadow-red-900/30 text-sm">Upload
+                                            Bukti</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

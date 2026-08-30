@@ -51,7 +51,7 @@ class FinanceResource extends Resource
 
                         // Relasi: Menghubungkan catatan keuangan ke Cabang Gym tertentu
                         Forms\Components\Select::make('gymkos_id')
-                            ->relationship('gymkos', 'name')
+                            ->relationship('gymkos', 'name', fn (Builder $query) => $query->whereIn('id', [1, 2]))
                             ->required()
                             ->label('Cabang Gym / Kos'),
 
