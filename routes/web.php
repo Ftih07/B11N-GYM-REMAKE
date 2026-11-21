@@ -14,6 +14,12 @@ use App\Http\Controllers\Store\StoreController;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 
+use App\Livewire\SelfCheckin;
+
+Route::get('/absen/{token}', SelfCheckin::class)
+    ->where('token', '[a-z0-9]{24}')
+    ->name('self-checkin');
+
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 
 Route::get('/', [HomeController::class, 'index'])->name('home'); //Home - Landing Page
