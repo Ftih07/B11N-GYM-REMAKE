@@ -403,6 +403,198 @@ class SalesAnalytics
         });
     }
 
+    /* ---------- Absensi & perpanjangan ---------- */
+
+    /** Semua kunjungan (member + tamu) pada rentang filter. Absen yang ditolak sudah dihapus, jadi semua baris dihitung. */
+    public function attendanceQuery(bool $previous = false): Builder
+    {
+        [$s, $e] = $this->range($previous);
+
+        return DB::table('attendances')
+            ->whereIn('gymkos_id', $this->branchIds())
+            ->whereBetween('check_in_time', [$s, $e]);
+    }
+
+    public function visits(bool $previous = false): int
+    {
+        return $this->cached('visits' . (int) $previous, fn () => (int) $this->attendanceQuery($previous)->count());
+    }
+
+    /** Jumlah member berbeda yang hadir. */
+    public function uniqueVisitors(bool $previous = false): int
+    {
+        return $this->cached('visitors' . (int) $previous, fn () => (int) $this->attendanceQuery($previous)
+            ->whereNotNull('member_id')->distinct()->count('member_id'));
+    }
+
+    public function renewalQuery(bool $previous = false): Builder
+    {
+        [$s, $e] = $this->range($previous);
+
+        return DB::table('membership_renewals')
+            ->whereIn('gymkos_id', $this->branchIds())
+            ->whereBetween('paid_at', [$s->toDateString(), $e->toDateString()]);
+    }
+
+    /** Jumlah pembayaran perpanjangan tercatat (riwayat dimulai sejak fitur pelacakan dipakai). */
+    public function renewals(bool $previous = false): int
+    {
+        return $this->cached('renewals' . (int) $previous, fn () => (int) $this->renewalQuery($previous)->count());
+    }
+
+    public function monthlyVisitsByBranch(): array
+    {
+        return $this->cached('monthly-visits', fn () => $this->alignByBranch(
+            $this->attendanceQuery()
+                ->selectRaw("gymkos_id, DATE_FORMAT(check_in_time, '%Y-%m') as ym, COUNT(*) as total")
+                ->groupBy('gymkos_id', 'ym')
+                ->get()
+        ));
+    }
+
+    /** [nilai per bulan sesuai months()] jumlah perpanjangan semua cabang terpilih. */
+    public function monthlyRenewals(): array
+    {
+        return $this->cached('monthly-renewals', function () {
+            $map = $this->renewalQuery()
+                ->selectRaw("DATE_FORMAT(paid_at, '%Y-%m') as ym, COUNT(*) as total")
+                ->groupBy('ym')
+                ->pluck('total', 'ym');
+
+            return array_map(fn ($ym) => (int) ($map[$ym] ?? 0), array_keys($this->months()));
+        });
+    }
+
+    /** [nilai per bulan sesuai months()] member baru semua cabang terpilih. */
+    public function monthlyNewMembersTotal(): array
+    {
+        $by = $this->monthlyNewMembersByBranch();
+        $n = count($this->months());
+        $out = array_fill(0, $n, 0);
+        foreach ($by as $values) {
+            foreach ($values as $i => $v) {
+                $out[$i] += (int) $v;
+            }
+        }
+
+        return $out;
+    }
+
+    /** [label => jumlah] metode bayar perpanjangan. */
+    public function renewalMethods(): array
+    {
+        return $this->cached('renewal-methods', function () {
+            $labels = \App\Models\MembershipRenewal::PAYMENT_METHODS;
+
+            return $this->renewalQuery()
+                ->selectRaw('payment_method, COUNT(*) as total')
+                ->groupBy('payment_method')
+                ->orderByDesc('total')
+                ->get()
+                ->mapWithKeys(fn ($r) => [($labels[$r->payment_method] ?? 'Belum diisi') => (int) $r->total])
+                ->all();
+        });
+    }
+
+    /** Heatmap kunjungan: hari (0=Senin) x jam. */
+    public function attendanceHeatmap(int $gymkosId): array
+    {
+        return $this->cached('att-heatmap-' . $gymkosId, function () use ($gymkosId) {
+            [$s, $e] = $this->range();
+
+            $rows = DB::table('attendances')
+                ->where('gymkos_id', $gymkosId)
+                ->whereBetween('check_in_time', [$s, $e])
+                ->selectRaw('DAYOFWEEK(check_in_time) as d, HOUR(check_in_time) as h, COUNT(*) as c')
+                ->groupBy('d', 'h')
+                ->get();
+
+            $matrix = [];
+            $max = 0;
+            $total = 0;
+            foreach ($rows as $r) {
+                $matrix[($r->d + 5) % 7][(int) $r->h] = (int) $r->c;
+                $max = max($max, (int) $r->c);
+                $total += (int) $r->c;
+            }
+
+            return ['matrix' => $matrix, 'max' => $max, 'total' => $total];
+        });
+    }
+
+    /** Analisis singkat absensi, member baru, dan perpanjangan. */
+    public function attendanceInsights(): array
+    {
+        return $this->cached('att-insights', function () {
+            $out = [];
+            $names = $this->branches();
+
+            $v = $this->visits();
+            $pv = $this->visits(true);
+            if ($v === 0) {
+                return ['Belum ada data absensi pada periode ini.'];
+            }
+
+            $g = self::pct($v, $pv);
+            $out[] = 'Total kunjungan ' . number_format($v, 0, ',', '.') . ($g === null ? '.' : ' (' . ($g >= 0 ? 'naik ' : 'turun ') . abs($g) . '% dari periode sebelumnya).');
+            $out[] = 'Rata-rata ' . number_format($v / $this->dayCount(), 2, ',', '.') . ' kunjungan per hari, dari ' . number_format($this->uniqueVisitors(), 0, ',', '.') . ' member berbeda.';
+
+            $guests = (int) $this->attendanceQuery()->whereNull('member_id')->count();
+            if ($guests > 0) {
+                $out[] = 'Kunjungan tamu/non-member: ' . number_format($guests, 0, ',', '.') . ' (' . round($guests / $v * 100) . '% dari total).';
+            }
+
+            $day = $this->attendanceQuery()
+                ->selectRaw('DAYOFWEEK(check_in_time) as d, COUNT(*) as c')
+                ->groupBy('d')->orderByDesc('c')->first();
+            $hour = $this->attendanceQuery()
+                ->selectRaw('HOUR(check_in_time) as h, COUNT(*) as c')
+                ->groupBy('h')->orderByDesc('c')->first();
+            if ($day && $hour) {
+                $out[] = 'Hari paling ramai: ' . self::DAYS_FULL[($day->d + 5) % 7] . ' (' . $day->c . ' kunjungan). Jam paling ramai: sekitar pukul ' . sprintf('%02d:00', $hour->h) . '.';
+            }
+
+            $byBranch = $this->attendanceQuery()->selectRaw('gymkos_id, COUNT(*) as c')
+                ->groupBy('gymkos_id')->orderByDesc('c')->get();
+            if ($byBranch->count() > 1) {
+                $out[] = ($names[$byBranch->first()->gymkos_id] ?? 'Cabang') . ' paling ramai dikunjungi (' . $byBranch->first()->c . ' kunjungan).';
+            }
+
+            // Data absensi baru dipakai sebentar -> bandingkan hanya bila data sudah mencakup >= 30 hari,
+            // dihitung sejak awal periode atau sejak absen pertama (mana yang lebih akhir).
+            $first = DB::table('attendances')->whereIn('gymkos_id', $this->branchIds())->min('check_in_time');
+            $from = $first ? max($this->start()->copy(), Carbon::parse($first)->startOfDay()) : null;
+            if ($from && $from->diffInDays($this->end()) >= 30) {
+                $silent = (int) DB::table('members')
+                    ->whereIn('gymkos_id', $this->branchIds())
+                    ->where('status', 'active')
+                    ->where('join_date', '<', $from->toDateString())
+                    ->whereNotExists(function ($q) use ($from) {
+                        $q->select(DB::raw(1))->from('attendances')
+                            ->whereColumn('attendances.member_id', 'members.id')
+                            ->whereBetween('attendances.check_in_time', [$from, $this->end()]);
+                    })
+                    ->count();
+                if ($silent > 0) {
+                    $out[] = "{$silent} member aktif tidak pernah check-in sejak " . $from->locale('id')->translatedFormat('d M Y') . '. Mereka berpotensi tidak memperpanjang.';
+                }
+            }
+
+            $new = $this->newMembers();
+            $ren = $this->renewals();
+            $gr = self::pct($ren, $this->renewals(true));
+            $out[] = "Periode ini ada {$new} member baru dan {$ren} perpanjangan tercatat" . ($gr === null ? '.' : ' (perpanjangan ' . ($gr >= 0 ? 'naik ' : 'turun ') . abs($gr) . '% dari periode sebelumnya).');
+
+            $methods = $this->renewalMethods();
+            if ($methods) {
+                $top = array_key_first($methods);
+                $out[] = 'Metode bayar perpanjangan terbanyak: ' . $top . ' (' . round(reset($methods) / max(1, array_sum($methods)) * 100) . '%).';
+            }
+
+            return $out;
+        });
+    }
+
     /* ---------- Analisis singkat ---------- */
 
     public function insights(): array
@@ -500,7 +692,7 @@ class SalesAnalytics
 
         $exp = $this->expiringSoon();
         if ($exp > 0) {
-            $out[] = "{$exp} member aktif akan berakhir dalam 30 hari ke depan, segera follow up lewat tabel di bawah.";
+            $out[] = "{$exp} member aktif akan berakhir dalam 30 hari ke depan, segera hubungi mereka untuk perpanjangan.";
         }
 
         $stale = collect($this->memberStatusByBranch())->sum('lewat');
@@ -541,6 +733,31 @@ class SalesAnalytics
             $weekday[] = ['name' => $name, 'values' => $wd[$id] ?? []];
         }
 
+        // Absensi & member: tren bulanan, heatmap per cabang, metode bayar perpanjangan
+        $visitsBy = $this->monthlyVisitsByBranch();
+        $attMonthly = [];
+        foreach ($branches as $id => $name) {
+            $attMonthly[] = ['name' => "{$name} - Kunjungan", 'values' => $visitsBy[$id] ?? []];
+        }
+        $attMonthly[] = ['name' => 'Member baru (semua cabang)', 'values' => $this->monthlyNewMembersTotal()];
+        $attMonthly[] = ['name' => 'Perpanjangan (semua cabang)', 'values' => $this->monthlyRenewals()];
+
+        $heatmaps = [];
+        $minH = 5;
+        $maxH = 22;
+        foreach ($branches as $id => $name) {
+            $hm = $this->attendanceHeatmap($id);
+            $heatmaps[] = ['name' => $name] + $hm;
+            foreach ($hm['matrix'] as $row) {
+                foreach (array_keys($row) as $h) {
+                    $minH = min($minH, $h);
+                    $maxH = max($maxH, $h);
+                }
+            }
+        }
+
+        $visits = $this->visits();
+
         return [
             'periode' => $this->start()->locale('id')->translatedFormat('d M Y') . ' - ' . $this->end()->locale('id')->translatedFormat('d M Y'),
             'cabang' => $branches->values()->implode(', '),
@@ -554,8 +771,17 @@ class SalesAnalytics
                 ['Rata-rata pendapatan harian', self::rp($rev / $this->dayCount())],
                 ['Member baru', number_format($this->newMembers(), 0, ',', '.')],
                 ['Segera expired (30 hari)', number_format($this->expiringSoon(), 0, ',', '.')],
+                ['Total kunjungan (absensi)', number_format($visits, 0, ',', '.')],
+                ['Rata-rata kunjungan per hari', number_format($visits / $this->dayCount(), 2, ',', '.')],
+                ['Member hadir (unik)', number_format($this->uniqueVisitors(), 0, ',', '.')],
+                ['Perpanjangan tercatat', number_format($this->renewals(), 0, ',', '.')],
             ],
             'insights' => $this->insights(),
+            'attendanceInsights' => $this->attendanceInsights(),
+            'attMonthly' => ['labels' => array_values($this->months()), 'series' => $attMonthly],
+            'heatmaps' => $heatmaps,
+            'hours' => range($minH, $maxH),
+            'renewalMethods' => $this->renewalMethods(),
             'monthly' => ['labels' => array_values($this->months()), 'series' => $monthly],
             'weekday' => ['labels' => self::DAYS_FULL, 'series' => $weekday],
             'products' => $this->topProducts(15),

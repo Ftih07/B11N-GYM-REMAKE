@@ -88,7 +88,7 @@ class SalesStats extends StatsOverviewWidget
             Stat::make('Member Baru', number_format($new, 0, ',', '.'))
                 ->description($newDesc)->descriptionIcon($newIcon)->color($newColor),
             Stat::make('Segera Expired (30 hari)', number_format($a->expiringSoon(), 0, ',', '.'))
-                ->description('Lihat tabel follow-up')
+                ->description('Perlu dihubungi untuk perpanjangan')
                 ->color('danger'),
         ];
     }

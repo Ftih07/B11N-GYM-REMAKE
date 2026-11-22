@@ -2,10 +2,14 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\ExpiringMembersTable;
+use App\Filament\Widgets\AttendanceHeatmap;
+use App\Filament\Widgets\AttendanceInsights;
+use App\Filament\Widgets\AttendanceStats;
+use App\Filament\Widgets\AttendanceTrendChart;
+use App\Filament\Widgets\MemberFlowChart;
 use App\Filament\Widgets\MemberStatusChart;
-use App\Filament\Widgets\NewMemberChart;
 use App\Filament\Widgets\PaymentMethodChart;
+use App\Filament\Widgets\RenewalMethodChart;
 use App\Filament\Widgets\RevenueMixChart;
 use App\Filament\Widgets\RevenueTrendChart;
 use App\Filament\Widgets\SalesHeatmap;
@@ -181,6 +185,35 @@ class SalesAnalysis extends BaseDashboard
             }
             $put([]);
 
+            $put(['ANALISIS ABSENSI & MEMBER']);
+            foreach ($r['attendanceInsights'] as $i) {
+                $put([$i]);
+            }
+            $put([]);
+
+            $put(['KUNJUNGAN, MEMBER BARU & PERPANJANGAN PER BULAN']);
+            $put(array_merge([''], $r['attMonthly']['labels']));
+            foreach ($r['attMonthly']['series'] as $s) {
+                $put(array_merge([$s['name']], $s['values']));
+            }
+            $put([]);
+
+            $put(['METODE BAYAR PERPANJANGAN']);
+            $put(['Metode', 'Jumlah']);
+            foreach ($r['renewalMethods'] as $label => $qty) {
+                $put([$label, $qty]);
+            }
+            $put([]);
+
+            foreach ($r['heatmaps'] as $hm) {
+                $put(['HEATMAP KUNJUNGAN - ' . $hm['name'] . ' (' . $hm['total'] . ' kunjungan)']);
+                $put(array_merge([''], array_map(fn ($h) => sprintf('%02d:00', $h), $r['hours'])));
+                foreach (SalesAnalytics::DAYS_FULL as $d => $dayName) {
+                    $put(array_merge([$dayName], array_map(fn ($h) => $hm['matrix'][$d][$h] ?? 0, $r['hours'])));
+                }
+                $put([]);
+            }
+
             $put(['PRODUK TERLARIS']);
             $put(['Produk', 'Jumlah terjual', 'Nilai (Rp)']);
             foreach ($r['products'] as $p) {
@@ -204,13 +237,17 @@ class SalesAnalysis extends BaseDashboard
             SalesStats::class,
             SalesInsights::class,
             RevenueTrendChart::class,
-            NewMemberChart::class,
+            MemberFlowChart::class,
+            RenewalMethodChart::class,
             MemberStatusChart::class,
             WeekdayRevenueChart::class,
             RevenueMixChart::class,
             PaymentMethodChart::class,
             TopProductsChart::class,
-            ExpiringMembersTable::class,
+            AttendanceStats::class,
+            AttendanceTrendChart::class,
+            AttendanceHeatmap::class,
+            AttendanceInsights::class,
             SalesHeatmap::class,
         ];
     }

@@ -64,6 +64,61 @@
     @endforeach
 </table>
 
+<h2>Analisis Absensi &amp; Member</h2>
+<ul>
+    @foreach ($attendanceInsights as $i)
+        <li>{{ $i }}</li>
+    @endforeach
+</ul>
+
+<h2>Kunjungan, Member Baru &amp; Perpanjangan per Bulan</h2>
+<table>
+    <tr>
+        <th></th>
+        @foreach ($attMonthly['labels'] as $l)<th class="num">{{ $l }}</th>@endforeach
+    </tr>
+    @foreach ($attMonthly['series'] as $s)
+        <tr>
+            <td>{{ $s['name'] }}</td>
+            @foreach ($s['values'] as $v)<td class="num">{{ number_format($v, 0, ',', '.') }}</td>@endforeach
+        </tr>
+    @endforeach
+</table>
+
+<h2>Metode Bayar Perpanjangan</h2>
+<table>
+    <tr><th>Metode</th><th class="num">Jumlah</th></tr>
+    @forelse ($renewalMethods as $label => $qty)
+        <tr><td>{{ $label }}</td><td class="num">{{ number_format($qty, 0, ',', '.') }}</td></tr>
+    @empty
+        <tr><td colspan="2" class="muted">Belum ada perpanjangan tercatat pada periode ini.</td></tr>
+    @endforelse
+</table>
+
+@foreach ($heatmaps as $hm)
+    <h2>Heatmap Kunjungan - {{ $hm['name'] }} ({{ number_format($hm['total'], 0, ',', '.') }} kunjungan)</h2>
+    <table style="table-layout: fixed;">
+        <tr>
+            <th style="width:48px"></th>
+            @foreach ($hours as $h)<th class="num" style="padding:3px 1px; text-align:center">{{ sprintf('%02d', $h) }}</th>@endforeach
+        </tr>
+        @foreach (A::DAYS_FULL as $d => $dayName)
+            <tr>
+                <td>{{ $dayName }}</td>
+                @foreach ($hours as $h)
+                    @php
+                        $v = $hm['matrix'][$d][$h] ?? 0;
+                        $a = $v && $hm['max'] ? max(0.15, $v / $hm['max']) : 0;
+                        // biru (59,130,246) dicampur ke putih agar tampil di PDF
+                        $bg = sprintf('#%02x%02x%02x', 255 - (255 - 59) * $a, 255 - (255 - 130) * $a, 255 - (255 - 246) * $a);
+                    @endphp
+                    <td style="padding:3px 1px; text-align:center; background: {{ $bg }}; color: {{ $a > 0.6 ? '#fff' : '#111827' }}">{{ $v ?: '' }}</td>
+                @endforeach
+            </tr>
+        @endforeach
+    </table>
+@endforeach
+
 <h2>Produk Terlaris</h2>
 <table>
     <tr><th>Produk</th><th class="num">Terjual</th><th class="num">Nilai (Rp)</th></tr>
