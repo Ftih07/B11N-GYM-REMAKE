@@ -29,6 +29,11 @@ class Member extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function renewals(): HasMany
+    {
+        return $this->hasMany(MembershipRenewal::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

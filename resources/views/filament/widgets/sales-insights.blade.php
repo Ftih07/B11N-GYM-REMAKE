@@ -21,7 +21,7 @@
         }
     </style>
 
-    <x-filament::section heading="Analisis Singkat" icon="heroicon-o-light-bulb">
+    <x-filament::section :heading="$sectionTitle ?? 'Analisis Singkat'" icon="heroicon-o-light-bulb">
         <ul class="sa-insights">
             @forelse ($insights as $i)
                 <li>

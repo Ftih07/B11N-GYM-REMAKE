@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Exports\MemberExport;
 use App\Filament\Resources\MemberResource\Pages;
+use App\Filament\Resources\MemberResource\RelationManagers;
 use App\Models\Member;
 use Filament\Forms;
 use Filament\Forms\Components\Radio;
@@ -28,6 +29,19 @@ class MemberResource extends Resource
     }
 
     protected static ?string $model = Member::class;
+
+    // Metode bayar perpanjangan terakhir (dari riwayat) untuk badge di kolom End Date.
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->addSelect([
+            'members.*',
+            'last_renewal_method' => \App\Models\MembershipRenewal::select('payment_method')
+                ->whereColumn('member_id', 'members.id')
+                ->orderByDesc('paid_at')
+                ->orderByDesc('id')
+                ->limit(1),
+        ]);
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
@@ -129,12 +143,11 @@ class MemberResource extends Resource
                         // 9. METODE PEMBAYARAN
                         Forms\Components\Select::make('payment_method')
                             ->label('Metode Pembayaran (Perpanjangan)')
-                            ->options([
-                                'cash' => 'Tunai (Cash)',
-                                'qr' => 'QRIS / Transfer',
-                                'cash_qr' => 'Tunai + QRIS (Split)', // <--- Tambahan opsi ke 3
-                            ])
-                            ->helperText('Opsional. Metode pembayaran saat daftar/perpanjang.'),
+                            ->options(\App\Models\MembershipRenewal::PAYMENT_METHODS)
+                            // Selalu kosong saat form dibuka: diisi hanya bila ada pembayaran baru. Setelah disimpan,
+                            // nilainya masuk ke Riwayat Perpanjangan lalu field dikosongkan lagi (lihat EditMember/CreateMember).
+                            ->afterStateHydrated(fn (Forms\Components\Select $component) => $component->state(null))
+                            ->helperText('Isi bila ada pembayaran baru (saat daftar/perpanjang). Wajib diisi jika "Berlaku Sampai" dimajukan.'),
 
                         // 10. STATUS
                         Forms\Components\Select::make('status')
@@ -226,18 +239,30 @@ class MemberResource extends Resource
                     ->description(function (Member $record) {
                         $timeDiff = $record->membership_end_date?->diffForHumans();
 
-                        if (! $record->payment_method) {
+                        // Metode bayar hanya ditampilkan untuk member yang masih aktif.
+                        $isActive = $record->status === 'active'
+                            && $record->membership_end_date
+                            && ! $record->membership_end_date->copy()->endOfDay()->isPast();
+
+                        // Sumber: perpanjangan terakhir di riwayat; member lama tanpa riwayat memakai kolom lama.
+                        $method = $record->last_renewal_method ?: $record->payment_method;
+
+                        if (! $isActive || ! $method) {
                             return $timeDiff;
                         }
 
                         // Mapping label biar lebih cantik di badge
                         $paymentLabels = [
-                            'cash' => 'CASH',
+                            'cash' => 'TUNAI',
                             'qr' => 'QR',
-                            'cash_qr' => 'CASH + QR',
+                            'cash_qr' => 'TUNAI + QR',
+                            'qris' => 'QRIS',
+                            'transfer' => 'TRANSFER',
+                            'cash_qris' => 'TUNAI + QRIS',
+                            'other' => 'LAINNYA',
                         ];
 
-                        $payment = $paymentLabels[$record->payment_method] ?? strtoupper($record->payment_method);
+                        $payment = $paymentLabels[$method] ?? strtoupper($method);
 
                         // Membuat elemen HTML untuk highlight
                         $badgeHtml = '
@@ -374,7 +399,9 @@ class MemberResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            RelationManagers\RenewalsRelationManager::class,
+        ];
     }
 
     // --- GLOBAL SEARCH (Header Atas Filament) ---
