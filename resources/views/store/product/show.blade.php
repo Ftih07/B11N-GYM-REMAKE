@@ -151,7 +151,7 @@
                     {{-- Logic WA Link --}}
                     @php
                     $waMessage = "Halo admin, saya mau pesan *{$product->name}* ({$product->flavour}). Apakah stok masih ada?";
-                    $waLink = "https://wa.me/6283194288423?text=" . urlencode($waMessage); // Ganti nomor sesuai kebutuhan
+                    $waLink = config('b1ng.contact.whatsapp_url') . '?text=' . urlencode($waMessage); // Ganti nomor sesuai kebutuhan
                     $btnClass = ($product->stores_id == 3) ? 'bg-brand-red hover:bg-red-700' : 'bg-brand-orange hover:bg-orange-600';
                     @endphp
 

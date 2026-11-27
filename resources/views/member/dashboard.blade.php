@@ -183,7 +183,7 @@
                 <div class="bg-card border border-neutral-800 p-6 rounded-lg shadow-xl mt-6 lg:hidden">
                     <h3 class="font-header text-xl font-bold text-white mb-2">Status Member</h3>
                     <p class="text-sm text-gray-400">Expired: <span class="text-white font-bold">{{ \Carbon\Carbon::parse($member->membership_end_date)->format('d M Y') }}</span></p>
-                    <button onclick="toggleModal('renewModal')" class="mt-4 w-full bg-green-700 hover:bg-green-800 text-white py-2 rounded text-sm font-bold uppercase">Perpanjang</button>
+                    <a href="{{ config('b1ng.contact.whatsapp_url') }}?text={{ rawurlencode('Halo admin B1NG Empire, saya ingin perpanjang membership. Nama: '.($member?->name ?? '-').' | ID Member: '.($member?->member_code ?? '-')) }}" target="_blank" rel="noopener noreferrer" class="mt-4 block w-full text-center bg-green-700 hover:bg-green-800 text-white py-2 rounded text-sm font-bold uppercase">Perpanjang via WhatsApp</a>
                 </div>
             </div>
 
@@ -211,9 +211,9 @@
                     </div>
 
                     <div class="relative z-10">
-                        <button type="button" onclick="toggleModal('renewModal')" class="bg-green-600 hover:bg-green-700 text-white font-header font-bold py-3 px-8 rounded shadow-lg transition transform hover:-translate-y-0.5">
-                            PERPANJANG SEKARANG
-                        </button>
+                        <a href="{{ config('b1ng.contact.whatsapp_url') }}?text={{ rawurlencode('Halo admin B1NG Empire, saya ingin perpanjang membership. Nama: '.($member?->name ?? '-').' | ID Member: '.($member?->member_code ?? '-')) }}" target="_blank" rel="noopener noreferrer" class="inline-block bg-green-600 hover:bg-green-700 text-white font-header font-bold py-3 px-8 rounded shadow-lg transition transform hover:-translate-y-0.5">
+                            PERPANJANG VIA WHATSAPP
+                        </a>
                     </div>
                 </div>
 
@@ -316,7 +316,7 @@
         $waMessage = "Halo Admin B1NG Empire, saya ingin mengaktifkan data member saya. Email akun saya: *{$emailUser}*. Mohon bantuannya.";
 
         // Generate link WA (jangan lupa ganti nomor adminnya kalau beda)
-        $waLink = "https://wa.me/6283194288423?text=" . urlencode($waMessage);
+        $waLink = config('b1ng.contact.whatsapp_url') . '?text=' . urlencode($waMessage);
         @endphp
 
         <div class="text-center bg-yellow-900/20 border border-yellow-700/50 p-6 rounded-lg mt-6">
@@ -397,82 +397,6 @@
         </div>
     </div>
 
-    @if($member)
-    <div id="renewModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity" onclick="toggleModal('renewModal')"></div>
-
-        <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
-            <div class="relative bg-card border border-neutral-700 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-lg w-full rounded-lg">
-
-                <div class="bg-neutral-800 px-6 py-4 border-b border-neutral-700 flex justify-between items-center">
-                    <h3 class="text-lg leading-6 font-header font-bold text-white uppercase tracking-wide" id="modal-title">
-                        Perpanjang Membership
-                    </h3>
-                    <button type="button" onclick="toggleModal('renewModal')" class="text-gray-400 hover:text-white focus:outline-none">
-                        ✕
-                    </button>
-                </div>
-
-                <div class="px-6 py-6">
-                    <form action="/payment/upload" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="member_id" value="{{ $member->id }}">
-                        <input type="hidden" name="gym_id" value="{{ $member->gymkos_id }}">
-                        <input type="hidden" name="email" value="{{ $user->email }}">
-                        <input type="hidden" name="phone" value="{{ $member->phone ?? '08000000000' }}">
-                        <input type="hidden" name="membership_type" value="Member Bulanan">
-
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Nama</label>
-                                <input type="text" name="name" value="{{ $member->name }}" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-gray-400 text-sm" readonly>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Paket</label>
-                                <input type="text" value="Bulanan (90k)" class="w-full bg-neutral-900 border border-neutral-700 p-2 rounded text-primary font-bold text-sm" readonly>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Metode Pembayaran</label>
-                            <select id="paymentMethodSelect" name="payment" onchange="togglePaymentInfo()" class="w-full bg-neutral-900 border border-neutral-600 text-white p-2 rounded focus:ring-primary focus:border-primary">
-                                <option value="qris">QRIS (Scan Barcode)</option>
-                                <option value="transfer">Transfer Bank (BCA)</option>
-                            </select>
-                        </div>
-
-                        <div id="paymentInfoArea" class="mb-6">
-                            <div id="info-qris" class="text-center p-4 border border-neutral-700 rounded bg-white">
-                                <img src="/assets/img/pembayaran/qris-barcode.png" alt="QRIS Code" class="mx-auto w-40 h-auto">
-                                <p class="text-black font-bold mt-2">Scan via GoPay/OVO/BCA</p>
-                            </div>
-                            <div id="info-transfer" class="hidden bg-neutral-800 border-l-4 border-blue-500 text-gray-300 p-4 text-sm">
-                                <p class="font-bold text-white mb-2">Transfer Manual:</p>
-                                <p>Bank BCA: <strong class="text-white text-lg select-all">0461701506</strong></p>
-                                <p>A.n: <strong class="text-white">Sobiin</strong></p>
-                                <p class="mt-2 text-xs text-gray-500">Total: Rp 90.000</p>
-                            </div>
-                        </div>
-
-                        <div class="mb-6">
-                            <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Upload Bukti</label>
-                            <input type="file" name="image" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700 border border-neutral-700 rounded" required>
-                        </div>
-
-                        <div class="flex justify-end gap-3 pt-4 border-t border-neutral-700">
-                            <button type="button" onclick="toggleModal('renewModal')" class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-bold py-2 px-4 rounded transition">
-                                Batal
-                            </button>
-                            <button type="submit" class="bg-primary hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition shadow-lg shadow-red-900/30">
-                                KIRIM BUKTI
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
 
     <div id="custom-confirm-modal" class="fixed inset-0 z-[100] hidden flex items-start justify-center pt-14 pointer-events-none">
         <div id="confirm-backdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-auto" onclick="closeConfirmModal()"></div>
@@ -508,33 +432,6 @@
     </div>
 
     <script>
-        // JS Untuk Modal Perpanjang Member
-        function toggleModal(modalID) {
-            const modal = document.getElementById(modalID);
-            modal.classList.toggle('hidden');
-            if (!modal.classList.contains('hidden')) {
-                document.body.style.overflow = 'hidden';
-                document.getElementById('paymentMethodSelect').value = 'qris';
-                togglePaymentInfo();
-            } else {
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        function togglePaymentInfo() {
-            const select = document.getElementById('paymentMethodSelect');
-            const qrisDiv = document.getElementById('info-qris');
-            const transferDiv = document.getElementById('info-transfer');
-
-            if (select.value === 'qris') {
-                qrisDiv.classList.remove('hidden');
-                transferDiv.classList.add('hidden');
-            } else {
-                qrisDiv.classList.add('hidden');
-                transferDiv.classList.remove('hidden');
-            }
-        }
-
         // JS Untuk Custom Confirmation Delete
         let confirmTimeout;
         let formToSubmitId = null;

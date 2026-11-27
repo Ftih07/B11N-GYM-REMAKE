@@ -28,7 +28,7 @@
                 <div class="flex items-center gap-3 pt-2">
                     @php
                     $socials = [
-                    ['icon' => 'ri-whatsapp-line', 'url' => 'https://wa.me/6283194288423', 'label' => 'WhatsApp B1IN Gym'],
+                    ['icon' => 'ri-whatsapp-line', 'url' => config('b1ng.contact.whatsapp_url'), 'label' => 'WhatsApp B1IN Gym'],
                     ['icon' => 'ri-instagram-fill', 'url' => 'https://www.instagram.com/biin_gym/', 'label' => 'Instagram B1IN Gym'],
                     ['icon' => 'ri-threads-fill', 'url' => 'https://www.threads.net/@biin_gym', 'label' => 'Threads B1IN Gym'],
                     ['icon' => 'fas fa-envelope', 'url' => 'mailto:sobiin77@gmail.com', 'label' => 'Email B1IN Gym'],
@@ -65,7 +65,7 @@
                 </h4>
                 <ul class="space-y-4">
                     <li>
-                        <a href="https://wa.me/6283194288423" target="_blank" class="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-red-600 hover:bg-red-600/10 transition-all duration-300 group">
+                        <a href="{{ config('b1ng.contact.whatsapp_url') }}" target="_blank" class="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-red-600 hover:bg-red-600/10 transition-all duration-300 group">
 
                             <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                                 <i class="ri-whatsapp-fill text-lg"></i>
@@ -73,7 +73,7 @@
 
                             <div>
                                 <h5 class="text-white font-bold text-xs uppercase tracking-wider mb-1 opacity-70">WhatsApp</h5>
-                                <p class="text-gray-300 font-medium text-sm group-hover:text-red-600 transition-colors">+62 831 9428 8423</p>
+                                <p class="text-gray-300 font-medium text-sm group-hover:text-red-600 transition-colors">{{ config('b1ng.contact.phone') }}</p>
                             </div>
                         </a>
                     </li>

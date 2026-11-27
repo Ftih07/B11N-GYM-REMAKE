@@ -86,7 +86,7 @@
     <div class="header">
         <div class="store-name">{{ strtoupper($transaction->gymkos->name ?? 'B11N GYM') }}</div>
         <div class="address">{{ strtoupper($transaction->gymkos->address ?? 'Jl. Masjid Baru, Arcawinangun') }}</div>
-        <div class="address">Telp: 0896-5384-7651</div>
+        <div class="address">Telp: {{ config('b1ng.contact.phone') }}</div>
     </div>
 
     <div class="line"></div>

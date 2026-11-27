@@ -3,36 +3,40 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Transaction extends Model
 {
     protected $guarded = [];
 
+    /**
+     * Kode unik untuk kolom `transactions.code` (UNIQUE), mis. TRX-261128-K7Q2M9XD.
+     * Dulu `TRX-{time()}` sehingga dua transaksi di detik yang sama bentrok (INT-04).
+     * Kode lama di database tidak diubah.
+     */
+    public static function generateCode(string $prefix = 'TRX'): string
+    {
+        do {
+            $code = $prefix.'-'.now()->format('ymd').'-'.Str::upper(Str::random(8));
+        } while (static::where('code', $code)->exists());
+
+        return $code;
+    }
+
+    // Kolom payable_type/payable_id kini hanya catatan asal transaksi lama dari fitur pembayaran
+    // membership online & booking kost (dihapus 2026-11-28); tidak ada lagi relasi morphTo.
     protected static function booted()
     {
         static::creating(function ($transaction) {
-            $transaction->code = 'TRX-'.time();
+            // Hanya isi bila pemanggil belum memberi kode sendiri
+            if (blank($transaction->code)) {
+                $transaction->code = static::generateCode();
+            }
         });
 
-        // --- TAMBAHAN BARU: EVENT SAAT TRANSAKSI DIHAPUS ---
         static::deleting(function ($transaction) {
-            // 1. Hapus Item Keranjang agar tidak nyangkut (Orphan data)
+            // Hapus item keranjang agar tidak menjadi data yatim
             $transaction->items()->delete();
-
-            // 2. Hapus data induk (Payment/Booking) jika ada
-            if ($transaction->payable) {
-                // Hapus relasi agar tidak looping (infinite loop) saat model parent menghapus kembali.
-                $payable = $transaction->payable;
-
-                // Set null dulu di database untuk memutus rantai sementara
-                $transaction->update([
-                    'payable_id' => null,
-                    'payable_type' => null,
-                ]);
-
-                // Baru hapus parent-nya
-                $payable->delete();
-            }
         });
     }
 
@@ -49,11 +53,6 @@ class Transaction extends Model
     public function gymkos()
     {
         return $this->belongsTo(Gymkos::class);
-    }
-
-    public function payable()
-    {
-        return $this->morphTo();
     }
 
     public function finance()

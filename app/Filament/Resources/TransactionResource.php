@@ -61,12 +61,16 @@ class TransactionResource extends Resource
                                     }
                                 });
                             })
-                            ->required()
+                            // Wajib untuk transaksi toko; transaksi online (membership/kost) tidak punya kasir
+                            ->required(fn (?Transaction $record): bool => blank($record?->payable_type))
+                            ->placeholder('— Online / tanpa kasir —')
                             ->label('Kasir Bertugas'),
 
                         // Pilihan Cabang Gym
                         Select::make('gymkos_id')
-                            ->relationship('gymkos', 'name', fn (Builder $query) => $query->whereIn('id', [1, 2]))
+                            // Cabang gym 1/2; transaksi kost (cabang 3) tetap bisa diedit tanpa kehilangan cabangnya
+                            ->relationship('gymkos', 'name', fn (Builder $query, ?Transaction $record) => $query
+                                ->whereIn('id', array_filter([1, 2, $record?->gymkos_id])))
                             ->label('Cabang Gym')
                             ->required(),
 
@@ -126,8 +130,8 @@ class TransactionResource extends Resource
                                 TextInput::make('quantity')
                                     ->label('Jumlah')
                                     ->numeric()
-                                    ->default(0)
-                                    ->minValue(0)
+                                    ->default(1)
+                                    ->minValue(1)
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function ($state, Set $set, Get $get) {
@@ -240,6 +244,36 @@ class TransactionResource extends Resource
             ]);
     }
 
+    /**
+     * Hitung ulang subtotal, total, dan kembalian dari item yang benar-benar tersimpan,
+     * bukan dari angka yang dikirim browser (INT-02). Dipanggil setelah create/edit;
+     * save() memicu TransactionObserver sehingga finances ikut angka yang benar.
+     */
+    public static function recalculateTotals(Transaction $transaction): void
+    {
+        $total = 0;
+        foreach ($transaction->items()->get() as $item) {
+            $subtotal = (float) $item->price * (int) $item->quantity;
+            if ((float) $item->subtotal !== $subtotal) {
+                $item->update(['subtotal' => $subtotal]);
+            }
+            $total += $subtotal;
+        }
+
+        $transaction->total_amount = $total;
+
+        if ($transaction->payment_method === 'cash') {
+            $transaction->change_amount = (float) $transaction->paid_amount - $total;
+        } else {
+            $transaction->paid_amount = $total;
+            $transaction->change_amount = 0;
+        }
+
+        if ($transaction->isDirty()) {
+            $transaction->save();
+        }
+    }
+
     // --- KONFIGURASI TABEL (Tampilan List) ---
     public static function table(Table $table): Table
     {
@@ -320,6 +354,7 @@ class TransactionResource extends Resource
                         'paid' => 'success',
                         'pending' => 'warning',
                         'cancelled' => 'danger',
+                        default => 'gray',
                     }),
 
                 Tables\Columns\TextColumn::make('created_at')
