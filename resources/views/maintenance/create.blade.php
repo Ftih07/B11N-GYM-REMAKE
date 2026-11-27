@@ -303,13 +303,13 @@
         // --- CHECK SESSION & TRIGGER TOAST KETIKA HALAMAN DIMUAT ---
         @if(session('success'))
         document.addEventListener('DOMContentLoaded', function() {
-            showModernToast('{{ session("success") }}', 'success');
+            showModernToast(@json(e(session('success'))), 'success');
         });
         @endif
 
         @if(session('error'))
         document.addEventListener('DOMContentLoaded', function() {
-            showModernToast('{{ session("error") }}', 'error');
+            showModernToast(@json(e(session('error'))), 'error');
         });
         @endif
 

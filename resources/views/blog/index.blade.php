@@ -138,7 +138,7 @@
 
                         <div
                             class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
-                            {!! Str::limit(strip_tags($blog->content), 120) !!}
+                            {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 120) }}
                         </div>
 
                         <a href="{{ route('blogs.show', $blog->slug) }}"

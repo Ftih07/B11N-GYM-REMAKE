@@ -1501,7 +1501,7 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body p-6">
-                                        {!! $trainingprogram->description !!}
+                                        {!! clean($trainingprogram->description) !!}
                                     </div>
                                 </div>
                             </div>

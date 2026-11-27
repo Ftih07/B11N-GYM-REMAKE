@@ -4,21 +4,24 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Alias `admin`: hanya akun yang boleh masuk panel Filament (admin / super_admin).
+ * Dipakai untuk halaman cetak yang dibuka dari panel (struk transaksi, QR code).
+ */
 class EnsureUserIsAdmin
 {
-    // Function Goal: Filter requests, allow only 'admin' role
     public function handle(Request $request, Closure $next): Response
     {
-        // Check 1: Is user logged in?
-        // Check 2: Is user's role 'admin'?
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request); // Allow access
+        $user = $request->user();
+
+        if (! $user) {
+            return redirect()->guest(route('filament.admin.auth.login'));
         }
 
-        // If not admin, stop here and show Error 403 (Forbidden)
-        abort(403, 'Anda tidak memiliki akses untuk mencetak struk.');
+        abort_unless(in_array($user->role, ['admin', 'super_admin'], true), 403, 'Halaman ini hanya untuk admin.');
+
+        return $next($request);
     }
 }

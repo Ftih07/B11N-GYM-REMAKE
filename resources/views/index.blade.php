@@ -695,7 +695,7 @@
                                     {{ $blog->title }}
                                 </h3>
                                 <p class="font-body text-textLight leading-relaxed text-base line-clamp-3 mb-4">
-                                    {!! Str::limit(strip_tags($blog->content), 100) !!}
+                                    {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 100) }}
                                 </p>
 
                                 <!-- Read More Link -->

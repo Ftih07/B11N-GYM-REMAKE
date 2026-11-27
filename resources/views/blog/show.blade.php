@@ -185,7 +185,7 @@
                 text-gray-800 dark:text-gray-300
                 break-words overflow-x-hidden
                 prose-a:break-all prose-li:break-words prose-p:break-words">
-            {!! $blog->content !!}
+            {!! clean($blog->content) !!}
         </article>
 
         <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
