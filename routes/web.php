@@ -42,10 +42,13 @@ Route::get('/biin-king-gym-store', [StoreController::class, 'showBiinKingGymStor
 Route::get('product/{product}', [ProductController::class, 'show'])->name('store.product.show');
 
 //Booking Kost Route
-Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])->name('kost.book');
+Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])
+    ->middleware('throttle:public-upload')
+    ->name('kost.book');
 
 //Membership Payment Route
-Route::post('/payment/upload', [PaymentController::class, 'uploadPayment']);
+Route::post('/payment/upload', [PaymentController::class, 'uploadPayment'])
+    ->middleware('throttle:public-upload');
 
 Route::get('/login', function () {
     return redirect()->route('filament.admin.auth.login');
@@ -59,7 +62,9 @@ Route::middleware(['auth'])->group(function () {
 
 // Route Halaman Report Form
 Route::get('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'create'])->name('maintenance.create');
-Route::post('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'store'])->name('maintenance.store');
+Route::post('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'store'])
+    ->middleware('throttle:public-form')
+    ->name('maintenance.store');
 
 // Route API Dropdown (PENTING)
 Route::get('/api/equipments/{gymId}', [App\Http\Controllers\MaintenanceReportController::class, 'getEquipments']);
@@ -75,7 +80,9 @@ Route::get('/gym/equipments/{slug}', [App\Http\Controllers\Gym\EquipmentPageCont
 Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
 
 // Route untuk memproses data yang dikirim (POST)
-Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
+Route::post('/survey', [SurveyController::class, 'store'])
+    ->middleware('throttle:public-form')
+    ->name('survey.store');
 
 Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 
@@ -126,55 +133,4 @@ Route::get('/api/check-membership-status', function () {
     $isMember = \App\Models\Member::where('email', auth()->user()->email)->exists();
 
     return response()->json(['status' => $isMember]);
-});
-
-// -----------------------------------------------//
-//--------------- Employee Route -----------------//
-// -----------------------------------------------//
-
-use App\Http\Controllers\Employee\AuthController as EmployeeAuthController;
-use App\Http\Controllers\Employee\DashboardController as EmployeeDashboardController;
-use App\Http\Controllers\Employee\ProductController as EmployeeProductController;
-use App\Http\Controllers\Employee\TransactionController as EmployeeTransactionController;
-
-// --- RUTE KHUSUS KARYAWAN (EMPLOYEE) ---
-Route::prefix('employee')->name('employee.')->group(function () {
-
-    Route::middleware('guest')->group(function () {
-        // Panggil pakai nama aliasnya: EmployeeAuthController
-        Route::get('/login', [EmployeeAuthController::class, 'showLoginForm'])->name('login');
-
-        Route::post('/login', [EmployeeAuthController::class, 'login'])
-            ->middleware('throttle:5,1')
-            ->name('login.post');
-    });
-
-    Route::middleware(['auth', 'employee'])->group(function () {
-        Route::get('/dashboard', [EmployeeDashboardController::class, 'index'])->name('dashboard');
-        Route::post('/logout', [EmployeeAuthController::class, 'logout'])->name('logout');
-
-        // <--- CRUD Transaksi (POS) --->
-        Route::post('/transaction', [EmployeeTransactionController::class, 'store'])->name('transaction.store');
-        Route::get('/transaction/{transaction}/edit', [EmployeeTransactionController::class, 'edit'])->name('transaction.edit');
-        Route::put('/transaction/{transaction}', [EmployeeTransactionController::class, 'update'])->name('transaction.update');
-        Route::delete('/transaction/{transaction}', [EmployeeTransactionController::class, 'destroy'])->name('transaction.destroy');
-
-        // <--- CRUD Produk Manajemen --->
-        Route::resource('products', EmployeeProductController::class);
-    });
-});
-
-use App\Http\Controllers\EmployeeMemberController;
-
-// 1. Halaman Tampil QR Code Global
-// Route::get('/frontdesk-qr', [EmployeeMemberController::class, 'generateQr'])->name('employee.qr');
-
-// 2. Portal Employee Terproteksi
-Route::middleware(['qr.auth'])->prefix('employee')->name('employee.')->group(function () {
-    Route::get('/members', [EmployeeMemberController::class, 'index'])->name('members.index');
-    Route::get('/members/create', [EmployeeMemberController::class, 'create'])->name('members.create');
-    Route::post('/members', [EmployeeMemberController::class, 'store'])->name('members.store');
-    Route::get('/members/{member}/edit', [EmployeeMemberController::class, 'edit'])->name('members.edit');
-    Route::put('/members/{member}', [EmployeeMemberController::class, 'update'])->name('members.update');
-    Route::post('/members/{member}/extend', [EmployeeMemberController::class, 'extend'])->name('members.extend');
 });

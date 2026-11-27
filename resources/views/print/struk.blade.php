@@ -94,7 +94,7 @@
     <div style="font-size: 12px;">
         <div>No: {{ $transaction->code }}</div>
         <div>Tgl: {{ $transaction->created_at->format('d-m-Y H:i') }}</div>
-        <div>Kasir: {{ $transaction->trainer->name }}</div>
+        <div>Kasir: {{ $transaction->trainer?->name ?? 'Online' }}</div>
 
         @if(!empty($transaction->customer_name))
         <div>Pembeli: {{ $transaction->customer_name }}</div>

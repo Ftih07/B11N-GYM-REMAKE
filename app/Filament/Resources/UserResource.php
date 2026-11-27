@@ -13,9 +13,24 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Kelola akun login (khusus super_admin).
+ *
+ * - super_admin / admin  : bisa masuk panel /admin (lihat User::canAccessPanel).
+ * - customer             : akun member dari login Google/Facebook, tidak bisa masuk panel.
+ *
+ * "Menonaktifkan" admin = ubah role-nya ke customer. Super admin tidak bisa mengubah
+ * role atau menghapus akunnya sendiri, sehingga selalu ada minimal satu super_admin.
+ */
 class UserResource extends Resource
 {
     use SuperAdminOnly;
+
+    public const ROLES = [
+        'super_admin' => 'Super Admin',
+        'admin' => 'Admin',
+        'customer' => 'Customer (Member)',
+    ];
 
     protected static ?string $model = User::class;
 
@@ -23,15 +38,20 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'User Directory';
 
+    protected static ?string $navigationLabel = 'Akun Pengguna';
+
+    protected static ?string $modelLabel = 'Akun';
+
+    protected static ?string $pluralModelLabel = 'Akun Pengguna';
+
     protected static ?int $navigationSort = 10;
 
-    // --- TAMBAHAN: FORM CREATE/EDIT ---
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Informasi Akun Karyawan')
-                    ->description('Buat kredensial login untuk karyawan baru. Role otomatis diset sebagai Employee.')
+                Section::make('Informasi Akun')
+                    ->description('Super Admin & Admin bisa masuk panel ini. Customer adalah akun member dari login Google/Facebook.')
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
@@ -46,19 +66,38 @@ class UserResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
 
+                        Forms\Components\Select::make('role')
+                            ->label('Role')
+                            ->options(self::ROLES)
+                            ->default('admin')
+                            ->required()
+                            ->native(false)
+                            // Tidak bisa mengubah role sendiri (mencegah super admin terkunci di luar)
+                            ->disabled(fn (?User $record): bool => self::isCurrentUser($record))
+                            ->helperText(fn (?User $record): ?string => self::isCurrentUser($record)
+                                ? 'Role akun Anda sendiri tidak bisa diubah.'
+                                : 'Ubah ke Customer untuk mencabut akses panel admin.'),
+
                         Forms\Components\TextInput::make('password')
-                            ->label('Password')
+                            ->label(fn (string $operation): string => $operation === 'create' ? 'Password' : 'Password Baru')
                             ->password()
                             ->revealable()
-                            // Wajib diisi saat create, opsional saat edit
-                            ->required(fn (string $context): bool => $context === 'create')
+                            ->required(fn (string $operation): bool => $operation === 'create')
+                            ->minLength(8)
+                            ->maxLength(255)
+                            ->confirmed()
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
-                            ->maxLength(255),
+                            ->helperText(fn (string $operation): ?string => $operation === 'edit'
+                                ? 'Kosongkan bila tidak ingin mengganti password.'
+                                : 'Minimal 8 karakter.'),
 
-                        // KUNCI ROLE: Disembunyikan dari form tapi nilainya dikirim ke database
-                        Forms\Components\Hidden::make('role')
-                            ->default('employee'),
+                        Forms\Components\TextInput::make('password_confirmation')
+                            ->label('Ulangi Password')
+                            ->password()
+                            ->revealable()
+                            ->requiredWith('password')
+                            ->dehydrated(false),
                     ]),
             ]);
     }
@@ -70,10 +109,11 @@ class UserResource extends Resource
                 Tables\Columns\ImageColumn::make('profile_picture')
                     ->label('Avatar')
                     ->circular()
-                    ->defaultImageUrl(url('https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff')),
+                    ->defaultImageUrl(fn (User $record): string => 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&name='.urlencode($record->name)),
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
+                    ->description(fn (User $record): ?string => self::isCurrentUser($record) ? 'Akun Anda' : null)
                     ->searchable()
                     ->sortable(),
 
@@ -81,39 +121,43 @@ class UserResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('role')
+                    ->label('Role')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'admin' => 'danger', // Merah buat Admin biar match tema B1NG Empire
-                        'employee' => 'warning', // Kuning/Warning untuk karyawan
-                        'user' => 'gray',
+                    ->color(fn (?string $state): string => match ($state) {
+                        'super_admin' => 'danger',
+                        'admin' => 'warning',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (?string $state): string => self::ROLES[$state] ?? (string) $state)
+                    ->sortable(),
 
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('login_via')
+                    ->label('Login Lewat')
+                    ->state(fn (User $record): string => collect([
+                        $record->google_id ? 'Google' : null,
+                        $record->facebook_id ? 'Facebook' : null,
+                    ])->filter()->join(', ') ?: 'Email & Password')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Dibuat')
+                    ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
-                    ->options([
-                        'admin' => 'Admin',
-                        'employee' => 'Karyawan / Employee',
-                        'user' => 'User / Customer',
-                    ]),
+                    ->label('Role')
+                    ->options(self::ROLES),
             ])
-            // Tambahkan tombol Create di Header Tabel
-            ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->label('Tambah Karyawan')
-                    ->icon('heroicon-o-plus'),
-            ]);
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->hidden(fn (User $record): bool => self::isCurrentUser($record))
+                    ->modalDescription('Akun dihapus permanen. Member/trainer yang tertaut ke akun ini tetap ada, hanya tautan akunnya yang dilepas.'),
+            ])
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array
@@ -123,21 +167,25 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        // Jumlah akun yang bisa masuk panel admin
+        return (string) static::getModel()::whereIn('role', ['admin', 'super_admin'])->count();
     }
 
-    // 1. HAPUS FUNGSI canCreate() AGAR DEFAULTNYA JADI TRUE
-    // public static function canCreate(): bool
-    // {
-    //     return false;
-    // }
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Jumlah akun Admin & Super Admin';
+    }
 
     public static function getPages(): array
     {
         return [
-            // Karena hanya ada halaman index, kita arahkan aksi create menggunakan Modal.
-            // Form akan otomatis muncul di popup modal saat tombol "Tambah Karyawan" diklik.
+            // Tambah & edit memakai modal di halaman daftar
             'index' => Pages\ListUsers::route('/'),
         ];
+    }
+
+    private static function isCurrentUser(?User $record): bool
+    {
+        return $record !== null && $record->is(auth()->user());
     }
 }

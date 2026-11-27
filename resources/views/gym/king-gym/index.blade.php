@@ -2286,6 +2286,7 @@
                     body: formData,
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
                     }
                 })
                 .then(response => {

@@ -51,19 +51,6 @@ class TrainerResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Detail Trainer')
                     ->schema([
-                        // --- TAMBAHAN: Select User Akun Karyawan ---
-                        Forms\Components\Select::make('user_id')
-                            ->label('Tautkan ke Akun Login (Opsional)')
-                            ->relationship('user', 'name', function ($query) {
-                                // Filter hanya tampilkan user yang role-nya 'employee'
-                                // dan belum ditautkan ke trainer lain (kecuali yang sedang diedit)
-                                return $query->where('role', 'employee');
-                            })
-                            ->searchable()
-                            ->preload()
-                            ->nullable()
-                            ->helperText('Pilih akun login karyawan. Biarkan kosong jika trainer belum punya akun.'),
-
                         Forms\Components\TextInput::make('name')
                             ->label('Nama Trainer')
                             ->required(),
@@ -116,14 +103,6 @@ class TrainerResource extends Resource
                     ->label('Nama Trainer')
                     ->sortable()
                     ->searchable(),
-
-                // --- TAMBAHAN: Tampilkan Email Akun Tertaut di Tabel ---
-                Tables\Columns\TextColumn::make('user.email')
-                    ->label('Akun Login')
-                    ->badge()
-                    ->color('info')
-                    ->placeholder('Belum ditautkan')
-                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('gymkos.name')
                     ->label('Nama Cabang')

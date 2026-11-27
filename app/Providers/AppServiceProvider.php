@@ -6,6 +6,9 @@ use App\Models\QrCode;
 use App\Models\Transaction;
 use App\Observers\QrCodeObserver;
 use App\Observers\TransactionObserver;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
         // 1. Register Observers
         Transaction::observe(TransactionObserver::class);
         QrCode::observe(QrCodeObserver::class);
+
+        // 1b. Rate limit endpoint publik (SEC-04) dan API OCR (SEC-07)
+        $this->configureRateLimiting();
 
         // 2. Global View Data (Navigation Menu)
         // Using View Composer ensures '$navMenus' is available in EVERY blade file
@@ -66,5 +72,32 @@ class AppServiceProvider extends ServiceProvider
             // Inject variable to views
             $view->with('navMenus', $navMenus);
         });
+    }
+
+    private function configureRateLimiting(): void
+    {
+        // Form publik dengan unggahan berkas (bukti bayar membership & kost).
+        $tooMany = function (Request $request, array $headers) {
+            $message = 'Terlalu banyak percobaan. Silakan coba lagi beberapa menit lagi.';
+
+            return $request->expectsJson()
+                ? response()->json(['message' => $message], 429, $headers)
+                : back()->with('error', $message)->withHeaders($headers);
+        };
+
+        RateLimiter::for('public-upload', fn (Request $request) => [
+            Limit::perMinute(5)->by('upload-min:'.$request->ip())->response($tooMany),
+            Limit::perDay(30)->by('upload-day:'.$request->ip())->response($tooMany),
+        ]);
+
+        // Form publik tanpa pembayaran (survei, laporan kerusakan). Batas per menit
+        // dibuat longgar karena banyak pengunjung gym bisa memakai Wi-Fi (IP) yang sama.
+        RateLimiter::for('public-form', fn (Request $request) => [
+            Limit::perMinute(10)->by('form-min:'.$request->ip())->response($tooMany),
+            Limit::perDay(150)->by('form-day:'.$request->ip())->response($tooMany),
+        ]);
+
+        // Sinkronisasi rekap harian dari skrip OCR.
+        RateLimiter::for('ocr-sync', fn (Request $request) => Limit::perMinute(30)->by('ocr:'.$request->ip()));
     }
 }

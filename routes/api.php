@@ -3,14 +3,16 @@
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/v1/sync/daily-recap', function (Request $request) {
     // 1. CEK API KEY
-    $secretKey = config('services.ocr.secret');
-    $clientKey = $request->header('X-API-KEY');
+    // Perbandingan timing-safe; gagal-tertutup bila OCR_SYNC_SECRET belum diatur.
+    $secretKey = (string) config('services.ocr.secret');
+    $clientKey = (string) $request->header('X-API-KEY');
 
-    if (! $clientKey || $clientKey !== $secretKey) {
+    if ($secretKey === '' || $clientKey === '' || ! hash_equals($secretKey, $clientKey)) {
         return response()->json([
             'status' => 'unauthorized',
             'message' => 'Akses ditolak! Kunci otorisasi tidak valid.',
@@ -19,20 +21,22 @@ Route::post('/v1/sync/daily-recap', function (Request $request) {
 
     try {
         $data = $request->validate([
-            'trainer_id' => 'required|integer',
-            'gymkos_id' => 'required|integer',
-            'customer_name' => 'required|string',
-            'payment_method' => 'required|string',
-            'status' => 'required|string',
-            'total_amount' => 'required|numeric',
-            'created_at' => 'required|string',
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|string',
-            'items.*.product_name' => 'required|string',
-            'items.*.quantity' => 'required|integer',
-            'items.*.price' => 'required|numeric',
-            'items.*.subtotal' => 'required|numeric',
+            'trainer_id' => 'required|integer|exists:trainers,id',
+            'gymkos_id' => 'required|integer|exists:gymkos,id',
+            'customer_name' => 'required|string|max:255',
+            'payment_method' => 'required|string|max:50',
+            'status' => 'required|in:paid,pending,cancelled',
+            'total_amount' => 'required|numeric|min:0',
+            'created_at' => 'required|date',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|string|exists:products,id',
+            'items.*.product_name' => 'required|string|max:255',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'items.*.subtotal' => 'required|numeric|min:0',
             'expense' => 'nullable|array', // Data Pengeluaran untuk tabel finances
+            'expense.amount' => 'required_with:expense|numeric|min:0',
+            'expense.description' => 'required_with:expense|string|max:1000',
         ]);
 
         return DB::transaction(function () use ($data) {
@@ -102,9 +106,12 @@ Route::post('/v1/sync/daily-recap', function (Request $request) {
             'errors' => $ve->errors(),
         ], 422);
     } catch (\Throwable $th) {
+        // Detail galat hanya ke log; klien cukup menerima pesan generik.
+        Log::error('OCR daily-recap gagal', ['exception' => $th]);
+
         return response()->json([
             'status' => 'error',
-            'message' => $th->getMessage(),
+            'message' => 'Terjadi kesalahan pada server. Data tidak disimpan.',
         ], 500);
     }
-});
+})->middleware('throttle:ocr-sync');

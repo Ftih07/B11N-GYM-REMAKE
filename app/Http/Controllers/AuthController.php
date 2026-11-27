@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -65,7 +66,9 @@ class AuthController extends Controller
 
             return redirect()->intended('/dashboard');
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Login Gagal: '.$e->getMessage());
+            Log::warning('Login Google gagal', ['exception' => $e]);
+
+            return redirect('/login')->with('error', 'Login Google gagal. Silakan coba lagi.');
         }
     }
 
@@ -121,7 +124,9 @@ class AuthController extends Controller
 
             return redirect()->intended('/dashboard');
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Login Facebook Gagal: '.$e->getMessage());
+            Log::warning('Login Facebook gagal', ['exception' => $e]);
+
+            return redirect('/login')->with('error', 'Login Facebook gagal. Silakan coba lagi.');
         }
     }
 
