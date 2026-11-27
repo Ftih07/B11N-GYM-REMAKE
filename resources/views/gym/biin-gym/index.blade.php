@@ -1817,7 +1817,7 @@
                             </div>
                             <div class="modal-body p-6">
                                 <form id="paymentForm" enctype="multipart/form-data" class="space-y-4">
-                                    <input type="hidden" name="gym_id" value="2">
+                                    <input type="hidden" name="gym_id" value="1">
                                     <div
                                         class="bg-neutral-900/50 border border-neutral-800 p-4 rounded-lg space-y-4 mb-2">
                                         <div>
@@ -2354,6 +2354,7 @@
                         body: formData,
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
                         }
                     })
                     .then(response => {

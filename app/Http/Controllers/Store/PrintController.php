@@ -4,19 +4,16 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // <--- Jangan lupa import Auth
+use Illuminate\Support\Facades\Auth;
 
 class PrintController extends Controller
 {
     public function printStruk($code)
     {
-        // --- PENGECEKAN ROLE MANUAL TANPA MIDDLEWARE ---
-        $userRole = Auth::user()->role;
-
-        // Kalau yang login BUKAN admin dan BUKAN employee, tendang keluar!
-        if (!in_array($userRole, ['admin', 'employee'])) {
-            abort(403, 'Akses Ditolak. Hanya Admin dan Kasir yang bisa mencetak struk.');
+        // Cetak struk dipanggil dari panel admin Filament (TransactionResource),
+        // jadi hanya role yang bisa masuk panel yang boleh mencetak.
+        if (! in_array(Auth::user()->role, ['admin', 'super_admin'], true)) {
+            abort(403, 'Akses Ditolak. Hanya Admin yang bisa mencetak struk.');
         }
 
         // 1. Find Transaction by CODE

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Kost;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\{Gallery, Testimoni, Blog, Booking};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Mail\BookingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -42,24 +44,23 @@ class KostController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            // 1. Validate Input
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email',
-                'phone' => 'required|string',
-                'date' => 'required|date',
-                'room_type' => 'required|string',
-                'room_number' => 'required|integer',
-                'paymentMethod' => 'required|string',
-                'paymentProof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:8192',
-            ]);
+        // 1. Validate Input (di luar try agar pesan validasi tetap tampil normal)
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'date' => 'required|date',
+            'room_type' => ['required', Rule::in(['750rb - AC', '500rb - Non AC'])], // = enum booking_kost.room_type
+            'room_number' => 'required|integer|between:1,10',
+            'paymentMethod' => 'required|string|max:50',
+            'paymentProof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:8192',
+        ]);
 
+        try {
             // 2. Secure Server-Side Pricing
             $price = match ($request->room_type) {
                 '750rb - AC' => 750000,
                 '500rb - Non AC' => 500000,
-                default => 500000,
             };
 
             // 3. Double Check Availability (Backend Validation)
@@ -99,12 +100,15 @@ class KostController extends Controller
             try {
                 Mail::to($request->email)->send(new BookingConfirmationMail($booking));
             } catch (\Exception $e) {
-                // Log error silently
+                // Booking tetap sah walau email gagal; catat agar ketahuan (REL-01)
+                Log::warning('Email konfirmasi booking gagal dikirim', ['booking_id' => $booking->id, 'exception' => $e]);
             }
 
             return back()->with('success', 'Booking berhasil! Mohon tunggu verifikasi admin.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan! ' . $e->getMessage());
+            Log::error('Booking kost gagal', ['exception' => $e]);
+
+            return back()->with('error', 'Terjadi kesalahan, booking belum tersimpan. Silakan coba lagi atau hubungi admin.');
         }
     }
 }
