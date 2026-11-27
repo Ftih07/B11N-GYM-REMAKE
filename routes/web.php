@@ -50,14 +50,11 @@ Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])
 Route::post('/payment/upload', [PaymentController::class, 'uploadPayment'])
     ->middleware('throttle:public-upload');
 
-Route::get('/login', function () {
-    return redirect()->route('filament.admin.auth.login');
-})->name('login');
-
-// Route Print Struk Customer
-Route::middleware(['auth'])->group(function () {
+// Halaman cetak yang dibuka dari panel admin (struk transaksi & QR code)
+Route::middleware('admin')->group(function () {
     Route::get('/print/transaction/{code}', [PrintController::class, 'printStruk'])
         ->name('print.struk');
+    Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 });
 
 // Route Halaman Report Form
@@ -83,8 +80,6 @@ Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
 Route::post('/survey', [SurveyController::class, 'store'])
     ->middleware('throttle:public-form')
     ->name('survey.store');
-
-Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
 
 // -----------------------------------------------//
 //--------------- Membership Route ---------------//

@@ -72,6 +72,12 @@
                 <p class="text-gray-500 text-sm mt-2 uppercase tracking-widest font-bold">Member Area Access</p>
             </div>
 
+            @if (session('error'))
+                <div role="alert" class="mb-6 rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <a href="{{ route('auth.google') }}"
                 class="group flex items-center justify-center w-full bg-white hover:bg-gray-200 text-gray-900 font-bold py-4 px-6 rounded transition duration-300 transform hover:-translate-y-1 shadow-lg mb-4">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6 mr-4 group-hover:scale-110 transition">

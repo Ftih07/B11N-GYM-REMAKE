@@ -282,9 +282,9 @@
                 faceApiUrl: @js(asset('js/face-api.min.js')),
                 modelsUrl: '/models',
                 audioUrls: {
-                    success: 'https://cdn.jsdelivr.net/gh/Ftih07/B11N-GYM-REMAKE@main/public/sounds/success.mp3',
-                    error: 'https://cdn.jsdelivr.net/gh/Ftih07/B11N-GYM-REMAKE@main/public/sounds/error.mp3',
-                    warning: 'https://cdn.jsdelivr.net/gh/Ftih07/B11N-GYM-REMAKE@main/public/sounds/warning.mp3'
+                    success: @js(asset('sounds/success.mp3')),
+                    error: @js(asset('sounds/error.mp3')),
+                    warning: @js(asset('sounds/warning.mp3'))
                 }
             })">
 
