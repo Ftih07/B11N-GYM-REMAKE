@@ -198,6 +198,8 @@ class MemberResource extends Resource
                 // 2. FOTO
                 Tables\Columns\ImageColumn::make('picture')
                     ->label('Foto')
+                    // Foto di disk privat → URL route terlindungi (SEC-10)
+                    ->getStateUsing(fn (\App\Models\Member $record): ?string => $record->photo_url)
                     ->circular()
                     ->defaultImageUrl('https://ui-avatars.com/api/?name=Member&background=0D8ABC&color=fff'),
 

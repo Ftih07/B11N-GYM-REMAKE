@@ -255,7 +255,7 @@
                                     <td class="p-4 text-center">
                                         <div class="flex flex-col sm:flex-row gap-2 justify-center">
                                             @if($item->progress_photo)
-                                            <a href="{{ Storage::url($item->progress_photo) }}" target="_blank" class="text-blue-400 hover:text-white text-[10px] font-bold border border-blue-900 bg-blue-900/20 px-2 py-1.5 rounded uppercase text-center">Foto</a>
+                                            <a href="{{ route('media.progress', $item) }}" target="_blank" class="text-blue-400 hover:text-white text-[10px] font-bold border border-blue-900 bg-blue-900/20 px-2 py-1.5 rounded uppercase text-center">Foto</a>
                                             @endif
 
                                             <button onclick="showNotes('{{ \Carbon\Carbon::parse($item->measured_at)->format('d M Y') }}', {{ json_encode($item->notes) }})" class="text-gray-400 hover:text-white text-[10px] font-bold border border-neutral-700 bg-neutral-800 px-2 py-1.5 rounded uppercase">Notes</button>

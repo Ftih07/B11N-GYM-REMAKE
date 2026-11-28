@@ -52,30 +52,39 @@
                 <div class="border-b border-neutral-800 pb-4 last:border-0 last:pb-0">
                     <h3 class="text-xl text-white font-oswald uppercase mb-2 tracking-wide">1. Data Collection</h3>
                     <div class="text-sm leading-relaxed text-neutral-400">
-                        <p>Kami mengumpulkan informasi dasar untuk keperluan manajemen gym dan fitur <span class="text-white font-medium">Auto-Attendance</span>, meliputi:</p>
+                        <p>Kami mengumpulkan informasi untuk keperluan manajemen gym dan fitur <span class="text-white font-medium">Auto-Attendance</span>, meliputi:</p>
                         <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li>Identitas Personal (Nama, Email, No. Telepon).</li>
-                            <li>Data Keanggotaan (Jenis Paket, Tanggal Mulai/Berakhir).</li>
-                            <li>Log Aktivitas (Waktu Check-in/Check-out fasilitas B11N & K1NG Gym).</li>
+                            <li>Identitas Personal (Nama, Email, No. Telepon, Alamat).</li>
+                            <li>Data Keanggotaan (Jenis Paket, Tanggal Mulai/Berakhir, riwayat perpanjangan).</li>
+                            <li>Log Aktivitas (Waktu check-in di B11N & K1NG Gym).</li>
+                            <li><span class="text-white font-medium">Foto wajah dan data pengenal wajah</span> (deretan angka hasil pemindaian wajah) bila kamu didaftarkan untuk absensi scan wajah.</li>
+                            <li>Data progres tubuh (berat, lingkar tubuh, foto progres) yang kamu isi sendiri di dashboard member.</li>
+                            <li>Data kunjungan situs: alamat IP yang disimpan dalam bentuk acak (hash), jenis browser, dan tanggal kunjungan, serta cookie sesi untuk login dan absen mandiri.</li>
                         </ul>
                     </div>
                 </div>
-
                 <div class="border-b border-neutral-800 pb-4 last:border-0 last:pb-0">
                     <h3 class="text-xl text-white font-oswald uppercase mb-2 tracking-wide">2. How We Use Your Data</h3>
                     <div class="text-sm leading-relaxed text-neutral-400">
                         <p>Data kamu digunakan murni untuk operasional sistem <strong>B1NG Empire</strong>:</p>
                         <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li>Memvalidasi akses masuk gym (Gate System).</li>
+                            <li>Memvalidasi akses dan mencatat kehadiran member.</li>
+                            <li>Mencocokkan wajah saat absensi scan wajah di perangkat admin gym. Data wajah <span class="text-white font-medium">tidak</span> dipakai untuk menebak usia, jenis kelamin, atau emosi.</li>
                             <li>Memantau progress latihan dan riwayat kehadiran member.</li>
+                            <li>Menghitung jumlah pengunjung situs secara agregat.</li>
                         </ul>
                     </div>
                 </div>
-
                 <div class="border-b border-neutral-800 pb-4 last:border-0 last:pb-0">
-                    <h3 class="text-xl text-white font-oswald uppercase mb-2 tracking-wide">3. Data Protection</h3>
+                    <h3 class="text-xl text-white font-oswald uppercase mb-2 tracking-wide">3. Data Protection &amp; Retention</h3>
                     <div class="text-sm leading-relaxed text-neutral-400">
-                        <p>Kami menerapkan standar keamanan enkripsi pada database kami. Data pribadimu tidak akan dijual atau dibagikan ke pihak ketiga di luar ekosistem B1NG Empire tanpa persetujuanmu.</p>
+                        <p>Foto wajah, foto progres, dan bukti pembayaran disimpan di penyimpanan privat yang hanya dapat dibuka oleh admin B1NG Empire (foto progres juga oleh member pemiliknya). Data kunjungan situs dihapus otomatis setelah 13 bulan. Data pribadimu tidak dijual atau dibagikan ke pihak ketiga di luar ekosistem B1NG Empire tanpa persetujuanmu.</p>
+                    </div>
+                </div>
+                <div class="border-b border-neutral-800 pb-4 last:border-0 last:pb-0">
+                    <h3 class="text-xl text-white font-oswald uppercase mb-2 tracking-wide">4. Your Rights</h3>
+                    <div class="text-sm leading-relaxed text-neutral-400">
+                        <p>Kamu dapat meminta untuk melihat, memperbaiki, atau menghapus data pribadimu — termasuk foto dan data wajah (kamu tetap bisa absen secara manual) — dengan menghubungi admin melalui WhatsApp <a href="{{ config('b1ng.contact.whatsapp_url') }}" target="_blank" rel="noopener noreferrer" class="text-white underline">{{ config('b1ng.contact.phone') }}</a>.</p>
                     </div>
                 </div>
             </div>

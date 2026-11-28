@@ -60,7 +60,7 @@ class AttendanceService
 
         $payload = [
             'member_name' => $member->name,
-            'photo_url' => $member->picture ? asset('storage/' . $member->picture) : null,
+            'photo_url' => $member->photo_url,
             'email' => $member->email ?? '-',
             'phone' => $member->phone ?? '-',
             'address' => $member->address ?? '-',

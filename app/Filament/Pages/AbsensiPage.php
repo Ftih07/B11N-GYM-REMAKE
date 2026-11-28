@@ -63,9 +63,8 @@ class AbsensiPage extends Page implements HasForms
     // Semua data user di-escape dengan e() karena Select memakai allowHtml().
     protected function memberOptionHtml(Member $member): string
     {
-        $avatarUrl = $member->picture
-            ? asset('storage/' . $member->picture)
-            : 'https://ui-avatars.com/api/?name=' . urlencode($member->name) . '&background=random';
+        $avatarUrl = $member->photo_url
+            ?? 'https://ui-avatars.com/api/?name=' . urlencode($member->name) . '&background=random';
 
         $name = e($member->name);
         $detail = e(collect([$member->email, $member->phone])->filter()->implode(' • ') ?: '-');

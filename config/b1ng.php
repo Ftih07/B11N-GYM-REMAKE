@@ -14,4 +14,12 @@ return [
         'phone' => env('B1NG_PHONE_DISPLAY', '0812-2611-0988'), // untuk ditampilkan
         'phone_e164' => '+'.$whatsapp, // untuk data terstruktur (schema.org)
     ],
+
+    // Data pengunjung situs (web_visitors) — PRV-05
+    'visitors' => [
+        // IP disimpan sebagai sha256(salt|ip); salt default = APP_KEY
+        'ip_salt' => env('VISITOR_IP_SALT', env('APP_KEY')),
+        // Baris lebih tua dari ini dihapus otomatis
+        'retention_months' => (int) env('VISITOR_RETENTION_MONTHS', 13),
+    ],
 ];
