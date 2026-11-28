@@ -39,11 +39,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Poppins:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <x-cdn name="remixicon3" />
 
     {{-- 2. ICONS & TAILWIND --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <x-cdn name="fontawesome6" />
+    <x-cdn name="tailwind" />
     <script>
         tailwind.config = {
             darkMode: 'class',

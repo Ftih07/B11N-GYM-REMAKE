@@ -47,11 +47,11 @@
         rel="stylesheet">
 
     {{-- 2. ICONS: FontAwesome & RemixIcon --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+    <x-cdn name="fontawesome6" />
+    <x-cdn name="remixicon4" />
 
     {{-- 3. TAILWIND CSS (CDN) --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <x-cdn name="tailwind" />
     <script>
         tailwind.config = {
             darkMode: 'class',

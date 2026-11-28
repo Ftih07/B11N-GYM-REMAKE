@@ -33,12 +33,12 @@
     {{-- 4. ICONS & FONTS --}}
     <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <x-cdn name="fontawesome5" />
+    <x-cdn name="remixicon3" />
 
     {{-- 5. SCRIPTS: Tailwind, AlpineJS --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <x-cdn name="tailwind" />
+    <x-cdn name="alpine" defer />
     {{-- SweetAlert2 dihapus karena sudah pakai Modern Toast --}}
 
     <script>

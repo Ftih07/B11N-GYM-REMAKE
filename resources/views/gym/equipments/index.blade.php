@@ -134,7 +134,7 @@ Katalog lengkap peralatan fitness B1NG Empire. Temukan alat Cardio, Strength, da
 
                 {{-- Image Area --}}
                 <div class="relative h-56 overflow-hidden bg-gray-100">
-                    <img src="{{ $thumbnail }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    <img loading="lazy" src="{{ $thumbnail }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
 
                     {{-- Overlay Gradient saat Hover --}}
                     <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-40 transition duration-300"></div>

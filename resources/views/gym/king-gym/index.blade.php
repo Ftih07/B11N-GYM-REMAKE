@@ -37,18 +37,18 @@
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/last.png'))">
 
     {{-- 1. BOOTSTRAP CSS (Load First) --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <x-cdn name="bootstrap-css" />
 
     {{-- 2. OTHER LIBRARIES --}}
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <x-cdn name="remixicon4" />
+    <x-cdn name="swiper-css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <x-cdn name="fontawesome5" />
 
     {{-- 3. TAILWIND CSS CDN & CONFIG --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <x-cdn name="tailwind" />
     <script>
         tailwind.config = {
             theme: {
@@ -1113,8 +1113,7 @@
     </style>
 
     {{-- SCRIPTS --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <x-cdn name="bootstrap-js" />
 
 </head>
 
@@ -1794,7 +1793,7 @@
     </footer>
 
     {{-- SCRIPTS --}}
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+    <x-cdn name="swiper-js" defer />
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
