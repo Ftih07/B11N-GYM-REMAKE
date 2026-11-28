@@ -24,6 +24,8 @@ $descriptorPath = implode('.', $pathParts);
         x-data="{
             stream: null,
             image: @entangle($getStatePath()), 
+            // Foto tersimpan ada di disk privat → tampilkan lewat route terlindungi (SEC-10)
+            existingUrl: @js($getRecord()?->photo_url),
             descriptorState: @entangle($descriptorPath), // <--- INI YG KITA PERBAIKI
             cameraActive: false,
             isModelLoaded: false,
@@ -124,7 +126,7 @@ $descriptorPath = implode('.', $pathParts);
         </div>
 
         <div x-show="image" class="text-center">
-            <img :src="image" class="w-full max-w-md mx-auto rounded-lg border border-gray-300 mb-2">
+            <img :src="image && image.startsWith('data:') ? image : existingUrl" class="w-full max-w-md mx-auto rounded-lg border border-gray-300 mb-2">
             <div class="text-xs text-green-600 font-mono mb-2">Data Biometrik Tersimpan ✅</div>
             <button type="button" @click="removePhoto()" class="text-red-600 text-sm hover:underline">
                 Hapus & Foto Ulang

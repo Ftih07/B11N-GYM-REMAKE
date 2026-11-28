@@ -392,20 +392,6 @@
                                 </span>
                             </div>
 
-                            {{-- Badge Gender & Mood --}}
-                            <div x-show="scanExtras.gender" class="flex flex-wrap gap-2 mt-1 mb-2">
-                                <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700">
-                                    <span x-text="scanExtras.gender === 'Pria' ? '♂️' : '♀️'" class="mr-1"></span>
-                                    <span x-text="scanExtras.gender"></span>
-                                </span>
-                                <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-500/30">
-                                    <span x-text="scanExtras.emoji" class="mr-1"></span>
-                                    <span x-text="scanExtras.expression"></span>
-                                </span>
-                            </div>
-
                             <div class="text-sm text-gray-700 dark:text-white mt-2 space-y-1">
                                 <div class="flex items-center gap-2">
                                     <span class="w-4">📞</span><span x-text="lastMember?.phone || '-'"></span>
@@ -495,11 +481,6 @@
                     lastMember: null,
                     errorMember: null,
                     audioUnlocked: false,
-                    scanExtras: {
-                        gender: null,
-                        expression: null,
-                        emoji: ''
-                    },
                     audioPlayer: {
                         success: null,
                         error: null,
@@ -615,9 +596,7 @@
                             modelsPromise = Promise.all([
                                 faceapi.nets.tinyFaceDetector.loadFromUri(modelsUrl),
                                 faceapi.nets.faceLandmark68Net.loadFromUri(modelsUrl),
-                                faceapi.nets.faceRecognitionNet.loadFromUri(modelsUrl),
-                                faceapi.nets.faceExpressionNet.loadFromUri(modelsUrl),
-                                faceapi.nets.ageGenderNet.loadFromUri(modelsUrl)
+                                faceapi.nets.faceRecognitionNet.loadFromUri(modelsUrl)
                             ]).catch((e) => {
                                 modelsPromise = null;
                                 throw e;
@@ -682,12 +661,6 @@
                         const canvas = this.$refs.canvas;
                         if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas
                         .height);
-
-                        this.scanExtras = {
-                            gender: null,
-                            expression: null,
-                            emoji: ''
-                        };
                     },
 
                     startDetection(token) {
@@ -715,9 +688,7 @@
                                 const detections = await faceapi
                                     .detectAllFaces(video, options)
                                     .withFaceLandmarks()
-                                    .withFaceDescriptors()
-                                    .withFaceExpressions()
-                                    .withAgeAndGender();
+                                    .withFaceDescriptors();
 
                                 if (token !== this.session) return;
 
@@ -737,7 +708,6 @@
                                     }).draw(canvas);
 
                                     if (match.label !== 'unknown') {
-                                        this.processFaceAttributes(d);
                                         this.triggerAttendance(match.label);
                                     }
                                 });
@@ -747,48 +717,6 @@
                                 this.detecting = false;
                             }
                         }, 500);
-                    },
-
-                    processFaceAttributes(detection) {
-                        const genderIndo = detection.gender === 'male' ? 'Pria' : 'Wanita';
-                        const expressions = detection.expressions;
-                        const sorted = Object.keys(expressions).sort((a, b) => expressions[b] -
-                            expressions[a]);
-                        const dominant = sorted[0];
-
-                        let text = 'Biasa',
-                            emo = '😐';
-                        switch (dominant) {
-                            case 'happy':
-                                text = 'Bahagia';
-                                emo = '😄';
-                                break;
-                            case 'sad':
-                                text = 'Sedih';
-                                emo = '😢';
-                                break;
-                            case 'angry':
-                                text = 'Marah';
-                                emo = '😡';
-                                break;
-                            case 'surprised':
-                                text = 'Kaget';
-                                emo = '😲';
-                                break;
-                            case 'disgusted':
-                                text = 'Jijik';
-                                emo = '🤢';
-                                break;
-                            case 'fearful':
-                                text = 'Takut';
-                                emo = '😨';
-                                break;
-                        }
-                        this.scanExtras = {
-                            gender: genderIndo,
-                            expression: text,
-                            emoji: emo
-                        };
                     },
 
                     triggerAttendance(memberId) {
@@ -825,11 +753,6 @@
                             this.playAudio('error');
                             this.errorMember = response;
                             this.debugMessage = 'MEMBERSHIP EXPIRED ❌';
-                            this.scanExtras = {
-                                gender: null,
-                                expression: null,
-                                emoji: ''
-                            };
                         } else {
                             this.debugMessage = response.message;
                         }

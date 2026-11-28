@@ -45,7 +45,16 @@ Route::middleware('admin')->group(function () {
     Route::get('/print/transaction/{code}', [PrintController::class, 'printStruk'])
         ->name('print.struk');
     Route::get('/qr-code/print/{qrCode}', QrCodePrintController::class)->name('qr-code.print');
+
+    // Berkas privat (SEC-10)
+    Route::get('/media/member/{member}/photo', [\App\Http\Controllers\PrivateMediaController::class, 'memberPhoto'])->name('media.member-photo');
+    Route::get('/media/transaction/{transaction}/proof', [\App\Http\Controllers\PrivateMediaController::class, 'transactionProof'])->name('media.transaction-proof');
 });
+
+// Foto progres: admin atau member pemiliknya
+Route::get('/media/progress/{measurement}', [\App\Http\Controllers\PrivateMediaController::class, 'progressPhoto'])
+    ->middleware('auth')
+    ->name('media.progress');
 
 // Route Halaman Report Form
 Route::get('/maintenance-report', [App\Http\Controllers\MaintenanceReportController::class, 'create'])->name('maintenance.create');

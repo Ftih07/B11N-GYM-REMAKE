@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PrivateMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,6 +40,12 @@ class Member extends Model
         return $this->belongsTo(User::class);
     }
 
+    /** URL foto wajah lewat route terlindungi (khusus admin), atau null. */
+    protected function photoUrl(): Attribute
+    {
+        return Attribute::get(fn () => $this->picture ? route('media.member-photo', $this) : null);
+    }
+
     public function measurements()
     {
         return $this->hasMany(MemberMeasurement::class);
@@ -56,14 +63,18 @@ class Member extends Model
                     // 1. Clean header
                     $image = preg_replace('/^data:image\/\w+;base64,/', '', $value);
 
-                    // 2. Decode
-                    $image = base64_decode($image);
+                    // 2. Decode, dan pastikan memang gambar JPEG/PNG (SEC-17)
+                    $image = base64_decode($image, true);
+                    $info = $image !== false ? @getimagesizefromstring($image) : false;
+                    if (! $info || ! in_array($info['mime'] ?? null, ['image/jpeg', 'image/png'], true)) {
+                        return $this->getRawOriginal('picture'); // abaikan data rusak, foto lama dipertahankan
+                    }
 
                     // 3. Create unique filename
                     $filename = 'member-photos/' . Str::random(40) . '.jpg';
 
-                    // 4. Save to Storage
-                    Storage::disk('public')->put($filename, $image);
+                    // 4. Simpan di disk privat — tidak bisa dibuka lewat /storage (SEC-10)
+                    Storage::disk(PrivateMedia::DISK)->put($filename, $image);
 
                     // 5. Return only the path to DB
                     return $filename;

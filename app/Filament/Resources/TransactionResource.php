@@ -225,7 +225,16 @@ class TransactionResource extends Resource
                         FileUpload::make('proof_of_payment')
                             ->label('Bukti Pembayaran')
                             ->image()
+                            // Disk privat; pratinjau lewat route terlindungi (SEC-10)
+                            ->disk(\App\Support\PrivateMedia::DISK)
+                            ->visibility('private')
                             ->directory('transaction-proofs')
+                            ->getUploadedFileUsing(fn (?Transaction $record, string $file): ?array => $record ? [
+                                'name' => basename($file),
+                                'size' => 0,
+                                'type' => null,
+                                'url' => route('media.transaction-proof', $record),
+                            ] : null)
                             ->nullable()
                             // --- FITUR KOMPRESI BAWAAN FILAMENT ---
                             ->imageResizeMode('contain') // Menjaga proporsi asli, tidak dicrop
@@ -497,6 +506,7 @@ class TransactionResource extends Resource
                     ->infolist([
                         Infolists\Components\ImageEntry::make('proof_of_payment')
                             ->hiddenLabel()
+                            ->getStateUsing(fn (Transaction $record): string => route('media.transaction-proof', $record))
                             ->extraImgAttributes([
                                 'alt' => 'Bukti Pembayaran',
                                 'style' => 'border-radius: 8px; max-height: 500px; width: auto; margin: 0 auto; display: block;',

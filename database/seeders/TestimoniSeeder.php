@@ -11,7 +11,7 @@ class TestimoniSeeder extends Seeder
     public function run(): void
     {
         // Ambil file JSON dari public
-        $jsonPath = public_path('reviewkost.json');
+        $jsonPath = database_path('seeders/data/reviewkost.json') // dipindah dari public/ (PRV-03);
 
         if (!File::exists($jsonPath)) {
             dd("File JSON tidak ditemukan di: " . $jsonPath);

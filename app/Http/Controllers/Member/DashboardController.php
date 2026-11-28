@@ -46,7 +46,7 @@ class DashboardController extends Controller
         // Handle File Upload (Progress Photo)
         $photoPath = null;
         if ($request->hasFile('progress_photo')) {
-            $photoPath = $request->file('progress_photo')->store('progress_photos', 'public');
+            $photoPath = $request->file('progress_photo')->store('progress_photos', \App\Support\PrivateMedia::DISK); // disk privat (SEC-10)
         }
 
         // Save Measurement Data
@@ -76,7 +76,7 @@ class DashboardController extends Controller
 
         // Hapus foto dari storage (jika ada) biar server gak penuh
         if ($measurement->progress_photo) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($measurement->progress_photo);
+            \App\Support\PrivateMedia::delete($measurement->progress_photo);
         }
 
         $measurement->delete();
