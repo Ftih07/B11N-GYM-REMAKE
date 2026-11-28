@@ -13,7 +13,7 @@
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <x-cdn name="tailwind" />
     <script>
         tailwind.config = {
             theme: {

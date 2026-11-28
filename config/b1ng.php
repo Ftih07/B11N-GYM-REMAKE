@@ -22,4 +22,11 @@ return [
         // Baris lebih tua dari ini dihapus otomatis
         'retention_months' => (int) env('VISITOR_RETENTION_MONTHS', 13),
     ],
+
+    // Content-Security-Policy (SEC-12). Matikan darurat lewat .env: CSP_ENABLED=false lalu `php artisan optimize:clear`
+    'csp' => [
+        'enabled' => (bool) env('CSP_ENABLED', true),
+        // Opsional: URL penerima laporan pelanggaran CSP (kosong = tidak melapor)
+        'report_uri' => env('CSP_REPORT_URI'),
+    ],
 ];

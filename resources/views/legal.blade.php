@@ -4,7 +4,7 @@
 @section('title', 'Legal & Trust - B1NG Empire')
 
 @section('content')
-<script src="//unpkg.com/alpinejs" defer></script>
+<x-cdn name="alpine" defer />
 
 @include('components.global-loader')
 

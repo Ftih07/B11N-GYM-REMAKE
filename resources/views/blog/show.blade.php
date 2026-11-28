@@ -44,9 +44,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Poppins:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
 
     {{-- Tailwind & Icons --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <x-cdn name="tailwind" />
+    <x-cdn name="remixicon3" />
+    <x-cdn name="fontawesome6" />
     <script>
         tailwind.config = {
             darkMode: 'class',

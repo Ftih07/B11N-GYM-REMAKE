@@ -30,9 +30,9 @@
     <link rel="icon" type="image/png" href="{{ asset('assets/Logo/empire.png') }}">
 
     {{-- Tailwind & Fonts (Tetap Biarkan Utuh Seperti Punya Abang) --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <x-cdn name="tailwind" />
+    <x-cdn name="remixicon3" />
+    <x-cdn name="fontawesome5" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">

@@ -74,15 +74,14 @@
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/empire.png'))">
 
     {{-- Stylesheets --}}
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <x-cdn name="remixicon3" />
+    <x-cdn name="fontawesome5" />
     <link
         href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     {{-- Tailwind CSS --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <x-cdn name="tailwind" />
     <script>
         tailwind.config = {
             theme: {
@@ -102,9 +101,6 @@
             }
         }
     </script>
-
-    {{-- JS Libraries --}}
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <style>
         /* Minimal custom styles only for floating menu animation */
@@ -421,7 +417,7 @@
                     class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
                     <!-- Image Container -->
                     <div class="relative h-64 sm:h-72 overflow-hidden flex-shrink-0">
-                        <img src="assets/home/biin-gym.jpg" alt="B11N Gym"
+                        <img loading="lazy" src="assets/home/biin-gym.jpg" alt="B11N Gym"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
@@ -455,7 +451,7 @@
                     class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
                     <!-- Image Container -->
                     <div class="relative h-64 sm:h-72 overflow-hidden flex-shrink-0">
-                        <img src="assets/king-gym/hero.jpg" alt="K1NG Gym"
+                        <img loading="lazy" src="assets/king-gym/hero.jpg" alt="K1NG Gym"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
@@ -489,7 +485,7 @@
                     class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
                     <!-- Image Container -->
                     <div class="relative h-64 sm:h-72 overflow-hidden flex-shrink-0">
-                        <img src="assets/home/istana-merdeka.jpg" alt="Kost Istana Merdeka 3"
+                        <img loading="lazy" src="assets/home/istana-merdeka.jpg" alt="Kost Istana Merdeka 3"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
@@ -522,7 +518,7 @@
                 <div
                     class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
                     <div class="relative h-64 sm:h-72 overflow-hidden flex-shrink-0">
-                        <img src="assets/home/digitify.jpg" alt="Digitify"
+                        <img loading="lazy" src="assets/home/digitify.jpg" alt="Digitify"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
@@ -630,7 +626,7 @@
                         <!-- Main Image Container -->
                         <div
                             class="relative rounded overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-extraLight">
-                            <img src="assets/home/store.png" alt="B11N & K1NG Gym Store"
+                            <img loading="lazy" src="assets/home/store.webp" alt="B11N & K1NG Gym Store"
                                 class="w-full h-auto transition-transform duration-700 group-hover:scale-105" />
                         </div>
 
@@ -676,7 +672,7 @@
 
                             <!-- Image Container -->
                             <div class="relative h-48 sm:h-56 overflow-hidden">
-                                <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
+                                <img loading="lazy" src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
 

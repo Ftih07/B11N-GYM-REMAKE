@@ -83,15 +83,15 @@
     <link rel="icon" type="image/png" href="@yield('favicon', asset('assets/Logo/kost.png'))">
 
     {{-- Stylesheets & Scripts --}}
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <x-cdn name="remixicon3" />
+    <x-cdn name="swiper-css" />
+    <x-cdn name="fontawesome5" />
     <link
         href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     {{-- Tailwind CSS CDN --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <x-cdn name="tailwind" />
     <script>
         tailwind.config = {
             theme: {
@@ -273,7 +273,7 @@
     <!-- HERO HEADER -->
     <header id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div class="absolute inset-0 z-0">
-            <img src="assets/facilities/ber-ac.png" alt="Kost Istana Merdeka 03"
+            <img src="assets/facilities/ber-ac.webp" alt="Kost Istana Merdeka 03"
                 class="w-full h-full object-cover object-center" />
             <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
         </div>
@@ -322,7 +322,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 reveal-stagger">
                 <div
                     class="group relative overflow-hidden rounded aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
-                    <img src="assets/facilities/ac.png" alt="Fasilitas AC"
+                    <img loading="lazy" src="assets/facilities/ac.webp" alt="Fasilitas AC"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 </div>
@@ -338,7 +338,7 @@
                 </div>
                 <div
                     class="group relative overflow-hidden rounded aspect-[4/5] shadow-lg hover:shadow-2xl transition-all duration-500">
-                    <img src="assets/home/biin-gym.jpg" alt="Lokasi Strategis"
+                    <img loading="lazy" src="assets/home/biin-gym.jpg" alt="Lokasi Strategis"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 </div>
@@ -376,7 +376,7 @@
                 <div
                     class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                     <div class="relative overflow-hidden aspect-[4/3]">
-                        <img src="assets/home/istana-merdeka.jpg" alt="Kamar Non AC"
+                        <img loading="lazy" src="assets/home/istana-merdeka.jpg" alt="Kamar Non AC"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute top-4 left-4">
                             <span
@@ -412,7 +412,7 @@
                 <div
                     class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ring-2 ring-secondary">
                     <div class="relative overflow-hidden aspect-[4/3]">
-                        <img src="assets/facilities/ber-ac.png" alt="Kamar AC"
+                        <img loading="lazy" src="assets/facilities/ber-ac.webp" alt="Kamar AC"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute top-4 left-4">
                             <span
@@ -663,7 +663,7 @@
                     @foreach ($gallery as $item)
                         <div
                             class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer">
-                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
+                            <img loading="lazy" src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
@@ -677,7 +677,7 @@
                 @else
                     <div
                         class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
-                        <img src="assets/facilities/ber-ac.png" alt="Gallery"
+                        <img loading="lazy" src="assets/facilities/ber-ac.webp" alt="Gallery"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
@@ -689,7 +689,7 @@
                     </div>
                     <div
                         class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
-                        <img src="assets/facilities/ber-ac.png" alt="Gallery"
+                        <img loading="lazy" src="assets/facilities/ber-ac.webp" alt="Gallery"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
@@ -701,7 +701,7 @@
                     </div>
                     <div
                         class="group relative overflow-hidden rounded aspect-[4/3] shadow-lg hover:shadow-2xl transition-all duration-500">
-                        <img src="assets/facilities/ac.png" alt="Gallery"
+                        <img loading="lazy" src="assets/facilities/ac.webp" alt="Gallery"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
@@ -861,7 +861,7 @@
                         <article
                             class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                             <div class="relative overflow-hidden aspect-[16/10]">
-                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
+                                <img loading="lazy" src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                 <div class="absolute top-4 left-4">
                                     <span
@@ -919,7 +919,7 @@
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 relative flex-shrink-0">
                             <a href="{{ route('home') }}" class="block">
-                                <img src="{{ asset('assets/Logo/kost.png') }}" alt="B1NG Empire Logo"
+                                <img loading="lazy" src="{{ asset('assets/Logo/kost.png') }}" alt="B1NG Empire Logo"
                                     class="w-full h-full object-contain" />
                             </a>
                         </div>
@@ -1041,7 +1041,7 @@
     </footer>
 
     <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <x-cdn name="swiper-js" />
     <script>
         // 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN 
         function showModernToast(message, type = 'success') {
