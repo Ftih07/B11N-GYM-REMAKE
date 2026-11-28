@@ -241,15 +241,19 @@ class FinanceResource extends Resource
                             ->placeholder('Semua Tahun'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['month'] ?? null,
-                                fn (Builder $query, $month): Builder => $query->whereMonth('date', $month),
-                            )
-                            ->when(
-                                $data['year'] ?? null,
-                                fn (Builder $query, $year): Builder => $query->whereYear('date', $year),
-                            );
+                        $month = $data['month'] ?? null;
+                        $year = $data['year'] ?? null;
+
+                        // Rentang tanggal agar index fin_analytics_idx terpakai (PERF-04)
+                        if ($year) {
+                            $start = $month ? Carbon::create((int) $year, (int) $month, 1) : Carbon::create((int) $year, 1, 1);
+                            $end = $month ? $start->copy()->endOfMonth() : $start->copy()->endOfYear();
+
+                            return $query->whereBetween('date', [$start->toDateString(), $end->toDateString()]);
+                        }
+
+                        // Bulan tanpa tahun (semua tahun) tidak bisa dijadikan satu rentang
+                        return $query->when($month, fn (Builder $query, $month): Builder => $query->whereMonth('date', $month));
                     })
                     // ... (bagian indicateUsing biarkan sama persis seperti kode Anda)
                     ->indicateUsing(function (array $data): array {

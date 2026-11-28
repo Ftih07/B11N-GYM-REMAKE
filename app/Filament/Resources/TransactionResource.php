@@ -104,14 +104,7 @@ class TransactionResource extends Resource
                                 // Pilihan Produk
                                 Select::make('product_id')
                                     ->label('Produk')
-                                    ->options(
-                                        Product::all()->mapWithKeys(function ($product) {
-                                            // Format tampilannya: "Nama Produk (Rp 13.000)"
-                                            return [
-                                                $product->id => "{$product->name} (Rp ".number_format($product->price, 0, ',', '.').')',
-                                            ];
-                                        })
-                                    )
+                                    ->options(fn (): array => static::productOptions())
                                     ->required()
                                     ->searchable()
                                     ->reactive() // Memicu update seketika
@@ -242,6 +235,21 @@ class TransactionResource extends Resource
                             ->columnSpanFull(),
                     ]),
             ]);
+    }
+
+    /**
+     * Pilihan produk "Nama (Rp 13.000)" — dihitung sekali per request, bukan per baris
+     * item repeater, dan hanya kolom yang dipakai (PERF-09).
+     */
+    public static function productOptions(): array
+    {
+        return once(fn (): array => Product::query()
+            ->orderBy('name')
+            ->get(['id', 'name', 'price'])
+            ->mapWithKeys(fn (Product $product) => [
+                $product->id => "{$product->name} (Rp ".number_format($product->price, 0, ',', '.').')',
+            ])
+            ->all());
     }
 
     /**
@@ -473,8 +481,8 @@ class TransactionResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['created_from'], fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
-                            ->when($data['created_until'], fn ($q, $date) => $q->whereDate('created_at', '<=', $date));
+                            ->when($data['created_from'], fn ($q, $date) => $q->where('created_at', '>=', \Illuminate\Support\Carbon::parse($date)->startOfDay()))
+                            ->when($data['created_until'], fn ($q, $date) => $q->where('created_at', '<', \Illuminate\Support\Carbon::parse($date)->addDay()->startOfDay()));
                     }),
             ])
             ->actions([

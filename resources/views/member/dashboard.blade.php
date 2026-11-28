@@ -336,19 +336,7 @@
             </a>
         </div>
 
-        <script>
-            const checkInterval = setInterval(() => {
-                fetch('/api/check-membership-status')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === true) {
-                            clearInterval(checkInterval);
-                            window.location.reload();
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            }, 3000);
-        </script>
+            @include('member.partials.membership-poll')
         @endif
 
         <div class="mt-12 mb-8">

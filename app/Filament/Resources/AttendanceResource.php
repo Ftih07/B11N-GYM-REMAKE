@@ -320,7 +320,7 @@ class AttendanceResource extends Resource
                 Filter::make('today')
                     ->label('Hari ini')
                     ->toggle()
-                    ->query(fn(Builder $query): Builder => $query->whereDate('check_in_time', today())),
+                    ->query(fn(Builder $query): Builder => $query->where('check_in_time', '>=', today())->where('check_in_time', '<', today()->addDay())),
 
                 // Filter 2: Rentang tanggal
                 Filter::make('check_in_time')
@@ -330,8 +330,8 @@ class AttendanceResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['created_from'] ?? null, fn(Builder $query, $date) => $query->whereDate('check_in_time', '>=', $date))
-                            ->when($data['created_until'] ?? null, fn(Builder $query, $date) => $query->whereDate('check_in_time', '<=', $date));
+                            ->when($data['created_from'] ?? null, fn(Builder $query, $date) => $query->where('check_in_time', '>=', Carbon::parse($date)->startOfDay()))
+                            ->when($data['created_until'] ?? null, fn(Builder $query, $date) => $query->where('check_in_time', '<', Carbon::parse($date)->addDay()->startOfDay()));
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];

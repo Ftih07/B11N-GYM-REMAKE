@@ -96,7 +96,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Halaman Dashboard Member (Harus Login)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\ExpireOverdueMemberships::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

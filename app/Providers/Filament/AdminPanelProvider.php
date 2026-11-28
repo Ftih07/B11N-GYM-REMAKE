@@ -50,6 +50,8 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                // Status member kedaluwarsa → inactive (maks. sekali per jam, PERF-05)
+                \App\Http\Middleware\ExpireOverdueMemberships::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

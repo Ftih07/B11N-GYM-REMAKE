@@ -20,16 +20,17 @@ class GlobalFinanceStats extends BaseWidget
         // Ganti 'date' dengan nama kolom tanggal transaksi riil di database Anda
         $dateColumn = 'date';
 
+        // Rentang tanggal (bukan whereMonth/whereYear) agar index finances terpakai (PERF-04)
+        $month = [$now->copy()->startOfMonth()->toDateString(), $now->copy()->endOfMonth()->toDateString()];
+
         // 1. Calculate Monthly Income
         $income = Finance::where('type', 'income')
-            ->whereMonth($dateColumn, $now->month)
-            ->whereYear($dateColumn, $now->year)
+            ->whereBetween($dateColumn, $month)
             ->sum('amount');
 
         // 2. Calculate Monthly Expense
         $expense = Finance::where('type', 'expense')
-            ->whereMonth($dateColumn, $now->month)
-            ->whereYear($dateColumn, $now->year)
+            ->whereBetween($dateColumn, $month)
             ->sum('amount');
 
         // 3. Count Active Members
