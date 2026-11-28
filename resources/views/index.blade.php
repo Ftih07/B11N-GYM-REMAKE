@@ -39,7 +39,7 @@
     {{-- 6. SCHEMA MARKUP (Organization - Parent Company) --}}
     <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "Organization",
             "name": "B1NG EMPIRE",
             "url": "{{ url('/') }}",

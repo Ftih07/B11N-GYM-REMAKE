@@ -15,7 +15,7 @@ Katalog lengkap peralatan fitness B1NG Empire. Temukan alat Cardio, Strength, da
 @push('json-ld')
 <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": "Koleksi Peralatan B1NG Empire",
         "description": "Daftar peralatan gym lengkap mulai dari Cardio, Strength, hingga Machine.",

@@ -40,7 +40,7 @@
     {{-- 6. SCHEMA MARKUP (LodgingBusiness / Hostel) --}}
     <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
+            "@@context": "https://schema.org",
             "@type": "LodgingBusiness",
             "name": "Kost Putra Istana Merdeka 03",
             "image": "{{ asset('assets/home/istana-merdeka.jpg') }}",
