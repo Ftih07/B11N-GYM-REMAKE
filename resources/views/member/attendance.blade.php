@@ -160,7 +160,7 @@
         @php
         $emailUser = auth()->user()->email ?? ($user->email ?? 'belum terdeteksi');
         $waMessage = "Halo Admin B1NG Empire, saya tidak bisa mengecek *riwayat absensi*. Email akun saya: *{$emailUser}* belum terdaftar di sistem. Mohon bantuannya untuk aktivasi.";
-        $waLink = "https://wa.me/6283194288423?text=" . urlencode($waMessage);
+        $waLink = config('b1ng.contact.whatsapp_url') . '?text=' . urlencode($waMessage);
         @endphp
 
         {{-- ALERT JIKA BUKAN MEMBER --}}

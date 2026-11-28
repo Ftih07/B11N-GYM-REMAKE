@@ -133,7 +133,7 @@
             @php
             $emailUser = auth()->user()->email ?? ($user->email ?? 'belum terdeteksi');
             $waMessage = "Halo Admin B1NG Empire, saya mengecek *halaman profil* dan data member saya tidak ditemukan. Email akun saya: *{$emailUser}*. Mohon bantuannya.";
-            $waLink = "https://wa.me/6283194288423?text=" . urlencode($waMessage);
+            $waLink = config('b1ng.contact.whatsapp_url') . '?text=' . urlencode($waMessage);
             @endphp
 
             <div class="text-center bg-yellow-900/20 border border-yellow-700/50 p-6 rounded-lg mt-6">

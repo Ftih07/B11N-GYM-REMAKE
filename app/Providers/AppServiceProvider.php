@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         Transaction::observe(TransactionObserver::class);
         QrCode::observe(QrCodeObserver::class);
 
-        // 1b. Rate limit endpoint publik (SEC-04) dan API OCR (SEC-07)
+        // 1b. Rate limit form publik (SEC-04) dan API OCR (SEC-07)
         $this->configureRateLimiting();
 
         // 2. Global View Data (Navigation Menu)
@@ -76,7 +76,6 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureRateLimiting(): void
     {
-        // Form publik dengan unggahan berkas (bukti bayar membership & kost).
         $tooMany = function (Request $request, array $headers) {
             $message = 'Terlalu banyak percobaan. Silakan coba lagi beberapa menit lagi.';
 
@@ -85,12 +84,7 @@ class AppServiceProvider extends ServiceProvider
                 : back()->with('error', $message)->withHeaders($headers);
         };
 
-        RateLimiter::for('public-upload', fn (Request $request) => [
-            Limit::perMinute(5)->by('upload-min:'.$request->ip())->response($tooMany),
-            Limit::perDay(30)->by('upload-day:'.$request->ip())->response($tooMany),
-        ]);
-
-        // Form publik tanpa pembayaran (survei, laporan kerusakan). Batas per menit
+        // Form publik (survei, laporan kerusakan). Batas per menit
         // dibuat longgar karena banyak pengunjung gym bisa memakai Wi-Fi (IP) yang sama.
         RateLimiter::for('public-form', fn (Request $request) => [
             Limit::perMinute(10)->by('form-min:'.$request->ip())->response($tooMany),

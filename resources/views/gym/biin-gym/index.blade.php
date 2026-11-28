@@ -44,7 +44,7 @@
 			"@type": "ExerciseGym",
 			"name": "B11N Gym Purwokerto",
 			"image": "{{ asset('assets/home/biin-gym.jpg') }}",
-			"telephone": "+6283194288423",
+			"telephone": "{{ config('b1ng.contact.phone_e164') }}",
 			"url": "{{ url('/') }}",
 			"address": {
 				"@type": "PostalAddress",
@@ -1644,7 +1644,8 @@
                         <li><span><i class="ri-close-line"></i></span>Bonus jadwal kelas gym rutin</li>
                     </ul>
                     <h3><sup>Rp</sup>10.000<span>/hari</span></h3>
-                    <button class="btn btn__primary" onclick="openPaymentModal('Harian')">Beli Sekarang</button>
+                    <a href="{{ config('b1ng.contact.whatsapp_url') }}?text={{ rawurlencode('Halo admin B11N Gym, saya ingin daftar Membership Harian.') }}" target="_blank" rel="noopener noreferrer"
+                        class="btn btn__primary inline-block text-center"><i class="ri-whatsapp-line"></i> Daftar via WhatsApp</a>
                 </div>
 
                 {{-- MINGGUAN --}}
@@ -1659,7 +1660,8 @@
                         <li><span><i class="ri-close-line"></i></span>Status member resmi B11N & K1NG</li>
                     </ul>
                     <h3><sup>Rp</sup>35.000<span>/minggu</span></h3>
-                    <button class="btn btn__primary" onclick="openPaymentModal('Mingguan')">Beli Sekarang</button>
+                    <a href="{{ config('b1ng.contact.whatsapp_url') }}?text={{ rawurlencode('Halo admin B11N Gym, saya ingin daftar Membership Mingguan.') }}" target="_blank" rel="noopener noreferrer"
+                        class="btn btn__primary inline-block text-center"><i class="ri-whatsapp-line"></i> Daftar via WhatsApp</a>
                 </div>
 
                 {{-- BULANAN --}}
@@ -1674,227 +1676,10 @@
                         <li><span><i class="ri-check-line"></i></span>Status member resmi B11N & K1NG</li>
                     </ul>
                     <h3><sup>Rp</sup>90.000<span>/Bulan</span></h3>
-                    <button class="btn btn__primary" onclick="openPaymentModal('Bulanan')">Beli Sekarang</button>
+                    <a href="{{ config('b1ng.contact.whatsapp_url') }}?text={{ rawurlencode('Halo admin B11N Gym, saya ingin daftar Membership Bulanan.') }}" target="_blank" rel="noopener noreferrer"
+                        class="btn btn__primary inline-block text-center"><i class="ri-whatsapp-line"></i> Daftar via WhatsApp</a>
                 </div>
 
-                {{-- MODAL 1: PILIH METODE PEMBAYARAN --}}
-                <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div
-                            class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
-                            <div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
-                                <h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl"
-                                    id="paymentModalLabel">
-                                    Metode Pembayaran <span class="text-[#DC2626] ml-1" id="membershipTitle"></span>
-                                </h5>
-                                <button type="button"
-                                    class="btn-close btn-close-white opacity-50 hover:opacity-100 transition"
-                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body p-6">
-                                <div id="paymentOptions">
-                                    <p class="text-sm text-gray-400 mb-4 text-center">Silakan pilih metode pembayaran
-                                        yang Anda inginkan:</p>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div onclick="selectPaymentMethod('qris')"
-                                            class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
-                                            {{-- DITAMBAHKAN LAZY LOADING --}}
-                                            <img src="/assets/img/pembayaran/qris.png" alt="QRIS" loading="lazy"
-                                                class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
-                                            <span
-                                                class="text-white font-bold text-sm uppercase tracking-wider block">Bayar
-                                                via QRIS</span>
-                                        </div>
-                                        <div onclick="selectPaymentMethod('transfer')"
-                                            class="cursor-pointer bg-neutral-900 border border-neutral-700 hover:border-[#DC2626]/50 hover:shadow-lg hover:shadow-red-900/20 rounded-lg p-5 text-center transition-all duration-300 group flex flex-col items-center justify-center min-h-[160px]">
-                                            {{-- DITAMBAHKAN LAZY LOADING --}}
-                                            <img src="/assets/img/pembayaran/bca.png" alt="Transfer Bank"
-                                                loading="lazy"
-                                                class="h-16 md:h-24 object-contain mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-md" />
-                                            <span
-                                                class="text-white font-bold text-sm uppercase tracking-wider block">Transfer
-                                                BCA</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{-- TAMPILAN QRIS --}}
-                                <div id="qrisPayment" class="d-none">
-                                    <h5 class="text-center font-bold text-white mb-4">
-                                        Scan QRIS <span class="text-[#DC2626] block text-sm mt-1"
-                                            id="qrisMembershipTitle"></span>
-                                    </h5>
-                                    <div class="flex justify-center mb-4">
-                                        <div
-                                            class="bg-white p-4 rounded-xl border-4 border-neutral-800 shadow-xl max-w-[250px] w-full">
-                                            {{-- DITAMBAHKAN LAZY LOADING --}}
-                                            <img src="/assets/img/pembayaran/qris-barcode.png" alt="QRIS Barcode"
-                                                loading="lazy" class="img-fluid w-full" />
-                                        </div>
-                                    </div>
-                                    <p class="text-center text-sm text-gray-400 mb-6">Scan kode QR di atas menggunakan
-                                        aplikasi m-Banking atau e-Wallet (GoPay, OVO, Dana, dll).</p>
-                                    <div class="flex justify-center mb-6">
-                                        <button
-                                            class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5"
-                                            onclick="showPaymentConfirmationModal()">
-                                            KIRIM BUKTI PEMBAYARAN
-                                        </button>
-                                    </div>
-                                    <div
-                                        class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
-                                        <strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim
-                                        bukti di atas agar akun diaktivasi.
-                                    </div>
-                                    <div class="flex justify-between items-center pt-4 border-t border-neutral-800">
-                                        <button class="text-gray-400 hover:text-white text-sm font-medium transition"
-                                            onclick="goBackToOptions()">← Ganti Metode</button>
-                                        <button class="text-gray-500 hover:text-gray-300 text-sm transition"
-                                            data-bs-dismiss="modal">Tutup</button>
-                                    </div>
-                                </div>
-
-                                {{-- TAMPILAN TRANSFER --}}
-                                <div id="transferPayment" class="d-none">
-                                    <h5 class="text-center font-bold text-white mb-4">
-                                        Transfer Bank <span class="text-[#DC2626] block text-sm mt-1"
-                                            id="transferMembershipTitle"></span>
-                                    </h5>
-                                    <div
-                                        class="bg-neutral-900 border border-neutral-700 rounded-xl p-5 mb-4 text-center">
-                                        {{-- DITAMBAHKAN LAZY LOADING --}}
-                                        <img src="/assets/img/pembayaran/bca.png" alt="Bank BCA" loading="lazy"
-                                            class="h-12 mx-auto mb-3 object-contain" />
-                                        <p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Nomor Rekening
-                                        </p>
-                                        <p
-                                            class="text-white text-2xl font-header font-bold tracking-widest mb-1 select-all">
-                                            0461701506</p>
-                                        <p class="text-gray-400 text-sm">a.n <strong
-                                                class="text-white">Sobiin</strong></p>
-                                    </div>
-                                    <p class="text-center text-sm text-gray-400 mb-6">Silakan lakukan transfer manual
-                                        ke nomor rekening di atas sesuai nominal paket.</p>
-                                    <div class="flex justify-center mb-6">
-                                        <button
-                                            class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded shadow-lg shadow-red-900/30 transition transform hover:-translate-y-0.5"
-                                            onclick="showPaymentConfirmationModal()">
-                                            KIRIM BUKTI PEMBAYARAN
-                                        </button>
-                                    </div>
-                                    <div
-                                        class="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-xs text-yellow-500 mb-4 text-center">
-                                        <strong>Penting:</strong> Setelah berhasil transfer, wajib klik tombol kirim
-                                        bukti di atas agar akun diaktivasi.
-                                    </div>
-                                    <div class="flex justify-between items-center pt-4 border-t border-neutral-800">
-                                        <button class="text-gray-400 hover:text-white text-sm font-medium transition"
-                                            onclick="goBackToOptions()">← Ganti Metode</button>
-                                        <button class="text-gray-500 hover:text-gray-300 text-sm transition"
-                                            data-bs-dismiss="modal">Tutup</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- MODAL 2: FORM UPLOAD BUKTI --}}
-                <div class="modal fade" id="paymentConfirmationModal" tabindex="-1"
-                    aria-labelledby="paymentConfirmationModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div
-                            class="modal-content bg-[#171717] border border-neutral-800 shadow-2xl rounded-xl overflow-hidden">
-                            <div class="modal-header border-b border-neutral-800 bg-[#0a0a0a] px-6 py-4">
-                                <h5 class="modal-title font-header font-bold text-white uppercase tracking-wide text-xl"
-                                    id="paymentConfirmationModalLabel">
-                                    Konfirmasi <span class="text-[#DC2626]">Pembayaran</span>
-                                </h5>
-                                <button type="button"
-                                    class="btn-close btn-close-white opacity-50 hover:opacity-100 transition"
-                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body p-6">
-                                <form id="paymentForm" enctype="multipart/form-data" class="space-y-4">
-                                    <input type="hidden" name="gym_id" value="1">
-                                    <div
-                                        class="bg-neutral-900/50 border border-neutral-800 p-4 rounded-lg space-y-4 mb-2">
-                                        <div>
-                                            <label
-                                                class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Nama
-                                                Lengkap <span class="text-red-500">*</span></label>
-                                            <input type="text" name="name" placeholder="Sesuai KTP / Panggilan"
-                                                class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm"
-                                                required>
-                                        </div>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <div>
-                                                <label
-                                                    class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Email
-                                                    <span class="text-red-500">*</span></label>
-                                                <input type="email" name="email" placeholder="email@anda.com"
-                                                    class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm"
-                                                    required>
-                                            </div>
-                                            <div>
-                                                <label
-                                                    class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">No.
-                                                    WhatsApp <span class="text-red-500">*</span></label>
-                                                <input type="tel" name="phone" placeholder="08..."
-                                                    class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm"
-                                                    required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div>
-                                            <label
-                                                class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Paket
-                                                Member <span class="text-red-500">*</span></label>
-                                            <select name="membership_type"
-                                                class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer"
-                                                required>
-                                                <option value="" disabled selected>Pilih Paket</option>
-                                                <option value="Member Harian">Harian (Rp 10.000)</option>
-                                                <option value="Member Mingguan">Mingguan (Rp 35.000)</option>
-                                                <option value="Member Bulanan">Bulanan (Rp 90.000)</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label
-                                                class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Transfer
-                                                Ke <span class="text-red-500">*</span></label>
-                                            <select name="payment"
-                                                class="w-full bg-neutral-900 border border-neutral-700 rounded p-2.5 text-white focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] transition text-sm cursor-pointer"
-                                                required>
-                                                <option value="" disabled selected>Pilih Metode</option>
-                                                <option value="qris">QRIS (GoPay/Dana/OVO)</option>
-                                                <option value="transfer">Bank BCA</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Upload
-                                            Bukti Struk/Resi <span class="text-red-500">*</span></label>
-                                        <input type="file" name="image" accept="image/png,image/jpeg,image/jpg"
-                                            class="block w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:bg-neutral-800 file:text-[#DC2626] hover:file:bg-neutral-700 cursor-pointer border border-neutral-700 rounded bg-neutral-900"
-                                            required>
-                                    </div>
-                                    <div class="flex justify-end gap-3 pt-4 mt-2 border-t border-neutral-800">
-                                        <button type="button"
-                                            class="bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-bold py-2 px-5 rounded transition text-sm"
-                                            data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit"
-                                            class="bg-[#DC2626] hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition shadow-lg shadow-red-900/30 text-sm">Upload
-                                            Bukti</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -2005,8 +1790,8 @@
                         <li><a href="https://maps.app.goo.gl/CEQqy1nCNUYKasrU9" target="_blank"><span><i
                                         class="ri-map-pin-2-fill"></i></span> Jl. Masjid Baru, Arcawinangun,Kec. Purwokerto
                                 Timur, Kab. Banyumas </a></li>
-                        <li><a href="https://wa.me/6283194288423" target="_blank"><span><i
-                                        class="ri-phone-fill"></i></span> +62 831 9428 8423</a></li>
+                        <li><a href="{{ config('b1ng.contact.whatsapp_url') }}" target="_blank"><span><i
+                                        class="ri-phone-fill"></i></span> {{ config('b1ng.contact.phone') }}</a></li>
                         <li><a href="mailto:sobiin77@gmail.com" target="_blank"><span><i class="ri-mail-fill"></i></span>
                                 sobiin77@gmail.com</a></li>
                     </ul>
@@ -2056,13 +1841,13 @@
                         <p class="text-gray-400 text-sm tracking-wide uppercase mt-2">BIIN_GYM</p>
                     </div>
                     <div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
-                        <a href="https://wa.me/6283194288423"
+                        <a href="{{ config('b1ng.contact.whatsapp_url') }}"
                             class="flex items-center gap-3 text-white group-hover:text-red-600 transition-all"
                             target="_blank">
                             <i class="fab fa-whatsapp text-xl group-hover:text-red-600"></i>
                             <h5 class="font-semibold text-xl group-hover:text-red-600 transition-all">Whatsapp</h5>
                         </a>
-                        <p class="text-gray-400 text-sm tracking-wide mt-2">0831 9428 8423</p>
+                        <p class="text-gray-400 text-sm tracking-wide mt-2">{{ config('b1ng.contact.phone') }}</p>
                     </div>
                     <div class="border-b border-dotted border-gray-400 pb-3 mb-3 group">
                         <a href="mailto:sobiin77@gmail.com"
@@ -2131,57 +1916,6 @@
             window.addEventListener('scroll', handleScroll);
             handleScroll(); // Jalankan sekali untuk memastikan efek langsung terjadi
 
-            let selectedMembershipTitle = "";
-            let selectedPaymentMethod = ""; // Tambahkan variabel ini untuk menyimpan metode pembayaran
-
-            function openPaymentModal(title) {
-                selectedMembershipTitle = title;
-                document.getElementById("membershipTitle").textContent = title;
-                document.getElementById("paymentOptions").classList.remove("d-none");
-                document.getElementById("qrisPayment").classList.add("d-none");
-                document.getElementById("transferPayment").classList.add("d-none");
-                new bootstrap.Modal(document.getElementById("paymentModal")).show();
-            }
-
-            function selectPaymentMethod(method) {
-                selectedPaymentMethod = method; // Simpan metode pembayaran yang dipilih
-                document.getElementById("paymentOptions").classList.add("d-none");
-                if (method === "qris") {
-                    document.getElementById("qrisPayment").classList.remove("d-none");
-                    document.getElementById("qrisMembershipTitle").textContent = selectedMembershipTitle;
-                } else if (method === "transfer") {
-                    document.getElementById("transferPayment").classList.remove("d-none");
-                    document.getElementById("transferMembershipTitle").textContent = selectedMembershipTitle;
-                }
-            }
-
-            function sendPaymentConfirmation(method) {
-                const email = "naufalfathi37@gmail.com"; // Ganti dengan email Anda
-                const whatsappNumber = "6283194288423"; // Ganti dengan nomor WhatsApp Anda
-
-                const messageBase =
-                    `Halo, saya ingin mengonfirmasi pembayaran untuk membership ${selectedMembershipTitle} via (${selectedPaymentMethod.toUpperCase()}).\n`;
-                const messageFooter = `Tolong lampirkan bukti pembayaran Anda disini. \n\nTerima kasih.`;
-
-                if (method === "email") {
-                    const subject =
-                        `Konfirmasi Pembayaran via ${selectedPaymentMethod.toUpperCase()} untuk member ${selectedMembershipTitle}`;
-                    const body = `${messageBase}${messageFooter}`;
-                    window.location.href =
-                        `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                } else if (method === "whatsapp") {
-                    const message = `${messageBase}${messageFooter}`;
-                    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-                }
-            }
-
-
-            function goBackToOptions() {
-                document.getElementById("paymentOptions").classList.remove("d-none");
-                document.getElementById("qrisPayment").classList.add("d-none");
-                document.getElementById("transferPayment").classList.add("d-none");
-            }
-
             document.addEventListener('DOMContentLoaded', function() {
                 const swiper = new Swiper('.swiper', {
                     loop: true,
@@ -2248,165 +1982,6 @@
             });
         </script>
 
-        <script>
-            // 1. FUNGSI UNTUK MEMUNCULKAN TOAST NOTIFICATION MODERN
-            function showModernToast(message, type = 'success') {
-                // Hapus toast lama jika masih ada di layar (mencegah numpuk)
-                const existingToast = document.getElementById('modern-toast');
-                if (existingToast) existingToast.remove();
-
-                // Tentukan warna berdasarkan tipe (success / error)
-                const isSuccess = type === 'success';
-                const borderColor = isSuccess ? '#16a34a' : '#dc2626'; // border-green-600 : border-red-600
-                const iconColor = isSuccess ? '#22c55e' : '#ef4444'; // text-green-500 : text-red-500
-                const iconBg = isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'; // bg opacity
-                const progressBg = isSuccess ? '#16a34a' : '#dc2626';
-
-                // Icon SVG (Checklist atau Silang)
-                const svgIcon = isSuccess ?
-                    `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>` :
-                    `<svg style="width: 24px; height: 24px; color: ${iconColor};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
-
-                // Template HTML Toast (Inline CSS agar aman tanpa Tailwind)
-                const toastHTML = `
-                <div id="modern-toast" style="position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 9999; transition: all 0.5s ease; pointer-events: none; width: max-content; max-width: 90vw; font-family: 'Poppins', sans-serif;">
-                    <div style="background-color: #171717; border: 1px solid ${borderColor}; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 8px; pointer-events: auto; overflow: hidden; position: relative; min-width: 300px;">
-                        
-                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: #262626;">
-                            <div id="toast-progress-bar" style="height: 100%; width: 100%; background-color: ${progressBg};"></div>
-                        </div>
-
-                        <div style="padding: 16px; display: flex; align-items: center; gap: 16px;">
-                            <div style="background-color: ${iconBg}; padding: 8px; border-radius: 50%; flex-shrink: 0; display: flex;">
-                                ${svgIcon}
-                            </div>
-                            <div style="flex: 1; font-size: 14px; font-weight: 500; color: #ffffff; padding-right: 16px; line-height: 1.4;">
-                                ${message}
-                            </div>
-                            <button onclick="closeModernToast()" style="background: transparent; border: none; color: #737373; cursor: pointer; flex-shrink: 0; display: flex; padding: 0;">
-                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-                // Masukkan ke dalam body
-                document.body.insertAdjacentHTML('beforeend', toastHTML);
-
-                const toast = document.getElementById('modern-toast');
-                const progressBar = document.getElementById('toast-progress-bar');
-
-                // Trigger Animasi Masuk (Slide Down)
-                setTimeout(() => {
-                    toast.style.transform = 'translate(-50%, 0)';
-                    toast.style.opacity = '1';
-                }, 50);
-
-                // Trigger Animasi Progress Bar mundur (5 Detik)
-                setTimeout(() => {
-                    progressBar.style.transition = 'width 5s linear';
-                    progressBar.style.width = '0%';
-                }, 100);
-
-                // Auto Close setelah 5 detik
-                window.modernToastTimeout = setTimeout(() => {
-                    closeModernToast();
-                }, 5000);
-            }
-
-            // Fungsi manual untuk menutup Toast
-            window.closeModernToast = function() {
-                const toast = document.getElementById('modern-toast');
-                if (!toast) return;
-
-                clearTimeout(window.modernToastTimeout);
-
-                // Animasi Slide Up
-                toast.style.transform = 'translate(-50%, -20px)';
-                toast.style.opacity = '0';
-
-                // Hapus dari layar setelah animasi selesai
-                setTimeout(() => {
-                    if (toast) toast.remove();
-                }, 500);
-            };
-
-
-            // 2. LOGIC SUBMIT FORM PAYMENT
-            document.getElementById('paymentForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                const form = this;
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.innerHTML;
-                const modalElement = document.getElementById('paymentConfirmationModal');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-
-                submitBtn.disabled = true;
-                submitBtn.innerHTML =
-                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...';
-
-                let formData = new FormData(this);
-
-                fetch('/payment/upload', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json',
-                        }
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        return response.json().then(err => {
-                            throw err;
-                        });
-                    })
-                    .then(data => {
-                        // --- UBAH DI SINI: Panggil Toast Success ---
-                        showModernToast("Berhasil! " + data.message, 'success');
-
-                        form.reset();
-
-                        if (modalInstance) {
-                            modalInstance.hide();
-                        }
-                    })
-                    .catch(error => {
-                        let errorMessage = "Terjadi kesalahan saat mengupload.";
-
-                        if (error.errors) {
-                            errorMessage =
-                                "Gagal Validasi:<br>"; // Gunakan <br> karena innerHTML mendeteksi tag HTML
-                            for (const [key, messages] of Object.entries(error.errors)) {
-                                errorMessage += `- ${messages[0]}<br>`;
-                            }
-                        } else if (error.message) {
-                            errorMessage = error.message;
-                        }
-
-                        // --- UBAH DI SINI: Panggil Toast Error ---
-                        showModernToast(errorMessage, 'error');
-                    })
-                    .finally(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = originalBtnText;
-                    });
-            });
-
-            function showPaymentConfirmationModal() {
-                var paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-                var paymentConfirmationModal = new bootstrap.Modal(document.getElementById('paymentConfirmationModal'));
-
-                paymentModal.hide();
-                setTimeout(() => {
-                    paymentConfirmationModal.show();
-                }, 500);
-            }
-        </script>
 
     </body>
 

@@ -3,7 +3,6 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Gym\BiinGymController;
 use App\Http\Controllers\Gym\KingGymController;
-use App\Http\Controllers\Gym\PaymentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Kost\KostController;
 use App\Http\Controllers\QrCodePrintController;
@@ -40,15 +39,6 @@ Route::get('/biin-king-gym-store', [StoreController::class, 'showBiinKingGymStor
 
 //Product Route
 Route::get('product/{product}', [ProductController::class, 'show'])->name('store.product.show');
-
-//Booking Kost Route
-Route::post('/kost-istana-merdeka-3/book', [KostController::class, 'store'])
-    ->middleware('throttle:public-upload')
-    ->name('kost.book');
-
-//Membership Payment Route
-Route::post('/payment/upload', [PaymentController::class, 'uploadPayment'])
-    ->middleware('throttle:public-upload');
 
 // Halaman cetak yang dibuka dari panel admin (struk transaksi & QR code)
 Route::middleware('admin')->group(function () {

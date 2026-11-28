@@ -44,7 +44,7 @@
             "@type": "LodgingBusiness",
             "name": "Kost Putra Istana Merdeka 03",
             "image": "{{ asset('assets/home/istana-merdeka.jpg') }}",
-            "telephone": "+6289653847651",
+            "telephone": "{{ config('b1ng.contact.phone_e164') }}",
             "url": "{{ url('/') }}",
             "address": {
                 "@type": "PostalAddress",
@@ -755,7 +755,7 @@
                                 pembayaran untuk konfirmasi booking kamar.</li>
                         </ol>
                         <div class="mt-8">
-                            <a href="https://wa.me/6283194288423" target="_blank"
+                            <a href="{{ config('b1ng.contact.whatsapp_url') }}" target="_blank"
                                 class="w-full font-heading px-6 py-4 bg-secondary text-white font-semibold text-lg rounded shadow-lg hover:bg-white hover:text-secondary border-2 border-secondary transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2">
                                 <i class="ri-whatsapp-line text-2xl"></i> Hubungi via WhatsApp
                             </a>
@@ -789,7 +789,7 @@
                             & Lokasi</h3>
                         <div class="space-y-6">
                             <!-- WhatsApp -->
-                            <a href="https://wa.me/6283194288423" target="_blank"
+                            <a href="{{ config('b1ng.contact.whatsapp_url') }}" target="_blank"
                                 class="flex items-center gap-4 text-textLight hover:text-secondary transition-colors duration-300 group p-4 border border-gray-100 rounded-lg hover:border-secondary/30 hover:bg-secondary/5">
                                 <div
                                     class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center group-hover:bg-secondary transition-colors duration-300">
@@ -800,7 +800,7 @@
                                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">WhatsApp
                                     </p>
                                     <span
-                                        class="font-body font-semibold text-textDark group-hover:text-secondary transition-colors">0831-9428-8423</span>
+                                        class="font-body font-semibold text-textDark group-hover:text-secondary transition-colors">{{ config('b1ng.contact.phone') }}</span>
                                 </div>
                             </a>
 
@@ -940,7 +940,7 @@
                     <div class="flex items-center gap-3 pt-2">
                         @php
                             $socials = [
-                                ['icon' => 'ri-whatsapp-line', 'url' => 'https://wa.me/6283194288423'],
+                                ['icon' => 'ri-whatsapp-line', 'url' => config('b1ng.contact.whatsapp_url')],
                                 ['icon' => 'ri-instagram-fill', 'url' => 'https://www.instagram.com/biin_gym/'],
                                 ['icon' => 'ri-threads-fill', 'url' => 'https://www.threads.net/@biin_gym'],
                                 ['icon' => 'fas fa-envelope', 'url' => 'mailto:sobiin77@gmail.com'],
@@ -983,7 +983,7 @@
                     </h4>
                     <ul class="space-y-4">
                         <li>
-                            <a href="https://wa.me/6283194288423" target="_blank"
+                            <a href="{{ config('b1ng.contact.whatsapp_url') }}" target="_blank"
                                 class="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:border-[#f6ac0f]/50 hover:bg-[#f6ac0f]/10 transition-all duration-300 group">
 
                                 <div
@@ -996,7 +996,7 @@
                                         WhatsApp</h5>
                                     <p
                                         class="text-gray-300 font-medium text-sm group-hover:text-[#f6ac0f] transition-colors">
-                                        +62 831 9428 8423</p>
+                                        {{ config('b1ng.contact.phone') }}</p>
                                 </div>
                             </a>
                         </li>
