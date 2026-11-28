@@ -40,7 +40,7 @@
     {{-- 6. SCHEMA MARKUP --}}
     <script type="application/ld+json">
 		{
-			"@context": "https://schema.org",
+			"@@context": "https://schema.org",
 			"@type": "ExerciseGym",
 			"name": "B11N Gym Purwokerto",
 			"image": "{{ asset('assets/home/biin-gym.jpg') }}",

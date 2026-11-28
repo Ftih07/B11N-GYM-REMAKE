@@ -54,7 +54,7 @@ Panduan lengkap menggunakan {{ $equipment->name }}. {{ \Illuminate\Support\Str::
 {{-- Schema Markup tetap sama --}}
 <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+        "@@context": "https://schema.org",
         "@type": ["Product", "VideoObject"],
         "name": "{{ $equipment->name }}",
         "description": "{{ $equipment->description }}",
