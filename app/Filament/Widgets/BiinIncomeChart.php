@@ -43,9 +43,9 @@ class BiinIncomeChart extends ChartWidget
             }
         } else {
             for ($i = 1; $i <= 12; $i++) {
-                $month = now()->setMonth($i)->format('Y-m');
+                $month = now()->startOfYear()->addMonths($i - 1)->format('Y-m'); // tidak bergeser di tgl 29–31
                 $dataPoints[$month] = 0;
-                $labels[] = \Carbon\Carbon::createFromFormat('Y-m', $month)->format('M');
+                $labels[] = \Carbon\Carbon::createFromFormat('!Y-m', $month)->format('M');
             }
         }
 
@@ -72,7 +72,7 @@ class BiinIncomeChart extends ChartWidget
 
             default => $query
                 ->selectRaw('DATE_FORMAT(date, "%Y-%m") as period, SUM(amount) as aggregate')
-                ->whereYear('date', now()->year)
+                ->whereBetween('date', [now()->startOfYear()->toDateString(), now()->endOfYear()->toDateString()])
                 ->groupBy('period')
                 ->get(),
         };

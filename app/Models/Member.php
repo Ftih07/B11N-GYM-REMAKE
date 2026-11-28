@@ -75,18 +75,6 @@ class Member extends Model
         );
     }
 
-    // --- AUTO-EXPIRE CHECK ---
-    // Check expiration every time member data is retrieved
-    protected static function booted()
-    {
-        static::retrieved(function ($member) {
-            if ($member->membership_end_date && $member->status === 'active') {
-                if ($member->membership_end_date->endOfDay()->isPast()) {
-                    // Update status silently (without triggering 'saved' events)
-                    $member->status = 'inactive';
-                    $member->saveQuietly();
-                }
-            }
-        });
-    }
+    // Status kedaluwarsa (active → inactive) kini diperbarui massal oleh
+    // App\Services\MembershipStatusService, bukan lagi saat data dibaca (PERF-05).
 }

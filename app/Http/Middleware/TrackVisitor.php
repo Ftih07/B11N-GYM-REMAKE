@@ -4,25 +4,48 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\WebVisitor;
 
+/**
+ * Catat pengunjung unik per IP per hari (web_visitors) — PERF-01.
+ *
+ * Hanya halaman publik yang dibuka langsung (GET HTML). Panel admin, Livewire, API, polling,
+ * dan aset tidak dihitung. Kunjungan berikutnya di sesi yang sama pada hari yang sama tidak
+ * menyentuh database sama sekali; kunjungan pertama hanya satu INSERT IGNORE (index unik).
+ */
 class TrackVisitor
 {
-    // Function Goal: Record visitor IP and Date
+    private const SKIP_PATHS = ['admin', 'admin/*', 'livewire/*', 'filament/*', 'api/*', 'storage/*', 'print/*', 'up'];
+
     public function handle(Request $request, Closure $next): Response
     {
-        // Logic: Track Unique Visitors (Per Day)
-        // 'firstOrCreate' checks if [ip_address + visit_date] exists.
-        // If YES -> Do nothing (It's the same person returning today).
-        // If NO  -> Create new record (New unique visitor for today).
-        WebVisitor::firstOrCreate([
-            'ip_address' => $request->ip(),
-            'visit_date' => now()->toDateString(), // Save date only (Y-m-d)
-        ], [
-            'user_agent' => $request->header('User-Agent'), // Track browser/device info
-        ]);
+        if ($this->shouldTrack($request)) {
+            $today = now()->toDateString();
+
+            if ($request->session()->get('visitor_tracked_on') !== $today) {
+                DB::table('web_visitors')->insertOrIgnore([
+                    'ip_address' => (string) $request->ip(),
+                    'visit_date' => $today,
+                    'user_agent' => Str::limit((string) $request->userAgent(), 250, ''),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                $request->session()->put('visitor_tracked_on', $today);
+            }
+        }
 
         return $next($request);
+    }
+
+    private function shouldTrack(Request $request): bool
+    {
+        return $request->isMethod('GET')
+            && ! $request->expectsJson()
+            && ! $request->ajax()
+            && ! $request->is(...self::SKIP_PATHS)
+            && $request->hasSession();
     }
 }

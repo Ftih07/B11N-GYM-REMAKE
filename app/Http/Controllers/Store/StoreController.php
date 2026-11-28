@@ -22,7 +22,8 @@ class StoreController extends Controller
         $store = Store::find(3);
 
         // 3. Query Products
-        $products = Product::where('status', 'ready')
+        $products = Product::with('categoryproduct') // hindari N+1 per kartu produk (PERF-08)
+            ->where('status', 'ready')
             // Filter Category (tetap sama)
             ->when($categoryId, function ($query) use ($categoryId) {
                 $query->where('category_products_id', $categoryId);

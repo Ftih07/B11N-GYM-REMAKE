@@ -43,7 +43,8 @@ class EquipmentPageController extends Controller
             ->firstOrFail(); // Returns 404 if not found
 
         // 2. Logic: Related Equipments (Exclude current item)
-        $relatedEquipments = Equipment::where('status', 'active')
+        $relatedEquipments = Equipment::with('gallery') // hindari N+1 di kartu alat terkait (PERF-08)
+            ->where('status', 'active')
             ->where('id', '!=', $equipment->id)
             ->inRandomOrder() // Shuffle results
             ->take(3)

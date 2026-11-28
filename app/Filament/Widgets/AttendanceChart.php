@@ -48,7 +48,7 @@ class AttendanceChart extends ChartWidget
             for ($i = 1; $i <= 12; $i++) {
                 $month = Carbon::create(now()->year, $i, 1)->format('Y-m');
                 $dataPoints[$month] = 0;
-                $labels[] = Carbon::createFromFormat('Y-m', $month)->format('M');
+                $labels[] = Carbon::createFromFormat('!Y-m', $month)->format('M');
             }
         }
 
@@ -71,7 +71,7 @@ class AttendanceChart extends ChartWidget
 
             default => $query
                 ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as period, COUNT(*) as aggregate')
-                ->whereYear('created_at', now()->year)
+                ->whereBetween('created_at', [now()->startOfYear(), now()->endOfYear()])
                 ->groupBy('period')
                 ->get(),
         };

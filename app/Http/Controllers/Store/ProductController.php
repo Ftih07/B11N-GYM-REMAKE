@@ -13,7 +13,10 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         // Get products from SAME category, but EXCLUDE current product
-        $relatedProducts = Product::where('category_products_id', $product->category_products_id)
+        $product->loadMissing('categoryproduct');
+
+        $relatedProducts = Product::with('categoryproduct') // hindari N+1 (PERF-08)
+            ->where('category_products_id', $product->category_products_id)
             ->where('id', '!=', $product->id) // Nggak perlu diubah, tetap pakai $product->id
             ->where('status', 'ready')
             ->inRandomOrder(crc32(session()->getId()))

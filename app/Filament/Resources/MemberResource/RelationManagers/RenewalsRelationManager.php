@@ -61,7 +61,7 @@ class RenewalsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('period_month')
                     ->label('Untuk Bulan')
                     ->state(fn (MembershipRenewal $r) => collect($r->coveredMonths())
-                        ->map(fn ($ym) => Carbon::createFromFormat('Y-m', $ym)->locale('id')->translatedFormat('M Y'))
+                        ->map(fn ($ym) => Carbon::createFromFormat('!Y-m', $ym)->locale('id')->translatedFormat('M Y'))
                         ->implode(', ')),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->label('Metode')

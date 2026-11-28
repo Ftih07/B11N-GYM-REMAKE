@@ -84,7 +84,9 @@ class AttendanceService
                 // Absen yang ditolak admin sudah dihapus, jadi member asli boleh absen lagi.
                 $existing = Attendance::with('gymkos')
                     ->where('member_id', $member->id)
-                    ->whereDate('check_in_time', today())
+                    // Rentang (bukan whereDate) agar index att_member_time_idx terpakai (PERF-04)
+                    ->where('check_in_time', '>=', today())
+                    ->where('check_in_time', '<', today()->addDay())
                     ->latest('check_in_time')
                     ->first();
 
@@ -171,7 +173,8 @@ class AttendanceService
         return Attendance::whereNull('member_id')
             ->where('gymkos_id', $gymId)
             ->where('visitor_name', $name)
-            ->whereDate('check_in_time', today())
+            ->where('check_in_time', '>=', today())
+            ->where('check_in_time', '<', today()->addDay())
             ->exists();
     }
 

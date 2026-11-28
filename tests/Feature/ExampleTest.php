@@ -2,11 +2,14 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    // Halaman publik menulis web_visitors; tanpa ini barisnya tertinggal di DB testing
+    use RefreshDatabase;
+
     /**
      * A basic test example.
      */

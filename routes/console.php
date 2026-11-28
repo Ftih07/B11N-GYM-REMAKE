@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+// Opsional: hanya berjalan bila hosting menjalankan cron `php artisan schedule:run` tiap menit.
+// Tanpa cron pun status tetap diperbarui otomatis (maks. sekali per jam) saat panel admin /
+// portal member dibuka — lihat App\Http\Middleware\ExpireOverdueMemberships.
+Schedule::command('member:expire')->hourly();
